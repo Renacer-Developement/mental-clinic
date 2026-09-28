@@ -3,7 +3,7 @@ services:
     name: mental-clinic-backend
     env: node
     rootDir: apps/backend
-    buildCommand: corepack enable && pnpm install --frozen-lockfile --prod
+    buildCommand: npx -y pnpm@10.34.5 install --frozen-lockfile --prod --filter @mental-clinic/backend
     startCommand: node server.js
     envVars:
       - key: NODE_ENV
