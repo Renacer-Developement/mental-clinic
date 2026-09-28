@@ -27,7 +27,7 @@
     "@ngrx/effects": "^21.1.0",
     "@ngrx/entity": "^21.1.0",
     "@ngrx/store": "^21.1.0",
-    "@ngrx/store-devtools": "^21.1.0",
+    "@ngrx/store-devtools": "^22.0.1",
     "@primeng/themes": "^21.0.4",
     "@vercel/speed-insights": "^2.0.0",
     "bootstrap": "^5.3.3",
