@@ -1,0 +1,134 @@
+<section class="hero">
+  <div>
+    <h1 class="h1">Інформаційні послуги<span class="muted"> та </span> психологічні послуги</h1>
+    <p class="lead">Інформаційні послуги з підбору фахівця у сфері психологічного консультування. Допоможемо знайти
+      перевіреного психолога під вашу мету та бюджет.</p>
+
+    <div class="cta">
+      <a class="btn primary" [href]="'tel:' + phone">Зателефонувати</a>
+      <a class="btn" routerLink="/contract">Публічний договір</a>
+      <!-- НОВА КНОПКА -->
+      <a class="btn" routerLink="/pricing">Ціни</a>
+    </div>
+
+    <div class="meta">
+      <span class="pill">Онлайн • Офлайн</span>
+      <span class="pill">Конфіденційно</span>
+    </div>
+  </div>
+
+  <div aria-label="Фото" class="photo card">
+    <img alt="Фото Іллі Скрипника" src="./assets/owner.jpg"/>
+  </div>
+</section>
+<section class="section" id="services">
+  <h2>Послуги</h2>
+  <div class="row g-3">
+    <div *ngFor="let s of services" class="col-12 col-sm-6 col-lg-4">
+      <div class="card services h-100 p-3">
+        <div class="item d-flex">
+          <div class="text-white">
+            <div class="d-flex flex-row align-items-center">
+              <span class="bullet me-2"></span>
+
+              <strong>{{ s.title }}</strong>
+            </div>
+            <div class="muted">{{ s.text }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section><!-- METHODS -->
+<!-- METHODS -->
+<section class="section">
+    <h2>Методи психотерапії</h2>
+    <div class="row g-3">
+        <div class="col-12 col-md-6">
+            <div class="card h-100">
+                <ul class="methods text-white">
+                    <li *ngFor="let m of methodsLeft">{{ m }}</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="card h-100">
+                <ul class="methods text-white">
+                    <li *ngFor="let m of methodsRight">{{ m }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <p class="muted" style="margin-top:8px">
+        * Допоможемо визначити, які підходи будуть найбільш доцільними та результативними у вашій ситуації.
+    </p>
+</section>
+
+<!-- NEW SECTION -->
+<section class="section consultation" id="consultation">
+    <div class="container">
+        <div class="text-center mb-16">
+            <h2 class="h2 text-white">Психологічне консультування</h2>
+            <p class="lead-muted">
+                Професійна допомога у вирішенні життєвих, емоційних і міжособистісних труднощів — без медичних методів.
+                Це психологічна підтримка, просвітництво та навчання навичкам саморегуляції.
+            </p>
+        </div>
+
+        <div class="grid cols-2 gap-24">
+            <!-- Що робить психолог -->
+            <div class="card">
+                <h3 class="h3 mb-12">👩‍⚕️ Що робить психолог на консультації</h3>
+
+                <!-- Профіль психолога -->
+                <div class="profile">
+                    <div class="avatar">
+                        <img src="./assets/psychologist.jpg" alt="Фото психолога"/>
+                        <span class="glow"></span>
+                    </div>
+                    <div class="who">
+                        <div class="name">Гупаловська Вікторія Анатоліївна</div>
+                        <div class="title muted">Кваліфікований психолог з досвідом індивідуальної та групової роботи</div>
+                    </div>
+                </div>
+
+                <ol class="list list--decimal">
+                    <li><strong>Встановлює контакт і довіру</strong> — створює безпечний простір.</li>
+                    <li><strong>Уточнює запит</strong> — допомагає зрозуміти, що саме турбує клієнта.</li>
+                    <li><strong>Збирає психологічний анамнез</strong> — аналізує ситуації та попередні спроби вирішення.</li>
+                    <li><strong>Пояснює природу труднощів</strong> — проводить психоедукацію.</li>
+                    <li><strong>Навчає навичкам</strong> — техніки регуляції емоцій, когнітивні стратегії, майндфулнес.</li>
+                    <li><strong>Планує подальшу роботу</strong> — визначає тривалість та формат подальших зустрічей.</li>
+                </ol>
+            </div>
+
+            <!-- Формат роботи -->
+            <div class="card">
+                <h3 class="h3 mb-12">🔸 Формат роботи</h3>
+                <ul class="list">
+                    <li>Індивідуальні, сімейні, парні або групові консультації</li>
+                    <li>Тривалість — 50–60 хвилин</li>
+                    <li>Онлайн або офлайн</li>
+                    <li>Короткостроковий або довготривалий процес</li>
+                </ul>
+
+                <div class="note">
+                    🌿 <strong>Платформа надає кваліфікованого психолога</strong> для консультації —
+                    ми допоможемо підібрати фахівця під вашу мету, запит і бюджет.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+<section  class="section"><h2>Контакти</h2>
+  <div class="card contact">
+    <div class="tel text-white"><a [href]="'tel:' + phone">+380 (95) 121 17 58</a></div>
+    <span class="pill">Viber/Telegram за номером</span></div>
+</section>

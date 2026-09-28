@@ -1,0 +1,94 @@
+/* Section theme */
+
+.text-center { text-align: center; }
+.mb-16 { margin-bottom: 16px; }
+.gap-24 { gap: 24px; }
+
+.h2 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    color: var(--text);
+    font-weight: 800;
+}
+.h3 {
+    margin: 0 0 12px;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+}
+.lead-muted {
+    max-width: 760px;
+    margin: 0 auto;
+    color: var(--muted);
+    font-size: 16px;
+}
+
+/* Profile block */
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 16px;             /* space between photo & text */
+    margin: 12px 0 18px;   /* space above/below profile */
+}
+
+.avatar {
+    position: relative;
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid #1f2a4a;
+    background: #0f1530;
+    flex-shrink: 0;
+}
+.avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 50%;
+}
+.avatar .glow {
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(110,168,254,.18), transparent 70%);
+    pointer-events: none;
+    filter: blur(6px);
+}
+
+.who .name {
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--text);
+}
+.who .title {
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+/* Lists */
+.list { margin: 0; padding-left: 18px; color: var(--text); }
+.list li { margin: 8px 0; }
+.list--decimal { list-style: decimal; }
+
+/* Info note box */
+.note {
+    margin-top: 16px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid #2a2350;
+    color: var(--text);
+}
+
+/* Grid gap override for this section */
+.consultation .grid { gap: 20px; }
+.consultation .grid.cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+/* Responsive tweaks */
+@media (max-width: 900px) {
+    .consultation .grid.cols-2 { grid-template-columns: 1fr; }
+    .profile { gap: 14px; margin-bottom: 14px; }
+    .avatar { width: 72px; height: 72px; }
+    .h2 { font-size: 24px; }
+}

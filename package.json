@@ -10,6 +10,7 @@
     "build": "pnpm -r --if-present build",
     "build:admin": "pnpm --filter @mental-clinic/admin build",
     "build:frontend": "pnpm --filter @mental-clinic/frontend build",
+    "build:sites": "pnpm --filter \"./apps/personal-websites/*\" build",
     "test": "pnpm -r --if-present test"
   },
   "devDependencies": {

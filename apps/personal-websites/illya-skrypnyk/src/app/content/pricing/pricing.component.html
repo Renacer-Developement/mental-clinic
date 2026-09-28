@@ -1,0 +1,35 @@
+<main class="container py-4" >
+  <div>
+    <h1 class="h1 m-0">Прайс‑лист</h1>
+    <p class="muted m-0 mt-2">Фізична особа‑підприємець Скрипник Ілля Євгенович</p>
+    <p class="muted m-0">КВЕД 63.99 — Надання інших інформаційних послуг, н.в.і.у.</p>
+    <p class="muted m-0">КВЕД 86.90 — Інша діяльність у сфері охорони здоров’я</p>
+  </div>
+
+
+  <section class="price-section">
+    <ol class="price-list">
+      <li class="price-item" *ngFor="let item of priceItems; index as i">
+        <div class="price-num">{{ i + 1 }}</div>
+
+        <div class="price-body">
+          <strong class="price-title d-block">{{ item.title }}</strong>
+          <div class="price-desc">{{ item.desc }}</div>
+        </div>
+
+        <!-- Пушимо праворуч на широких екранах -->
+        <div class="price-right ms-auto">
+          <span class="price-tag">{{ item.price }}</span>
+          <a class="btn btn-sm ms-2" [href]="'tel:' + phone">Замовити</a>
+        </div>
+      </li>
+    </ol>
+
+
+    <p class="muted small mt-3">
+      Усі послуги є виключно інформаційними, не є медичними чи психологічними послугами
+      та не замінюють консультації кваліфікованого психолога або лікаря.
+    </p>
+  </section>
+
+</main>

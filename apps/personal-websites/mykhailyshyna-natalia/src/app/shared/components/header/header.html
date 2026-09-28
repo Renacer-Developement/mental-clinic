@@ -1,0 +1,57 @@
+<nav class="navbar navbar-expand-lg rose-nav sticky-top" data-bs-theme="light">
+    <div class="container align-items-center">
+        <a class="navbar-brand fw-bold brand-small mb-0 rose-brand" routerLink="/">
+            Платформа ментального здоров’я
+        </a>
+
+        <!-- Burger -->
+        <button class="navbar-toggler ms-auto d-lg-none rose-toggler" type="button"
+                data-bs-toggle="offcanvas" data-bs-target="#mobileNav"
+                aria-controls="mobileNav" aria-label="Перемкнути навігацію">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Desktop nav -->
+        <div class="collapse navbar-collapse d-none d-lg-flex">
+            <ul class="navbar-nav ms-auto align-items-lg-center gap-2">
+                <li class="nav-item">
+                    <a class="nav-link pill-link"
+                       routerLink="/"
+                       routerLinkActive="active"
+                       [routerLinkActiveOptions]="{ exact: true }">Головна</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link pill-link"
+                       routerLink="/publichnyi-dogovir"
+                       routerLinkActive="active">Публічний договір</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Mobile offcanvas -->
+<div class="offcanvas offcanvas-end rose-offcanvas" tabindex="-1" id="mobileNav" aria-labelledby="mobileNavLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="mobileNavLabel">Меню</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Закрити"></button>
+    </div>
+
+    <div class="offcanvas-body">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link py-2 pill-link w-100 text-center"
+                   routerLink="/"
+                   routerLinkActive="active"
+                   [routerLinkActiveOptions]="{ exact: true }"
+                   data-bs-dismiss="offcanvas">Головна</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link py-2 pill-link w-100 text-center"
+                   routerLink="/publichnyi-dogovir"
+                   routerLinkActive="active"
+                   data-bs-dismiss="offcanvas">Публічний договір</a>
+            </li>
+        </ul>
+    </div>
+</div>

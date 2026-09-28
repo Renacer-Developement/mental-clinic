@@ -1,0 +1,106 @@
+/* Заголовок секції */
+.h1 {
+  font-size: 42px;
+  line-height: 1.15;
+  letter-spacing: .2px;
+  margin-bottom: 8px;
+}
+.h1::after {
+  content: "";
+  display: block;
+  width: 72px;
+  height: 2px;
+  margin: 14px 0 0;
+  background: linear-gradient(135deg, var(--accent, #6ea8fe), var(--accent2, #a78bfa));
+  opacity: .8;
+}
+
+/* Більше «повітря» навколо списку */
+.price-section { margin-top: 28px; }
+
+/* Список */
+.price-list { list-style: none; margin: 0; padding: 0; }
+
+/* Рядок прайсу: більше падингів + легкий фон і розділювач */
+.price-item{
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 24px 16px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.02));
+  border: 1px solid rgba(42,58,104,.35);
+  box-shadow: 0 6px 22px -18px rgba(0,0,0,.7);
+}
+.price-item + .price-item { margin-top: 14px; }
+
+/* Акуратний ховер (без «стрибків») */
+.price-item:hover{
+  transform: translateY(-1px);
+  background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025));
+  border-color: rgba(42,58,104,.55);
+  transition: background .25s ease, transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+  box-shadow: 0 10px 30px -16px rgba(0,0,0,.75);
+}
+
+/* Номер із акцентом */
+.price-num{
+  width: 40px; height: 40px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 999px; font-weight: 800;
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent, #6ea8fe), var(--accent2, #a78bfa));
+  box-shadow: 0 6px 18px -8px rgba(110,168,254,.55);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Текст */
+.price-body{ flex: 1; min-width: 0; }
+.price-title{ color: #e7edf7; font-weight: 700; letter-spacing: .2px; }
+.price-desc{ color: #93a3b8; margin-top: 6px; line-height: 1.75; }
+
+/* Правий блок: ціна + кнопка – завжди вправо на широких */
+.price-right{
+  display: flex; align-items: center; gap: 10px;
+  margin-left: auto; /* пушить вправо */
+}
+.price-tag{
+  padding: 8px 12px; border-radius: 999px; font-weight: 800;
+  background: rgba(110,168,254,.14);
+  border: 1px solid #2a3a68;
+  letter-spacing: .2px;
+}
+.btn.btn-sm{
+  padding: 8px 12px; border-radius: 12px;
+  border: 1px solid #2a3a68;
+  background: #162043; color: #fff; font-weight: 700;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.btn.btn-sm:hover{ transform: translateY(-1px); box-shadow: 0 8px 24px -10px rgba(110,168,254,.45); }
+
+/* Дисклеймер відділяємо тонкою лінією і збільшуємо відступ */
+.price-section > .muted.small{
+  margin-top: 18px !important;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(42,58,104,.5);
+}
+
+/* Адаптивність */
+@media (max-width: 768px){
+  .h1{ font-size: 34px; }
+  .price-item{ padding: 20px 14px; gap: 14px; }
+  .price-num{ width: 36px; height: 36px; }
+}
+
+@media (max-width: 576px){
+  .h1{ font-size: 28px; }
+  .price-item{ flex-wrap: wrap; }
+  /* ціна + кнопка під текст, але візуально вирівняні з ним */
+  .price-right{
+    width: 100%;
+    justify-content: flex-start;
+    margin-left: calc(36px + 14px); /* ширина .price-num + gap */
+    margin-top: 8px;
+  }
+  .price-tag{ font-weight: 700; }
+}

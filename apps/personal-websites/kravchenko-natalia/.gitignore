@@ -1,0 +1,17 @@
+# Node/JS/TS
+node_modules/
+dist/
+build/
+.out/
+.next/
+coverage/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+# Env & local
+.env
+.env.*
+# OS/IDE
+.DS_Store
+.idea/
+.vscode/

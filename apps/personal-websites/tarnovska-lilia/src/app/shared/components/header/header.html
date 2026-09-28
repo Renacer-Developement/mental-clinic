@@ -1,0 +1,49 @@
+<nav class="orchid-nav" role="navigation" aria-label="Головна навігація">
+    <div class="orchid-nav__inner">
+        <!-- Brand (col 1) -->
+        <a class="brand" routerLink="/" (click)="close()">
+            <span class="brand__dot" aria-hidden="true"></span>
+            <span>Тарновська&nbsp; Лілія</span>
+        </a>
+
+        <!-- Center links (col 2) — hidden on mobile via CSS -->
+        <div class="links" aria-label="Посилання">
+            <a class="pill"
+               routerLink="/"
+               routerLinkActive="active"
+               [routerLinkActiveOptions]="{ exact: true }">Головна</a>
+        </div>
+
+        <!-- Right (col 3): desktop CTA + mobile toggle -->
+        <div class="cta">
+            <!-- Desktop only button -->
+            <a class="btn btn--primary desktop-only" routerLink="/publichnyi-dogovir">
+                Публічний договір
+            </a>
+
+            <!-- Burger / toggle -->
+            <button class="toggle"
+                    type="button"
+                    (click)="toggle()"
+                    aria-controls="m-panel"
+                    [attr.aria-expanded]="isOpen">
+                Меню
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile panel -->
+    <div class="panel"
+         id="m-panel"
+         [class.is-open]="isOpen"
+         [attr.aria-hidden]="!isOpen"
+         (click)="close()">
+        <div class="panel__inner">
+            <a class="pill"
+               routerLink="/"
+               routerLinkActive="active"
+               [routerLinkActiveOptions]="{ exact: true }">Головна</a>
+            <a class="pill" routerLink="/publichnyi-dogovir">Публічний договір</a>
+        </div>
+    </div>
+</nav>
