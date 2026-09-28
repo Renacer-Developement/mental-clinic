@@ -1,6 +1,6 @@
 # Mental Clinic monorepo
 
-npm workspaces monorepo containing:
+[pnpm](https://pnpm.io) workspaces monorepo containing:
 
 | Workspace | Path | Stack | Dev port |
 | --- | --- | --- | --- |
@@ -10,33 +10,37 @@ npm workspaces monorepo containing:
 
 ## Setup
 
-Install everything once from the repo root (a single `package-lock.json` lives at the root):
+Install everything once from the repo root (a single `pnpm-lock.yaml` lives at the root):
 
 ```bash
-npm install
+corepack enable   # once per machine; provides the pinned pnpm version
+pnpm install
 ```
 
-Add dependencies to a specific app with `-w`:
+pnpm is used instead of npm because the apps run different Angular majors (18 and 21);
+pnpm keeps each app's dependency tree isolated, so they never resolve each other's packages.
+
+Add dependencies to a specific app with `--filter`:
 
 ```bash
-npm install <pkg> -w @mental-clinic/frontend
+pnpm add <pkg> --filter @mental-clinic/frontend
 ```
 
 ## Development
 
 ```bash
-npm run dev            # all three apps in parallel
-npm run dev:backend
-npm run dev:frontend
-npm run dev:admin
+pnpm dev            # all three apps in parallel
+pnpm dev:backend
+pnpm dev:frontend
+pnpm dev:admin
 ```
 
 ## Build
 
 ```bash
-npm run build          # every workspace
-npm run build:frontend
-npm run build:admin
+pnpm build          # every workspace
+pnpm build:frontend
+pnpm build:admin
 ```
 
 ## Deployment

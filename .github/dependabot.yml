@@ -1,6 +1,6 @@
 version: 2
 updates:
-  # npm workspaces share the root lockfile, so one entry covers all apps.
+  # pnpm workspace shares the root pnpm-lock.yaml, so one entry covers all apps.
   - package-ecosystem: "npm"
     directory: "/"
     schedule:

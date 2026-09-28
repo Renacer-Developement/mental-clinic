@@ -3,7 +3,7 @@ services:
     name: mental-clinic-backend
     env: node
     rootDir: apps/backend
-    buildCommand: npm install
+    buildCommand: corepack enable && pnpm install --frozen-lockfile --prod
     startCommand: node server.js
     envVars:
       - key: NODE_ENV
@@ -17,5 +17,5 @@ services:
     name: mental-clinic-fe
     env: node
     rootDir: apps/frontend
-    buildCommand: npm install && npm run build
-    startCommand: npm run serve:ssr:mentalClinicFe
+    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm run build
+    startCommand: pnpm run serve:ssr:mentalClinicFe

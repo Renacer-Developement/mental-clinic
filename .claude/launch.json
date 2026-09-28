@@ -3,19 +3,19 @@
   "configurations": [
     {
       "name": "frontend",
-      "runtimeExecutable": "npm",
+      "runtimeExecutable": "pnpm",
       "runtimeArgs": ["run", "dev:frontend"],
       "port": 4200
     },
     {
       "name": "admin",
-      "runtimeExecutable": "npm",
+      "runtimeExecutable": "pnpm",
       "runtimeArgs": ["run", "dev:admin"],
       "port": 4201
     },
     {
       "name": "backend",
-      "runtimeExecutable": "npm",
+      "runtimeExecutable": "pnpm",
       "runtimeArgs": ["run", "dev:backend"],
       "port": 10000
     }

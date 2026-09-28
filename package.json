@@ -2,21 +2,33 @@
   "name": "mental-clinic",
   "private": true,
   "version": "1.0.0",
-  "workspaces": [
-    "apps/*"
-  ],
   "scripts": {
-    "dev": "concurrently -n backend,admin,frontend -c blue,magenta,green \"npm:dev:backend\" \"npm:dev:admin\" \"npm:dev:frontend\"",
-    "dev:backend": "npm run start -w @mental-clinic/backend",
-    "dev:admin": "npm run start -w @mental-clinic/admin -- --port 4201",
-    "dev:frontend": "npm run start -w @mental-clinic/frontend -- --port 4200",
-    "build": "npm run build --workspaces --if-present",
-    "build:admin": "npm run build -w @mental-clinic/admin",
-    "build:frontend": "npm run build -w @mental-clinic/frontend",
-    "test": "npm run test --workspaces --if-present"
+    "dev": "concurrently -n backend,admin,frontend -c blue,magenta,green \"pnpm:dev:backend\" \"pnpm:dev:admin\" \"pnpm:dev:frontend\"",
+    "dev:backend": "pnpm --filter @mental-clinic/backend start",
+    "dev:admin": "pnpm --filter @mental-clinic/admin start --port 4201",
+    "dev:frontend": "pnpm --filter @mental-clinic/frontend start --port 4200",
+    "build": "pnpm -r --if-present build",
+    "build:admin": "pnpm --filter @mental-clinic/admin build",
+    "build:frontend": "pnpm --filter @mental-clinic/frontend build",
+    "test": "pnpm -r --if-present test"
   },
   "devDependencies": {
     "concurrently": "^9.2.1"
   },
-  "packageManager": "npm@10.9.2"
+  "packageManager": "pnpm@10.34.5",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@parcel/watcher",
+      "esbuild",
+      "lmdb",
+      "msgpackr-extract"
+    ],
+    "packageExtensions": {
+      "@ngx-env/builder@18": {
+        "peerDependencies": {
+          "@angular-devkit/architect": "*"
+        }
+      }
+    }
+  }
 }
