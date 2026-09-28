@@ -1,4 +1,5 @@
 {
+  "outputDirectory": "dist/mental-clinic-fe/browser",
   "headers": [
     {
       "source": "/(.*)",
