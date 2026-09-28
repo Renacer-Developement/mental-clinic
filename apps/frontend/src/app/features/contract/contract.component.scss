@@ -1,0 +1,187 @@
+@use "../../../assets/css/coloristics" as *;
+
+$line-color: #ddd;
+$text-color: #555;
+
+// ── Layout ────────────────────────────────────────────────────────────────────
+
+.content-wrapper {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+  line-height: 1.8;
+  font-family: "Inter", sans-serif;
+}
+
+// ── Loading / error ───────────────────────────────────────────────────────────
+
+.contract-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  color: #8a8fa8;
+  padding: 4rem 0;
+  font-size: 0.95rem;
+}
+
+.contract-loading__spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #d1d5db;
+  border-top-color: $primary-color;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.contract-error {
+  text-align: center;
+  color: #e57373;
+  padding: 3rem 0;
+}
+
+.contract-404 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem 1rem;
+  text-align: center;
+
+  &__code {
+    font-size: 7rem;
+    font-weight: 800;
+    line-height: 1;
+    color: $primary-color;
+    opacity: 0.15;
+    letter-spacing: -4px;
+  }
+
+  &__title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: $heading-color;
+    margin: 0.5rem 0 1rem;
+  }
+
+  &__text {
+    font-size: 1rem;
+    color: #6b7280;
+    margin-bottom: 2rem;
+  }
+
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 28px;
+    background: $primary-color;
+    color: #fff;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: opacity 0.2s;
+
+    &:hover { opacity: 0.85; }
+  }
+}
+
+// ── Dynamic HTML from API — ::ng-deep pierces Angular's view encapsulation ────
+
+:host ::ng-deep .contract-body {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: $text-color;
+
+  // Quill alignment classes
+  .ql-align-center { text-align: center; }
+  .ql-align-right  { text-align: right; }
+  .ql-align-justify { text-align: left; } // override justify → left to avoid &nbsp; gaps
+
+  h1, h2, h3 {
+    color: $heading-color;
+    text-align: center;
+  }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin: 0 0 1rem;
+
+    &::after {
+      content: "";
+      display: block;
+      width: 60px;
+      height: 2px;
+      background: $line-color;
+      margin: 0.5rem auto 0;
+    }
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin: 2rem 0 0.75rem;
+  }
+
+  h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.5rem;
+    text-align: left;
+  }
+
+  p {
+    margin: 0 0 1.25rem;
+  }
+
+  ul, ol {
+    padding-left: 1.5rem;
+    margin: 0.75rem 0;
+
+    li { margin-bottom: 0.4rem; }
+  }
+
+  blockquote {
+    border-left: 3px solid $line-color;
+    margin: 1rem 0;
+    padding: 0.5rem 1rem;
+    color: #777;
+    font-style: italic;
+  }
+
+  strong { color: $heading-color; }
+
+  a {
+    color: $primary-color;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    &:hover { color: darken($primary-color, 10%); }
+  }
+
+  .notice {
+    background: #fff8e1;
+    border-left: 4px solid #ffc107;
+    border-radius: 6px;
+    padding: 1rem 1.25rem;
+    margin: 1.5rem 0;
+
+    p { margin: 0; }
+  }
+}
+
+// ── Responsive ────────────────────────────────────────────────────────────────
+
+@media (max-width: 768px) {
+  .content-wrapper { padding: 1.5rem; }
+
+  :host ::ng-deep .contract-body {
+    h1 { font-size: 1.6rem; }
+    h2 { font-size: 1.25rem; }
+    p  { font-size: 0.95rem; }
+  }
+}

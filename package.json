@@ -6,10 +6,17 @@
     "apps/*"
   ],
   "scripts": {
-    "dev": "npm run dev --workspaces --if-present",
+    "dev": "concurrently -n backend,admin,frontend -c blue,magenta,green \"npm:dev:backend\" \"npm:dev:admin\" \"npm:dev:frontend\"",
+    "dev:backend": "npm run start -w @mental-clinic/backend",
+    "dev:admin": "npm run start -w @mental-clinic/admin -- --port 4201",
+    "dev:frontend": "npm run start -w @mental-clinic/frontend -- --port 4200",
     "build": "npm run build --workspaces --if-present",
-    "start": "npm run start --workspaces --if-present",
+    "build:admin": "npm run build -w @mental-clinic/admin",
+    "build:frontend": "npm run build -w @mental-clinic/frontend",
     "test": "npm run test --workspaces --if-present"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
   },
   "packageManager": "npm@10.9.2"
 }

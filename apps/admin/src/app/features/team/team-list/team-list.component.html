@@ -1,0 +1,201 @@
+<div class="page">
+  <p-toast />
+
+  <div class="page-header">
+    <h2>Команда</h2>
+    <p-button class="add-desktop" label="Додати" icon="pi pi-plus" (onClick)="create()" />
+  </div>
+
+  <!-- Mobile expandable cards -->
+  <div class="mobile-cards">
+    @if (loading()) {
+      @for (r of [1,2,3]; track r) {
+        <div class="mobile-card">
+          <div class="mobile-card__header">
+            <p-skeleton shape="circle" size="40px" />
+            <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+              <p-skeleton height="1rem" width="130px" />
+              <p-skeleton height="0.8rem" width="80px" />
+            </div>
+            <p-skeleton height="1.2rem" width="70px" />
+          </div>
+        </div>
+      }
+    } @else if (members().length === 0) {
+      <div class="empty-mobile">Членів команди ще немає</div>
+    } @else {
+      @for (m of members(); track m._id) {
+        <div class="mobile-card" [class.is-hidden]="!m.isActive">
+          <div class="mobile-card__header" (click)="toggleExpand(m._id)">
+            @if (m.photo) {
+              <img [src]="m.photo" [alt]="m.name" class="mobile-card__photo" [class.faded]="!m.isActive" />
+            } @else {
+              <div class="mobile-card__initials" [class.faded]="!m.isActive">{{ m.name[0] }}</div>
+            }
+            <div class="mobile-card__meta">
+              <span class="mobile-card__name" [class.name-hidden]="!m.isActive">{{ m.name }}</span>
+              <span class="mobile-card__role">{{ m.role }}</span>
+              <span class="status-badge" [class.status-active]="m.isActive" [class.status-hidden]="!m.isActive">
+                {{ m.isActive ? 'Активний' : 'Приховано' }}
+              </span>
+            </div>
+            <i class="pi mobile-card__chevron"
+               [class.pi-chevron-down]="expandedId() !== m._id"
+               [class.pi-chevron-up]="expandedId() === m._id"></i>
+          </div>
+          @if (expandedId() === m._id) {
+            <div class="mobile-card__body">
+              @if (m.experience) {
+                <div class="mobile-card__row">
+                  <span class="mobile-card__label">Досвід</span>
+                  <span>{{ m.experience }}</span>
+                </div>
+              }
+              @if (m.email) {
+                <div class="mobile-card__row">
+                  <span class="mobile-card__label">Email</span>
+                  <span>{{ m.email }}</span>
+                </div>
+              }
+              <div class="mobile-card__row">
+                <span class="mobile-card__label">Порядок</span>
+                <input class="order-input" type="number" min="0"
+                       [value]="m.order"
+                       (blur)="saveOrder(m, $event)"
+                       (keyup.enter)="saveOrder(m, $event); $any($event.target).blur()" />
+              </div>
+              <div class="mobile-card__actions">
+                <p-button size="small" styleClass="w-full"
+                          [label]="m.isActive ? 'Приховати' : 'Показати'"
+                          [icon]="m.isActive ? 'pi pi-eye-slash' : 'pi pi-eye'"
+                          (onClick)="toggleVisibility(m)" />
+                <p-button size="small" styleClass="w-full" label="Редагувати" icon="pi pi-pencil"
+                          (onClick)="edit(m._id)" />
+                <p-button size="small" styleClass="w-full" label="Видалити" icon="pi pi-trash"
+                          (onClick)="promptDelete(m)" />
+              </div>
+            </div>
+          }
+        </div>
+      }
+    }
+  </div>
+
+  <!-- Fixed bottom bar (mobile only) -->
+  <div class="add-mobile-bar">
+    <p-button label="Додати учасника" icon="pi pi-plus" styleClass="w-full" (onClick)="create()" />
+  </div>
+
+  <div class="card">
+    <p-table [value]="members()" [loading]="loading()" styleClass="p-datatable-sm">
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width:60px"></th>
+          <th>Ім'я</th>
+          <th>Посада</th>
+          <th>Досвід</th>
+          <th>Email</th>
+          <th style="width:110px">Статус</th>
+          <th style="width:90px" pTooltip="Порядок відображення на сайті" tooltipPosition="top">Порядок</th>
+          <th style="width:130px"></th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="loadingbody">
+        @for (r of [1,2,3,4,5,6,7,8]; track r) {
+          <tr>
+            <td><p-skeleton shape="circle" size="36px" /></td>
+            <td><p-skeleton height="1.4rem" /></td>
+            <td><p-skeleton height="1.4rem" width="110px" /></td>
+            <td><p-skeleton height="1.4rem" width="60px" /></td>
+            <td><p-skeleton height="1.4rem" width="150px" /></td>
+            <td><p-skeleton height="1.4rem" width="80px" /></td>
+            <td><p-skeleton height="1.4rem" width="50px" /></td>
+            <td><p-skeleton height="1.4rem" width="100px" /></td>
+          </tr>
+        }
+      </ng-template>
+
+      <ng-template pTemplate="body" let-m>
+        <tr [class.row-hidden]="!m.isActive">
+          <td>
+            @if (m.photo) {
+              <img [src]="m.photo" [alt]="m.name" class="member-avatar" [class.avatar-hidden]="!m.isActive" />
+            } @else {
+              <div class="member-initials" [class.initials-hidden]="!m.isActive">{{ m.name[0] }}</div>
+            }
+          </td>
+          <td>
+            <span class="member-name" [class.name-hidden]="!m.isActive">{{ m.name }}</span>
+          </td>
+          <td>{{ m.role }}</td>
+          <td>{{ m.experience || '—' }}</td>
+          <td>{{ m.email || '—' }}</td>
+          <td>
+            <span class="status-badge" [class.status-active]="m.isActive" [class.status-hidden]="!m.isActive">
+              {{ m.isActive ? 'Активний' : 'Приховано' }}
+            </span>
+          </td>
+          <td>
+            <input class="order-input" type="number" min="0"
+                   [value]="m.order"
+                   (blur)="saveOrder(m, $event)"
+                   (keyup.enter)="saveOrder(m, $event); $any($event.target).blur()" />
+          </td>
+          <td class="actions">
+            <button class="action-btn"
+                    [class.btn-hide]="m.isActive"
+                    [class.btn-show]="!m.isActive"
+                    [pTooltip]="m.isActive ? 'Приховати з сайту' : 'Показати на сайті'"
+                    tooltipPosition="top"
+                    (click)="toggleVisibility(m)">
+              <i [class]="'pi ' + (m.isActive ? 'pi-eye-slash' : 'pi-eye')"></i>
+            </button>
+            <button class="action-btn btn-edit"
+                    pTooltip="Редагувати" tooltipPosition="top"
+                    (click)="edit(m._id)">
+              <i class="pi pi-pencil"></i>
+            </button>
+            <button class="action-btn btn-delete"
+                    pTooltip="Видалити" tooltipPosition="top"
+                    (click)="promptDelete(m)">
+              <i class="pi pi-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr><td colspan="8" class="empty-row">Членів команди ще немає</td></tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<!-- Delete confirm modal -->
+@if (deleteVisible()) {
+  <div class="confirm-overlay" (click)="!deleteLoading() && deleteVisible.set(false)">
+    <div class="confirm-card" (click)="$event.stopPropagation()">
+
+      <div class="confirm-icon-wrap">
+        <i class="pi pi-trash"></i>
+      </div>
+
+      <h3 class="confirm-title">Видалити учасника?</h3>
+      <p class="confirm-text">
+        Профіль <strong>{{ deleteTarget()?.name }}</strong> буде видалено назавжди.
+      </p>
+
+      <div class="confirm-actions">
+        <button class="cta-btn cta-cancel" [disabled]="deleteLoading()" (click)="deleteVisible.set(false)">
+          Скасувати
+        </button>
+        <button class="cta-btn cta-danger" [disabled]="deleteLoading()" (click)="confirmDelete()">
+          <i [class]="deleteLoading() ? 'pi pi-spinner pi-spin' : 'pi pi-trash'"></i>
+          Видалити
+        </button>
+      </div>
+
+    </div>
+  </div>
+}

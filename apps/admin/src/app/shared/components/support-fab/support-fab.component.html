@@ -1,0 +1,58 @@
+@if (step() !== 'closed') {
+  <div class="fab-panel">
+
+    <div class="fab-header">
+      <div class="fab-header-left">
+        <div class="fab-avatar"><i class="pi pi-headphones"></i></div>
+        <div>
+          <div class="fab-title">Тех. підтримка</div>
+          <div class="fab-sub">Розробник відповість у Telegram</div>
+        </div>
+      </div>
+      <button class="fab-close-btn" (click)="close()">
+        <i class="pi pi-times"></i>
+      </button>
+    </div>
+
+    @if (step() === 'form') {
+      <div class="fab-body">
+        <div class="fab-hint">
+          <i class="pi pi-info-circle"></i>
+          Опишіть проблему або запитання — повідомлення надійде розробнику через Telegram
+        </div>
+        <textarea
+          [(ngModel)]="message"
+          rows="4"
+          placeholder="Наприклад: не працює завантаження зображень…"
+          class="fab-textarea"
+        ></textarea>
+        @if (error()) {
+          <div class="fab-error">{{ error() }}</div>
+        }
+      </div>
+      <div class="fab-footer">
+        <button class="fab-send-btn" (click)="send()" [disabled]="sending()">
+          @if (sending()) {
+            <i class="pi pi-spin pi-spinner"></i> Надсилання…
+          } @else {
+            <i class="pi pi-telegram"></i> Надіслати розробнику
+          }
+        </button>
+        <div class="fab-tg-note">
+          <i class="pi pi-lock"></i> Надійде в Telegram &#64;denysdatsiv
+        </div>
+      </div>
+    }
+
+    @if (step() === 'success') {
+      <div class="fab-success">
+        <div class="success-icon"><i class="pi pi-check-circle"></i></div>
+        <div class="success-title">Надіслано!</div>
+        <div class="success-text">Розробник отримав ваше повідомлення і зв'яжеться з вами найближчим часом.</div>
+        <button class="fab-again-btn" (click)="again()">Ще одне повідомлення</button>
+      </div>
+    }
+
+  </div>
+}
+

@@ -1,0 +1,162 @@
+@use "sass:color";
+@use "../../../assets/css/coloristics" as *;
+
+.landing-outer,
+.landing-wrapper {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+// ── Contract section ──────────────────────────────────────────────────────────
+
+.contract-section {
+  background: $section-bg;
+  padding: 5rem 0 0;
+}
+
+.contract-inner {
+  max-width: 1450px;
+  margin: 0 auto;
+  padding: 0 6%;
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column-reverse;
+    gap: 2.5rem;
+  }
+}
+
+// ── Content (left) ────────────────────────────────────────────────────────────
+
+.contract-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.contract-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: $primary-color;
+  background: rgba($primary-color, 0.08);
+  border: 1px solid rgba($primary-color, 0.2);
+  padding: 0.22rem 0.8rem;
+  border-radius: 100px;
+  width: fit-content;
+}
+
+.contract-heading {
+  font-size: clamp(1.35rem, 2vw, 1.8rem);
+  font-weight: 800;
+  color: #003168;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.contract-text {
+  font-size: 0.95rem;
+  color: rgba($heading-color, 0.62);
+  line-height: 1.7;
+  margin: 0;
+  max-width: 480px;
+}
+
+.contract-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.72rem 1.5rem;
+  border-radius: 12px;
+  background: $primary-color;
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+  width: fit-content;
+  box-shadow: 0 4px 18px rgba($primary-color, 0.3);
+  transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+  margin-top: 0.25rem;
+
+  svg {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.2s;
+  }
+
+  &:hover {
+    background: color.adjust($primary-color, $lightness: -8%);
+    box-shadow: 0 8px 28px rgba($primary-color, 0.42);
+    transform: translateY(-2px);
+
+    svg { transform: translateX(3px); }
+  }
+
+  &:active { transform: translateY(0); }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+// ── Illustration (right) ──────────────────────────────────────────────────────
+
+.contract-illustration {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $primary-color;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+}
+
+.contract-illus-svg {
+  width: 220px;
+  height: auto;
+  filter: drop-shadow(0 12px 32px rgba($primary-color, 0.18));
+
+  @media (max-width: 768px) {
+    width: 160px;
+  }
+}
+
+// ── Divider ───────────────────────────────────────────────────────────────────
+
+.contract-divider {
+  padding: 0 6%;
+  margin: 4rem auto 0;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.contract-divider__line {
+  flex: 1;
+  height: 1.5px;
+  background: linear-gradient(to right, transparent, rgba($primary-color, 0.4), transparent);
+}
+
+.contract-divider__icon {
+  flex-shrink: 0;
+  color: $primary-color;
+  display: flex;
+  align-items: center;
+
+  svg {
+    width: 10px;
+    height: 10px;
+    opacity: 0.65;
+  }
+}

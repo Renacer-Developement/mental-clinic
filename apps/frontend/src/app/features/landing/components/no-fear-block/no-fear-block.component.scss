@@ -1,0 +1,82 @@
+@use "../../../../../assets/css/coloristics" as *;
+
+.no-fear-section {
+  background: $section-seconder-bg;
+  padding: 5rem 0 4rem;
+}
+
+.no-fear-inner {
+  max-width: 1450px;
+  margin: 0 auto;
+  padding: 0 6%;
+}
+
+.no-fear-heading {
+  font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+  font-weight: 900;
+  color: $heading-color;
+  margin: 0 0 2rem;
+  line-height: 1.2;
+}
+
+.fact-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.fact-row {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  background: #ffffff;
+  border: 1px solid rgba($heading-color, 0.08);
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  transition: background 0.22s ease, box-shadow 0.22s ease;
+
+  &:hover {
+    background: #ffffff;
+    box-shadow: 0 4px 20px rgba($heading-color, 0.08);
+  }
+
+  @media (max-width: 700px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+}
+
+.fact-title {
+  flex: 0 0 260px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: $heading-color;
+  line-height: 1.35;
+
+  @media (max-width: 700px) {
+    flex: none;
+  }
+}
+
+.fact-divider {
+  width: 1px;
+  height: 40px;
+  background: rgba($heading-color, 0.1);
+  flex-shrink: 0;
+
+  @media (max-width: 700px) {
+    display: none;
+  }
+}
+
+.fact-text {
+  flex: 1;
+  font-size: 0.92rem;
+  color: #5a6a8a;
+  line-height: 1.7;
+  margin: 0;
+}

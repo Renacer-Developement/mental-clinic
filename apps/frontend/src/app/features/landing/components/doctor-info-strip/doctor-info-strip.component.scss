@@ -1,0 +1,104 @@
+@use "../../../../../assets/css/coloristics" as *;
+
+.info-strip {
+  background: $section-bg;
+  padding: 2.75rem 0;
+}
+
+.info-strip__inner {
+  max-width: 1450px;
+  margin: 0 auto;
+  padding: 0 6%;
+  display: flex;
+  align-items: center;
+  gap: 3.5rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+}
+
+.info-strip__left {
+  flex: 0 0 auto;
+  min-width: 220px;
+}
+
+.strip-name {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: $primary-color;
+  margin: 0 0 0.5rem;
+}
+
+.strip-title {
+  font-size: clamp(1.25rem, 2vw, 1.6rem);
+  font-weight: 700;
+  color: $heading-color;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.strip-divider {
+  width: 2px;
+  height: 72px;
+  background: rgba($heading-color, 0.15);
+  flex-shrink: 0;
+  border-radius: 2px;
+
+  @media (max-width: 768px) {
+    width: 40px;
+    height: 2px;
+  }
+}
+
+.info-strip__right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.credentials-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cred-item {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #3a4a6a;
+  white-space: nowrap;
+}
+
+.cred-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: $primary-color;
+  flex-shrink: 0;
+}
+
+.strip-desc {
+  font-size: 0.86rem;
+  color: #5a6a8a;
+  line-height: 1.7;
+  margin: 0;
+  max-width: 640px;
+
+  strong {
+    color: $heading-color;
+    font-weight: 600;
+  }
+}

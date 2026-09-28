@@ -1,0 +1,314 @@
+<div class="page">
+  <p-toast />
+
+  <h2 class="page-title">Налаштування акаунту</h2>
+
+  <div class="layout">
+
+    <!-- Profile card -->
+    <div class="card profile-card">
+      <div class="avatar-large">{{ (user()?.name ?? 'A')[0].toUpperCase() }}</div>
+      <div class="profile-info">
+        <h3>{{ user()?.name }}</h3>
+        <span class="role-badge">{{ user()?.role === 'admin' ? 'Адміністратор' : user()?.role === 'doctor' ? 'Лікар' : 'Користувач' }}</span>
+        <p class="profile-email"><i class="pi pi-envelope"></i> {{ user()?.email }}</p>
+      </div>
+    </div>
+
+    <!-- Change password -->
+    <div class="card">
+      <h3 class="card-title">
+        <i class="pi pi-lock"></i>
+        Зміна паролю
+      </h3>
+
+      <p class="card-desc">
+        Використовуйте надійний пароль, який ви не використовуєте в інших сервісах.
+        Мінімум 6 символів.
+      </p>
+
+      <p-divider />
+
+      @if (pwdError()) {
+        <p-message severity="error" [text]="pwdError()" styleClass="w-full mb-4" />
+      }
+
+      <div class="fields">
+        <div class="field">
+          <label for="cur">Поточний пароль</label>
+          <p-password id="cur" [(ngModel)]="currentPassword"
+                      [feedback]="false" [toggleMask]="true"
+                      styleClass="w-full" inputStyleClass="w-full"
+                      placeholder="Введіть поточний пароль" />
+        </div>
+
+        <div class="field">
+          <label for="newp">Новий пароль</label>
+          <p-password id="newp" [(ngModel)]="newPassword"
+                      [feedback]="true" [toggleMask]="true"
+                      styleClass="w-full" inputStyleClass="w-full"
+                      placeholder="Мінімум 6 символів"
+                      promptLabel="Введіть пароль"
+                      weakLabel="Слабкий"
+                      mediumLabel="Середній"
+                      strongLabel="Надійний" />
+        </div>
+
+        <div class="field">
+          <label for="conf">Підтвердіть новий пароль</label>
+          <p-password id="conf" [(ngModel)]="confirmPassword"
+                      [feedback]="false" [toggleMask]="true"
+                      styleClass="w-full" inputStyleClass="w-full"
+                      placeholder="Повторіть новий пароль" />
+        </div>
+      </div>
+
+      <div class="form-footer">
+        <p-button label="Змінити пароль" icon="pi pi-check"
+                  [loading]="savingPwd()" (onClick)="changePassword()" />
+      </div>
+    </div>
+
+    <!-- Contact details -->
+    <div class="card">
+      <h3 class="card-title"><i class="pi pi-id-card"></i> Контактні дані</h3>
+      <p class="card-desc">Для зміни email або телефону потрібно підтвердити дію кодом із поточної пошти.</p>
+      <p-divider />
+
+      <!-- ── Email ── -->
+      <div class="contact-section">
+        <div class="contact-header">
+          <span class="contact-label"><i class="pi pi-envelope"></i> Email</span>
+          <span class="contact-current">{{ user()?.email }}</span>
+        </div>
+
+        @if (emailStep() === 'form') {
+          @if (emailError()) {
+            <div class="contact-error"><i class="pi pi-exclamation-triangle"></i> {{ emailError() }}</div>
+          }
+          <div class="contact-input-row">
+            <input pInputText [(ngModel)]="newEmail" class="w-full"
+                   placeholder="Новий email" (ngModelChange)="emailError.set('')" />
+            <div class="send-btn-row">
+              <p-button label="Надіслати код" icon="pi pi-send" size="small"
+                        [loading]="emailLoading()" (onClick)="requestEmailChange()" />
+            </div>
+          </div>
+
+        } @else {
+          <div class="otp-notice">
+            <i class="pi pi-envelope"></i>
+            <span>Код надіслано на <strong>{{ emailSentTo }}</strong></span>
+          </div>
+          @if (emailError()) {
+            <div class="contact-error"><i class="pi pi-exclamation-triangle"></i> {{ emailError() }}</div>
+          }
+          <div class="otp-row">
+            <p-inputotp [(ngModel)]="emailOtp" [length]="6" [integerOnly]="true"
+                        (ngModelChange)="emailError.set('')" />
+          </div>
+          <div class="otp-actions">
+            <p-button label="Підтвердити" icon="pi pi-check" size="small"
+                      [loading]="emailLoading()" (onClick)="confirmEmailChange()" />
+            @if (emailCountdown() > 0) {
+              <span class="resend-hint">Надіслати знову через {{ emailCountdown() }} сек.</span>
+            } @else {
+              <p-button label="Надіслати знову" icon="pi pi-refresh" size="small"
+                        severity="secondary" [loading]="emailLoading()" (onClick)="resendEmailOtp()" />
+            }
+            <button class="cancel-btn" (click)="resetEmailForm()">Скасувати</button>
+          </div>
+        }
+      </div>
+
+      <p-divider />
+
+      <!-- ── Phone ── -->
+      <div class="contact-section">
+        <div class="contact-header">
+          <span class="contact-label"><i class="pi pi-phone"></i> Телефон</span>
+          <span class="contact-current">{{ user()?.phone || 'Не вказано' }}</span>
+        </div>
+
+        @if (phoneStep() === 'form') {
+          @if (phoneError()) {
+            <div class="contact-error"><i class="pi pi-exclamation-triangle"></i> {{ phoneError() }}</div>
+          }
+          <div class="contact-input-row">
+            <input pInputText [(ngModel)]="newPhone" class="w-full"
+                   placeholder="+380..." (ngModelChange)="phoneError.set('')" />
+            <div class="send-btn-row">
+              <p-button label="Надіслати код" icon="pi pi-send" size="small"
+                        [loading]="phoneLoading()" (onClick)="requestPhoneChange()" />
+            </div>
+          </div>
+
+        } @else {
+          <div class="otp-notice">
+            <i class="pi pi-envelope"></i>
+            <span>Код надіслано на пошту <strong>{{ phoneSentTo }}</strong></span>
+          </div>
+          @if (phoneError()) {
+            <div class="contact-error"><i class="pi pi-exclamation-triangle"></i> {{ phoneError() }}</div>
+          }
+          <div class="otp-row">
+            <p-inputotp [(ngModel)]="phoneOtp" [length]="6" [integerOnly]="true"
+                        (ngModelChange)="phoneError.set('')" />
+          </div>
+          <div class="otp-actions">
+            <p-button label="Підтвердити" icon="pi pi-check" size="small"
+                      [loading]="phoneLoading()" (onClick)="confirmPhoneChange()" />
+            @if (phoneCountdown() > 0) {
+              <span class="resend-hint">Надіслати знову через {{ phoneCountdown() }} сек.</span>
+            } @else {
+              <p-button label="Надіслати знову" icon="pi pi-refresh" size="small"
+                        severity="secondary" [loading]="phoneLoading()" (onClick)="resendPhoneOtp()" />
+            }
+            <button class="cancel-btn" (click)="resetPhoneForm()">Скасувати</button>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Doctor profile (visible only to doctors) -->
+    @if (user()?.role === 'doctor') {
+      <div class="card">
+        <h3 class="card-title"><i class="pi pi-user-edit"></i> Профіль лікаря</h3>
+        <p class="card-desc">Ця інформація відображається на публічному сайті клініки.</p>
+        <p-divider />
+
+        @if (profileLoading()) {
+          <div style="display:flex;flex-direction:column;gap:12px">
+            @for (r of [1,2,3,4]; track r) {
+              <p-skeleton height="2.4rem" />
+            }
+          </div>
+        } @else if (!doctorProfile()) {
+          <p-message severity="warn" text="Профіль лікаря ще не створено. Зверніться до адміністратора." styleClass="w-full" />
+        } @else {
+          @if (profileError()) {
+            <p-message severity="error" [text]="profileError()" styleClass="w-full mb-3" />
+          }
+          <div class="fields">
+            <div class="field">
+              <label>Посада / спеціальність</label>
+              <input pInputText [(ngModel)]="profile.role" class="w-full" placeholder="Психолог, Психіатр..." />
+            </div>
+            <div class="field">
+              <label>Досвід роботи</label>
+              <input pInputText [(ngModel)]="profile.experience" class="w-full" placeholder="5 років практики" />
+            </div>
+            <div class="field">
+              <label>Спеціалізації <span class="hint">(через кому)</span></label>
+              <input pInputText [(ngModel)]="specializationsText" class="w-full"
+                     placeholder="Тривожність, Депресія, КПТ" />
+            </div>
+            <div class="field">
+              <label>Біографія</label>
+              <textarea pTextarea [(ngModel)]="profile.bio" rows="5" class="w-full"
+                        placeholder="Розкажіть про себе..."></textarea>
+            </div>
+            <div class="field">
+              <label>Освіта <span class="hint">(кожен пункт з нового рядка)</span></label>
+              <textarea pTextarea [(ngModel)]="educationText" rows="3" class="w-full"
+                        placeholder="КНУ ім. Шевченка, 2015&#10;Курс КПТ, 2018"></textarea>
+            </div>
+            <div class="field">
+              <label>Фото (URL)</label>
+              <input pInputText [(ngModel)]="profile.photo" class="w-full" placeholder="https://..." />
+            </div>
+          </div>
+          <div class="form-footer">
+            <p-button label="Зберегти профіль" icon="pi pi-check"
+                      [loading]="savingProfile()" (onClick)="saveProfile()" />
+          </div>
+        }
+      </div>
+    }
+
+    <!-- 2FA toggle -->
+    <div class="card">
+      <h3 class="card-title"><i class="pi pi-shield"></i> Двофакторна автентифікація</h3>
+      <p class="card-desc">Якщо увімкнено — при кожному вході надсилається код підтвердження на email.</p>
+      <p-divider />
+      <div class="twofa-row">
+        <div class="twofa-info">
+          <span class="twofa-status" [class.twofa-on]="twoFAEnabled()" [class.twofa-off]="!twoFAEnabled()">
+            <i [class]="'pi ' + (twoFAEnabled() ? 'pi-lock' : 'pi-lock-open')"></i>
+            {{ twoFAEnabled() ? 'Увімкнено' : 'Вимкнено' }}
+          </span>
+          <span class="twofa-hint">
+            {{ twoFAEnabled()
+              ? 'Ваш акаунт захищено двоетапною перевіркою.'
+              : 'Вхід без підтвердження — менш безпечно.' }}
+          </span>
+        </div>
+        <p-toggleswitch [ngModel]="twoFAEnabled()"
+                        [disabled]="togglingTwoFA()"
+                        (ngModelChange)="toggle2FA($event)" />
+      </div>
+    </div>
+
+    <!-- Active sessions -->
+    <div class="card">
+      <div class="sessions-header">
+        <div>
+          <h3 class="card-title"><i class="pi pi-desktop"></i> Активні сесії</h3>
+          <p class="card-desc">Пристрої, на яких зараз відкрито ваш акаунт.</p>
+        </div>
+        @if (sessions().length > 1) {
+          <p-button label="Завершити всі інші" icon="pi pi-sign-out" severity="danger" size="small"
+                    [outlined]="true" [loading]="revokingAll()" (onClick)="revokeAllSessions()" />
+        }
+      </div>
+      <p-divider />
+
+      @if (sessionsLoading()) {
+        <div style="display:flex;flex-direction:column;gap:10px">
+          @for (i of [1,2,3]; track i) { <p-skeleton height="56px" borderRadius="10px" /> }
+        </div>
+      } @else if (!sessions().length) {
+        <p class="no-sessions">Немає активних сесій</p>
+      } @else {
+        <div class="sessions-list">
+          @for (s of sessions(); track s._id) {
+            <div class="session-item" [class.session-current]="s._id === currentSessionId()">
+              <div class="session-icon">
+                <i [class]="'pi ' + parseDevice(s.userAgent).icon"></i>
+              </div>
+              <div class="session-info">
+                <span class="session-device">
+                  {{ parseDevice(s.userAgent).label }}
+                  @if (s._id === currentSessionId()) {
+                    <span class="current-badge">Поточна</span>
+                  }
+                </span>
+                <span class="session-meta">
+                  {{ s.ip }} · Остання активність {{ s.lastSeen | date:'dd.MM.yyyy HH:mm' }}
+                </span>
+              </div>
+              @if (s._id !== currentSessionId()) {
+                <p-button icon="pi pi-times" severity="danger" [text]="true" size="small"
+                          [loading]="revokingId() === s._id"
+                          (onClick)="revokeSession(s._id)" />
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Security tips -->
+    <div class="card tips-card">
+      <h3 class="card-title"><i class="pi pi-shield"></i> Поради з безпеки</h3>
+      <ul class="tips-list">
+        <li><i class="pi pi-check-circle"></i> Використовуйте унікальний пароль для цього акаунту</li>
+        <li><i class="pi pi-check-circle"></i> Пароль має містити букви, цифри та символи</li>
+        <li><i class="pi pi-check-circle"></i> Не передавайте пароль третім особам</li>
+        <li><i class="pi pi-check-circle"></i> Змінюйте пароль кожні 3–6 місяців</li>
+        <li><i class="pi pi-info-circle"></i> Якщо підозрюєте витік — змініть пароль негайно</li>
+      </ul>
+    </div>
+
+  </div>
+</div>

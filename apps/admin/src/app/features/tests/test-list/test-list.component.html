@@ -1,0 +1,127 @@
+<div class="page">
+  <p-toast />
+  <p-confirmDialog />
+
+  <div class="page-header">
+    <h2>Психологічні тести</h2>
+    <p-button class="add-desktop" label="Новий тест" icon="pi pi-plus" (onClick)="create()" />
+  </div>
+
+  <div class="filter-bar">
+    <div class="filter-search">
+      <i class="pi pi-search filter-search-icon"></i>
+      <input [ngModel]="search()" (ngModelChange)="search.set($event)"
+             class="filter-search-input" placeholder="Пошук тестів…" />
+    </div>
+
+    <div class="filter-divider"></div>
+
+    <div class="filter-group">
+      <span class="filter-label">Тип</span>
+      <div class="filter-pills">
+        <button class="filter-pill" [class.active]="typeFilter() === ''" (click)="typeFilter.set('')">Усі</button>
+        @for (t of availableTypes(); track t.type) {
+          <button class="filter-pill" [class.active]="typeFilter() === t.type" (click)="typeFilter.set(t.type)">
+            {{ t.label }}
+          </button>
+        }
+      </div>
+      <select class="mobile-select" [value]="typeFilter()" (change)="typeFilter.set($any($event.target).value)">
+        <option value="">Усі типи</option>
+        @for (t of availableTypes(); track t.type) {
+          <option [value]="t.type">{{ t.label }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  <!-- Mobile expandable cards -->
+  <div class="mobile-cards">
+    @if (loading()) {
+      @for (r of [1,2,3,4,5]; track r) {
+        <div class="mobile-card">
+          <div class="mobile-card__header">
+            <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+              <p-skeleton height="1rem" width="70%" />
+              <p-skeleton height="0.8rem" width="80px" />
+            </div>
+            <p-skeleton height="1.4rem" width="50px" />
+          </div>
+        </div>
+      }
+    } @else if (tests().length === 0) {
+      <div class="empty-mobile">Тестів не знайдено.</div>
+    } @else {
+      @for (t of tests(); track t._id) {
+        <div class="mobile-card">
+          <div class="mobile-card__header" (click)="toggleExpand(t._id)">
+            <div class="mobile-card__meta">
+              <span class="mobile-card__name">{{ t.name }}</span>
+              <p-tag [value]="typeLabel(t.type)" severity="info" />
+            </div>
+            <i class="pi mobile-card__chevron"
+               [class.pi-chevron-down]="expandedId() !== t._id"
+               [class.pi-chevron-up]="expandedId() === t._id"></i>
+          </div>
+          @if (expandedId() === t._id) {
+            <div class="mobile-card__body">
+              <div class="mobile-card__row">
+                <span class="mobile-card__label">Тривалість</span>
+                <span>{{ t.duration }}</span>
+              </div>
+              <div class="mobile-card__actions">
+                <p-button size="small" styleClass="w-full" label="Редагувати" icon="pi pi-pencil"
+                          (onClick)="edit(t._id)" />
+                <p-button size="small" styleClass="w-full" label="Видалити" icon="pi pi-trash"
+                          (onClick)="delete(t)" />
+              </div>
+            </div>
+          }
+        </div>
+      }
+    }
+  </div>
+
+  <!-- Fixed bottom bar (mobile only) -->
+  <div class="add-mobile-bar">
+    <p-button label="Новий тест" icon="pi pi-plus" styleClass="w-full" (onClick)="create()" />
+  </div>
+
+  <p-table [value]="tests()" [loading]="loading()" [paginator]="true" [rows]="10"
+           styleClass="p-datatable-sm" responsiveLayout="scroll">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Назва</th>
+        <th>Тип</th>
+        <th>Тривалість</th>
+        <th style="width:120px"></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="loadingbody">
+      @for (r of [1,2,3,4,5,6,7,8]; track r) {
+        <tr>
+          <td><p-skeleton height="1.4rem" /></td>
+          <td><p-skeleton height="1.4rem" width="90px" /></td>
+          <td><p-skeleton height="1.4rem" width="60px" /></td>
+          <td><p-skeleton height="1.4rem" width="80px" /></td>
+        </tr>
+      }
+    </ng-template>
+    <ng-template pTemplate="body" let-t>
+      <tr>
+        <td>{{ t.name }}</td>
+        <td><p-tag [value]="typeLabel(t.type)" severity="info" /></td>
+        <td>{{ t.duration }}</td>
+        <td>
+          <div class="row-actions">
+            <p-button icon="pi pi-pencil" [text]="true" severity="secondary" (onClick)="edit(t._id)" />
+            <p-button icon="pi pi-trash"  [text]="true" severity="danger"    (onClick)="delete(t)" />
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr><td colspan="4" class="empty">Тестів не знайдено.</td></tr>
+    </ng-template>
+  </p-table>
+</div>

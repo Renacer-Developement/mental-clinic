@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     viewBox="0 0 500 500" width="500" height="500">
+  <defs>
+    <clipPath id="photo-clip">
+      <circle cx="218" cy="268" r="163"/>
+    </clipPath>
+  </defs>
+
+  <!-- Brush stroke ring — main thick arc, gap at upper-right -->
+  <circle cx="250" cy="250" r="218" fill="none" stroke="#7b9cf6" stroke-width="38"
+          stroke-linecap="round" stroke-dasharray="1282 88"/>
+
+  <!-- Outer thin halo layer -->
+  <circle cx="250" cy="250" r="229" fill="none" stroke="#7b9cf6" stroke-width="14"
+          stroke-linecap="round" stroke-dasharray="980 392" stroke-dashoffset="-25" opacity="0.65"/>
+
+  <!-- Inner accent layer -->
+  <circle cx="250" cy="250" r="207" fill="none" stroke="#7b9cf6" stroke-width="12"
+          stroke-linecap="round" stroke-dasharray="820 550" stroke-dashoffset="-110" opacity="0.55"/>
+
+  <!-- Bristle tail — top -->
+  <circle cx="250" cy="250" r="222" fill="none" stroke="#7b9cf6" stroke-width="6"
+          stroke-linecap="round" stroke-dasharray="100 1270" stroke-dashoffset="-1255" opacity="0.55"/>
+
+  <!-- Bristle tail — bottom-right -->
+  <circle cx="250" cy="250" r="216" fill="none" stroke="#7b9cf6" stroke-width="5"
+          stroke-linecap="round" stroke-dasharray="65 1305" stroke-dashoffset="-960" opacity="0.45"/>
+
+  <!-- Doctor photo clipped to circle -->
+  <image href="owner.png" x="30" y="95" width="350" height="380"
+         clip-path="url(#photo-clip)" preserveAspectRatio="xMidYMin meet"/>
+
+  <!-- Text -->
+  <text font-family="'Times New Roman', Georgia, serif" fill="#1a1a1a">
+    <tspan x="300" y="226" font-size="29" font-style="italic">Dr.</tspan>
+    <tspan x="283" y="268" font-size="31" font-weight="700" font-style="normal">Skripnik</tspan>
+    <tspan x="276" y="310" font-size="27" font-weight="400">platform</tspan>
+  </text>
+
+  <!-- Decorative underline under "platform" -->
+  <path d="M 276 318 Q 336 325 400 316"
+        stroke="#1a1a1a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+</svg>

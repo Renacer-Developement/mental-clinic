@@ -1,0 +1,82 @@
+@use "../../../../../assets/css/coloristics" as *;
+
+:host {
+  display: block;
+  background: $section-bg;
+}
+
+.testing-section {
+  padding: 5rem 6% 4.5rem;
+  max-width: 1450px;
+  margin: 0 auto;
+}
+
+.testing-section__header {
+  margin-bottom: 4rem;
+}
+
+.section-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: $primary-color;
+  background: rgba($primary-color, 0.08);
+  border: 1px solid rgba($primary-color, 0.2);
+  padding: 0.28rem 0.9rem;
+  border-radius: 100px;
+  margin-bottom: 1.25rem;
+}
+
+.title-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.85rem;
+}
+
+.all-tests-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: $primary-color;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: opacity 0.22s ease;
+
+  svg {
+    transition: transform 0.22s ease;
+  }
+
+  &:hover {
+    opacity: 0.75;
+
+    svg {
+      transform: translateX(4px);
+    }
+  }
+}
+
+.section-title {
+  font-size: clamp(1.3rem, 2.2vw, 2rem);
+  font-weight: 900;
+  color: $heading-color;
+  line-height: 1.18;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.section-desc {
+  font-size: 0.95rem;
+  color: #5a6a8a;
+  line-height: 1.75;
+  max-width: 520px;
+  margin: 0;
+}

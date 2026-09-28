@@ -1,0 +1,406 @@
+<div class="visit-page">
+
+  <!-- Hero -->
+  <section class="visit-hero">
+    <div class="container">
+      <nav class="visit-hero__breadcrumb">
+        <a routerLink="/">Головна</a>
+        <span>/</span>
+        <span>Онлайн запис</span>
+      </nav>
+      <h1 class="visit-hero__title">Онлайн запис<br>на консультацію</h1>
+      <p class="visit-hero__subtitle">Доказова психіатрія · Відеоконсультація · Конфіденційно</p>
+      <p class="visit-hero__lead">
+        Запишіться до лікаря-психіатра Євгена Скрипника зручним для вас способом.
+        Перший крок до психічного здоров'я — це звернутися по допомогу.
+      </p>
+      <button class="visit-hero__cta" (click)="openContacts()">
+        Записатися на консультацію
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- Quick info -->
+  <section class="visit-info">
+    <div class="container">
+      <div class="visit-info__grid">
+
+        <div class="visit-info__card">
+          <div class="visit-info__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <div>
+            <h3>Години прийому</h3>
+            <p>Щодня з 8:00 до 22:00 — запис у зручний час без черг</p>
+          </div>
+        </div>
+
+        <div class="visit-info__card">
+          <div class="visit-info__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">
+              <polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+            </svg>
+          </div>
+          <div>
+            <h3>Відеоконсультація</h3>
+            <p>Обов'язковий відеозв'язок — живе спілкування з лікарем онлайн</p>
+          </div>
+        </div>
+
+        <div class="visit-info__card">
+          <div class="visit-info__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <div>
+            <h3>Скасування без втрат</h3>
+            <p>Перенесення або повернення коштів — гнучкі умови для кожного</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature 1: How consultation works — SVG left, text right -->
+  <section class="visit-feature visit-feature--light">
+    <div class="container">
+      <div class="visit-feature__inner">
+
+        <div class="visit-feature__visual">
+          <div class="visit-feature__visual-wrap">
+            <svg class="visit-feature__svg" viewBox="0 0 440 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Main video window -->
+              <rect x="60" y="60" width="240" height="165" rx="18" fill="rgba(95,117,214,0.08)" stroke="#5f75d6" stroke-width="2"/>
+              <!-- Screen content gradient -->
+              <rect x="72" y="72" width="216" height="141" rx="10" fill="rgba(95,117,214,0.06)"/>
+              <!-- Doctor avatar in main window -->
+              <circle cx="180" cy="132" r="36" fill="rgba(95,117,214,0.15)" stroke="#5f75d6" stroke-width="1.5"/>
+              <circle cx="180" cy="120" r="16" fill="#5f75d6" opacity="0.6"/>
+              <path d="M148 163 q0-20 32-20 q32 0 32 20" fill="#5f75d6" opacity="0.4"/>
+              <!-- Camera indicator dot -->
+              <circle cx="180" cy="73" r="4" fill="#22c55e" opacity="0.8"/>
+              <!-- Bottom control bar -->
+              <rect x="72" y="200" width="216" height="18" rx="4" fill="rgba(95,117,214,0.08)"/>
+              <circle cx="150" cy="209" r="5" fill="#ef4444" opacity="0.7"/>
+              <circle cx="175" cy="209" r="5" fill="#5f75d6" opacity="0.6"/>
+              <circle cx="200" cy="209" r="5" fill="#22c55e" opacity="0.6"/>
+
+              <!-- Small patient window (pip) -->
+              <rect x="258" y="70" width="110" height="78" rx="12" fill="rgba(0,49,104,0.08)" stroke="#003168" stroke-width="1.5" opacity="0.7"/>
+              <circle cx="313" cy="98" r="18" fill="rgba(0,49,104,0.15)"/>
+              <circle cx="313" cy="90" r="9" fill="#003168" opacity="0.4"/>
+              <path d="M296 114 q0-12 17-12 q17 0 17 12" fill="#003168" opacity="0.25"/>
+
+              <!-- Connection line between windows -->
+              <path d="M258 109 Q240 109 240 109" stroke="#5f75d6" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.4"/>
+
+              <!-- Chat bubble 1 -->
+              <rect x="300" y="165" width="120" height="42" rx="12" fill="rgba(95,117,214,0.12)" stroke="rgba(95,117,214,0.25)" stroke-width="1"/>
+              <rect x="300" y="165" width="120" height="42" rx="12" fill="rgba(95,117,214,0.06)"/>
+              <rect x="313" y="178" width="70" height="7" rx="3.5" fill="#5f75d6" opacity="0.3"/>
+              <rect x="313" y="191" width="50" height="6" rx="3" fill="#5f75d6" opacity="0.2"/>
+              <polygon points="312,177 300,185 300,185" fill="rgba(95,117,214,0.2)"/>
+
+              <!-- Chat bubble 2 -->
+              <rect x="60" y="248" width="140" height="42" rx="12" fill="rgba(0,49,104,0.08)" stroke="rgba(0,49,104,0.15)" stroke-width="1"/>
+              <rect x="74" y="261" width="80" height="7" rx="3.5" fill="#003168" opacity="0.25"/>
+              <rect x="74" y="274" width="55" height="6" rx="3" fill="#003168" opacity="0.18"/>
+              <polygon points="198,270 210,263 210,277" fill="rgba(0,49,104,0.1)"/>
+
+              <!-- Calendar card -->
+              <rect x="280" y="248" width="128" height="96" rx="14" fill="#fff" stroke="rgba(95,117,214,0.2)" stroke-width="1.5"/>
+              <rect x="280" y="248" width="128" height="28" rx="14" fill="rgba(95,117,214,0.1)"/>
+              <rect x="280" y="262" width="128" height="14" rx="0" fill="rgba(95,117,214,0.1)"/>
+              <text x="344" y="267" text-anchor="middle" font-size="10" fill="#5f75d6" font-weight="700">Консультація</text>
+              <!-- Calendar grid dots -->
+              <circle cx="305" cy="296" r="3" fill="#5f75d6" opacity="0.4"/>
+              <circle cx="322" cy="296" r="3" fill="#5f75d6" opacity="0.4"/>
+              <circle cx="339" cy="296" r="5" fill="#5f75d6" opacity="0.9"/>
+              <circle cx="356" cy="296" r="3" fill="#5f75d6" opacity="0.4"/>
+              <circle cx="373" cy="296" r="3" fill="#5f75d6" opacity="0.4"/>
+              <circle cx="305" cy="315" r="3" fill="#5f75d6" opacity="0.25"/>
+              <circle cx="322" cy="315" r="3" fill="#5f75d6" opacity="0.25"/>
+              <circle cx="339" cy="315" r="3" fill="#5f75d6" opacity="0.25"/>
+
+              <!-- Signal dots -->
+              <circle cx="46" cy="170" r="5" fill="#22c55e" opacity="0.5"/>
+              <circle cx="46" cy="185" r="5" fill="#22c55e" opacity="0.35"/>
+              <circle cx="46" cy="200" r="5" fill="#22c55e" opacity="0.2"/>
+
+              <!-- Decorative pill -->
+              <rect x="38" y="290" width="44" height="20" rx="10" fill="#6c86f5" opacity="0.15" transform="rotate(-15 60 300)"/>
+              <rect x="360" y="50" width="36" height="16" rx="8" fill="#5f75d6" opacity="0.12" transform="rotate(12 378 58)"/>
+            </svg>
+
+            <div class="visit-feature__badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+                <polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+              </svg>
+              Відеоконсультація
+            </div>
+          </div>
+        </div>
+
+        <div class="visit-feature__text">
+          <p class="visit-feature__label">Як це працює</p>
+          <h2 class="visit-feature__title">Консультація онлайн — як особистий прийом</h2>
+          <p class="visit-feature__body">
+            Відеозустріч із лікарем нічим не поступається очному прийому. Ви отримуєте повноцінну
+            психіатричну консультацію, призначення та план лікування — прямо з дому.
+          </p>
+          <p class="visit-feature__body">
+            Євген Скрипник проводить структуровані консультації за доказовими протоколами:
+            збір анамнезу, клінічна оцінка стану та розгорнуті рекомендації.
+          </p>
+          <ul class="visit-feature__list">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+              З будь-якого місця в Україні та за кордоном
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+              Без черг і витрат на дорогу
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+              Виписка рекомендацій після консультації
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- When to seek help -->
+  <section class="visit-when">
+    <div class="container">
+      <div class="visit-when__header">
+        <p class="visit-when__label">Показання</p>
+        <h2 class="visit-when__title">Коли варто звернутися?</h2>
+        <p class="visit-when__subtitle">Не чекайте погіршення — рання консультація дає кращі результати</p>
+      </div>
+      <div class="visit-when__grid">
+        <div class="visit-when__card">
+          <div class="visit-when__card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+              <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>
+            </svg>
+          </div>
+          <h3>Постійна тривога та стрес</h3>
+          <p>Хронічна тривожність, панічні атаки, відчуття небезпеки без видимих причин</p>
+        </div>
+        <div class="visit-when__card">
+          <div class="visit-when__card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+          </div>
+          <h3>Порушення сну та апетиту</h3>
+          <p>Безсоння, гіперсомнія, зміни апетиту, втрата ваги або набір ваги</p>
+        </div>
+        <div class="visit-when__card">
+          <div class="visit-when__card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
+          </div>
+          <h3>Депресивний стан</h3>
+          <p>Стійкий пригнічений настрій, втрата інтересу до життя, відсутність мотивації</p>
+        </div>
+        <div class="visit-when__card">
+          <div class="visit-when__card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+              <path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+            </svg>
+          </div>
+          <h3>Нав'язливі думки та ритуали</h3>
+          <p>Нав'язливі думки, страхи, компульсивні дії, які заважають повноцінному життю</p>
+        </div>
+        <div class="visit-when__card">
+          <div class="visit-when__card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <h3>Психотравма та ПТСР</h3>
+          <p>Наслідки стресових подій, флешбеки, емоційне заціпеніння, уникання</p>
+        </div>
+        <div class="visit-when__card">
+          <div class="visit-when__card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+              <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-1.14"/>
+              <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-1.14"/>
+            </svg>
+          </div>
+          <h3>Залежності</h3>
+          <p>Алкогольна, медикаментозна або поведінкова залежність — шлях до одужання</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature 2: Privacy & safety — text left, SVG right -->
+  <section class="visit-feature visit-feature--dark">
+    <div class="container">
+      <div class="visit-feature__inner visit-feature__inner--reverse">
+
+        <div class="visit-feature__text">
+          <p class="visit-feature__label visit-feature__label--light">Конфіденційність</p>
+          <h2 class="visit-feature__title visit-feature__title--light">Ваші дані під надійним захистом</h2>
+          <p class="visit-feature__body visit-feature__body--light">
+            Конфіденційність є основою довіри між лікарем та пацієнтом. Жодна інформація
+            з консультації не передається третім особам без вашої згоди.
+          </p>
+          <p class="visit-feature__body visit-feature__body--light">
+            Безкоштовна психологічна підтримка доступна щодня з 10:00 до 12:00
+            та з 19:00 до 21:00 у чатах із доказовими лікарями та психологами.
+          </p>
+          <ul class="visit-feature__list visit-feature__list--light">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+              Лікарська таємниця суворо дотримується
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+              Захищений канал передачі даних
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg>
+              Доступно з будь-якого регіону України
+            </li>
+          </ul>
+          <button class="visit-feature__cta" (click)="openContacts()">
+            Записатися зараз
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="visit-feature__visual">
+          <div class="visit-feature__visual-wrap visit-feature__visual-wrap--dark">
+            <svg class="visit-feature__svg" viewBox="0 0 440 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Outer ring -->
+              <circle cx="220" cy="190" r="150" stroke="rgba(255,255,255,0.05)" stroke-width="1.5"/>
+              <circle cx="220" cy="190" r="110" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+
+              <!-- Main shield -->
+              <path d="M220 78 L170 100 L170 165 C170 205 195 238 220 248 C245 238 270 205 270 165 L270 100 Z"
+                    fill="rgba(95,117,214,0.2)" stroke="#6c86f5" stroke-width="2"/>
+              <path d="M220 95 L178 113 L178 163 C178 196 200 224 220 233 C240 224 262 196 262 163 L262 113 Z"
+                    fill="rgba(95,117,214,0.15)"/>
+
+              <!-- Lock icon inside shield -->
+              <rect x="207" y="170" width="26" height="22" rx="5" fill="#6c86f5" opacity="0.8"/>
+              <path d="M213 170 L213 162 Q213 152 220 152 Q227 152 227 162 L227 170" stroke="#6c86f5" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.8"/>
+              <circle cx="220" cy="181" r="3.5" fill="#fff" opacity="0.9"/>
+
+              <!-- Floating data nodes -->
+              <rect x="42" y="100" width="96" height="44" rx="10" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+              <circle cx="62" cy="122" r="10" fill="rgba(95,117,214,0.4)"/>
+              <rect x="80" y="116" width="48" height="6" rx="3" fill="rgba(255,255,255,0.2)"/>
+              <rect x="80" y="126" width="32" height="5" rx="2.5" fill="rgba(255,255,255,0.12)"/>
+              <line x1="138" y1="122" x2="170" y2="130" stroke="rgba(95,117,214,0.3)" stroke-width="1" stroke-dasharray="4 3"/>
+
+              <rect x="302" y="100" width="96" height="44" rx="10" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+              <circle cx="322" cy="122" r="10" fill="rgba(95,117,214,0.35)"/>
+              <rect x="340" y="116" width="44" height="6" rx="3" fill="rgba(255,255,255,0.2)"/>
+              <rect x="340" y="126" width="30" height="5" rx="2.5" fill="rgba(255,255,255,0.12)"/>
+              <line x1="302" y1="122" x2="270" y2="130" stroke="rgba(95,117,214,0.3)" stroke-width="1" stroke-dasharray="4 3"/>
+
+              <rect x="42" y="246" width="96" height="44" rx="10" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+              <circle cx="62" cy="268" r="10" fill="rgba(22,163,74,0.4)"/>
+              <text x="62" y="272" text-anchor="middle" font-size="9" fill="#fff" font-weight="700">✓</text>
+              <rect x="80" y="262" width="48" height="6" rx="3" fill="rgba(255,255,255,0.2)"/>
+              <rect x="80" y="272" width="32" height="5" rx="2.5" fill="rgba(255,255,255,0.12)"/>
+              <line x1="138" y1="268" x2="170" y2="250" stroke="rgba(22,163,74,0.25)" stroke-width="1" stroke-dasharray="4 3"/>
+
+              <rect x="302" y="246" width="96" height="44" rx="10" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+              <circle cx="322" cy="268" r="10" fill="rgba(22,163,74,0.35)"/>
+              <text x="322" y="272" text-anchor="middle" font-size="9" fill="#fff" font-weight="700">✓</text>
+              <rect x="340" y="262" width="44" height="6" rx="3" fill="rgba(255,255,255,0.2)"/>
+              <rect x="340" y="272" width="28" height="5" rx="2.5" fill="rgba(255,255,255,0.12)"/>
+              <line x1="302" y1="268" x2="270" y2="250" stroke="rgba(22,163,74,0.25)" stroke-width="1" stroke-dasharray="4 3"/>
+
+              <!-- Decorative pills -->
+              <rect x="50" y="195" width="36" height="16" rx="8" fill="rgba(108,134,245,0.18)" transform="rotate(-20 68 203)"/>
+              <rect x="368" y="195" width="36" height="16" rx="8" fill="rgba(108,134,245,0.15)" transform="rotate(20 386 203)"/>
+              <rect x="200" y="318" width="40" height="17" rx="8.5" fill="rgba(95,117,214,0.12)" transform="rotate(8 220 326)"/>
+            </svg>
+
+            <div class="visit-feature__badge visit-feature__badge--light">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              Конфіденційно
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="visit-faq">
+    <div class="container">
+      <div class="visit-faq__header">
+        <p class="visit-faq__label">FAQ</p>
+        <h2 class="visit-faq__title">Часті питання</h2>
+      </div>
+      <p-accordion [multiple]="true" styleClass="visit-faq__accordion">
+        <p-accordion-panel value="0">
+          <p-accordion-header>Що таке ознайомча консультація?</p-accordion-header>
+          <p-accordion-content>
+            <p>Перша комунікація дозволяє визначити стан клієнта та порекомендувати індивідуальний курс лікування. Лікар збирає анамнез, оцінює клінічну картину і формулює план подальшої роботи.</p>
+          </p-accordion-content>
+        </p-accordion-panel>
+        <p-accordion-panel value="1">
+          <p-accordion-header>Чи є безкоштовна психологічна підтримка?</p-accordion-header>
+          <p-accordion-content>
+            <p>Так. З понеділка по суботу <strong>з 10:00 до 12:00 та з 19:00 до 21:00</strong> доказові та кваліфіковані лікарі й психологи працюють у чатах підтримки, аби відповісти на ваші запитання та надати потрібні поради.</p>
+          </p-accordion-content>
+        </p-accordion-panel>
+        <p-accordion-panel value="2">
+          <p-accordion-header>Як скасувати або перенести консультацію?</p-accordion-header>
+          <p-accordion-content>
+            <p>Скасувати або перенести консультацію можна без втрат. Ми повертаємо кошти на рахунок або залишаємо їх на балансі для наступного запису — на ваш розсуд.</p>
+          </p-accordion-content>
+        </p-accordion-panel>
+        <p-accordion-panel value="3">
+          <p-accordion-header>Чому онлайн-консультації ефективні?</p-accordion-header>
+          <p-accordion-content>
+            <p>Спілкуйтесь з фахівцем <strong>з будь-якого місця</strong>. Обирайте зручний час без витрат на дорогу. Ваші дані <strong>повністю конфіденційні</strong>. Доступно для всіх регіонів України та для українців за кордоном.</p>
+          </p-accordion-content>
+        </p-accordion-panel>
+      </p-accordion>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="visit-cta">
+    <div class="container">
+      <div class="visit-cta__inner">
+        <div class="visit-cta__text">
+          <h2 class="visit-cta__title">Готові зробити перший крок?</h2>
+          <p class="visit-cta__body">Запишіться на консультацію прямо зараз — без черг, з будь-якого місця</p>
+        </div>
+        <button class="visit-cta__btn" (click)="openContacts()">
+          Записатися на консультацію
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+</div>

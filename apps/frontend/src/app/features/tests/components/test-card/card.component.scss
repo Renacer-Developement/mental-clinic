@@ -1,0 +1,85 @@
+@use "sass:color";
+@use "../../../../../assets/css/coloristics" as *;
+
+$ink: #1f2a3c;
+$muted: #5b6475;
+
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
+.tcard {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.1rem 1rem 0.85rem;
+  box-shadow: 0 2px 12px rgba(16, 24, 40, 0.06);
+
+  &__title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: $ink;
+    line-height: 1.35;
+    margin: 0 0 0.75rem;
+  }
+
+  &__desc {
+    font-size: 0.8rem;
+    color: $muted;
+    line-height: 1.6;
+    margin: 0 0 1.25rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  // Pushed to the bottom so buttons line up across a row
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: auto;
+  }
+
+  &__cta {
+    border: none;
+    border-radius: 999px;
+    background: $primary-color;
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.6rem 1.1rem;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background 0.2s;
+
+    &:hover { background: color.adjust($primary-color, $lightness: -8%); }
+  }
+
+  &__share {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: none;
+    background: none;
+    color: $muted;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.4rem 0.25rem;
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:hover { color: $primary-color; }
+  }
+
+  &__count {
+    align-self: flex-end;
+    font-size: 0.72rem;
+    color: $muted;
+    margin-top: 0.75rem;
+  }
+}

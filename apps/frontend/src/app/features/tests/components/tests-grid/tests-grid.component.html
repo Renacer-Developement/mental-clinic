@@ -1,0 +1,32 @@
+<div class="tgrid">
+  <h2 class="tgrid__heading">Доступні тести</h2>
+
+  @if (loading()) {
+    <div class="tgrid__grid">
+      @for (item of skeletonItems; track $index) {
+        <div class="tcard-skeleton">
+          <p-skeleton width="75%" height="16px" borderRadius="6px"/>
+          <div class="tcard-skeleton__desc">
+            <p-skeleton width="100%" height="12px" borderRadius="4px"/>
+            <p-skeleton width="100%" height="12px" borderRadius="4px"/>
+            <p-skeleton width="60%"  height="12px" borderRadius="4px"/>
+          </div>
+          <p-skeleton width="96px" height="32px" borderRadius="999px"/>
+        </div>
+      }
+    </div>
+  } @else {
+    @for (g of groups(); track g.title) {
+      <section class="tgrid__section" [id]="g.anchor">
+        <h3 class="tgrid__section-title">{{ g.title }}</h3>
+        <div class="tgrid__grid">
+          @for (test of g.tests; track test._id) {
+            <app-card [testData]="test"/>
+          }
+        </div>
+      </section>
+    } @empty {
+      <p class="tgrid__empty">Не вдалося завантажити тести. Спробуйте пізніше.</p>
+    }
+  }
+</div>

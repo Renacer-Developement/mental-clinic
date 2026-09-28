@@ -1,0 +1,925 @@
+@use "../../../../assets/css/coloristics" as *;
+
+:host {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.adetail-page {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background: #f8fafc;
+}
+
+// ── Reading progress bar ──────────────────────────────────────────────────────
+
+.adetail-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, $primary-color, lighten($primary-color, 18%));
+  z-index: 9999;
+  transition: width 0.1s linear;
+  pointer-events: none;
+  border-radius: 0 2px 2px 0;
+}
+
+// ── Hero ──────────────────────────────────────────────────────────────────────
+
+.adetail-hero {
+  background: #fff;
+  padding: 5.5rem 0 2.5rem;
+  border-bottom: 1px solid rgba($primary-color, 0.08);
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0;
+    height: 3px;
+    background: linear-gradient(90deg, $primary-color 0%, rgba($primary-color, 0.1) 100%);
+  }
+
+  &__breadcrumb {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    font-size: 0.78rem;
+    color: rgba($heading-color, 0.5);
+    margin-bottom: 1.5rem;
+
+    a {
+      color: rgba($heading-color, 0.5);
+      text-decoration: none;
+      transition: color 0.2s;
+      &:hover { color: $primary-color; }
+    }
+
+    span:last-child {
+      color: $primary-color;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 260px;
+    }
+  }
+
+  &__cats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+  }
+
+  &__cat {
+    display: inline-block;
+    padding: 0.22rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    background: rgba($primary-color, 0.08);
+    color: $primary-color;
+  }
+
+  &__title {
+    font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.12;
+    color: $heading-color;
+    margin: 0 0 1rem;
+    max-width: 820px;
+  }
+
+  &__excerpt {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: rgba($heading-color, 0.65);
+    max-width: 680px;
+    margin: 0 0 1.5rem;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    font-size: 0.82rem;
+    color: rgba($heading-color, 0.55);
+    margin-bottom: 1.5rem;
+  }
+
+  &__author,
+  &__date,
+  &__readtime,
+  &__views {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  &__sep { opacity: 0.4; }
+}
+
+// ── Share buttons ─────────────────────────────────────────────────────────────
+
+.adetail-share {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+
+  &__label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: rgba($heading-color, 0.45);
+    margin-right: 0.1rem;
+  }
+
+  // Both buttons are icon-only circles on all screen sizes
+  &__btn-text { display: none; }
+
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition:
+      background  0.2s ease,
+      color       0.2s ease,
+      border-color 0.2s ease,
+      transform   0.18s ease,
+      box-shadow  0.2s ease;
+
+    svg { flex-shrink: 0; width: 17px; height: 17px; transition: transform 0.2s ease; }
+
+    // ── Telegram — solid primary ─────────────────────────────────────────────
+    &--tg {
+      background: $primary-color;
+      color: #fff;
+      border-color: $primary-color;
+      box-shadow: 0 3px 10px rgba($primary-color, 0.28);
+
+      &:hover {
+        background: darken($primary-color, 8%);
+        border-color: darken($primary-color, 8%);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 22px rgba($primary-color, 0.4);
+        svg { transform: scale(1.12) rotate(-6deg); }
+      }
+      &:active { transform: translateY(0); box-shadow: none; }
+    }
+
+    // ── Copy link — outlined primary, fills on hover ─────────────────────────
+    &--copy {
+      background: transparent;
+      color: $primary-color;
+      border-color: rgba($primary-color, 0.38);
+
+      &:hover {
+        background: $primary-color;
+        color: #fff;
+        border-color: $primary-color;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 22px rgba($primary-color, 0.3);
+        svg { transform: scale(1.1); }
+      }
+      &:active { transform: translateY(0); box-shadow: none; }
+    }
+
+    // ── Copied feedback ──────────────────────────────────────────────────────
+    &--copied {
+      background: rgba(#22c55e, 0.1) !important;
+      color: #16a34a !important;
+      border-color: rgba(#22c55e, 0.35) !important;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+  }
+
+  // ── Mobile: slightly smaller circles ────────────────────────────────────────
+  @media (max-width: 600px) {
+    gap: 0.45rem;
+    &__label { font-size: 0.72rem; }
+    &__btn { width: 38px; height: 38px; svg { width: 15px; height: 15px; } }
+  }
+}
+
+// ── Cover image ───────────────────────────────────────────────────────────────
+
+.adetail-cover {
+  width: 100%;
+  max-height: 480px;
+  overflow: hidden;
+  background: rgba($primary-color, 0.05);
+
+  &__img {
+    width: 100%;
+    height: 100%;
+    max-height: 480px;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+// ── Body layout ───────────────────────────────────────────────────────────────
+
+.adetail-body {
+  padding: 3.5rem 0 5rem;
+}
+
+.adetail-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 3rem;
+}
+
+.adetail-main {
+  flex: 1;
+  min-width: 0;
+  max-width: 760px;
+  // Clip [innerHTML] content that is wider than the flex column.
+  // Safe here because .adetail-toc is a sibling, not a descendant,
+  // so its position:sticky is not affected.
+  overflow: hidden;
+}
+
+// ── Article content typography ────────────────────────────────────────────────
+
+.adetail-content {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: #374151;
+  word-break: normal;
+  overflow-wrap: normal;
+
+  h1, h2, h3, h4 {
+    color: $heading-color;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 2rem 0 0.75rem;
+    line-height: 1.25;
+    scroll-margin-top: 90px;
+  }
+
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.2rem; }
+
+  p { margin: 0 0 1.25rem; }
+
+  ul, ol {
+    margin: 0 0 1.25rem 1.5rem;
+    li { margin-bottom: 0.4rem; }
+  }
+
+  strong { color: $heading-color; font-weight: 700; }
+
+  a {
+    color: $primary-color;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.2s;
+    overflow-wrap: break-word;
+    word-break: break-all;
+    &:hover { color: darken($primary-color, 10%); }
+  }
+
+  p.important-block {
+    background: rgba($primary-color, 0.07);
+    border-left: 3px solid $primary-color;
+    border-radius: 0 8px 8px 0;
+    padding: 0.85rem 1.25rem;
+    margin: 1rem 0;
+    color: $heading-color;
+    font-weight: 500;
+    line-height: 1.7;
+  }
+
+  blockquote {
+    margin: 1.5rem 0;
+    padding: 1rem 1.5rem;
+    border-left: 4px solid $primary-color;
+    background: rgba($primary-color, 0.04);
+    border-radius: 0 12px 12px 0;
+    color: rgba($heading-color, 0.75);
+    font-style: italic;
+  }
+
+  img {
+    max-width: 100%;
+    border-radius: 12px;
+    margin: 0.5rem 0;
+    display: block;
+  }
+
+  code {
+    background: rgba($primary-color, 0.07);
+    padding: 0.1em 0.4em;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+}
+
+// ── Custom YouTube player ─────────────────────────────────────────────────────
+//   Elements are injected via [innerHTML], so they never receive Angular's
+//   _ngcontent attribute — ::ng-deep is required to pierce view encapsulation.
+//   Scoped inside .adetail-main to avoid global leakage.
+
+.adetail-main {
+
+  ::ng-deep .important-block {
+    position: relative;
+    background: rgba($primary-color, 0.07);
+    border-left: 3px solid $primary-color;
+    border-radius: 0 10px 10px 0;
+    padding: 0.85rem 1.4rem;
+    margin: 1.25rem 0;
+
+    .important-block__text {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 500;
+      color: $heading-color;
+      line-height: 1.7;
+    }
+
+    .important-block__edit { display: none; }
+  }
+
+  ::ng-deep .social-post {
+    margin: 1.5rem 0;
+    padding: 1.1rem 1.4rem;
+    border-radius: 10px;
+    background: rgba($primary-color, 0.04);
+    border-left: 3px solid $primary-color;
+    max-width: 100%;
+
+    &::before {
+      content: 'Читайте у соцмережах';
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: $primary-color;
+      margin-bottom: 0.75rem;
+    }
+
+    &__row {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    &__img {
+      width: 130px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      display: block;
+      object-fit: cover;
+      margin: 0 !important;
+    }
+
+    &__body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    &__desc {
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: rgba($heading-color, 0.72);
+      margin: 0;
+    }
+
+    &__edit { display: none; }
+
+    &__links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    &__link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-decoration: none;
+      padding: 0.45rem 1.1rem;
+      border-radius: 999px;
+      transition: opacity 0.18s, transform 0.15s;
+      white-space: nowrap;
+      &:hover { opacity: 0.88; transform: translateY(-1px); }
+      svg { flex-shrink: 0; }
+
+      &--fb {
+        color: #fff;
+        background: $primary-color;
+        box-shadow: 0 2px 8px rgba($primary-color, 0.3);
+      }
+      &--inst {
+        color: #fff;
+        background: $heading-color;
+        box-shadow: 0 2px 8px rgba($heading-color, 0.25);
+      }
+    }
+
+    @media (max-width: 640px) {
+      &__row {
+        flex-direction: column;
+      }
+      &__img {
+        width: 100%;
+        max-height: 220px;
+        object-fit: cover;
+      }
+      &__links {
+        flex-direction: column;
+      }
+      &__link {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  }
+
+  ::ng-deep .yt-player {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background-color: darken($primary-color, 30%);
+    background-size: cover;
+    background-position: center;
+    border-radius: 18px;
+    overflow: hidden;
+    cursor: pointer;
+    margin: 2.5rem 0;
+    box-shadow: 0 8px 32px rgba($primary-color, 0.35);
+
+    iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    &:hover .yt-player__play {
+      transform: scale(1.12);
+      box-shadow:
+        0 0 0 10px rgba($primary-color, 0.28),
+        0 14px 44px rgba($primary-color, 0.52);
+    }
+  }
+
+  // ── Poster overlay — transparent, only used to centre the play button ─────
+  ::ng-deep .yt-player__overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  ::ng-deep .yt-player__play {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: $primary-color;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    padding-left: 5px;
+    box-shadow:
+      0 0 0 7px rgba($primary-color, 0.22),
+      0 8px 32px rgba($primary-color, 0.46);
+    transition:
+      transform 0.22s cubic-bezier(.34, 1.56, .64, 1),
+      box-shadow 0.22s;
+
+    @media (max-width: 600px) {
+      width: 56px;
+      height: 56px;
+
+      svg { width: 22px; height: 22px; }
+    }
+  }
+
+}
+
+// ── Table of contents ─────────────────────────────────────────────────────────
+
+.adetail-toc {
+  flex-shrink: 0;
+  width: 220px;
+  position: sticky;
+  top: 5rem;
+  max-height: calc(100vh - 7rem);
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid rgba($primary-color, 0.1);
+  border-radius: 16px;
+  padding: 1.25rem;
+  box-shadow:
+    0 4px 16px rgba(15, 32, 69, 0.04),
+    0 1px 4px rgba(15, 32, 69, 0.02);
+
+  // Hidden on tablet/mobile
+  @media (max-width: 1100px) { display: none; }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: rgba($heading-color, 0.55);
+    margin: 0 0 1rem;
+  }
+
+  &__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  &__item {
+    &--h3 { padding-left: 0.85rem; }
+  }
+
+  &__link {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: none;
+    padding: 0.3rem 0.5rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    color: rgba($heading-color, 0.65);
+    cursor: pointer;
+    line-height: 1.4;
+    transition: background 0.15s, color 0.15s;
+
+    &:hover {
+      background: rgba($primary-color, 0.07);
+      color: $primary-color;
+    }
+  }
+}
+
+// ── Tags ──────────────────────────────────────────────────────────────────────
+
+.adetail-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba($primary-color, 0.1);
+}
+
+.adetail-tag {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: rgba($heading-color, 0.55);
+  background: rgba($primary-color, 0.06);
+  border: 1px solid rgba($primary-color, 0.12);
+}
+
+// ── Back link ─────────────────────────────────────────────────────────────────
+
+.adetail-back {
+  margin-top: 3rem;
+
+  &__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: $primary-color;
+    text-decoration: none;
+    padding: 0.6rem 1.2rem;
+    border: 1.5px solid rgba($primary-color, 0.25);
+    border-radius: 999px;
+    background: rgba($primary-color, 0.05);
+    transition: background 0.2s, border-color 0.2s, transform 0.15s;
+
+    &:hover {
+      background: rgba($primary-color, 0.1);
+      border-color: rgba($primary-color, 0.4);
+      transform: translateX(-2px);
+    }
+  }
+}
+
+// ── Related tests ─────────────────────────────────────────────────────────────
+
+.adetail-related-tests {
+  margin-top: 2.5rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: 10px;
+  background: rgba($primary-color, 0.05);
+  border-left: 3px solid $primary-color;
+
+  &__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: $primary-color;
+    margin-bottom: 0.75rem;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    text-decoration: none;
+    padding: 0.65rem 0;
+    border-top: 1px solid rgba($primary-color, 0.1);
+
+    & + & { border-top: 1px solid rgba($primary-color, 0.1); }
+
+    &:hover .adetail-related-tests__cta {
+      color: $primary-color;
+      gap: 0.5rem;
+    }
+  }
+
+  &__name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: $heading-color;
+    line-height: 1.4;
+  }
+
+  &__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: rgba($primary-color, 0.6);
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: color 0.2s, gap 0.2s;
+  }
+}
+
+// ── Consultation CTA ─────────────────────────────────────────────────────────
+
+.adetail-consult {
+  margin-top: 3rem;
+  background: linear-gradient(120deg, $heading-color 0%, darken($primary-color, 8%) 100%);
+  overflow: hidden;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 80% 50%, rgba($logo-subtext-color, 0.18) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  &__inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 2.5rem 0;
+
+    @media (max-width: 700px) {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 2rem 0;
+    }
+  }
+
+  &__text {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(#fff, 0.55);
+    margin: 0 0 0.5rem;
+  }
+
+  &__title {
+    font-size: clamp(1.3rem, 2.5vw, 1.75rem);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.6rem;
+  }
+
+  &__sub {
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: rgba(#fff, 0.65);
+    margin: 0;
+    max-width: 520px;
+  }
+
+  &__btn {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.75rem;
+    border-radius: 999px;
+    background: #fff;
+    color: $heading-color;
+    font-size: 0.95rem;
+    font-weight: 800;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: transform 0.2s, box-shadow 0.2s, gap 0.2s;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.22);
+
+    svg { transition: transform 0.2s; }
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.3);
+      gap: 0.75rem;
+      svg { transform: translateX(3px); }
+    }
+
+    &:active { transform: translateY(0); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18); }
+
+    @media (max-width: 700px) { width: 100%; justify-content: center; }
+  }
+}
+
+// ── Related articles ──────────────────────────────────────────────────────────
+
+.adetail-related {
+  margin-top: 4rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid rgba($primary-color, 0.1);
+
+  &__title {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: $heading-color;
+    margin: 0 0 1.5rem;
+    letter-spacing: -0.02em;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+// ── Back to top ───────────────────────────────────────────────────────────────
+
+.adetail-backtop {
+  position: fixed;
+  bottom: 2.25rem;
+  right: 2.25rem;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: $primary-color;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 8px 24px rgba($primary-color, 0.35),
+    0 2px 8px rgba($primary-color, 0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
+  z-index: 900;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow:
+      0 12px 32px rgba($primary-color, 0.4),
+      0 4px 12px rgba($primary-color, 0.25);
+  }
+
+  @media (max-width: 600px) {
+    bottom: 1.25rem;
+    right: 1.25rem;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+// ── Loading skeleton ──────────────────────────────────────────────────────────
+
+.adetail-skeleton {
+  &__hero {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 5.5rem 0 2.5rem;
+  }
+
+  &__meta {
+    display: flex;
+    gap: 1rem;
+  }
+
+  &__cover {
+    width: 100%;
+    height: 380px;
+    background: rgba($primary-color, 0.04);
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    padding: 3.5rem 0;
+    max-width: 760px;
+  }
+}
+
+// ── Error state ───────────────────────────────────────────────────────────────
+
+.adetail-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 8rem 1rem;
+  text-align: center;
+  color: rgba($heading-color, 0.45);
+
+  h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: $heading-color;
+    margin: 0;
+  }
+
+  p { font-size: 0.95rem; margin: 0; }
+
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: $primary-color;
+    text-decoration: none;
+    padding: 0.6rem 1.25rem;
+    border: 1.5px solid rgba($primary-color, 0.25);
+    border-radius: 999px;
+    background: rgba($primary-color, 0.06);
+    transition: background 0.2s;
+
+    &:hover { background: rgba($primary-color, 0.12); }
+  }
+}

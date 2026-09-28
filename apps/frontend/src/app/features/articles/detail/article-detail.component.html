@@ -1,0 +1,294 @@
+<div class="adetail-page">
+
+  <!-- Reading progress bar (fixed, always visible) -->
+  <div class="adetail-progress" [style.width.%]="scrollProgress()"></div>
+
+  <!-- Loading skeleton -->
+  @if (loading()) {
+    <div class="adetail-skeleton">
+      <div class="container">
+        <div class="adetail-skeleton__hero">
+          <p-skeleton width="120px" height="28px" borderRadius="999px"/>
+          <p-skeleton width="70%" height="42px" borderRadius="8px"/>
+          <p-skeleton width="50%" height="28px" borderRadius="8px"/>
+          <div class="adetail-skeleton__meta">
+            <p-skeleton width="130px" height="18px" borderRadius="4px"/>
+            <p-skeleton width="110px" height="18px" borderRadius="4px"/>
+          </div>
+        </div>
+      </div>
+      <div class="adetail-skeleton__cover">
+        <p-skeleton width="100%" height="100%" borderRadius="0"/>
+      </div>
+      <div class="container">
+        <div class="adetail-skeleton__body">
+          @for (i of [1,2,3,4,5,6,7,8]; track i) {
+            <p-skeleton width="{{ i % 3 === 0 ? '75%' : '100%' }}" height="16px" borderRadius="4px"/>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Error state -->
+  @if (error()) {
+    <app-not-found
+      title="Статтю не знайдено"
+      description="Можливо, її було видалено або посилання застаріле."
+      ctaLink="/articles"
+      ctaLabel="← До всіх статей"
+    />
+  }
+
+  <!-- Article content -->
+  @if (!loading() && !error() && article()) {
+
+    <!-- Hero -->
+    <header class="adetail-hero">
+      <div class="container">
+        <nav class="adetail-hero__breadcrumb">
+          <a routerLink="/">Головна</a>
+          <span>/</span>
+          <a routerLink="/articles">Статті</a>
+          <span>/</span>
+          <span>{{ article()!.title }}</span>
+        </nav>
+
+        @if (article()!.categories?.length) {
+          <div class="adetail-hero__cats">
+            @for (cat of article()!.categories; track cat) {
+              <span class="adetail-hero__cat">{{ cat }}</span>
+            }
+          </div>
+        }
+
+        <h1 class="adetail-hero__title">{{ article()!.title }}</h1>
+
+        @if (article()!.excerpt) {
+          <p class="adetail-hero__excerpt">{{ article()!.excerpt }}</p>
+        }
+
+        <div class="adetail-hero__meta">
+          <span class="adetail-hero__author">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                 stroke-linecap="round" stroke-linejoin="round" width="15" height="15">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            Євген Скрипник
+          </span>
+          <span class="adetail-hero__sep">·</span>
+          <span class="adetail-hero__date">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                 stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8"  y1="2" x2="8"  y2="6"/>
+              <line x1="3"  y1="10" x2="21" y2="10"/>
+            </svg>
+            {{ formattedDate }}
+          </span>
+          @if (article()!.readTime) {
+            <span class="adetail-hero__sep">·</span>
+            <span class="adetail-hero__readtime">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                   stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              {{ article()!.readTime }} хв читання
+            </span>
+          }
+          @if (article()!.views) {
+            <span class="adetail-hero__sep">·</span>
+            <span class="adetail-hero__views">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                   stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              {{ article()!.views }} переглядів
+            </span>
+          }
+        </div>
+
+        <!-- Share buttons -->
+        <div class="adetail-share">
+          <span class="adetail-share__label">Поділитися:</span>
+          <button class="adetail-share__btn adetail-share__btn--tg"
+                  (click)="shareOnTelegram()" type="button" title="Поділитися в Telegram">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15">
+              <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+            </svg>
+            <span class="adetail-share__btn-text">Telegram</span>
+          </button>
+          <button class="adetail-share__btn adetail-share__btn--copy"
+                  (click)="copyLink()" type="button"
+                  [class.adetail-share__btn--copied]="linkCopied()">
+            @if (linkCopied()) {
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round" width="15" height="15">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              <span class="adetail-share__btn-text">Скопійовано!</span>
+            } @else {
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round" width="15" height="15">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+              <span class="adetail-share__btn-text">Копіювати посилання</span>
+            }
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Cover image -->
+    @if (article()!.coverImage) {
+      <div class="adetail-cover">
+        <img [src]="article()!.coverImage" [alt]="article()!.title"
+             class="adetail-cover__img" loading="eager"/>
+      </div>
+    }
+
+    <!-- Body -->
+    <section class="adetail-body">
+      <div class="container">
+        <div class="adetail-layout">
+
+          <!-- Main content -->
+          <div class="adetail-main">
+            <div class="adetail-content" [innerHTML]="safeContent()"></div>
+
+            @if (article()!.tags?.length) {
+              <div class="adetail-tags">
+                @for (tag of article()!.tags; track tag) {
+                  <span class="adetail-tag">#{{ tag }}</span>
+                }
+              </div>
+            }
+
+            @if (article()!.relatedTests?.length) {
+              <div class="adetail-related-tests">
+                <span class="adetail-related-tests__eyebrow">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                       stroke-linecap="round" stroke-linejoin="round" width="13" height="13">
+                    <path d="M9 11l3 3L22 4"/>
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                  </svg>
+                  Пов'язаний тест
+                </span>
+                @for (test of article()!.relatedTests; track test._id) {
+                  <a class="adetail-related-tests__row"
+                     [routerLink]="['/test/detail', test._id]">
+                    <span class="adetail-related-tests__name">{{ test.name }}</span>
+                    <span class="adetail-related-tests__cta">
+                      Пройти тест
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                           stroke-linecap="round" stroke-linejoin="round" width="13" height="13">
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                        <polyline points="12 5 19 12 12 19"/>
+                      </svg>
+                    </span>
+                  </a>
+                }
+              </div>
+            }
+
+            <div class="adetail-back">
+              <a routerLink="/articles" class="adetail-back__link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                  <line x1="19" y1="12" x2="5" y2="12"/>
+                  <polyline points="12 19 5 12 12 5"/>
+                </svg>
+                Усі статті
+              </a>
+            </div>
+          </div>
+
+          <!-- Table of contents sidebar -->
+          @if (tocItems().length >= 2) {
+            <aside class="adetail-toc">
+              <h4 class="adetail-toc__title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round" width="15" height="15">
+                  <line x1="8" y1="6" x2="21" y2="6"/>
+                  <line x1="8" y1="12" x2="21" y2="12"/>
+                  <line x1="8" y1="18" x2="21" y2="18"/>
+                  <line x1="3" y1="6" x2="3.01" y2="6"/>
+                  <line x1="3" y1="12" x2="3.01" y2="12"/>
+                  <line x1="3" y1="18" x2="3.01" y2="18"/>
+                </svg>
+                Зміст
+              </h4>
+              <ul class="adetail-toc__list">
+                @for (item of tocItems(); track item.id) {
+                  <li class="adetail-toc__item"
+                      [class.adetail-toc__item--h3]="item.level === 3">
+                    <button class="adetail-toc__link"
+                            (click)="scrollToSection(item.id)"
+                            type="button">
+                      {{ item.text }}
+                    </button>
+                  </li>
+                }
+              </ul>
+            </aside>
+          }
+        </div>
+
+      </div>
+
+      <!-- Consultation CTA — full width -->
+      <div class="adetail-consult">
+        <div class="container">
+        <div class="adetail-consult__inner">
+          <div class="adetail-consult__text">
+            <p class="adetail-consult__label">Потрібна допомога?</p>
+            <h2 class="adetail-consult__title">Запишіться на консультацію</h2>
+            <p class="adetail-consult__sub">
+              Лікарі та психологи центру готові допомогти вам. Перший крок — просто зателефонувати.
+            </p>
+          </div>
+          <button class="adetail-consult__btn" type="button" (click)="openContacts()">
+            Онлайн запис
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                 stroke-linecap="round" stroke-linejoin="round" width="17" height="17">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </button>
+        </div>
+        </div>
+      </div>
+
+      <!-- Related articles -->
+      @if (relatedArticles().length) {
+        <div class="container">
+          <div class="adetail-related">
+            <h3 class="adetail-related__title">Схожі статті</h3>
+            <div class="adetail-related__list">
+              @for (rel of relatedArticles(); track rel._id) {
+                <app-article-card [article]="rel"/>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </section>
+  }
+
+  <!-- Back to top button -->
+  @if (showBackToTop()) {
+    <button class="adetail-backtop" (click)="scrollToTop()" type="button" title="На початок">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+           stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+        <line x1="12" y1="19" x2="12" y2="5"/>
+        <polyline points="5 12 12 5 19 12"/>
+      </svg>
+    </button>
+  }
+
+</div>

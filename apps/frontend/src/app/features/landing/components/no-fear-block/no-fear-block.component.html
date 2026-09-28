@@ -1,0 +1,15 @@
+<section class="no-fear-section" aria-label="Чому не варто боятись психіатра">
+  <div class="no-fear-inner">
+
+    <h2 class="no-fear-heading">Чому не варто боятись психіатра</h2>
+
+    <ul class="fact-list" role="list">
+      <li *ngFor="let fact of facts" class="fact-row">
+        <span class="fact-title">{{ fact.title }}</span>
+        <span class="fact-divider" aria-hidden="true"></span>
+        <p class="fact-text">{{ fact.text }}</p>
+      </li>
+    </ul>
+
+  </div>
+</section>

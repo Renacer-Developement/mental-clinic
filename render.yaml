@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: mental-clinic-backend
+    env: node
+    rootDir: apps/backend
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        sync: false
+
+  - type: web
+    name: mental-clinic-fe
+    env: node
+    rootDir: apps/frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm run serve:ssr:mentalClinicFe

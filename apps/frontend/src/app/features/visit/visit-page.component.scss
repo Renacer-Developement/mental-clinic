@@ -1,0 +1,543 @@
+@use "sass:color";
+@use "../../../assets/css/coloristics" as *;
+
+.visit-page {
+  display: flex;
+  flex-direction: column;
+}
+
+// ── Hero ─────────────────────────────────────────────────────────────────────
+
+.visit-hero {
+  background: $heading-color;
+  color: #fff;
+  min-height: 440px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 0 3.5rem;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 65% 100% at 0% 100%, rgba($primary-color, 0.3) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 50% at 100% 0%,  rgba($primary-color, 0.12) 0%, transparent 55%);
+    pointer-events: none;
+  }
+
+  &__breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.45);
+    margin-bottom: 1.25rem;
+    position: relative;
+    z-index: 1;
+
+    a {
+      color: rgba(255, 255, 255, 0.45);
+      text-decoration: none;
+      transition: color 0.2s;
+      &:hover { color: rgba(255, 255, 255, 0.85); }
+    }
+
+    span:last-child { color: rgba(255, 255, 255, 0.75); }
+  }
+
+  &__title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin: 0 0 0.75rem;
+    color: #fff;
+    position: relative;
+    z-index: 1;
+  }
+
+  &__subtitle {
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.42);
+    margin: 0 0 1.25rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  &__lead {
+    font-size: 1rem;
+    line-height: 1.75;
+    color: rgba(255, 255, 255, 0.65);
+    max-width: 520px;
+    margin: 0 0 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  &__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    width: fit-content;
+    background: $primary-color;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    padding: 0.9rem 2rem;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    z-index: 1;
+
+    &:hover {
+      background: color.adjust($primary-color, $lightness: 8%);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 36px rgba($primary-color, 0.5);
+    }
+  }
+}
+
+// ── Quick info ────────────────────────────────────────────────────────────────
+
+.visit-info {
+  padding: 3.5rem 0;
+  background: #fff;
+  border-bottom: 1px solid rgba($primary-color, 0.07);
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+
+    @media (max-width: 720px) {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+  }
+
+  &__card {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 1.5rem;
+    border-radius: 16px;
+    border: 1px solid rgba($primary-color, 0.08);
+    background: $section-bg;
+    transition: box-shadow 0.2s, border-color 0.2s;
+
+    &:hover {
+      box-shadow: 0 8px 24px rgba($primary-color, 0.08);
+      border-color: rgba($primary-color, 0.18);
+    }
+
+    h3 {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: $heading-color;
+      margin: 0 0 0.35rem;
+      letter-spacing: -0.01em;
+    }
+
+    p {
+      font-size: 0.82rem;
+      line-height: 1.65;
+      color: #5a6072;
+      margin: 0;
+    }
+  }
+
+  &__icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba($primary-color, 0.1);
+    color: $primary-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+}
+
+// ── Feature sections ──────────────────────────────────────────────────────────
+
+.visit-feature {
+  padding: 5rem 0;
+
+  &--light { background: $section-bg; }
+  &--dark  { background: $heading-color; }
+
+  &__inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+
+    &--reverse {
+      direction: rtl;
+      > * { direction: ltr; }
+    }
+
+    @media (max-width: 860px) {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+      direction: ltr;
+      > * { direction: ltr; }
+    }
+  }
+
+  &__visual {
+    display: flex;
+    justify-content: center;
+  }
+
+  &__visual-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+  }
+
+  &__svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  &__badge {
+    position: absolute;
+    bottom: 0.75rem;
+    right: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: $primary-color;
+    background: #fff;
+    border: 1px solid rgba($primary-color, 0.15);
+    border-radius: 999px;
+    padding: 0.4rem 0.9rem;
+    box-shadow: 0 4px 16px rgba($heading-color, 0.1);
+
+    &--light {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.15);
+      color: rgba(255, 255, 255, 0.75);
+      box-shadow: none;
+    }
+  }
+
+  &__label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: $primary-color;
+    margin-bottom: 0.75rem;
+
+    &--light { color: rgba(255, 255, 255, 0.45); }
+  }
+
+  &__title {
+    font-size: clamp(1.5rem, 2.8vw, 2.1rem);
+    font-weight: 800;
+    color: $heading-color;
+    letter-spacing: -0.02em;
+    margin: 0 0 1.25rem;
+    line-height: 1.2;
+
+    &--light { color: #fff; }
+  }
+
+  &__body {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #5a6072;
+    margin: 0 0 1rem;
+
+    &--light { color: rgba(255, 255, 255, 0.62); }
+  }
+
+  &__list {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: $heading-color;
+
+      svg { color: $primary-color; flex-shrink: 0; }
+    }
+
+    &--light li {
+      color: rgba(255, 255, 255, 0.75);
+      svg { color: #7dd3fc; }
+    }
+  }
+
+  &__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    width: fit-content;
+    background: $primary-color;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    padding: 0.85rem 2rem;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-decoration: none;
+    margin-top: 1.75rem;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+
+    &:hover {
+      background: color.adjust($primary-color, $lightness: 8%);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba($primary-color, 0.45);
+    }
+  }
+}
+
+// ── When to seek help ─────────────────────────────────────────────────────────
+
+.visit-when {
+  padding: 5rem 0;
+  background: #fff;
+
+  &__header {
+    margin-bottom: 3rem;
+  }
+
+  &__label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: $primary-color;
+    margin-bottom: 0.75rem;
+  }
+
+  &__title {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 800;
+    color: $heading-color;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.6rem;
+  }
+
+  &__subtitle {
+    font-size: 1rem;
+    color: #5a6072;
+    margin: 0;
+    max-width: 520px;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+
+    @media (max-width: 860px) { grid-template-columns: repeat(2, 1fr); }
+    @media (max-width: 480px) { grid-template-columns: 1fr; }
+  }
+
+  &__card {
+    padding: 1.5rem;
+    border-radius: 18px;
+    border: 1px solid rgba($primary-color, 0.08);
+    background: $section-bg;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    transition: box-shadow 0.25s, transform 0.25s, border-color 0.25s;
+
+    &:hover {
+      box-shadow: 0 10px 32px rgba($primary-color, 0.1);
+      transform: translateY(-3px);
+      border-color: rgba($primary-color, 0.2);
+    }
+
+    h3 {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: $heading-color;
+      margin: 0;
+      letter-spacing: -0.01em;
+    }
+
+    p {
+      font-size: 0.82rem;
+      line-height: 1.65;
+      color: #5a6072;
+      margin: 0;
+    }
+  }
+
+  &__card-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: rgba($primary-color, 0.1);
+    color: $primary-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+}
+
+// ── FAQ ───────────────────────────────────────────────────────────────────────
+
+.visit-faq {
+  padding: 5rem 0;
+  background: $section-bg;
+
+  &__header {
+    margin-bottom: 2.5rem;
+  }
+
+  &__label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: $primary-color;
+    margin-bottom: 0.75rem;
+  }
+
+  &__title {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 800;
+    color: $heading-color;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+}
+
+::ng-deep .visit-faq__accordion {
+  .p-accordion-header-link {
+    background: #fff !important;
+    border: 1px solid rgba(#5f75d6, 0.1) !important;
+    border-radius: 12px !important;
+    padding: 1.1rem 1.5rem !important;
+    color: #003168 !important;
+    font-weight: 700 !important;
+    font-size: 0.95rem !important;
+    transition: border-color 0.2s !important;
+
+    &:hover {
+      border-color: rgba(#5f75d6, 0.25) !important;
+    }
+  }
+
+  .p-accordion-tab {
+    margin-bottom: 0.75rem;
+  }
+
+  .p-accordion-content {
+    border: 1px solid rgba(#5f75d6, 0.1) !important;
+    border-top: none !important;
+    border-radius: 0 0 12px 12px !important;
+    padding: 1.25rem 1.5rem !important;
+
+    p {
+      font-size: 0.9rem;
+      line-height: 1.75;
+      color: #4a5368;
+      margin: 0;
+
+      & + p { margin-top: 0.6rem; }
+    }
+  }
+}
+
+// ── CTA Section ───────────────────────────────────────────────────────────────
+
+.visit-cta {
+  padding: 4rem 0;
+  background: $heading-color;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 120% at 50% 100%, rgba($primary-color, 0.3) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  &__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    position: relative;
+    z-index: 1;
+
+    @media (max-width: 720px) {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  &__title {
+    font-size: clamp(1.4rem, 2.5vw, 1.9rem);
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.4rem;
+  }
+
+  &__body {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.55);
+    margin: 0;
+  }
+
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+    background: $primary-color;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    padding: 0.95rem 2.25rem;
+    border-radius: 999px;
+    font-size: 0.92rem;
+    font-weight: 700;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+
+    &:hover {
+      background: color.adjust($primary-color, $lightness: 8%);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 36px rgba($primary-color, 0.5);
+    }
+
+    @media (max-width: 720px) { width: 100%; justify-content: center; }
+  }
+}

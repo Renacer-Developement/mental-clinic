@@ -1,0 +1,196 @@
+<div class="page">
+  <p-toast />
+  <p-confirmDialog />
+
+  <div class="page-header">
+    <div class="header-left">
+      <h2>Відгуки пацієнтів</h2>
+      @if (pending() > 0) {
+        <span class="pending-badge">{{ pending() }} нових</span>
+      }
+    </div>
+  </div>
+
+  <!-- Фільтр-таби (desktop) -->
+  <div class="filter-tabs">
+    @for (tab of filterTabs; track tab.value) {
+      <button
+        class="filter-tab"
+        [class.active]="filter() === tab.value"
+        [style.--tab-color]="tab.color"
+        (click)="filter.set(tab.value)"
+      >
+        {{ tab.label }}
+        <span class="tab-count">{{ countFor(tab.value) }}</span>
+      </button>
+    }
+  </div>
+
+  <!-- Фільтр-дропдаун (mobile) -->
+  <div class="filter-row">
+    <p-select [options]="filterOptions()" [ngModel]="filter()"
+              optionLabel="label" optionValue="value"
+              styleClass="filter-select" (onChange)="filter.set($event.value)" />
+  </div>
+
+  <!-- Mobile expandable cards -->
+  <div class="mobile-cards">
+    @if (loading()) {
+      @for (r of [1,2,3,4]; track r) {
+        <div class="mobile-card">
+          <div class="mobile-card__header">
+            <p-skeleton shape="circle" size="36px" />
+            <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+              <p-skeleton height="1rem" width="120px" />
+              <p-skeleton height="0.8rem" width="80px" />
+            </div>
+            <p-skeleton height="1rem" width="60px" />
+          </div>
+        </div>
+      }
+    } @else if (filtered().length === 0) {
+      <div class="empty-mobile">Відгуків не знайдено.</div>
+    } @else {
+      @for (r of filtered(); track r._id) {
+        <div class="mobile-card" [class.is-pending]="r.status === 'pending'">
+          <div class="mobile-card__header" (click)="toggleExpand(r._id)">
+            <div class="mobile-card__avatar">{{ r.name[0] }}</div>
+            <div class="mobile-card__meta">
+              <span class="mobile-card__name">{{ r.name }}</span>
+              <span class="mobile-card__role">{{ r.role }}</span>
+              <p-tag [value]="statusLabel(r.status)" [severity]="statusSeverity(r.status)" />
+            </div>
+            <div class="mobile-card__right">
+              <div class="stars-sm">
+                @for (i of stars(r.rating); track i) { <i class="pi pi-star-fill"></i> }
+              </div>
+            </div>
+            <i class="pi mobile-card__chevron"
+               [class.pi-chevron-down]="expandedId() !== r._id"
+               [class.pi-chevron-up]="expandedId() === r._id"></i>
+          </div>
+          @if (expandedId() === r._id) {
+            <div class="mobile-card__body">
+              <p class="mobile-card__text">{{ r.text }}</p>
+              <div class="mobile-card__actions">
+                @if (r.status !== 'approved') {
+                  <p-button size="small" label="Схвалити" icon="pi pi-check" severity="success" styleClass="w-full" (onClick)="approve(r)" />
+                }
+                @if (r.status !== 'rejected') {
+                  <p-button size="small" label="Відхилити" icon="pi pi-times" severity="warn" styleClass="w-full" (onClick)="reject(r)" />
+                }
+                <p-button size="small" label="Редагувати" icon="pi pi-pencil" severity="secondary" styleClass="w-full" (onClick)="openEdit(r)" />
+                <p-button size="small" label="Видалити" icon="pi pi-trash" severity="danger" styleClass="w-full" (onClick)="delete(r)" />
+              </div>
+            </div>
+          }
+        </div>
+      }
+    }
+  </div>
+
+  <p-table [value]="filtered()" [loading]="loading()" [paginator]="true" [rows]="10"
+           styleClass="p-datatable-sm" responsiveLayout="scroll" class="reviews-table">
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width:200px">Автор</th>
+        <th>Відгук</th>
+        <th style="width:100px">Рейтинг</th>
+        <th style="width:110px">Статус</th>
+        <th style="width:160px"></th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="loadingbody">
+      @for (r of [1,2,3,4,5,6,7,8]; track r) {
+        <tr>
+          <td>
+            <div style="display:flex;align-items:center;gap:10px">
+              <p-skeleton shape="circle" size="36px" />
+              <p-skeleton height="1.4rem" width="110px" />
+            </div>
+          </td>
+          <td><p-skeleton height="1.4rem" /></td>
+          <td><p-skeleton height="1.4rem" width="80px" /></td>
+          <td><p-skeleton height="1.4rem" width="80px" /></td>
+          <td><p-skeleton height="1.4rem" width="100px" /></td>
+        </tr>
+      }
+    </ng-template>
+    <ng-template pTemplate="body" let-r>
+      <tr [class.row-pending]="r.status === 'pending'">
+        <td>
+          <div class="author-cell">
+            <div class="author-avatar">{{ r.name[0] }}</div>
+            <div>
+              <div class="author-name">{{ r.name }}</div>
+              <div class="author-role">{{ r.role }}</div>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="review-text">{{ r.text }}</div>
+        </td>
+        <td>
+          <div class="stars">
+            @for (i of stars(r.rating); track i) {
+              <i class="pi pi-star-fill star"></i>
+            }
+          </div>
+        </td>
+        <td>
+          <p-tag [value]="statusLabel(r.status)" [severity]="statusSeverity(r.status)" />
+        </td>
+        <td>
+          <div class="row-actions">
+            @if (r.status !== 'approved') {
+              <p-button icon="pi pi-check" [text]="true" severity="success"
+                        pTooltip="Схвалити" (onClick)="approve(r)" />
+            }
+            @if (r.status !== 'rejected') {
+              <p-button icon="pi pi-times" [text]="true" severity="warn"
+                        pTooltip="Відхилити" (onClick)="reject(r)" />
+            }
+            <p-button icon="pi pi-pencil"  [text]="true" severity="secondary"
+                      pTooltip="Редагувати" (onClick)="openEdit(r)" />
+            <p-button icon="pi pi-trash"   [text]="true" severity="danger"
+                      pTooltip="Видалити" (onClick)="delete(r)" />
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr><td colspan="5" class="empty">Відгуків не знайдено.</td></tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<!-- Edit dialog -->
+<p-dialog header="Редагувати відгук" [modal]="true" [visible]="editVisible()"
+          (visibleChange)="editVisible.set($event)" [style]="{width:'520px'}" [breakpoints]="{ '640px': 'calc(100vw - 24px)' }">
+  <div class="edit-fields">
+    <div class="field">
+      <label>Імʼя</label>
+      <input pInputText [ngModel]="editItem().name" (ngModelChange)="setField('name', $event)" class="w-full" />
+    </div>
+    <div class="field">
+      <label>Роль / підпис</label>
+      <input pInputText [ngModel]="editItem().role" (ngModelChange)="setField('role', $event)" class="w-full" />
+    </div>
+    <div class="field">
+      <label>Текст відгуку</label>
+      <textarea pTextarea rows="4" class="w-full"
+        [ngModel]="editItem().text"
+        (ngModelChange)="setField('text', $event)"></textarea>
+    </div>
+    <div class="field">
+      <label>Рейтинг</label>
+      <p-rating [ngModel]="editItem().rating" (ngModelChange)="setField('rating', $event)" />
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button label="Скасувати" severity="secondary" [text]="true" (onClick)="editVisible.set(false)" />
+    <p-button label="Зберегти" icon="pi pi-check" [loading]="saving()" (onClick)="saveEdit()" />
+  </ng-template>
+</p-dialog>

@@ -1,0 +1,149 @@
+@import "primeicons/primeicons.css";
+@import "primeflex/primeflex.css";
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 14px;
+  background: #f2f3f3;
+  color: #1f2937;
+}
+
+.w-full { width: 100%; }
+
+/* PrimeNG table tweaks */
+.p-datatable .p-datatable-thead > tr > th {
+  background: #f9fafb;
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.p-datatable .p-datatable-tbody > tr > td {
+  border-bottom: 1px solid #f3f4f6;
+  color: #374151;
+  font-size: 14px;
+}
+
+.p-datatable .p-datatable-tbody > tr:hover > td {
+  background: #f9fafb;
+}
+
+/* PrimeNG card */
+.p-card { border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+
+/* Input */
+.p-inputtext { border-radius: 8px; border-color: #e5e7eb; font-size: 14px; font-family: 'Inter', sans-serif; }
+.p-inputtext:focus,
+.p-inputtext:enabled:focus { border-color: #5f75d6 !important; box-shadow: 0 0 0 3px rgba(95,117,214,0.15) !important; outline: none; }
+
+/* Field error state (login form) */
+.input-error,
+.input-error:focus,
+.input-error:enabled:focus {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.14) !important;
+}
+
+.otp-error .p-inputotp-input,
+.otp-error .p-inputotp-input:focus {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12) !important;
+}
+
+/* ── Responsive page padding ──────────────────────────────── */
+@media (max-width: 768px) {
+  html, body { overflow-x: hidden; max-width: 100vw; }
+}
+
+@media (max-width: 640px) {
+  .page,
+  .dashboard { padding: 16px !important; }
+
+  .page-header {
+    flex-wrap: wrap;
+    gap: 10px;
+    h2 { font-size: 18px !important; }
+  }
+}
+
+/* Button */
+.p-button { border-radius: 8px; font-size: 14px; font-weight: 500; font-family: 'Inter', sans-serif; }
+.p-button-primary, .p-button:not(.p-button-secondary):not(.p-button-success):not(.p-button-warning):not(.p-button-danger):not(.p-button-info) {
+  background: #5f75d6; border-color: #5f75d6;
+  &:hover { background: #4a61c4; border-color: #4a61c4; }
+}
+
+/* ── Custom YouTube player ─────────────────────────────────────────────────────
+   Shared by the Quill editor content area AND the preview dialog.
+   Must live in global styles because PrimeNG dialogs render outside the
+   component host, so component-scoped rules cannot reach them.
+   Poster: clean thumbnail + primary play button — no darkening overlay.
+   On click: native YouTube iframe (YouTube supplies all controls).           ── */
+
+.yt-player {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-color: #3d4f9e; /* fallback colour before thumbnail loads */
+  background-size: cover;
+  background-position: center;
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  margin: 20px 0;
+  box-shadow: 0 6px 24px rgba(95, 117, 214, 0.28);
+
+  iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+  }
+
+  &:hover .yt-player__play {
+    transform: scale(1.1);
+    box-shadow:
+      0 0 0 10px rgba(95, 117, 214, 0.28),
+      0 14px 40px rgba(95, 117, 214, 0.52);
+  }
+}
+
+/* Overlay is transparent so the thumbnail shows cleanly */
+.yt-player__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.yt-player__play {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: #5f75d6;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  padding-left: 5px;
+  box-shadow:
+    0 0 0 7px rgba(95, 117, 214, 0.22),
+    0 8px 30px rgba(95, 117, 214, 0.46);
+  transition:
+    transform 0.22s cubic-bezier(.34, 1.56, .64, 1),
+    box-shadow 0.22s;
+}

@@ -1,0 +1,130 @@
+<div class="dashboard">
+
+  <!-- Quick Actions -->
+  <div class="quick-actions">
+    @for (a of quickActions; track a.route) {
+      <button class="qa-btn" (click)="navigate(a.route)">
+        <span class="qa-icon" [style.background]="a.color + '1a'">
+          <i [class]="'pi ' + a.icon" [style.color]="a.color"></i>
+        </span>
+        {{ a.label }}
+      </button>
+    }
+  </div>
+
+  <!-- Контент -->
+  <h2 class="section-title">Панель керування</h2>
+  @if (contentLoading()) {
+    <div class="stats-grid">
+      @for (i of [1,2,3,4]; track i) {
+        <p-skeleton height="88px" borderRadius="12px" />
+      }
+    </div>
+  } @else {
+    <div class="stats-grid">
+      @for (stat of contentStats(); track stat.label) {
+        <div class="stat-card">
+          <div class="stat-icon" [style.background]="stat.color + '1a'">
+            <i [class]="'pi ' + stat.icon" [style.color]="stat.color"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value">{{ stat.value }}</span>
+            <span class="stat-label">{{ stat.label }}</span>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- GA4 -->
+  <div class="section-header">
+    <h2 class="section-title">Google Analytics · останні 30 днів</h2>
+  </div>
+
+  @if (gaLoading()) {
+    <div class="stats-grid">
+      @for (i of [1,2,3,4,5,6]; track i) {
+        <p-skeleton height="88px" borderRadius="12px" />
+      }
+    </div>
+    <div class="two-charts">
+      <p-skeleton height="260px" borderRadius="12px" />
+      <p-skeleton height="260px" borderRadius="12px" />
+    </div>
+  } @else if (gaError()) {
+    <p-message severity="warn" [text]="gaError()!" styleClass="mb-4" />
+  } @else {
+
+    <!-- Лічильники -->
+    <div class="stats-grid ga-grid">
+      @for (stat of gaStats(); track stat.label) {
+        <div class="stat-card">
+          <div class="stat-icon" [style.background]="stat.color + '1a'">
+            <i [class]="'pi ' + stat.icon" [style.color]="stat.color"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value">{{ stat.value }}{{ stat.suffix ?? '' }}</span>
+            <span class="stat-label">{{ stat.label }}</span>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Трафік за джерелами + Пристрої -->
+    <div class="two-charts">
+      @if (sourcesChart()) {
+        <div class="chart-card">
+          <h3>Трафік за джерелами</h3>
+          <div class="donut-wrap">
+            <p-chart type="doughnut" [data]="sourcesChart()" [options]="donutOptions()" />
+          </div>
+        </div>
+      }
+      @if (devicesChart()) {
+        <div class="chart-card">
+          <h3>Пристрої</h3>
+          <div class="donut-wrap">
+            <p-chart type="doughnut" [data]="devicesChart()" [options]="donutOptions()" />
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Графік -->
+    @if (chartData()) {
+      <div class="chart-card">
+        <h3>Сесії та користувачі</h3>
+        <div class="chart-wrap">
+          <p-chart type="line" [data]="chartData()" [options]="chartOptions()" height="280px" />
+        </div>
+      </div>
+    }
+
+    <!-- Топ сторінки -->
+    @if (topPages().length) {
+      <div class="chart-card">
+        <h3>Топ сторінок</h3>
+        <p-table [value]="topPages()" styleClass="p-datatable-sm">
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="width:44px">#</th>
+              <th>Сторінка</th>
+              <th style="text-align:right;width:110px">Перегляди</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-p let-i="rowIndex">
+            <tr>
+              <td class="rank-cell">{{ i + 1 }}</td>
+              <td class="page-cell">
+                <span class="page-title">{{ p.title }}</span>
+                <span class="page-path">{{ p.path }}</span>
+              </td>
+              <td style="text-align:right;font-weight:600">{{ p.views | number }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    }
+  }
+
+</div>

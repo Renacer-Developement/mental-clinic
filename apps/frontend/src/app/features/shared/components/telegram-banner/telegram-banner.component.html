@@ -1,0 +1,32 @@
+<section class="tg-section">
+    <div class="tg-container">
+
+        <div class="tg-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor">
+                <path d="M32 6C18.7 6 8 16.7 8 30v4a6 6 0 0 0 6 6h2a2 2 0 0 0 2-2V26a2 2 0 0 0-2-2h-1.8C15.4 16.2 23 10 32 10s16.6 6.2 17.8 14H48a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h1v1c0 2.8-2.2 5-5 5h-5.2A3 3 0 0 0 38 44h-4a3 3 0 0 0 0 6h4a3 3 0 0 0 2.8-2H44c5 0 9-4 9-9V30C53 16.7 45.3 6 32 6z"/>
+            </svg>
+        </div>
+
+        <div class="tg-content">
+            <h2 class="tg-heading">Доєднуйся до нашої телеграм спільноти</h2>
+            <p class="tg-subheading">
+                Ставте питання доказовим психіатрам і психологам — і отримуйте відповіді у зручному форматі
+            </p>
+        </div>
+
+        <div class="tg-actions">
+            <button
+                    (click)="openTelegram(TELEGRAM_BANNER.PSYCHOLOGIST_CHAT.name, TELEGRAM_BANNER.PSYCHOLOGIST_CHAT.link)"
+                    class="tg-btn tg-btn--primary">
+                <span>{{ TELEGRAM_BANNER.PSYCHOLOGIST_CHAT.name }}</span>
+            </button>
+
+            <button
+                    (click)="openTelegram(TELEGRAM_BANNER.PSYCHIATRIST_CHAT.name, TELEGRAM_BANNER.PSYCHIATRIST_CHAT.link)"
+                    class="tg-btn tg-btn--outline">
+                <span>{{ TELEGRAM_BANNER.PSYCHIATRIST_CHAT.name }}</span>
+            </button>
+        </div>
+
+    </div>
+</section>

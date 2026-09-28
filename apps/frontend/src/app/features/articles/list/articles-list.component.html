@@ -1,0 +1,142 @@
+<div class="articles-page">
+
+  <!-- Hero -->
+  <section class="articles-hero">
+    <div class="container">
+      <nav class="articles-hero__breadcrumb">
+        <a routerLink="/">Головна</a>
+        <span>/</span>
+        <span>Статті</span>
+      </nav>
+      <h1 class="articles-hero__title">Ресурси про ментальне здоров'я</h1>
+      <p class="articles-hero__subtitle">Доказова медицина · Корисні матеріали · Безкоштовно</p>
+      <p class="articles-hero__lead">
+        Читайте актуальні матеріали про психічне здоров'я, сучасні підходи до лікування
+        та поради психіатра Євгена Скрипника.
+      </p>
+    </div>
+  </section>
+
+  <!-- Content -->
+  <section class="articles-content">
+    <div class="container">
+      <div class="agrid" [formGroup]="searchForm">
+
+        <!-- Toolbar -->
+        <div class="agrid__toolbar">
+          <div class="agrid__search">
+            <svg class="agrid__search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input class="agrid__search-input" formControlName="text"
+                   placeholder="Пошук статей..." type="text" autocomplete="off"/>
+            @if (searchForm.get('text')?.value) {
+              <button class="agrid__search-clear"
+                      (click)="searchForm.patchValue({ text: '' })" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+              </button>
+            }
+          </div>
+
+          <div class="agrid__chips">
+            @for (cat of categories; track cat.value) {
+              <button
+                class="agrid__chip"
+                [class.agrid__chip--active]="isActiveCategory(cat)"
+                (click)="selectCategory(cat)"
+                type="button">
+                {{ cat.name }}
+              </button>
+            }
+          </div>
+        </div>
+
+        <!-- Skeleton (shown while loading) -->
+        @if (loading()) {
+          <div class="agrid__list">
+            @for (item of skeletonItems; track $index) {
+              <div class="acard-skeleton">
+                <div class="acard-skeleton__thumb">
+                  <p-skeleton width="100%" height="100%" borderRadius="0"/>
+                </div>
+                <div class="acard-skeleton__body">
+                  <p-skeleton width="90px" height="20px" borderRadius="999px"/>
+                  <p-skeleton width="65%" height="20px" borderRadius="6px"/>
+                  <p-skeleton width="100%" height="13px" borderRadius="4px"/>
+                  <p-skeleton width="85%"  height="13px" borderRadius="4px"/>
+                  <div class="acard-skeleton__footer">
+                    <p-skeleton width="110px" height="13px" borderRadius="4px"/>
+                    <p-skeleton width="80px"  height="13px" borderRadius="4px"/>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- Results (shown once loaded) -->
+        @if (!loading() && articlesResult()) {
+          @if (articlesResult()!.articles.length) {
+            <div class="agrid__list">
+              @for (article of articlesResult()!.articles; track article._id) {
+                <app-article-card [article]="article"/>
+              }
+            </div>
+
+            <!-- Pagination -->
+            @if (articlesResult()!.pages > 1) {
+              <nav class="agrid__pagination" aria-label="Сторінки">
+                <button class="agrid__page agrid__page--prev"
+                        [disabled]="articlesResult()!.page <= 1"
+                        (click)="goToPage(articlesResult()!.page - 1)"
+                        type="button">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                       stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+                    <polyline points="15 18 9 12 15 6"/>
+                  </svg>
+                </button>
+
+                @for (page of pagesArray(articlesResult()!.pages); track page) {
+                  <button class="agrid__page"
+                          [class.agrid__page--active]="page === articlesResult()!.page"
+                          (click)="goToPage(page)"
+                          type="button">
+                    {{ page }}
+                  </button>
+                }
+
+                <button class="agrid__page agrid__page--next"
+                        [disabled]="articlesResult()!.page >= articlesResult()!.pages"
+                        (click)="goToPage(articlesResult()!.page + 1)"
+                        type="button">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                       stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+                    <polyline points="9 18 15 12 9 6"/>
+                  </svg>
+                </button>
+              </nav>
+            }
+          } @else {
+            <div class="agrid__empty">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                   stroke-linecap="round" stroke-linejoin="round" width="40" height="40">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+              </svg>
+              <p>Статей не знайдено</p>
+              <button class="agrid__reset" (click)="resetSearch()" type="button">
+                Скинути пошук
+              </button>
+            </div>
+          }
+        }
+
+      </div>
+    </div>
+  </section>
+
+</div>

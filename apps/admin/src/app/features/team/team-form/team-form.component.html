@@ -1,0 +1,104 @@
+<div class="page">
+  <p-toast />
+
+  <div class="page-header">
+    <h2>{{ isEdit ? 'Редагувати учасника' : 'Новий учасник команди' }}</h2>
+  </div>
+
+  @if (loading()) {
+    <div class="loading"><i class="pi pi-spin pi-spinner"></i> Завантаження…</div>
+  } @else {
+    <div class="form-grid">
+
+      <!-- Основна інформація -->
+      <div class="card">
+        <h3>Основна інформація</h3>
+
+        @if (form.photo) {
+          <div class="photo-preview">
+            <img [src]="form.photo" alt="Фото" />
+          </div>
+        }
+
+        <div class="fields-2col">
+          <div class="field">
+            <label>Ім'я та прізвище *</label>
+            <input pInputText [(ngModel)]="form.name" placeholder="Ім'я Прізвище" class="w-full" />
+          </div>
+          <div class="field">
+            <label>Посада *</label>
+            <input pInputText [(ngModel)]="form.role" placeholder="напр. Психіатр" class="w-full" />
+          </div>
+          <div class="field">
+            <label>Досвід</label>
+            <input pInputText [(ngModel)]="form.experience" placeholder="напр. 10+ років" class="w-full" />
+          </div>
+          <div class="field">
+            <label>Порядок відображення</label>
+            <p-inputnumber [(ngModel)]="form.order" [min]="0" styleClass="w-full" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Фото (URL)</label>
+          <input pInputText [(ngModel)]="form.photo" placeholder="https://…" class="w-full" />
+        </div>
+
+        <div class="field">
+          <label>Біографія</label>
+          <textarea pTextarea [(ngModel)]="form.bio" rows="4" class="w-full"
+                    placeholder="Короткий опис фахівця…"></textarea>
+        </div>
+
+        <div class="field">
+          <label>Спеціалізації (через кому)</label>
+          <input pInputText [ngModel]="specializationsText()"
+                 (ngModelChange)="setSpecializations($event)"
+                 placeholder="Депресія, Тривога, ПТСР"
+                 class="w-full" />
+          <small class="hint">Перерахуйте через кому</small>
+        </div>
+
+        <div class="field">
+          <label>Освіта (кожен рядок — окремий запис)</label>
+          <textarea pTextarea [ngModel]="educationText()"
+                    (ngModelChange)="setEducation($event)"
+                    rows="3" class="w-full"
+                    placeholder="Харківський НМУ, 2005&#10;Аспірантура, 2008"></textarea>
+        </div>
+      </div>
+
+      <!-- Контакти та статус -->
+      <div class="card">
+        <h3>Контакти та статус</h3>
+
+        <div class="fields-2col">
+          <div class="field">
+            <label>Email</label>
+            <input pInputText [(ngModel)]="form.email" type="email" placeholder="doctor@clinic.com" class="w-full" />
+          </div>
+          <div class="field">
+            <label>Телефон</label>
+            <input pInputText [(ngModel)]="form.phone" placeholder="+380…" class="w-full" />
+          </div>
+        </div>
+
+        <div class="field toggle-field">
+          <label>Відображати на сайті</label>
+          <p-togglebutton
+            [(ngModel)]="form.isActive"
+            onLabel="Активний"
+            offLabel="Прихований"
+            onIcon="pi pi-eye"
+            offIcon="pi pi-eye-slash" />
+        </div>
+      </div>
+
+    </div>
+
+    <div class="form-footer">
+      <p-button label="Скасувати" severity="secondary" [text]="true" (onClick)="cancel()" />
+      <p-button label="Зберегти" icon="pi pi-check" [loading]="saving()" (onClick)="save()" />
+    </div>
+  }
+</div>

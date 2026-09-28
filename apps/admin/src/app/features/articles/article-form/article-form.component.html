@@ -1,0 +1,361 @@
+<div class="page">
+  <p-toast />
+
+  <!-- ── КРОК 1: Вибір шаблону ── -->
+  @if (step() === 'template') {
+    <div class="page-header">
+      <h2>Оберіть шаблон статті</h2>
+      <p-button label="Скасувати" severity="secondary" [text]="true" (onClick)="cancel()" />
+    </div>
+
+    <div class="template-grid">
+      @for (tpl of templates; track tpl.id) {
+        <button class="template-card" (click)="selectTemplate(tpl)">
+          <div class="tpl-icon">
+            <i [class]="'pi ' + tpl.icon"></i>
+          </div>
+          <div class="tpl-info">
+            <span class="tpl-name">{{ tpl.name }}</span>
+            <span class="tpl-desc">{{ tpl.description }}</span>
+          </div>
+          <i class="pi pi-arrow-right tpl-arrow"></i>
+        </button>
+      }
+    </div>
+  }
+
+  <!-- ── КРОК 2: Форма редагування ── -->
+  @if (step() === 'form') {
+    <div class="page-header">
+      <h2>{{ isEdit ? 'Редагувати статтю' : 'Нова стаття' }}</h2>
+      <div class="header-actions">
+        @if (!isEdit) {
+          <p-button class="btn-tpl" label="Змінити шаблон" icon="pi pi-palette" severity="secondary"
+                    [text]="true" (onClick)="step.set('template')" />
+        }
+        <p-button class="btn-preview" label="Переглянути" icon="pi pi-eye" severity="secondary"
+                  (onClick)="openPreview()" />
+        <p-button class="btn-cancel" label="Скасувати" severity="secondary" [text]="true" (onClick)="cancel()" />
+        <p-button class="btn-save" label="Зберегти" icon="pi pi-check" [loading]="saving()" (onClick)="save()" />
+      </div>
+    </div>
+
+    @if (loading()) {
+      <div class="loading"><i class="pi pi-spin pi-spinner"></i> Завантаження…</div>
+    } @else {
+      <div class="form-grid">
+
+        <div class="form-main">
+          <div class="field">
+            <label>Заголовок *</label>
+            <input pInputText [(ngModel)]="form.title" placeholder="Заголовок статті" class="w-full" />
+          </div>
+
+          <div class="field">
+            <label>Анонс</label>
+            <textarea pTextarea [(ngModel)]="form.excerpt" rows="3"
+                      placeholder="Короткий опис для списку статей…" class="w-full"></textarea>
+          </div>
+
+          <div class="field">
+            <label>Зміст *</label>
+
+            <!-- Media insert buttons above the editor -->
+            <div class="media-toolbar">
+              <button class="media-btn" type="button"
+                      (click)="imageUrl=''; imageUrlError=''; imageDialogVisible.set(true)"
+                      title="Вставити зображення за URL">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round" width="15" height="15">
+                  <rect x="3" y="3" width="18" height="18" rx="2"/>
+                  <circle cx="8.5" cy="8.5" r="1.5"/>
+                  <polyline points="21 15 16 10 5 21"/>
+                </svg>
+                Зображення за URL
+              </button>
+              <button class="media-btn" type="button"
+                      (click)="youtubeUrl=''; youtubeUrlError=''; youtubeDialogVisible.set(true)"
+                      title="Вставити відео YouTube">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15">
+                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>
+                YouTube відео
+              </button>
+              <button class="media-btn" type="button"
+                      (click)="importantText=''; importantTextErr=''; importantEditIndex=null; importantDialogVisible.set(true)"
+                      title="Важливий блок">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                     stroke-linecap="round" stroke-linejoin="round" width="15" height="15">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="12" y1="8" x2="12" y2="12"/>
+                  <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                Важливо
+              </button>
+              <button class="media-btn" type="button"
+                      (click)="socialImage=''; socialFb=''; socialInst=''; socialDesc=''; socialImgErr=''; socialEditIndex=null; socialDialogVisible.set(true)"
+                      title="Вставити блок соцмереж">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round" width="15" height="15">
+                  <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                  <polyline points="16 6 12 2 8 6"/>
+                  <line x1="12" y1="2" x2="12" y2="15"/>
+                </svg>
+                Пост соцмереж
+              </button>
+            </div>
+
+            <p-editor [(ngModel)]="form.content"
+                      [style]="{ height: '400px' }"
+                      (onInit)="onEditorInit($event)" />
+          </div>
+        </div>
+
+        <div class="form-sidebar">
+
+          <div class="sidebar-card">
+            <h3>Статус публікації</h3>
+            <div class="status-options">
+              <button type="button" class="status-opt"
+                      [class.status-opt--draft]="form.status === 'draft'"
+                      (click)="form.status = 'draft'">
+                <i class="pi pi-file-edit"></i>
+                <span>Чернетка</span>
+              </button>
+              <button type="button" class="status-opt"
+                      [class.status-opt--published]="form.status === 'published'"
+                      (click)="form.status = 'published'">
+                <i class="pi pi-globe"></i>
+                <span>Опубліковано</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="sidebar-card">
+            <h3>Обкладинка</h3>
+            <input pInputText [(ngModel)]="form.coverImage"
+                   placeholder="https://…" class="w-full" />
+            @if (form.coverImage) {
+              <img [src]="form.coverImage" alt="обкладинка" class="cover-preview" />
+            }
+          </div>
+
+          <div class="sidebar-card">
+            <h3>Категорії</h3>
+            <div class="cat-options">
+              @for (cat of CATEGORIES; track cat) {
+                <button type="button" class="cat-option"
+                        [class.cat-option--active]="isCategorySelected(cat)"
+                        (click)="toggleCategory(cat)">
+                  {{ cat }}
+                </button>
+              }
+            </div>
+          </div>
+
+          <div class="sidebar-card">
+            <h3>Теги</h3>
+            <p-autocomplete [(ngModel)]="form.tags" [suggestions]="tagSuggestions"
+              (completeMethod)="searchTags($event)" [multiple]="true"
+              placeholder="Введіть та натисніть Enter" styleClass="w-full" />
+          </div>
+
+          <div class="sidebar-card">
+            <h3>
+              Пов'язані тести
+              @if (form.relatedTests?.length) {
+                <span class="related-count">{{ form.relatedTests!.length }}</span>
+              }
+            </h3>
+
+            <div class="related-search">
+              <i class="pi pi-search"></i>
+              <input pInputText [(ngModel)]="testSearchQuery"
+                     placeholder="Пошук тесту…" class="w-full" />
+            </div>
+
+            <div class="related-list">
+              @for (test of filteredTests; track test._id) {
+                <label class="related-item" [class.is-selected]="isTestSelected(test._id)">
+                  <input type="checkbox"
+                         [checked]="isTestSelected(test._id)"
+                         (change)="toggleTest(test._id)" />
+                  <span class="related-item__name">{{ test.name }}</span>
+                  @if (test.type) {
+                    <span class="related-item__type">{{ test.type }}</span>
+                  }
+                </label>
+              } @empty {
+                <p class="related-empty">Тестів не знайдено</p>
+              }
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    }
+  }
+</div>
+
+<!-- ── Превʼю статті (iframe) ── -->
+<p-dialog [(visible)]="previewVisible" [modal]="true"
+          [style]="{ width: '92vw', height: '92vh' }"
+          header="Превʼю на сайті" [draggable]="false"
+          styleClass="preview-iframe-dialog"
+          [contentStyle]="{ padding: '0', height: '100%' }">
+  <iframe [src]="iframePreviewUrl"
+          class="preview-iframe"
+          frameborder="0"
+          allow="autoplay; fullscreen"></iframe>
+</p-dialog>
+
+<!-- ── Вставити зображення за URL ── -->
+<p-dialog [(visible)]="imageDialogVisible" [modal]="true"
+          [style]="{ width: '480px' }" [breakpoints]="{ '640px': 'calc(100vw - 24px)' }" header="Вставити зображення"
+          [draggable]="false" (onHide)="imageUrlError=''">
+  <div class="insert-dialog">
+    <p class="insert-dialog__hint">
+      Введіть пряме посилання на зображення (має закінчуватись на
+      <code>.jpg</code>, <code>.png</code>, <code>.webp</code> тощо).
+    </p>
+    <div class="insert-dialog__field">
+      <label>URL зображення</label>
+      <input pInputText [(ngModel)]="imageUrl"
+             placeholder="https://example.com/image.jpg"
+             class="w-full"
+             (keyup.enter)="confirmInsertImage()" />
+      @if (imageUrlError) {
+        <span class="insert-dialog__error">{{ imageUrlError }}</span>
+      }
+    </div>
+    @if (imageUrl && !imageUrlError) {
+      <div class="insert-dialog__preview">
+        <img [src]="imageUrl" alt="preview"
+             (error)="imageUrlError='Не вдалося завантажити зображення за цим URL'"/>
+      </div>
+    }
+  </div>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Скасувати" severity="secondary" [text]="true"
+              (onClick)="imageDialogVisible.set(false)" />
+    <p-button label="Вставити" icon="pi pi-check"
+              (onClick)="confirmInsertImage()"
+              [disabled]="!imageUrl" />
+  </ng-template>
+</p-dialog>
+
+<!-- ── Важливий блок ── -->
+<p-dialog [(visible)]="importantDialogVisible" [modal]="true"
+          [style]="{ width: '480px' }" [breakpoints]="{ '640px': 'calc(100vw - 24px)' }" header="Важливий блок"
+          [draggable]="false" (onHide)="importantTextErr=''">
+  <div class="insert-dialog">
+    <p class="insert-dialog__hint">Текст буде відображено як виділений блок з позначкою "!!"</p>
+    <div class="insert-dialog__field">
+      <label>Текст *</label>
+      <textarea pTextarea [(ngModel)]="importantText" rows="4"
+                placeholder="Введіть важливий текст…"
+                class="w-full"
+                (ngModelChange)="importantTextErr=''"
+                (keyup.enter)="$event.stopPropagation()"></textarea>
+      @if (importantTextErr) {
+        <span class="insert-dialog__error">{{ importantTextErr }}</span>
+      }
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button label="Скасувати" severity="secondary" [text]="true"
+              (onClick)="importantDialogVisible.set(false)" />
+    <p-button label="Вставити" icon="pi pi-check"
+              (onClick)="confirmInsertImportant()"
+              [disabled]="!importantText" />
+  </ng-template>
+</p-dialog>
+
+<!-- ── Вставити пост соцмереж ── -->
+<p-dialog [(visible)]="socialDialogVisible" [modal]="true"
+          [style]="{ width: '480px' }" [breakpoints]="{ '640px': 'calc(100vw - 24px)' }" header="Вставити пост соцмереж"
+          [draggable]="false" (onHide)="socialImgErr=''">
+  <div class="insert-dialog">
+    <p class="insert-dialog__hint">
+      Вставте URL зображення і посилання на Facebook або Instagram пост.
+    </p>
+    <div class="insert-dialog__field">
+      <label>URL зображення *</label>
+      <input pInputText [(ngModel)]="socialImage"
+             placeholder="https://example.com/post-image.jpg"
+             class="w-full"
+             (ngModelChange)="socialImgErr=''" />
+      @if (socialImgErr) {
+        <span class="insert-dialog__error">{{ socialImgErr }}</span>
+      }
+    </div>
+    @if (socialImage && !socialImgErr) {
+      <div class="insert-dialog__preview">
+        <img [src]="socialImage" alt="preview"
+             (error)="socialImgErr='Не вдалося завантажити зображення'"/>
+      </div>
+    }
+    <div class="insert-dialog__field">
+      <label>Короткий опис (необов'язково)</label>
+      <textarea pTextarea [(ngModel)]="socialDesc" rows="2"
+                placeholder="Наприклад: Прихована депресія — симптоми, які легко сплутати зі звичайною втомою…"
+                class="w-full"></textarea>
+    </div>
+    <div class="insert-dialog__field">
+      <label>Посилання Facebook (необов'язково)</label>
+      <input pInputText [(ngModel)]="socialFb"
+             placeholder="https://facebook.com/…"
+             class="w-full" />
+    </div>
+    <div class="insert-dialog__field">
+      <label>Посилання Instagram (необов'язково)</label>
+      <input pInputText [(ngModel)]="socialInst"
+             placeholder="https://instagram.com/…"
+             class="w-full" />
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Скасувати" severity="secondary" [text]="true"
+              (onClick)="socialDialogVisible.set(false)" />
+    <p-button label="Вставити" icon="pi pi-check"
+              (onClick)="confirmInsertSocial()"
+              [disabled]="!socialImage" />
+  </ng-template>
+</p-dialog>
+
+<!-- ── Вставити YouTube відео ── -->
+<p-dialog [(visible)]="youtubeDialogVisible" [modal]="true"
+          [style]="{ width: '480px' }" [breakpoints]="{ '640px': 'calc(100vw - 24px)' }" header="Вставити YouTube відео"
+          [draggable]="false" (onHide)="youtubeUrlError=''">
+  <div class="insert-dialog">
+    <p class="insert-dialog__hint">
+      Вставте посилання на відео YouTube у будь-якому форматі:
+    </p>
+    <ul class="insert-dialog__examples">
+      <li><code>https://www.youtube.com/watch?v=XXXX</code></li>
+      <li><code>https://youtu.be/XXXX</code></li>
+      <li><code>https://www.youtube.com/shorts/XXXX</code></li>
+    </ul>
+    <div class="insert-dialog__field">
+      <label>Посилання YouTube</label>
+      <input pInputText [(ngModel)]="youtubeUrl"
+             placeholder="https://youtu.be/..."
+             class="w-full"
+             (keyup.enter)="confirmInsertYoutube()" />
+      @if (youtubeUrlError) {
+        <span class="insert-dialog__error">{{ youtubeUrlError }}</span>
+      }
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Скасувати" severity="secondary" [text]="true"
+              (onClick)="youtubeDialogVisible.set(false)" />
+    <p-button label="Вставити" icon="pi pi-check"
+              (onClick)="confirmInsertYoutube()"
+              [disabled]="!youtubeUrl" />
+  </ng-template>
+</p-dialog>

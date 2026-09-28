@@ -1,0 +1,116 @@
+<!-- ── Floating toast notifications ── -->
+@if (error()) {
+  <div class="toast toast-error">
+    <div class="toast-icon-wrap"><i class="pi pi-exclamation-triangle"></i></div>
+    <span class="toast-text">{{ error() }}</span>
+    <button class="toast-close" (click)="clearError()"><i class="pi pi-times"></i></button>
+  </div>
+}
+@if (success()) {
+  <div class="toast toast-success">
+    <div class="toast-icon-wrap"><i class="pi pi-check"></i></div>
+    <span class="toast-text">{{ success() }}</span>
+    <button class="toast-close" (click)="clearSuccess()"><i class="pi pi-times"></i></button>
+  </div>
+}
+
+<div class="login-wrapper">
+  <div class="login-card">
+
+    <div class="login-header">
+      <img src="logo.avif" alt="Логотип" />
+      <h1>Онлайн центр ментального здоров`я Євгена Скрипника</h1>
+      <p>Панель адміністратора</p>
+    </div>
+
+    <!-- ── Step 1: credentials ── -->
+    @if (view() === 'credentials') {
+      <div class="field">
+        <label for="identifier">Email або телефон</label>
+        <input pInputText id="identifier" [(ngModel)]="identifier"
+               class="w-full" [class.input-error]="identifierErr()"
+               (ngModelChange)="identifierErr.set(false); clearError()"
+               (keyup.enter)="submit()" />
+      </div>
+
+      <div class="field">
+        <label for="password">Пароль</label>
+        <p-password id="password" [(ngModel)]="password" [feedback]="false"
+                    [toggleMask]="true" styleClass="w-full"
+                    [inputStyleClass]="'w-full' + (passwordErr() ? ' input-error' : '')"
+                    (ngModelChange)="passwordErr.set(false); clearError()"
+                    (keyup.enter)="submit()" />
+      </div>
+
+      <p-button label="Увійти" icon="pi pi-sign-in" styleClass="w-full"
+        [loading]="loading()" (onClick)="submit()" />
+
+      <div class="bottom-link">
+        <button class="link-btn" (click)="view.set('forgot')">
+          Забули пароль?
+        </button>
+      </div>
+    }
+
+    <!-- ── Step 2: OTP ── -->
+    @if (view() === 'otp') {
+      <div class="otp-banner">
+        <div class="otp-icon"><i class="pi pi-envelope"></i></div>
+        <div>
+          <div class="otp-title">Перевірте пошту</div>
+          <div class="otp-sub">Код надіслано на <strong>{{ sentTo }}</strong></div>
+          <div class="otp-hint">Перевірте папку «Спам», якщо не бачите листа</div>
+        </div>
+      </div>
+
+      <div class="field otp-field" [class.otp-error]="otpErr()">
+        <label>6-значний код</label>
+        <p-inputotp [(ngModel)]="otp" [length]="6" [integerOnly]="true"
+                    (ngModelChange)="otpErr.set(false); clearError()" />
+      </div>
+
+      <p-button label="Підтвердити" icon="pi pi-check" styleClass="w-full"
+        [loading]="loading()" (onClick)="verifyOtp()" />
+
+      <div class="resend-row">
+        @if (countdown() > 0) {
+          <span class="resend-hint">Надіслати знову через <strong>{{ countdown() }} сек.</strong></span>
+        } @else {
+          <button class="link-btn" [disabled]="resendLoading()" (click)="resendOtp()">
+            <i class="pi pi-refresh" style="font-size:11px; margin-right:4px;"></i>
+            {{ resendLoading() ? 'Надсилання…' : 'Надіслати код знову' }}
+          </button>
+        }
+      </div>
+
+      <div class="bottom-link">
+        <button class="link-btn" (click)="back()">← Повернутись</button>
+      </div>
+    }
+
+    <!-- ── Forgot password ── -->
+    @if (view() === 'forgot') {
+      <div class="forgot-header">
+        <i class="pi pi-lock-open forgot-icon"></i>
+        <h3>Відновлення паролю</h3>
+        <p>Введіть email або телефон — надішлемо посилання для скидання</p>
+      </div>
+
+      <div class="field">
+        <label>Email або телефон</label>
+        <input pInputText [(ngModel)]="forgotIdentifier"
+               class="w-full" [class.input-error]="!!error()"
+               (ngModelChange)="clearError()"
+               (keyup.enter)="sendForgot()" />
+      </div>
+
+      <p-button label="Надіслати посилання" icon="pi pi-send" styleClass="w-full"
+        [loading]="loading()" (onClick)="sendForgot()" />
+
+      <div class="bottom-link">
+        <button class="link-btn" (click)="back()">← Назад до входу</button>
+      </div>
+    }
+
+  </div>
+</div>

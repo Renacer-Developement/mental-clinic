@@ -1,0 +1,130 @@
+$primary: #5f75d6;
+
+.page { padding: 32px; }
+
+.mobile-cards   { display: none; }
+.add-mobile-bar { display: none; }
+
+@media (max-width: 640px) {
+  .page { padding: 16px !important; }
+
+  .add-desktop { display: none; }
+
+  .search-bar { max-width: 100%; }
+
+  .add-mobile-bar {
+    display: block;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 100;
+    background: #fff;
+    border-top: 1px solid #e5e7eb;
+    padding: 12px 16px;
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+  }
+
+  ::ng-deep .p-datatable { display: none; }
+
+  .mobile-cards { display: flex; flex-direction: column; gap: 8px; padding-bottom: 80px; }
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  h2 { font-size: 22px; font-weight: 700; color: #003168; margin: 0; font-family: 'Inter', sans-serif; }
+}
+
+.search-bar {
+  position: relative;
+  margin-bottom: 20px;
+  max-width: 360px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  font-size: 14px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.search-input {
+  width: 100%;
+  padding-left: 36px !important;
+  border-radius: 8px !important;
+  border-color: #e5e7eb !important;
+  background: #fff;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+
+  &:focus {
+    border-color: #5f75d6 !important;
+    box-shadow: 0 0 0 3px rgba(95, 117, 214, 0.12) !important;
+  }
+
+  &::placeholder { color: #9ca3af; }
+}
+
+.row-actions { display: flex; gap: 4px; }
+
+.empty { text-align: center; color: #9ca3af; padding: 32px !important; }
+
+/* ── Mobile expandable cards ──────────────────────────────── */
+.mobile-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  &__meta {
+    flex: 1; min-width: 0;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+
+  &__name {
+    font-size: 13px; font-weight: 600; color: #1f2937;
+    font-family: 'Inter', sans-serif; line-height: 1.4;
+  }
+
+  &__chevron { font-size: 12px; color: $primary; flex-shrink: 0; }
+
+  &__body {
+    border-top: 1px solid #f3f4f6;
+    padding: 12px 14px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+
+  &__row {
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 8px;
+    font-size: 13px; font-family: 'Inter', sans-serif; color: #374151;
+  }
+
+  &__label {
+    font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.06em; color: #9ca3af; flex-shrink: 0; padding-top: 1px;
+  }
+
+  &__actions {
+    display: flex; gap: 8px;
+    ::ng-deep .p-button { flex: 1; }
+  }
+}
+
+.empty-mobile {
+  text-align: center; color: #9ca3af;
+  font-size: 13px; font-family: 'Inter', sans-serif; padding: 32px 0;
+}

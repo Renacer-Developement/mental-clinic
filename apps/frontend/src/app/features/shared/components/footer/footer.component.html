@@ -1,0 +1,76 @@
+<footer class="footer">
+  <div class="footer-accent-bar"></div>
+
+  <div class="footer-main">
+    <div class="footer-container">
+
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <img alt="Логотип центру ментального здоров'я Євгена Скрипника" src="assets/logo-icon.avif"/>
+          <div class="footer-logo-text">
+            <span class="footer-logo-title">Онлайн центр</span>
+            <span class="footer-logo-subtitle">ментального здоров'я Євгена Скрипника</span>
+          </div>
+        </div>
+        <p class="footer-description">
+          Професійна психіатрична допомога онлайн. Конфіденційно, безпечно, ефективно.
+        </p>
+        <div class="social-icons">
+          <a href="https://www.facebook.com/p/%D0%84%D0%B2%D0%B3%D0%B5%D0%BD-%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D0%BD%D0%B8%D0%BA-100005860367602"
+             target="_blank"
+             aria-label="Facebook"
+             (click)="trackSocialClick('Facebook', 'https://www.facebook.com/...')">
+            <i class="pi pi-facebook"></i>
+          </a>
+          <a href="https://www.instagram.com/dr_skripnik_evgen_/"
+             target="_blank"
+             aria-label="Instagram"
+             (click)="trackSocialClick('Instagram', 'https://www.instagram.com/...')">
+            <i class="pi pi-instagram"></i>
+          </a>
+          <a href="https://t.me/skripnik_evgen"
+             target="_blank"
+             aria-label="Telegram"
+             (click)="trackSocialClick('Telegram', 'https://t.me/skripnik_evgen')">
+            <i class="pi pi-telegram"></i>
+          </a>
+          <a (click)="openContacts()" aria-label="Phone" class="phone-link" href="#">
+            <i class="pi pi-phone"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-links">
+        <div class="link-column">
+          <h4 class="link-column-title">Навігація</h4>
+          <ul>
+            <li><a href="/" (click)="trackLinkClick('Головна', '/')">Головна</a></li>
+            <li><a href="/about" (click)="trackLinkClick('Про лікаря', '/about')">Про лікаря</a></li>
+            <li><a href="/test" (click)="trackLinkClick('Тести', '/test')">Тести</a></li>
+            <li><a href="/drugs" (click)="trackLinkClick('Препарати', '/drugs')">Препарати</a></li>
+          </ul>
+        </div>
+
+        <div class="link-column">
+          <h4 class="link-column-title">Документи</h4>
+          <ul>
+            <!-- <li>
+              <a href="/contract" (click)="trackLinkClick('Публічний договір', '/contract')">
+                Публічний договір
+                <span class="badge-important">Важливо</span>
+              </a>
+            </li> -->
+            <li><a href="/visit" (click)="trackLinkClick('Правила відвідування', '/visit')">Правила відвідування</a></li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="footer-container">
+      <span class="copyright">© 2026 Онлайн центр ментального здоров'я Євгена Скрипника. Всі права захищені.</span>
+    </div>
+  </div>
+</footer>

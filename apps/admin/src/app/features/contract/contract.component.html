@@ -1,0 +1,47 @@
+<div class="page ">
+  <p-toast />
+
+  <div class="page-header">
+    <div class="page-header__left">
+      <h2>Публічний договір</h2>
+      @if (lastSaved) {
+        <span class="last-saved">
+          Збережено: {{ lastSaved | date:'dd.MM.yyyy HH:mm' }}
+        </span>
+      }
+    </div>
+    <div class="header-right">
+      <label class="visibility-toggle" [class.is-visible]="visible">
+        <p-checkbox [(ngModel)]="visible" [binary]="true" inputId="visibleChk" />
+        <span class="toggle-label">
+          <i class="pi" [class.pi-eye]="visible" [class.pi-eye-slash]="!visible"></i>
+          {{ visible ? 'Показується на сайті' : 'Приховано (404)' }}
+        </span>
+      </label>
+      <p-button class="save-desktop"
+        label="Зберегти"
+        icon="pi pi-check"
+        [loading]="saving()"
+        (onClick)="save()"
+      />
+    </div>
+  </div>
+
+  <div class="save-mobile-bar">
+    <p-button label="Зберегти" icon="pi pi-check" styleClass="w-full"
+              [loading]="saving()" (onClick)="save()" />
+  </div>
+
+  @if (loading()) {
+    <div class="loading">
+      <i class="pi pi-spin pi-spinner"></i> Завантаження…
+    </div>
+  } @else {
+    <div class="editor-wrap">
+      <p-editor
+        [(ngModel)]="content"
+        [style]="{ height: 'calc(100vh - 200px)', minHeight: '500px' }"
+      />
+    </div>
+  }
+</div>

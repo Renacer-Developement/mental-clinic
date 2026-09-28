@@ -1,0 +1,11 @@
+<div class="faq-container">
+  <h2>Популярні питання</h2>
+  <div class="faq-grid" itemscope itemtype="https://schema.org/FAQPage">
+    <div class="faq-card" *ngFor="let faq of faqs" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      <h3 itemprop="name">{{ faq.question }}</h3>
+      <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+        <p itemprop="text">{{ faq.answer }}</p>
+      </div>
+    </div>
+  </div>
+</div>

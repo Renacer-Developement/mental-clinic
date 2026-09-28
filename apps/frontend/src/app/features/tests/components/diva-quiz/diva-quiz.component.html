@@ -1,0 +1,203 @@
+<!-- Two-column list of example checkboxes (adult / childhood) -->
+<ng-template #examplesTpl let-list let-prefix="prefix">
+  <ul class="dv-examples">
+    @for (text of list; track $index) {
+      <li>
+        <label class="dv-check" [class.dv-check--on]="isChecked(prefix + ':' + $index)">
+          <input type="checkbox" [checked]="isChecked(prefix + ':' + $index)" (change)="toggleCheck(prefix + ':' + $index)" />
+          <span class="dv-check__box"></span>
+          <span class="dv-check__label">{{ text }}</span>
+        </label>
+      </li>
+    }
+  </ul>
+  <input class="dv-other" type="text" placeholder="Інше…" [value]="note(prefix + ':other')"
+         (input)="setNote(prefix + ':other', $any($event.target).value)" />
+</ng-template>
+
+<!-- Так / Ні options in the site's radio style -->
+<ng-template #yesNoTpl let-key let-na="na">
+  <div class="dv-yn" [class.dv-yn--3]="na" [class.dp-options--error]="showError() && answer(key) === undefined">
+    <div class="dp-option" [class.dp-option--selected]="answer(key) === 1" (click)="setAnswer(key, 1)">
+      <span class="dp-option__dot"></span><span class="dp-option__label">Так</span>
+    </div>
+    <div class="dp-option" [class.dp-option--selected]="answer(key) === 0" (click)="setAnswer(key, 0)">
+      <span class="dp-option__dot"></span><span class="dp-option__label">Ні</span>
+    </div>
+    @if (na) {
+      <div class="dp-option" [class.dp-option--selected]="answer(key) === -1" (click)="setAnswer(key, -1)">
+        <span class="dp-option__dot"></span><span class="dp-option__label">Н/д</span>
+      </div>
+    }
+  </div>
+</ng-template>
+
+<section class="dp-quiz">
+  <div class="container">
+
+    <div class="dp-progress">
+      <div class="dp-progress__header">
+        <span class="dp-progress__label">Крок</span>
+        <span class="dp-progress__count">{{ index() + 1 }}<em>/{{ steps.length }}</em></span>
+      </div>
+      <div class="dp-progress__track">
+        <div class="dp-progress__fill" [style.width.%]="((index() + 1) / steps.length) * 100"></div>
+      </div>
+    </div>
+
+    <div class="dp-question">
+      @switch (step().kind) {
+
+        @case ('item') {
+          @let q = $any(step()).question;
+          <p class="dv-part">{{ partLabel(q.section) }}</p>
+          <p class="dp-question__text"><span class="dv-code">{{ q.code }}</span>{{ q.question }}</p>
+          @if (q.example) { <p class="dp-question__example">{{ q.example }}</p> }
+
+          <div class="dv-cols">
+            <div class="dv-col">
+              <h3 class="dv-col__title">Зрілість</h3>
+              <ng-container *ngTemplateOutlet="examplesTpl; context: { $implicit: q.adultExamples, prefix: q._id + ':adult' }" />
+              <div class="dv-answer">
+                <p class="dv-ask">Симптоми присутні?</p>
+                <ng-container *ngTemplateOutlet="yesNoTpl; context: { $implicit: q._id + ':adult' }" />
+              </div>
+            </div>
+            <div class="dv-col">
+              <h3 class="dv-col__title">Дитинство (5–12 р.)</h3>
+              <ng-container *ngTemplateOutlet="examplesTpl; context: { $implicit: q.childExamples, prefix: q._id + ':child' }" />
+              <div class="dv-answer">
+                <p class="dv-ask">Симптоми присутні?</p>
+                <ng-container *ngTemplateOutlet="yesNoTpl; context: { $implicit: q._id + ':child' }" />
+              </div>
+            </div>
+          </div>
+        }
+
+        @case ('supplement') {
+          @let sp = $any(step());
+          <p class="dv-part">{{ partLabel(sp.domain) }}</p>
+          <p class="dp-question__text"><span class="dv-code">Доп. A</span>Доповнення до критерію A</p>
+          <p class="dp-question__example">Порівняння з однолітками: симптоми мають бути вираженішими або частішими, ніж у людей того ж віку.</p>
+          <div class="dv-cols">
+            @if (sp.adult) {
+              <div class="dv-col">
+                <h3 class="dv-col__title">Зрілість</h3>
+                <p class="dv-block__text">{{ sp.adult.question }}</p>
+                <ng-container *ngTemplateOutlet="yesNoTpl; context: { $implicit: sp.adult._id }" />
+              </div>
+            }
+            @if (sp.child) {
+              <div class="dv-col">
+                <h3 class="dv-col__title">Дитинство (5–12 р.)</h3>
+                <p class="dv-block__text">{{ sp.child.question }}</p>
+                <ng-container *ngTemplateOutlet="yesNoTpl; context: { $implicit: sp.child._id }" />
+              </div>
+            }
+          </div>
+        }
+
+        @case ('domain') {
+          @let d = $any(step()).domain;
+          <p class="dv-part">Частина 3 — Порушення функціонування</p>
+          <p class="dp-question__text">{{ d.name }}</p>
+          <p class="dp-question__example">Позначте сфери, в яких симптоми заважали пацієнту.</p>
+          <div class="dv-cols">
+            <div class="dv-col">
+              <h3 class="dv-col__title">Зрілість</h3>
+              <ng-container *ngTemplateOutlet="examplesTpl; context: { $implicit: d.adultExamples, prefix: 'domain:' + d.name + ':adult' }" />
+            </div>
+            <div class="dv-col">
+              <h3 class="dv-col__title">Дитинство</h3>
+              <ng-container *ngTemplateOutlet="examplesTpl; context: { $implicit: d.childExamples, prefix: 'domain:' + d.name + ':child' }" />
+            </div>
+          </div>
+        }
+
+        @case ('criteria') {
+          <p class="dv-part">Частина 3 — Критерії B, C, D, E</p>
+
+          @if (bySection['B']; as b) {
+            <div class="dv-block">
+              <p class="dv-block__title">Критерій B — поява симптомів</p>
+              <p class="dv-block__text">{{ b.question }}</p>
+              <ng-container *ngTemplateOutlet="yesNoTpl; context: { $implicit: b._id }" />
+              @if (answer(b._id) === 0) {
+                <label class="dv-age">
+                  <span>Вік появи симптомів</span>
+                  <input type="number" min="0" max="99" placeholder="років" [value]="onsetAge()"
+                         (input)="onsetAge.set($any($event.target).value)" />
+                </label>
+              }
+            </div>
+          }
+
+          <div class="dv-block">
+            <p class="dv-block__title">Підсумок порушень (≥2 області)</p>
+            @if (bySection['IMPAIR_ADULT']; as q) {
+              <p class="dv-block__text">{{ q.question }}</p>
+              <ng-container *ngTemplateOutlet="yesNoTpl; context: { $implicit: q._id }" />
+            }
+            @if (bySection['IMPAIR_CHILD']; as q) {
+              <p class="dv-block__text">{{ q.question }}</p>
+              <ng-container *ngTemplateOutlet="yesNoTpl; context: { $implicit: q._id }" />
+            }
+          </div>
+
+          @if (bySection['E']; as e) {
+            <div class="dv-block">
+              <p class="dv-block__title">Критерій E</p>
+              <p class="dv-block__text">{{ e.question }}</p>
+              <ng-container *ngTemplateOutlet="yesNoTpl; context: { $implicit: e._id }" />
+              @if (answer(e._id) === 1) {
+                <input class="dv-other" type="text" placeholder="Яким саме розладом?" [value]="note(e._id + ':other')"
+                       (input)="setNote(e._id + ':other', $any($event.target).value)" />
+              }
+            </div>
+          }
+
+          @if (collateral.length) {
+            <div class="dv-block">
+              <p class="dv-block__title">Чи підтверджується діагноз додатковою інформацією?</p>
+              @for (c of collateral; track c._id) {
+                <p class="dv-block__text">{{ c.question }}</p>
+                <ng-container *ngTemplateOutlet="yesNoTpl; context: { $implicit: c._id, na: true }" />
+              }
+            </div>
+          }
+        }
+      }
+
+      @if (showError()) {
+        <div class="dp-validation-error">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round" width="15" height="15">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          Будь ласка, дайте відповідь на всі питання цього кроку.
+        </div>
+      }
+    </div>
+
+    <div class="dp-nav" [class.dp-nav--start]="index() === 0">
+      @if (index() > 0) {
+        <button class="dp-btn dp-btn--ghost" type="button" (click)="prev()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+               stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+            <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+          </svg>
+          Назад
+        </button>
+      }
+      <button class="dp-btn dp-btn--primary" type="button" (click)="next()">
+        {{ isLast() ? 'Формуляр підрахунку' : 'Далі' }}
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+             stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+          @if (isLast()) { <polyline points="20 6 9 17 4 12"/> }
+          @else { <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/> }
+        </svg>
+      </button>
+    </div>
+
+  </div>
+</section>

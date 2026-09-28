@@ -1,0 +1,68 @@
+@use "../../../../../assets/css/coloristics" as *;
+
+$ink: #1f2a3c;
+$serif: Georgia, 'Times New Roman', serif;
+
+.tgrid {
+  display: flex;
+  flex-direction: column;
+}
+
+.tgrid__heading {
+  font-family: $serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: $ink;
+  text-align: center;
+  margin: 0 0 1.5rem;
+}
+
+// ── Sections ──────────────────────────────────────────────────────────────────
+
+.tgrid__section {
+  scroll-margin-top: 90px; // keep the title clear of the sticky navbar
+
+  & + & { margin-top: 2rem; }
+}
+
+.tgrid__section-title {
+  font-family: $serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: $primary-color;
+  margin: 0 0 1rem;
+}
+
+.tgrid__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+
+  @media (max-width: 900px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 560px) { grid-template-columns: 1fr; }
+}
+
+// ── Skeleton cards ────────────────────────────────────────────────────────────
+
+.tcard-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.1rem 1rem;
+  box-shadow: 0 2px 12px rgba(16, 24, 40, 0.06);
+
+  &__desc {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+}
+
+.tgrid__empty {
+  text-align: center;
+  color: #8a93a6;
+  padding: 3rem 1rem;
+  margin: 0;
+}

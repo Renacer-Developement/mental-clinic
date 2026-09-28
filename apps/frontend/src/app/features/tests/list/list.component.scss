@@ -1,0 +1,105 @@
+@use "../../../../assets/css/coloristics" as *;
+
+.tests-list-page {
+  display: flex;
+  flex-direction: column;
+}
+
+.tests-hero {
+  // deep violet — psychological introspection
+  background: linear-gradient(145deg, #0c0820 0%, #130b2e 50%, #180d3a 100%);
+  color: #fff;
+  min-height: 440px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 0 3.5rem;
+  position: relative;
+  overflow: hidden;
+
+  // violet/purple radial glows
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 65% 100% at -5% 105%, rgba(139, 92, 246, 0.25) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 55% at 105%   0%, rgba(168, 85, 247, 0.15)  0%, transparent 55%),
+      radial-gradient(ellipse 50% 40% at 50%   110%, rgba(109, 40, 217, 0.12) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  // soft concentric ring decoration
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -120px;
+    right: -80px;
+    width: 520px;
+    height: 520px;
+    border-radius: 50%;
+    border: 1px solid rgba(139, 92, 246, 0.12);
+    box-shadow:
+      0 0 0 60px  rgba(139, 92, 246, 0.05),
+      0 0 0 120px rgba(139, 92, 246, 0.03),
+      0 0 0 200px rgba(139, 92, 246, 0.02);
+    pointer-events: none;
+  }
+
+  &__breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 1.25rem;
+    position: relative;
+    z-index: 1;
+
+    a {
+      color: rgba(255,255,255,0.45);
+      text-decoration: none;
+      transition: color 0.2s;
+      &:hover { color: rgba(255,255,255,0.85); }
+    }
+
+    span:last-child { color: rgba(255,255,255,0.75); }
+  }
+
+  &__title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin: 0 0 0.75rem;
+    color: #fff;
+    position: relative;
+    z-index: 1;
+  }
+
+  &__subtitle {
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.42);
+    margin: 0 0 1.25rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  &__lead {
+    font-size: 1rem;
+    line-height: 1.75;
+    color: rgba(255,255,255,0.65);
+    max-width: 540px;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+  }
+}
+
+.tests-content {
+  background: $section-bg;
+  padding: 3rem 0 5rem;
+}

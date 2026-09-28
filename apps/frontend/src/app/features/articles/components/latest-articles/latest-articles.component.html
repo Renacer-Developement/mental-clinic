@@ -1,0 +1,84 @@
+<section class="latest-articles">
+  <div class="latest-articles__inner">
+
+    <div class="la-head">
+      <div class="la-head__left">
+        <span class="la-head__eyebrow">Корисні матеріали</span>
+        <h2 class="la-head__title">Статті про ментальне здоров'я</h2>
+      </div>
+      <a class="la-head__all" routerLink="/articles">
+        Всі статті
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+             stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Skeleton -->
+    @if (loading()) {
+      <div class="art-bento">
+        <div class="art-card art-card--featured art-card--skeleton">
+          <p-skeleton width="100%" height="100%" borderRadius="16px"/>
+        </div>
+        @for (s of [1,2]; track $index) {
+          <div class="art-card art-card--skeleton">
+            <p-skeleton width="100%" height="100%" borderRadius="16px"/>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Articles -->
+    @if (!loading() && articles().length) {
+      <div class="art-bento">
+        @for (article of articles(); track article._id; let i = $index) {
+          <a
+            class="art-card"
+            [class.art-card--featured]="i === 0"
+            [routerLink]="['/articles', article.slug ?? article._id]"
+          >
+            <!-- Image -->
+            <div class="art-card__img-wrap">
+              @if (article.coverImage) {
+                <img [src]="article.coverImage" [alt]="article.title" loading="lazy" class="art-card__img"/>
+              } @else {
+                <div class="art-card__no-img">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"
+                       stroke-linecap="round" stroke-linejoin="round" width="32" height="32">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                  </svg>
+                </div>
+              }
+              <div class="art-card__overlay"></div>
+            </div>
+
+            <!-- Body -->
+            <div class="art-card__body">
+              @if (article.categories?.length) {
+                <span class="art-card__cat">{{ article.categories[0] }}</span>
+              }
+              <h3 class="art-card__title">{{ article.title }}</h3>
+              @if (i === 0 && article.excerpt) {
+                <p class="art-card__excerpt">{{ article.excerpt }}</p>
+              }
+              <div class="art-card__meta">
+                @if (article.readTime) {
+                  <span>{{ article.readTime }} хв читання</span>
+                }
+                <span class="art-card__arrow">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                       stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+                    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                  </svg>
+                </span>
+              </div>
+            </div>
+          </a>
+        }
+      </div>
+    }
+
+  </div>
+</section>

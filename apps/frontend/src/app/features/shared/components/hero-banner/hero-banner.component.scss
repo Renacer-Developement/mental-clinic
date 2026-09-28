@@ -1,0 +1,168 @@
+@use "sass:color";
+@use "../../../../../assets/css/coloristics" as *;
+
+// ── Keyframes ─────────────────────────────────────────────────────────────────
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(48px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+// ── Banner shell ──────────────────────────────────────────────────────────────
+
+#hero-banner {
+  background: linear-gradient(
+    115deg,
+    color.adjust($primary-color, $lightness: 22%) 0%,
+    color.adjust($primary-color, $lightness: 14%) 38%,
+    color.adjust($primary-color, $lightness: 8%)  68%,
+    $primary-color               100%
+  );
+  overflow: hidden;
+  min-height: 440px;
+  display: flex;
+  align-items: stretch;
+}
+
+// ── Inner wrapper ─────────────────────────────────────────────────────────────
+
+.hero-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1450px;
+  margin: 0 auto;
+  padding: 3.5rem 6% 0;
+  gap: 2rem;
+
+  @media (max-width: 900px) {
+    position: relative;
+    align-items: flex-end;
+    padding: 2.5rem 1.5rem 0;
+    gap: 0;
+    min-height: 420px;
+  }
+}
+
+// ── Text block ────────────────────────────────────────────────────────────────
+
+.hero-text {
+  flex: 0 1 50%;
+  max-width: 520px;
+  padding-bottom: 3.5rem;
+  animation: fadeInUp 0.72s ease-out both;
+
+  @media (max-width: 900px) {
+    position: relative;
+    z-index: 2;
+    flex: none;
+    width: 62%;
+    padding-bottom: 2.5rem;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 3.6vw, 3.25rem);
+    font-weight: 900;
+    line-height: 1.12;
+    color: $heading-color;
+    margin: 0 0 1rem;
+  }
+
+  p {
+    font-size: clamp(0.88rem, 1.3vw, 1.02rem);
+    color: color.adjust($primary-color, $lightness: -30%);
+    line-height: 1.7;
+    margin: 0 0 1.75rem;
+    opacity: 0.88;
+    animation: fadeInUp 0.72s 0.14s ease-out both;
+  }
+}
+
+.hero-name {
+  display: block;
+  font-size: clamp(1rem, 1.8vw, 1.45rem);
+  font-weight: 300;
+  color: color.adjust($primary-color, $lightness: -18%);
+  letter-spacing: 0.03em;
+  margin-bottom: 0.3rem;
+}
+
+// ── CTA button ────────────────────────────────────────────────────────────────
+
+.hero-cta {
+  display: inline-block;
+  background: color.adjust($primary-color, $lightness: -28%);
+  color: $secondary-color;
+  padding: 0.72rem 1.8rem;
+  border-radius: 2rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: background 0.22s, transform 0.22s, box-shadow 0.22s;
+  animation: fadeInUp 0.72s 0.26s ease-out both;
+
+  &:hover {
+    background: $primary-color;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba($primary-color, 0.45);
+  }
+
+  @media (max-width: 900px) {
+    white-space: nowrap;
+    font-size: 0.85rem;
+    padding: 0.65rem 1.4rem;
+  }
+}
+
+// ── Doctor image ──────────────────────────────────────────────────────────────
+
+.hero-image-wrap {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  // fade left edge into banner, fade bottom edge out
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 26%),
+                      linear-gradient(to bottom, black 55%, transparent 100%);
+  -webkit-mask-composite: destination-in;
+  mask-image: linear-gradient(to right, transparent 0%, black 26%),
+              linear-gradient(to bottom, black 55%, transparent 100%);
+  mask-composite: intersect;
+  animation: fadeInRight 0.82s 0.2s ease-out both;
+
+  @media (max-width: 900px) {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 48%;
+    justify-content: flex-end;
+    -webkit-mask-image:
+      linear-gradient(to right, transparent 0%, black 22%),
+      linear-gradient(to bottom, black 42%, transparent 100%);
+    -webkit-mask-composite: destination-in;
+    mask-image:
+      linear-gradient(to right, transparent 0%, black 22%),
+      linear-gradient(to bottom, black 42%, transparent 100%);
+    mask-composite: intersect;
+  }
+}
+
+.hero-img {
+  display: block;
+  width: 100%;
+  max-width: 460px;
+  min-width: 220px;
+  height: auto;
+  object-fit: contain;
+
+  @media (max-width: 900px) {
+    max-width: 100%;
+  }
+}

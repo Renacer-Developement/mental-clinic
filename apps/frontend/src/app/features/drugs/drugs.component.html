@@ -1,0 +1,307 @@
+<div class="drugs-page">
+
+  <!-- Hero -->
+  <section class="drugs-hero">
+    <div class="container">
+      <nav class="drugs-hero__breadcrumb">
+        <a routerLink="/">Головна</a>
+        <span>/</span>
+        <span>Перевірка ліків</span>
+      </nav>
+      <h1 class="drugs-hero__title">Перевірка ліків</h1>
+      <p class="drugs-hero__subtitle">Доказова медицина · Аналіз взаємодій · Надійні джерела</p>
+      <p class="drugs-hero__lead">
+        Перевіряйте рівень дослідженості препаратів та їх взаємодії за допомогою провідних медичних баз даних.
+        Жодної псевдонауки — лише верифіковані клінічні дані.
+      </p>
+      <div class="drugs-hero__tags">
+        <span>Взаємодія ліків</span>
+        <span>Побічні ефекти</span>
+        <span>Дозування</span>
+        <span>Протипоказання</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Resources -->
+  <section class="drugs-resources">
+    <div class="container">
+      <p class="drugs-resources__label">Перевірені джерела</p>
+      <h2 class="drugs-resources__title">Бази даних доказової медицини</h2>
+      <p class="drugs-resources__lead">
+        Ознайомтеся з провідними міжнародними ресурсами для аналізу ліків
+      </p>
+
+      <div class="drugs-resources__grid">
+
+        <a class="drugs-resources__card"
+           href="https://reference.medscape.com/drug-interactionchecker"
+           target="_blank" rel="noopener noreferrer">
+          <div class="drugs-resources__card-badge">Рекомендовано</div>
+          <div class="drugs-resources__card-icon drugs-resources__card-icon--blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="26" height="26">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+            </svg>
+          </div>
+          <h3 class="drugs-resources__card-title">Medscape Drug Interaction Checker</h3>
+          <p class="drugs-resources__card-desc">
+            Перевірка взаємодій між препаратами на основі клінічних даних. Один з найповніших інструментів для лікарів та пацієнтів.
+          </p>
+          <span class="drugs-resources__card-cta">
+            Перейти до Medscape
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </span>
+        </a>
+
+        <a class="drugs-resources__card"
+           href="https://www.drugs.com/uk/"
+           target="_blank" rel="noopener noreferrer">
+          <div class="drugs-resources__card-icon drugs-resources__card-icon--purple">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="26" height="26">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <h3 class="drugs-resources__card-title">Drugs.com — Інформація про ліки</h3>
+          <p class="drugs-resources__card-desc">
+            Докладна інформація про показання, дозування, побічні ефекти та протипоказання лікарських засобів.
+          </p>
+          <span class="drugs-resources__card-cta">
+            Перейти до Drugs.com
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </span>
+        </a>
+
+      </div>
+        <p class="drugs-resources__notice pt-2">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            Посилання ведуть на незалежні зовнішні ресурси. Ми не несемо відповідальності за їх зміст, точність або доступність.
+        </p>
+    </div>
+  </section>
+
+  <!-- Feature 1: Why evidence matters — image left, text right -->
+  <section class="drugs-feature drugs-feature--light">
+    <div class="container">
+      <div class="drugs-feature__inner">
+
+        <div class="drugs-feature__visual">
+          <div class="drugs-feature__visual-wrap">
+            <!-- Decorative molecular / research illustration -->
+            <svg class="drugs-feature__svg" viewBox="0 0 440 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Outer glow ring -->
+              <circle cx="220" cy="190" r="155" stroke="#5f75d6" stroke-width="1" stroke-dasharray="8 6" opacity="0.2"/>
+              <!-- Mid ring -->
+              <circle cx="220" cy="190" r="105" fill="rgba(95,117,214,0.06)" stroke="#5f75d6" stroke-width="1.5" opacity="0.25"/>
+              <!-- Core circle -->
+              <circle cx="220" cy="190" r="60" fill="rgba(95,117,214,0.12)"/>
+              <!-- Shield icon in core -->
+              <path d="M220 158 l-24 10 v18 c0 14 10 26 24 30 14-4 24-16 24-30 v-18 z" fill="#5f75d6" opacity="0.85"/>
+              <polyline points="211,188 218,196 232,179" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <!-- Satellite nodes -->
+              <circle cx="120" cy="110" r="22" fill="#6c86f5" opacity="0.15"/>
+              <circle cx="120" cy="110" r="14" fill="#6c86f5" opacity="0.55"/>
+              <text x="120" y="115" text-anchor="middle" font-size="11" fill="#fff" font-weight="700" opacity="0.9">Rx</text>
+              <line x1="220" y1="190" x2="134" y2="118" stroke="#5f75d6" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.3"/>
+
+              <circle cx="330" cy="108" r="22" fill="#5f75d6" opacity="0.12"/>
+              <circle cx="330" cy="108" r="14" fill="#5f75d6" opacity="0.5"/>
+              <text x="330" y="113" text-anchor="middle" font-size="10" fill="#fff" font-weight="700" opacity="0.9">DB</text>
+              <line x1="220" y1="190" x2="316" y2="116" stroke="#5f75d6" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.3"/>
+
+              <circle cx="336" cy="274" r="22" fill="#6c86f5" opacity="0.12"/>
+              <circle cx="336" cy="274" r="14" fill="#6c86f5" opacity="0.45"/>
+              <text x="336" y="279" text-anchor="middle" font-size="10" fill="#fff" font-weight="700" opacity="0.9">AI</text>
+              <line x1="220" y1="190" x2="322" y2="266" stroke="#5f75d6" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.3"/>
+
+              <circle cx="112" cy="272" r="22" fill="#5f75d6" opacity="0.12"/>
+              <circle cx="112" cy="272" r="14" fill="#5f75d6" opacity="0.45"/>
+              <text x="112" y="277" text-anchor="middle" font-size="9" fill="#fff" font-weight="700" opacity="0.9">Lab</text>
+              <line x1="220" y1="190" x2="126" y2="264" stroke="#5f75d6" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.3"/>
+
+              <!-- Floating pill shapes -->
+              <rect x="46" y="170" width="42" height="20" rx="10" fill="#6c86f5" opacity="0.18" transform="rotate(-20 67 180)"/>
+              <rect x="358" y="165" width="36" height="17" rx="8.5" fill="#5f75d6" opacity="0.18" transform="rotate(15 376 173)"/>
+              <rect x="180" y="32" width="30" height="14" rx="7" fill="#6c86f5" opacity="0.2" transform="rotate(-8 195 39)"/>
+              <rect x="200" y="330" width="38" height="16" rx="8" fill="#5f75d6" opacity="0.15" transform="rotate(10 219 338)"/>
+            </svg>
+            <div class="drugs-feature__visual-badge">
+              <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path d="M10 1l2.5 5 5.5.8-4 3.9.9 5.5L10 13.5 5.1 16.2l.9-5.5L2 6.8l5.5-.8z"/></svg>
+              Клінічно верифіковано
+            </div>
+          </div>
+        </div>
+
+        <div class="drugs-feature__text">
+          <p class="drugs-feature__label">Чому це важливо</p>
+          <h2 class="drugs-feature__title">Доказова медицина рятує життя</h2>
+          <p class="drugs-feature__body">
+            Самостійний прийом ліків без перевірки взаємодій може призвести до серйозних ускладнень.
+            Деякі комбінації препаратів посилюють або нейтралізують одне одного — а іноді є небезпечними.
+          </p>
+          <p class="drugs-feature__body">
+            Використання перевірених міжнародних баз даних дозволяє оцінити ризики ще до початку лікування
+            і прийти на консультацію з лікарем вже підготовленим.
+          </p>
+          <ul class="drugs-feature__list">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg>
+              Перевірено клінічними дослідженнями
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg>
+              Регулярне оновлення баз даних
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg>
+              Міжнародні стандарти якості
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Steps: How to check interactions -->
+  <section class="drugs-steps">
+    <div class="container">
+      <div class="drugs-steps__header">
+        <p class="drugs-steps__label">Інструкція</p>
+        <h2 class="drugs-steps__title">Як перевірити взаємодію ліків?</h2>
+        <p class="drugs-steps__subtitle">Простий алгоритм — три кроки до безпечного лікування</p>
+      </div>
+      <div class="drugs-steps__track">
+
+        <div class="drugs-steps__item">
+          <div class="drugs-steps__num">01</div>
+          <div class="drugs-steps__body">
+            <h3>Відкрийте обраний ресурс</h3>
+            <p>Перейдіть до Medscape або Drugs.com за посиланнями вище.</p>
+            <div class="drugs-steps__example">
+              <code>medscape.com → Drug Interaction Checker</code>
+            </div>
+          </div>
+        </div>
+
+        <div class="drugs-steps__item">
+          <div class="drugs-steps__num">02</div>
+          <div class="drugs-steps__body">
+            <h3>Введіть назви препаратів</h3>
+            <p>Вводьте міжнародну непатентовану назву (МНН) латиницею для точнішого результату.</p>
+            <div class="drugs-steps__example">
+              <code>Escitalopram + Hydroxyzine</code>
+            </div>
+          </div>
+        </div>
+
+        <div class="drugs-steps__item">
+          <div class="drugs-steps__num">03</div>
+          <div class="drugs-steps__body">
+            <h3>Ознайомтеся з результатами</h3>
+            <p>Перегляньте рівень взаємодії та проконсультуйтеся з лікарем щодо підібраної схеми.</p>
+            <div class="drugs-steps__example">
+              <code>Незначний / Помірний / Значний / Протипоказаний</code>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature 2: Safety — text left, image right -->
+  <section class="drugs-feature drugs-feature--dark">
+    <div class="container">
+      <div class="drugs-feature__inner drugs-feature__inner--reverse">
+
+        <div class="drugs-feature__text">
+          <p class="drugs-feature__label drugs-feature__label--light">Безпека лікування</p>
+          <h2 class="drugs-feature__title drugs-feature__title--light">Консультація лікаря — завжди перший крок</h2>
+          <p class="drugs-feature__body drugs-feature__body--light">
+            Онлайн-бази даних є потужним інструментом, але не замінюють лікаря. Вони допомагають вам
+            прийти на прийом підготовленим, знати потрібні питання і розуміти свою схему лікування.
+          </p>
+          <p class="drugs-feature__body drugs-feature__body--light">
+            Євген Скрипник практикує виключно доказову психіатрію та надає розгорнуті пояснення
+            щодо кожного призначеного препарату.
+          </p>
+          <a routerLink="/visit" class="drugs-feature__cta">
+            Записатися на консультацію
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </a>
+        </div>
+
+        <div class="drugs-feature__visual">
+          <div class="drugs-feature__visual-wrap drugs-feature__visual-wrap--dark">
+            <!-- Decorative safety / magnifier illustration -->
+            <svg class="drugs-feature__svg" viewBox="0 0 440 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Background rings -->
+              <circle cx="210" cy="178" r="130" stroke="rgba(255,255,255,0.06)" stroke-width="1.5"/>
+              <circle cx="210" cy="178" r="90" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+
+              <!-- Magnifying glass -->
+              <circle cx="195" cy="163" r="68" fill="rgba(95,117,214,0.18)" stroke="#6c86f5" stroke-width="3"/>
+              <circle cx="195" cy="163" r="52" fill="rgba(95,117,214,0.1)" stroke="#6c86f5" stroke-width="1.5" opacity="0.6"/>
+              <!-- Handle -->
+              <line x1="240" y1="208" x2="285" y2="253" stroke="#6c86f5" stroke-width="14" stroke-linecap="round" opacity="0.7"/>
+              <line x1="240" y1="208" x2="285" y2="253" stroke="rgba(255,255,255,0.15)" stroke-width="5" stroke-linecap="round"/>
+
+              <!-- Inside magnifier: pill + checkmark -->
+              <rect x="170" y="150" width="50" height="24" rx="12" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+              <line x1="195" y1="150" x2="195" y2="174" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+              <polyline points="179,168 188,178 213,155" stroke="#7dd3fc" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+              <!-- Floating data points -->
+              <rect x="320" y="80" width="70" height="32" rx="8" fill="rgba(95,117,214,0.3)" stroke="rgba(108,134,245,0.5)" stroke-width="1"/>
+              <text x="355" y="101" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.8)" font-weight="600">Безпечно ✓</text>
+              <line x1="320" y1="96" x2="263" y2="148" stroke="rgba(108,134,245,0.35)" stroke-width="1" stroke-dasharray="4 3"/>
+
+              <rect x="44" y="68" width="90" height="32" rx="8" fill="rgba(239,68,68,0.2)" stroke="rgba(239,68,68,0.4)" stroke-width="1"/>
+              <text x="89" y="89" text-anchor="middle" font-size="11" fill="rgba(255,180,180,0.9)" font-weight="600">Серйозний ⚠</text>
+              <line x1="124" y1="84" x2="152" y2="140" stroke="rgba(239,68,68,0.3)" stroke-width="1" stroke-dasharray="4 3"/>
+
+              <rect x="50" y="270" width="80" height="32" rx="8" fill="rgba(251,191,36,0.18)" stroke="rgba(251,191,36,0.35)" stroke-width="1"/>
+              <text x="90" y="291" text-anchor="middle" font-size="11" fill="rgba(255,220,120,0.9)" font-weight="600">Незначний ℹ</text>
+              <line x1="130" y1="286" x2="158" y2="220" stroke="rgba(251,191,36,0.3)" stroke-width="1" stroke-dasharray="4 3"/>
+
+              <!-- Decorative pills -->
+              <rect x="340" y="260" width="44" height="20" rx="10" fill="rgba(108,134,245,0.2)" transform="rotate(-25 362 270)"/>
+              <rect x="30" y="178" width="36" height="16" rx="8" fill="rgba(125,211,252,0.15)" transform="rotate(15 48 186)"/>
+            </svg>
+            <div class="drugs-feature__visual-badge drugs-feature__visual-badge--light">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Доказова психіатрія
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Disclaimer -->
+  <section class="drugs-disclaimer">
+    <div class="container">
+      <div class="drugs-disclaimer__inner">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <p>
+          Інформація надана виключно з ознайомлювальною метою.
+          Завжди консультуйтеся з вашим лікарем перед прийомом будь-яких ліків.
+          Переходячи за посиланнями на зовнішні ресурси, ви залишаєте цей сайт —
+          ми не несемо відповідальності за зміст сторонніх платформ.
+        </p>
+      </div>
+    </div>
+  </section>
+
+</div>

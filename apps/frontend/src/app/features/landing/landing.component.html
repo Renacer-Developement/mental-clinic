@@ -1,0 +1,77 @@
+<div class="landing-outer">
+  <div class="landing-wrapper" id="home">
+
+    <app-hero-banner></app-hero-banner>
+
+    <app-doctor-info-strip></app-doctor-info-strip>
+
+    <app-no-fear-block></app-no-fear-block>
+
+    <app-testing-block [id]='SECTION.TEST'>
+      <app-test-block></app-test-block>
+    </app-testing-block>
+
+    <app-consultation-block></app-consultation-block>
+
+    <app-latest-articles></app-latest-articles>
+
+    @if (contractVisible()) {
+    <div class="contract-section">
+      <div class="contract-inner">
+
+        <!-- left: content -->
+        <div class="contract-content">
+          <span class="contract-eyebrow">Публічна оферта</span>
+          <h3 class="contract-heading">Прозорі умови<br>надання послуг</h3>
+          <p class="contract-text">
+            Записуючись на консультацію, ви погоджуєтесь з умовами надання послуг клініки. Ознайомтесь із договором, щоб знати свої права та обов'язки.
+          </p>
+          <a class="contract-btn" [routerLink]="ROUTES.CONTRACT">
+            Читати договір
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </a>
+        </div>
+
+        <!-- right: illustration -->
+        <div class="contract-illustration" aria-hidden="true">
+          <svg class="contract-illus-svg" viewBox="0 0 260 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="40" y="28" width="160" height="210" rx="16" fill="currentColor" opacity="0.06"/>
+            <rect x="30" y="18" width="160" height="210" rx="16" fill="white" stroke="currentColor" stroke-opacity="0.18" stroke-width="1.5"/>
+            <path d="M150 18 L190 58 L150 58 Z" fill="currentColor" opacity="0.08"/>
+            <path d="M150 18 L190 58" stroke="currentColor" stroke-opacity="0.2" stroke-width="1.5"/>
+            <rect x="52" y="78" width="96" height="8" rx="4" fill="currentColor" opacity="0.15"/>
+            <rect x="52" y="98" width="116" height="6" rx="3" fill="currentColor" opacity="0.09"/>
+            <rect x="52" y="112" width="100" height="6" rx="3" fill="currentColor" opacity="0.09"/>
+            <rect x="52" y="126" width="88" height="6" rx="3" fill="currentColor" opacity="0.09"/>
+            <rect x="52" y="148" width="116" height="6" rx="3" fill="currentColor" opacity="0.09"/>
+            <rect x="52" y="162" width="76" height="6" rx="3" fill="currentColor" opacity="0.09"/>
+            <rect x="52" y="192" width="80" height="2" rx="1" fill="currentColor" opacity="0.2"/>
+            <rect x="148" y="192" width="30" height="2" rx="1" fill="currentColor" opacity="0.2"/>
+            <circle cx="188" cy="198" r="28" fill="currentColor" opacity="0.1"/>
+            <circle cx="188" cy="198" r="22" fill="currentColor"/>
+            <path d="M178 198 L185 205 L199 191" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+      </div>
+
+      <!-- primary divider -->
+      <div class="contract-divider">
+        <span class="contract-divider__line"></span>
+        <span class="contract-divider__icon">
+          <svg viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="8" cy="8" r="3"/>
+          </svg>
+        </span>
+        <span class="contract-divider__line"></span>
+      </div>
+    </div>
+    }
+
+    <app-telegram-banner></app-telegram-banner>
+
+  </div>
+</div>

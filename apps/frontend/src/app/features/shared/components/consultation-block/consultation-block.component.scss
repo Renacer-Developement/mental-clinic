@@ -1,0 +1,137 @@
+@use "sass:color";
+@use "../../../../../assets/css/coloristics" as *;
+
+.consultation-section {
+  background: $section-seconder-bg;
+  padding: 5rem 0;
+}
+
+.consultation-inner {
+  max-width: 1450px;
+  margin: 0 auto;
+  padding: 0 6%;
+}
+
+// ── Header ────────────────────────────────────────────────────────────────────
+
+.consultation-header {
+  margin-bottom: 3.5rem;
+}
+
+.consultation-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: $primary-color;
+  background: rgba($primary-color, 0.08);
+  border: 1px solid rgba($primary-color, 0.2);
+  padding: 0.28rem 0.9rem;
+  border-radius: 100px;
+  margin-bottom: 1.1rem;
+}
+
+.consultation-title {
+  font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+  font-weight: 800;
+  color: $heading-color;
+  margin: 0;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+// ── Steps grid ────────────────────────────────────────────────────────────────
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+// ── Individual step ───────────────────────────────────────────────────────────
+
+.step {
+  background: $section-bg;
+  border: 1px solid rgba($heading-color, 0.06);
+  border-radius: 20px;
+  padding: 2rem 1.75rem;
+  transition: box-shadow 0.28s ease, transform 0.28s ease, border-color 0.28s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 36px rgba($primary-color, 0.12);
+    border-color: rgba($primary-color, 0.2);
+  }
+}
+
+// ── Step top row (number + connector) ────────────────────────────────────────
+
+.step-top {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.step-num {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: $primary-color;
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.step-connector {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, rgba($primary-color, 0.35), rgba($primary-color, 0.05));
+  margin-left: 0.85rem;
+}
+
+// ── Icon ─────────────────────────────────────────────────────────────────────
+
+.step-icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: rgba($primary-color, 0.07);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+
+  svg {
+    width: 24px;
+    height: 24px;
+    color: $primary-color;
+  }
+}
+
+// ── Text ─────────────────────────────────────────────────────────────────────
+
+.step-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: $heading-color;
+  margin: 0 0 0.6rem;
+  line-height: 1.35;
+}
+
+.step-desc {
+  font-size: 0.85rem;
+  color: #5a6a8a;
+  line-height: 1.7;
+  margin: 0;
+}

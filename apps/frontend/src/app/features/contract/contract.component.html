@@ -1,0 +1,28 @@
+<h1 class="visually-hidden">Публічний договір (оферта)</h1>
+<div class="content-wrapper">
+
+  @if (loading()) {
+    <div class="contract-loading">
+      <span class="contract-loading__spinner"></span>
+      Завантаження договору…
+    </div>
+  }
+
+  @if (notFound()) {
+    <div class="contract-404">
+      <span class="contract-404__code">404</span>
+      <h2 class="contract-404__title">Сторінку не знайдено</h2>
+      <p class="contract-404__text">Договір наразі недоступний або був видалений.</p>
+      <a class="contract-404__btn" routerLink="/">На головну</a>
+    </div>
+  }
+
+  @if (error()) {
+    <p class="contract-error">Не вдалося завантажити договір. Спробуйте пізніше.</p>
+  }
+
+  @if (!loading() && !error() && !notFound()) {
+    <div class="contract-body" [innerHTML]="safeContent()"></div>
+  }
+
+</div>

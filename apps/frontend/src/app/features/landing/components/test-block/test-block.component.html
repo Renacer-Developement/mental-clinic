@@ -1,0 +1,74 @@
+<div class="test-block">
+  <div class="cards-grid">
+    <div
+      *ngFor="let card of mentalCards; let i = index"
+      class="test-card"
+      [routerLink]="[TEST_ROUTES.LIST, card.link]"
+      (click)="googleAnalyticsTracker(EVENT_TRACK.CARD_CLICK, card.title, ROUTES.MAIN_PAGE)"
+    >
+      <span class="card-index">{{ (i + 1).toString().padStart(2, '0') }}</span>
+
+      <div class="card-icon-wrap">
+        <ng-container [ngSwitch]="card.icon">
+
+          <!-- Depression: cloud with rain -->
+          <svg *ngSwitchCase="'depression'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 17.58A5 5 0 0 0 18 8h-1.26A8 8 0 1 0 4 16.25"/>
+            <line x1="8" y1="19" x2="8" y2="21"/>
+            <line x1="12" y1="20" x2="12" y2="22"/>
+            <line x1="16" y1="19" x2="16" y2="21"/>
+          </svg>
+
+          <!-- Anxiety: brain with lightning -->
+          <svg *ngSwitchCase="'anxiety'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/>
+            <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/>
+          </svg>
+
+          <!-- Personality disorders: two people -->
+          <svg *ngSwitchCase="'personality'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="7" r="3"/>
+            <path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/>
+            <circle cx="19" cy="7" r="2"/>
+            <path d="M23 21v-1a3 3 0 0 0-2-2.83"/>
+          </svg>
+
+          <!-- Behavioral disorders: warning triangle -->
+          <svg *ngSwitchCase="'behavior'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/>
+            <circle cx="12" cy="17" r="0.8" fill="currentColor" stroke="none"/>
+          </svg>
+
+          <!-- Addictions: chain link -->
+          <svg *ngSwitchCase="'addiction'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+          </svg>
+
+          <!-- Fallback -->
+          <svg *ngSwitchDefault viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <circle cx="12" cy="16" r="0.8" fill="currentColor" stroke="none"/>
+          </svg>
+
+        </ng-container>
+      </div>
+
+      <div class="card-body">
+        <h3 class="card-title">{{ card.title }}</h3>
+        <p class="card-desc">{{ card.description }}</p>
+      </div>
+
+      <span class="card-arrow" aria-hidden="true">→</span>
+    </div>
+  </div>
+
+  <p class="cards-disclaimer">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="0.8" fill="currentColor" stroke="none"/>
+    </svg>
+    Тести не є медичним діагнозом — це лише можливість перевірити свої симптоми перед візитом до психіатра.
+  </p>
+</div>

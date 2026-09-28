@@ -1,0 +1,190 @@
+<div class="page">
+  <p-toast />
+
+  <div class="page-header">
+    <h2>{{ isEdit ? 'Редагувати тест' : 'Новий тест' }}</h2>
+    <div class="header-actions">
+      <p-button label="Скасувати" severity="secondary" [text]="true" (onClick)="cancel()" />
+      <p-button label="Зберегти" icon="pi pi-check" [loading]="saving()" (onClick)="save()" />
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="loading"><i class="pi pi-spin pi-spinner"></i> Завантаження…</div>
+  } @else {
+    <div class="form-grid">
+
+      <div class="card">
+        <h3>Основна інформація</h3>
+        <div class="fields-2col">
+          <div class="field">
+            <label>Назва *</label>
+            <input pInputText [(ngModel)]="form.name" class="w-full" />
+          </div>
+          <div class="field">
+            <label>Тип *</label>
+            <p-select [(ngModel)]="form.type"
+                      [options]="typeOptions"
+                      optionLabel="label"
+                      optionValue="value"
+                      placeholder="Оберіть тип"
+                      styleClass="w-full" />
+          </div>
+          @if (form.type === 'specialized') {
+            <div class="field">
+              <label>Особливий тест</label>
+              <input pInputText [(ngModel)]="form.specialTest"
+                     placeholder="Назва спецтесту" class="w-full" />
+              <div class="special-warning">
+                <i class="pi pi-telegram"></i>
+                Для розробки спеціального тесту зверніться до розробника:
+                <a href="https://t.me/denysdatsiv" target="_blank">denysdatsiv</a>
+              </div>
+            </div>
+          }
+          <div class="field">
+            <label>Тривалість *</label>
+            <input pInputText [(ngModel)]="form.duration" placeholder="напр. 15 хв" class="w-full" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Опис *</label>
+          <textarea pTextarea [(ngModel)]="form.description" rows="3" class="w-full"></textarea>
+        </div>
+        <div class="field">
+          <label>Навіщо проходити цей тест *</label>
+          <textarea pTextarea [(ngModel)]="form.whyTest" rows="2" class="w-full"></textarea>
+        </div>
+        <div class="field">
+          <label>Інструкції *</label>
+          <textarea pTextarea [(ngModel)]="form.instructions" rows="3" class="w-full"></textarea>
+        </div>
+        <div class="field">
+          <label>Загальне повідомлення *</label>
+          <textarea pTextarea [(ngModel)]="form.commonMessage" rows="2" class="w-full"></textarea>
+        </div>
+        <div class="field">
+          <label>Посилання на PDF</label>
+          <input pInputText [(ngModel)]="form.pdfLink" placeholder="https://…" class="w-full" />
+        </div>
+      </div>
+
+      <!-- Result interpretations -->
+      <div class="card">
+        <div class="section-header">
+          <div>
+            <h3>Інтерпретація результатів</h3>
+            <p class="section-hint">Визначте, який результат показується користувачу залежно від набраної суми балів.</p>
+          </div>
+          <p-button label="Додати діапазон" icon="pi pi-plus" severity="secondary"
+                    size="small" (onClick)="addInterpretation()" />
+        </div>
+
+        @if (!form.resultInterpretation?.length) {
+          <p class="empty-hint">Інтерпретацій ще немає. Натисніть «Додати діапазон».</p>
+        }
+
+        @if (form.resultInterpretation?.length) {
+          <div class="interp-table-head">
+            <span class="col-num"></span>
+            <span class="col-range">Діапазон балів</span>
+            <span class="col-result">Результат для користувача</span>
+            <span class="col-del"></span>
+          </div>
+        }
+
+        @for (interp of form.resultInterpretation; track $index) {
+          <div class="interp-row">
+            <span class="interp-num">{{ $index + 1 }}</span>
+            <div class="interp-range">
+              <input class="range-input" type="number" min="0"
+                     [value]="getRangeMin(interp) ?? ''"
+                     (input)="setRangeMin(interp, $any($event.target).value)"
+                     placeholder="0" />
+              <span class="range-dash">—</span>
+              <input class="range-input" type="number" min="0"
+                     [value]="getRangeMax(interp) ?? ''"
+                     (input)="setRangeMax(interp, $any($event.target).value)"
+                     placeholder="∞" />
+            </div>
+            <textarea class="interp-textarea" rows="2"
+                      [(ngModel)]="interp.result"
+                      placeholder="Текст, який побачить користувач після проходження тесту…"></textarea>
+            <button class="interp-remove" (click)="removeInterpretation($index)" type="button">
+              <i class="pi pi-trash"></i>
+            </button>
+          </div>
+        }
+      </div>
+
+      <div class="card">
+        <div class="section-header">
+          <h3>Питання</h3>
+          <p-button label="Додати питання" icon="pi pi-plus" severity="secondary"
+                    size="small" (onClick)="addQuestion()" />
+        </div>
+
+        @if (!form.questions?.length) {
+          <p class="empty-hint">Питань ще немає. Натисніть «Додати питання».</p>
+        }
+
+        <p-accordion>
+          @for (q of form.questions; track $index) {
+            <p-accordionTab [header]="'Питання ' + ($index + 1) + (q.question ? ': ' + q.question : '')">
+              <div class="q-fields">
+                <div class="field">
+                  <label>Текст питання</label>
+                  <input pInputText [(ngModel)]="q.question" class="w-full" />
+                </div>
+                <div class="field">
+                  <label>Приклад</label>
+                  <input pInputText [(ngModel)]="q.example" class="w-full" />
+                </div>
+                <div class="field">
+                  <div class="answers-header">
+                    <label>Відповіді та значення</label>
+                    <button class="answer-add-btn" type="button" (click)="addAnswer(q)">
+                      <i class="pi pi-plus"></i> Додати
+                    </button>
+                  </div>
+                  @if (q.labelText?.length) {
+                    <div class="answer-table-head">
+                      <span class="acol-num"></span>
+                      <span class="acol-label">Відповідь</span>
+                      <span class="acol-value">Значення</span>
+                      <span class="acol-del"></span>
+                    </div>
+                  }
+                  <div class="answer-rows">
+                    @for (label of q.labelText; track $index) {
+                      <div class="answer-row">
+                        <span class="answer-num">{{ $index + 1 }}</span>
+                        <input class="answer-input" type="text"
+                               [value]="label"
+                               (input)="q.labelText![$index] = $any($event.target).value"
+                               placeholder="Текст відповіді" />
+                        <input class="answer-value-input" type="number"
+                               [value]="q.value?.[$index] ?? 0"
+                               (input)="q.value![$index] = +$any($event.target).value"
+                               placeholder="0" />
+                        <button class="answer-remove" type="button" (click)="removeAnswer(q, $index)">
+                          <i class="pi pi-trash"></i>
+                        </button>
+                      </div>
+                    }
+                  </div>
+                  @if (!q.labelText?.length) {
+                    <p class="empty-hint" style="padding: 12px 0">Відповідей ще немає.</p>
+                  }
+                </div>
+                <p-button label="Видалити" icon="pi pi-trash" severity="danger"
+                          size="small" [text]="true" (onClick)="removeQuestion($index)" />
+              </div>
+            </p-accordionTab>
+          }
+        </p-accordion>
+      </div>
+
+    </div>
+  }
+</div>
