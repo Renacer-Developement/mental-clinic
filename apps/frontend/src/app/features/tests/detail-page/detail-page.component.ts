@@ -15,6 +15,14 @@ import { TEST_ROUTES } from "../../../shared/constants/routes.constants";
 import { NotFoundComponent } from '../../not-found/not-found.component';
 import { DivaQuizComponent, DivaResult } from '../components/diva-quiz/diva-quiz.component';
 
+interface Subscale {
+  name: string;
+  score: number;
+  threshold: number;
+  flagged: boolean;
+  interpretation?: string;
+}
+
 @Component({
   standalone: true,
   imports: [CommonModule, NgIf, NgFor, ImportsModule, RouterLink, NotFoundComponent, DivaQuizComponent],
@@ -66,6 +74,9 @@ export class DetailPageComponent implements OnInit {
 
   // DIVA-5
   divaResult: DivaResult | null = null;
+
+  // Subscales of general tests (SCARED, MFQ): factor = threshold, questions = 1-based item numbers
+  subscales: Subscale[] = [];
 
   protected readonly Object = Object;
   protected readonly specializedTests = specializedTests;
@@ -292,11 +303,26 @@ export class DetailPageComponent implements OnInit {
       );
 
       this.resultMessage = interpretation?.result || 'Не вдалося визначити рівень.';
-      this.resultDescription = interpretation['description'] || '';
+      this.resultDescription = interpretation?.['description'] || '';
+      this.subscales = this.scoreSubscales();
     }
 
     this.isTestCompleted = true;
     setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
+  }
+
+  private scoreSubscales(): Subscale[] {
+    return (this.data.factor ?? [])
+        .filter((s: any) => typeof s.factor === 'number' && Array.isArray(s.questions))
+        .map((s: any) => {
+          const score = s.questions.reduce((sum: number, qNumber: number) => {
+            const question = this.data.questions[qNumber - 1];
+            const value = question ? this.answers[question._id] : undefined;
+            return sum + (value !== undefined ? Number(value) : 0);
+          }, 0);
+
+          return { name: s.name, score, threshold: s.factor, flagged: score >= s.factor, interpretation: s.interpretation };
+        });
   }
 
   onDivaCompleted(result: DivaResult): void {
@@ -489,10 +515,13 @@ export class DetailPageComponent implements OnInit {
         <p style="margin-bottom:5px"><strong>Частина B — негативні:</strong> ${this.asrsPartBNegative}/12</p>
         <p><strong>Інтерпретація:</strong> ${this.asrsResult}</p>`;
     } else {
+      const subscalesHtml = this.subscales.map(s => `
+        <p style="margin-bottom:5px">${s.name}: <strong>${s.score}</strong> (поріг ${s.threshold})${s.flagged && s.interpretation ? ` — ${s.interpretation}` : ''}</p>`).join('');
       resultsHtml = `
         <p style="margin-bottom:6px"><strong>Сума балів:</strong> ${this.totalScore}</p>
         <p style="margin-bottom:6px"><strong>Результат:</strong> ${this.resultMessage}</p>
         ${this.resultDescription ? `<p style="margin-bottom:6px">${this.resultDescription}</p>` : ''}
+        ${subscalesHtml ? `<div style="margin-top:10px">${subscalesHtml}</div>` : ''}
         ${this.data.commonMessage ? `<p style="margin-top:8px;font-size:9.5pt;color:#718096">${this.data.commonMessage}</p>` : ''}`;
     }
 
@@ -614,6 +643,7 @@ export class DetailPageComponent implements OnInit {
     this.asrsResult = '';
 
     this.divaResult = null;
+    this.subscales = [];
   }
 
   goToAllTests(): void {

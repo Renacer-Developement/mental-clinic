@@ -424,6 +424,15 @@
             </div>
             <p class="dp-result-msg">{{ resultMessage }}</p>
             <p *ngIf="resultDescription" class="dp-result-description">{{ resultDescription }}</p>
+            <ul *ngIf="subscales.length" class="dp-subscales">
+              <li *ngFor="let s of subscales" class="dp-subscales__item" [class.dp-subscales__item--flagged]="s.flagged">
+                <div class="dp-subscales__head">
+                  <span class="dp-subscales__name">{{ s.name }}</span>
+                  <span class="dp-subscales__score">{{ s.score }}<em> / поріг {{ s.threshold }}</em></span>
+                </div>
+                <p *ngIf="s.flagged && s.interpretation" class="dp-subscales__note">{{ s.interpretation }}</p>
+              </li>
+            </ul>
             <p class="dp-result-common">{{ data?.commonMessage }}</p>
           </div>
         </ng-template>

@@ -6,7 +6,9 @@ import { TEST_CATEGORIES_CONST } from './test-categories.constants';
 // (e.g. "РДУГ у дитини" before "РДУГ", HADS before plain "депресія").
 export const TEST_SECTIONS: { title: string; match: RegExp }[] = [
   { title: 'Депресія',             match: /депрес/i },
+  { title: 'Депресія (діти)',      match: /MFQ/i },
   { title: 'Тривога',              match: /тривог|фобі/i },
+  { title: 'Тривога (діти)',       match: /SCARED/i },
   { title: 'ОКР',                  match: /ОКР|Йеля-Брауна/i },
   { title: 'ПТСР',                 match: /ПТСР/i },
   { title: 'Паніка',               match: /панічн/i },
@@ -26,7 +28,7 @@ export const OTHER_SECTION = 'Інше';
 
 // Which rules are checked first (independent of display order above)
 const MATCH_ORDER = [
-  'РДУГ (діти)', 'Аутизм', 'Аутизм (діти)', 'РДУГ', 'Біполярний розлад', 'Схема-терапія',
+  'Депресія (діти)', 'Тривога (діти)', 'РДУГ (діти)', 'Аутизм', 'Аутизм (діти)', 'РДУГ', 'Біполярний розлад', 'Схема-терапія',
   'Психотичні розлади', 'Розлади особистості', 'ОКР', 'ПТСР', 'Паніка', 'Тривога', 'Депресія',
   'Залежності', 'Харчова поведінка',
 ].map(title => TEST_SECTIONS.find(s => s.title === title)!);
