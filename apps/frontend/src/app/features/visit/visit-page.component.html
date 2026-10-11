@@ -111,7 +111,11 @@
       <ul class="v-reasons">
         @for (r of reasons; track r.title; let i = $index) {
           <li class="v-reason" appReveal [revealDelay]="(i % 3) * 90">
-            <h3>{{ r.title }}</h3>
+            @if (r.slug) {
+              <h3><a class="v-reason__link" [routerLink]="'/' + r.slug">{{ r.title }}</a></h3>
+            } @else {
+              <h3>{{ r.title }}</h3>
+            }
             <p>{{ r.text }}</p>
           </li>
         }

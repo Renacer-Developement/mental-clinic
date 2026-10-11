@@ -251,6 +251,9 @@
             <p class="adetail-consult__sub">
               Лікарі та психологи центру готові допомогти вам. Перший крок — просто зателефонувати.
             </p>
+            @if (condition(); as c) {
+              <a class="adetail-consult__link" [routerLink]="'/' + c.slug">{{ c.h1 }} →</a>
+            }
           </div>
           <button class="adetail-consult__btn" type="button" (click)="openContacts()">
             Онлайн запис

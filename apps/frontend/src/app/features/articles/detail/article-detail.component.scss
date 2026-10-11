@@ -727,6 +727,18 @@
     color: #fff;
   }
 
+  // treatment page on the article's topic (/likuvannya-*)
+  &__link {
+    display: inline-block;
+    margin-top: 0.9rem;
+    color: $accent-color;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+
+    &:hover { color: #fff; }
+  }
+
   &__sub {
     max-width: 520px;
     margin: 0;

@@ -160,6 +160,9 @@
           <a *ngIf="categoryLink" class="dp-about__more" [routerLink]="['/test/list', categoryLink.slug]">
             Усі тести: {{ categoryLink.label }} →
           </a>
+          <a *ngIf="condition" class="dp-about__more" [routerLink]="'/' + condition.slug">
+            {{ condition.h1 }} →
+          </a>
         </div>
 
         <div *ngIf="scoreBands.length" class="dp-about__block">

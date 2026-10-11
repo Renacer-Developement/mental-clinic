@@ -509,6 +509,26 @@
     color: $heading-color;
   }
 
+  // whole card is clickable when it links to a condition page
+  &__link {
+    color: inherit;
+    text-decoration: none;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+    }
+
+    &:hover { color: $primary-color; }
+
+    &:focus-visible {
+      outline: none;
+      &::after { outline: 2px solid $primary-color; outline-offset: 3px; }
+    }
+  }
+
   p {
     margin: 0;
     font-size: 0.9rem;

@@ -4,9 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { ImportsModule } from '../../shared/primeng-imports.module';
 import { SeoService } from '../../core/seo/seo.service';
-import { ReviewService, Review, SubmitReview } from './review.service';
+import { ReviewService, Review, ReviewsPage, SubmitReview } from './review.service';
 import { ClinicContactsService } from '../shared/components/clinic-contacts-dialog/clinic-contacts.service';
 import { clinicContacts } from '../shared/constants/contacts.constants';
+
+const BASE_URL = 'https://doctor-skripnik.com.ua';
 
 @Component({
   standalone: true,
@@ -47,27 +49,66 @@ export class ReviewsComponent implements OnInit {
   readonly stars = [1, 2, 3, 4, 5];
 
   ngOnInit(): void {
-    this.seo.updatePage({
-      title: "Відгуки пацієнтів — Євген Скрипник | Центр ментального здоров'я",
-      description: 'Реальні відгуки пацієнтів про психіатра Євгена Скрипника. Онлайн консультації, доказова психіатрія, відкритий підхід.',
-      canonical: '/reviews',
-      ogType: 'website',
-      schema: {
+    this.updateSeo();
+
+    this.loadPage(1);
+  }
+
+  /**
+   * Page meta + JSON-LD. Called once up front and again when the first page of
+   * reviews arrives, so the markup carries the real rating and review texts.
+   */
+  private updateSeo(result?: ReviewsPage): void {
+    const url = `${BASE_URL}/reviews`;
+    const schema: object[] = [
+      {
         '@context': 'https://schema.org',
         '@type': 'WebPage',
-        url: 'https://doctor-skripnik.com.ua/reviews',
-        name: 'Відгуки пацієнтів — Євген Скрипник',
+        url,
+        name: 'Відгуки про психіатра Євгена Скрипника',
+        about: { '@id': `${BASE_URL}/#physician` },
         breadcrumb: {
           '@type': 'BreadcrumbList',
           itemListElement: [
-            { '@type': 'ListItem', position: 1, name: 'Головна', item: 'https://doctor-skripnik.com.ua/' },
-            { '@type': 'ListItem', position: 2, name: 'Відгуки', item: 'https://doctor-skripnik.com.ua/reviews' },
+            { '@type': 'ListItem', position: 1, name: 'Головна', item: `${BASE_URL}/` },
+            { '@type': 'ListItem', position: 2, name: 'Відгуки', item: url },
           ],
         },
       },
-    });
+    ];
 
-    this.loadPage(1);
+    if (result?.total) {
+      schema.push({
+        '@context': 'https://schema.org',
+        '@type': 'Physician',
+        '@id': `${BASE_URL}/#physician`,
+        name: 'Євген Скрипник',
+        url: `${BASE_URL}/about`,
+        medicalSpecialty: 'Psychiatric',
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: result.avgRating,
+          reviewCount: result.total,
+          bestRating: 5,
+          worstRating: 1,
+        },
+        review: result.data.map(r => ({
+          '@type': 'Review',
+          author: { '@type': 'Person', name: r.name },
+          ...(r.createdAt && { datePublished: r.createdAt.slice(0, 10) }),
+          reviewBody: r.text,
+          reviewRating: { '@type': 'Rating', ratingValue: r.rating, bestRating: 5, worstRating: 1 },
+        })),
+      });
+    }
+
+    this.seo.updatePage({
+      title: 'Відгуки про психіатра Євгена Скрипника — реальні пацієнти',
+      description: 'Відгуки пацієнтів про психіатра Євгена Скрипника: онлайн консультації, лікування депресії, тривоги, ПТСР. Доказова психіатрія, відкритий підхід.',
+      canonical: '/reviews',
+      ogType: 'website',
+      schema,
+    });
   }
 
   loadMore(): void {
@@ -85,6 +126,7 @@ export class ReviewsComponent implements OnInit {
         this.avgRating.set(result.avgRating);
         this.hasMore.set(result.hasMore);
         this.page = page;
+        if (page === 1) this.updateSeo(result);
         this.loading.set(false);
         this.loadingMore.set(false);
       },

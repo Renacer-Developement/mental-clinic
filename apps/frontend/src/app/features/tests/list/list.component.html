@@ -34,6 +34,14 @@
 
       <app-tests-grid [category]="type"/>
 
+      @if (condition) {
+        <a class="tests-treatment" [routerLink]="'/' + condition.slug">
+          <span class="tests-treatment__label">Наступний крок</span>
+          <span class="tests-treatment__title">{{ condition.h1 }} →</span>
+          <span class="tests-treatment__text">Як проходить діагностика і лікування у психіатра</span>
+        </a>
+      }
+
       @if (content.intro.length > 1 || content.faq?.length) {
         <article class="tests-about">
           @for (p of content.intro.slice(1); track $index) {

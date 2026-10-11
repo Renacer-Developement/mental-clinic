@@ -1,0 +1,145 @@
+<div class="visit-page">
+
+  <!-- Hero -->
+  <section class="v-hero">
+    <div class="v-wrap v-hero__grid">
+      <div class="v-hero__text">
+        <nav class="v-crumbs" aria-label="Навігація">
+          <a routerLink="/">Головна</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">{{ condition.label }}</span>
+        </nav>
+
+        <span class="v-eyebrow">Що лікуємо</span>
+        <h1 class="v-hero__title">{{ condition.h1 }}</h1>
+        <p class="v-hero__lead">{{ condition.lead }}</p>
+
+        <div class="v-hero__actions">
+          <button type="button" class="v-cta" (click)="openContacts()">
+            <span>Записатися на консультацію</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </button>
+          @if (condition.testCategory) {
+            <a class="v-link" [routerLink]="['/test/list', condition.testCategory]">Спершу пройти тест</a>
+          }
+        </div>
+      </div>
+
+      <aside class="v-card" aria-labelledby="c-card-title" appReveal="zoom" [revealDelay]="150">
+        <h2 id="c-card-title" class="v-card__title">Консультація психіатра</h2>
+        <dl class="v-card__meta">
+          <div>
+            <dt>Лікар</dt>
+            <dd><a class="c-card__doctor" [routerLink]="'/' + ROUTES.ABOUT">Євген Скрипник, 20+ років досвіду</a></dd>
+          </div>
+          <div>
+            <dt>Години</dt>
+            <dd>Щодня, 8:00–22:00</dd>
+          </div>
+          <div>
+            <dt>Формат</dt>
+            <dd>Відеозв'язок онлайн, з будь-якого місця</dd>
+          </div>
+        </dl>
+        <button type="button" class="v-card__btn" (click)="openContacts()">Написати в Telegram або Viber</button>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Symptoms -->
+  <section class="v-section v-section--white">
+    <div class="v-wrap v-split">
+      <header class="v-split__head" appReveal="left">
+        <span class="v-eyebrow">Симптоми</span>
+        <h2 class="v-title">{{ condition.symptomsTitle }}</h2>
+        <p class="v-text">
+          Якщо кілька з цих ознак тримаються тижнями і заважають жити — варто звернутися до психіатра.
+          Діагноз встановлює лише лікар.
+        </p>
+      </header>
+
+      <ul class="c-symptoms">
+        @for (s of condition.symptoms; track s; let i = $index) {
+          <li appReveal [revealDelay]="i * 60">{{ s }}</li>
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Treatment -->
+  <section class="v-section">
+    <div class="v-wrap">
+      <header class="v-head" appReveal>
+        <div>
+          <span class="v-eyebrow">Лікування</span>
+          <h2 class="v-title">Як ми лікуємо</h2>
+        </div>
+        <p class="v-text v-head__aside">Лише методи з доведеною ефективністю — відповідно до протоколів МОЗ та міжнародних настанов.</p>
+      </header>
+
+      <ul class="v-reasons">
+        @for (t of condition.treatment; track t.title; let i = $index) {
+          <li class="v-reason" appReveal [revealDelay]="(i % 3) * 90">
+            <h3>{{ t.title }}</h3>
+            <p>{{ t.text }}</p>
+          </li>
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="v-section v-section--white">
+    <div class="v-wrap v-split">
+      <header class="v-split__head" appReveal="left">
+        <span class="v-eyebrow">FAQ</span>
+        <h2 class="v-title">Часті питання</h2>
+        <p class="v-text">Не знайшли відповідь? Запитайте лікаря на консультації.</p>
+        @if (condition.articleCategory) {
+          <a class="v-link c-articles-link" [routerLink]="['/articles/category', condition.articleCategory]">Читати статті на цю тему</a>
+        }
+      </header>
+
+      <div class="v-faq">
+        @for (f of condition.faqs; track f.q) {
+          <details class="v-faq__item">
+            <summary>
+              {{ f.q }}
+              <span class="v-faq__icon" aria-hidden="true"></span>
+            </summary>
+            <p>{{ f.a }}</p>
+          </details>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Other conditions: internal links between the condition pages -->
+  <section class="v-section">
+    <div class="v-wrap">
+      <h2 class="v-title c-related__title">Також лікуємо</h2>
+      <ul class="c-related">
+        @for (r of related; track r.slug) {
+          <li><a [routerLink]="'/' + r.slug">{{ r.label }}</a></li>
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="v-final">
+    <div class="v-wrap v-final__inner" appReveal>
+      <h2 class="v-final__title">Готові зробити перший крок?</h2>
+      <p class="v-final__text">Запишіться на консультацію — без черг, з будь-якого місця.</p>
+      <button type="button" class="v-cta v-cta--light" (click)="openContacts()">
+        <span>Записатися на консультацію</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </button>
+    </div>
+  </section>
+
+</div>

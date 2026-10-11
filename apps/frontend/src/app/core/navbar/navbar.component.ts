@@ -12,6 +12,7 @@ import { CATEGORY_SECTIONS } from '../../features/tests/constants/test-sections.
 import { TEST_CATEGORY_CONTENT } from '../../features/tests/constants/test-category-content.constants';
 import { sectionAnchor } from '../../features/tests/constants/test-sections.constants';
 import { ARTICLE_CATEGORIES } from '../../features/articles/constants/article-categories.constants';
+import { CONDITIONS } from '../../features/conditions/conditions.data';
 import { NavigationStart } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -31,10 +32,10 @@ export class NavbarComponent implements OnDestroy {
 
   isMenuOpen = false;
   /** Which accordion is expanded in the mobile menu. */
-  mobileSection: 'tests' | 'articles' | null = null;
+  mobileSection: 'conditions' | 'tests' | 'articles' | null = null;
   /** Which desktop dropdown is open. A signal, because it is also changed from a
    *  timer (delayed close) and the app runs without zone.js change detection. */
-  readonly mega = signal<'tests' | 'articles' | null>(null);
+  readonly mega = signal<'conditions' | 'tests' | 'articles' | null>(null);
   private megaCloseTimer?: ReturnType<typeof setTimeout>;
 
   /** Test categories with their sections, for the tests mega menu. */
@@ -45,6 +46,9 @@ export class NavbarComponent implements OnDestroy {
   }));
 
   readonly articleMenu = ARTICLE_CATEGORIES.filter(c => c.value);
+
+  /** Condition pages (/likuvannya-*), for the "Що лікуємо" menu. */
+  readonly conditionMenu = CONDITIONS.map(c => ({ slug: c.slug, label: c.label }));
 
   readonly phone = clinicContacts.doctors.phone;
   /** +380665691677 → +38 (066) 569-16-77 */
@@ -58,7 +62,7 @@ export class NavbarComponent implements OnDestroy {
     });
   }
 
-  openMega(which: 'tests' | 'articles'): void {
+  openMega(which: 'conditions' | 'tests' | 'articles'): void {
     clearTimeout(this.megaCloseTimer);
     this.mega.set(which);
   }
@@ -68,7 +72,7 @@ export class NavbarComponent implements OnDestroy {
    * already opened it via mouseenter, so a toggle would immediately close it again.
    * Closing happens on mouseleave, Escape, backdrop click or navigation.
    */
-  onTriggerClick(which: 'tests' | 'articles'): void {
+  onTriggerClick(which: 'conditions' | 'tests' | 'articles'): void {
     clearTimeout(this.megaCloseTimer);
     this.mega.set(which);
   }
@@ -115,7 +119,7 @@ export class NavbarComponent implements OnDestroy {
     if (this.isMenuOpen) this.setMenu(false);
   }
 
-  toggleMobileSection(which: 'tests' | 'articles'): void {
+  toggleMobileSection(which: 'conditions' | 'tests' | 'articles'): void {
     this.mobileSection = this.mobileSection === which ? null : which;
   }
 

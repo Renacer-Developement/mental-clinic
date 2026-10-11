@@ -8,6 +8,7 @@ import { GoogleAnalyticsService } from '../../../../analytics/google-analytics.s
 import { ConsentService } from '../../../../analytics/consent.service';
 import { EVENT_TRACK } from '../../../../analytics/analytics.constants';
 import { TEST_CATEGORY_CONTENT } from '../../../tests/constants/test-category-content.constants';
+import { CONDITIONS } from '../../../conditions/conditions.data';
 
 @Component({
   standalone: true,
@@ -24,6 +25,8 @@ export class FooterComponent {
   openCookieSettings(): void {
     this.consentService.reopen();
   }
+
+  readonly conditions = CONDITIONS.map(c => ({ slug: c.slug, label: c.label }));
 
   readonly testCategories = Object.entries(TEST_CATEGORY_CONTENT).map(([slug, c]) => ({ slug, label: c.label }));
 

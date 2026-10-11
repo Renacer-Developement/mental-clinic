@@ -1,0 +1,19 @@
+<section class="cond-section" aria-labelledby="cond-title">
+  <div class="cond-inner">
+    <header class="cond-head" appReveal>
+      <span class="cond-eyebrow">Що лікуємо</span>
+      <h2 id="cond-title" class="cond-title">З чим можна звернутися</h2>
+      <p class="cond-text">Доказове лікування онлайн — оберіть, що вас турбує, і дізнайтеся, як проходить лікування.</p>
+    </header>
+
+    <ul class="cond-grid">
+      @for (c of conditions; track c.slug; let i = $index) {
+        <li class="cond-card" appReveal [revealDelay]="(i % 3) * 90">
+          <h3><a class="cond-card__link" [routerLink]="'/' + c.slug">{{ c.label }}</a></h3>
+          <p>{{ c.teaser }}</p>
+          <span class="cond-card__more" aria-hidden="true">Детальніше →</span>
+        </li>
+      }
+    </ul>
+  </div>
+</section>

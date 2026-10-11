@@ -1,5 +1,6 @@
 import {
   Component,
+  computed,
   ElementRef,
   HostListener,
   inject,
@@ -21,6 +22,7 @@ import { SeoService } from '../../../core/seo/seo.service';
 import { ClinicContactsService } from '../../shared/components/clinic-contacts-dialog/clinic-contacts.service';
 import { clinicContacts } from '../../shared/constants/contacts.constants';
 import { NotFoundComponent } from '../../not-found/not-found.component';
+import { conditionForArticleCategories } from '../../conditions/conditions.data';
 
 const BASE_URL = 'https://doctor-skripnik.com.ua';
 
@@ -58,6 +60,8 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
   showBackToTop    = signal(false);
   linkCopied       = signal(false);
   relatedArticles  = signal<Article[]>([]);
+  /** Treatment page on the article's topic, linked from the consultation block. */
+  condition        = computed(() => conditionForArticleCategories(this.article()?.categories));
   safeContent      = signal<SafeHtml>('');
   tocItems         = signal<TocItem[]>([]);
   /** True once the sticky contents panel starts sliding up under the navbar (end of article). */

@@ -9,6 +9,7 @@ import { FaqBlockComponent } from '../shared/components/faq-block/faq-block.comp
 import { TelegramBannerComponent } from '../shared/components/telegram-banner/telegram-banner.component';
 import { DoctorInfoStripComponent } from './components/doctor-info-strip/doctor-info-strip.component';
 import { NoFearBlockComponent } from './components/no-fear-block/no-fear-block.component';
+import { ConditionsBlockComponent } from './components/conditions-block/conditions-block.component';
 import { AfterViewInit, Component, ElementRef, inject, OnInit, PLATFORM_ID, Renderer2, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { SECTION } from '../../shared/constants/section-ids.constants';
@@ -20,7 +21,7 @@ import { ContractApiService } from '../contract/contract.service';
 
 @Component({
   standalone: true,
-  imports: [RevealDirective, CommonModule, ImportsModule, RouterLink, HeroBannerComponent, DoctorInfoStripComponent, NoFearBlockComponent, TestingBlockComponent, TestBlockComponent, ConsultationBlockComponent, TelegramBannerComponent, LatestArticlesComponent],
+  imports: [RevealDirective, CommonModule, ImportsModule, RouterLink, HeroBannerComponent, DoctorInfoStripComponent, NoFearBlockComponent, ConditionsBlockComponent, TestingBlockComponent, TestBlockComponent, ConsultationBlockComponent, TelegramBannerComponent, LatestArticlesComponent],
   selector: 'app-landing',
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.scss'],

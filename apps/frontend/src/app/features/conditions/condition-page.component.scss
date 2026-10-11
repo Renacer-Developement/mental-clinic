@@ -1,0 +1,81 @@
+@use "../../../assets/css/coloristics" as *;
+
+// Layout and type come from visit-page.component.scss; only condition-specific blocks live here.
+
+.c-card__doctor {
+  color: $heading-color;
+  text-decoration: underline;
+  text-decoration-color: $accent-color;
+  text-underline-offset: 3px;
+
+  &:hover { color: $primary-color; }
+}
+
+.c-symptoms {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    position: relative;
+    padding: 1rem 1.25rem 1rem 3rem;
+    border-radius: 16px;
+    background: $section-bg;
+    font-size: 0.98rem;
+    line-height: 1.6;
+    color: $body-text-color;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 1.25rem;
+      top: 1.45rem;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: $accent-color;
+    }
+  }
+}
+
+.c-related__title {
+  margin-bottom: 1.75rem;
+}
+
+.c-related {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  a {
+    display: inline-block;
+    padding: 0.7rem 1.4rem;
+    border: 1.5px solid $heading-color;
+    border-radius: 100px;
+    color: $heading-color;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.25s, color 0.25s;
+
+    &:hover {
+      background: $heading-color;
+      color: #fff;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $primary-color;
+      outline-offset: 3px;
+    }
+  }
+}
+
+.c-articles-link {
+  display: inline-block;
+  margin-top: 1.5rem;
+}

@@ -5,6 +5,7 @@ import { TestsGridComponent } from '../components/tests-grid/tests-grid.componen
 import { Component, DestroyRef, inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ALL_TESTS_CONTENT, TEST_CATEGORY_CONTENT, TestCategoryContent } from '../constants/test-category-content.constants';
+import { ConditionContent, conditionForTestCategory } from '../../conditions/conditions.data';
 import { SECTION } from '../../../shared/constants/section-ids.constants';
 import { SeoService } from '../../../core/seo/seo.service';
 import { AnimatedSection } from '../../../shared/animation/animated-section';
@@ -30,6 +31,8 @@ export class ListComponent extends AnimatedSection implements OnInit {
 
   type = '';
   content: TestCategoryContent = ALL_TESTS_CONTENT;
+  /** Treatment page for this category — the next step after taking a test. */
+  condition?: ConditionContent;
 
   ngOnInit(): void {
     // paramMap, not snapshot: the component is reused when switching between categories
@@ -39,6 +42,7 @@ export class ListComponent extends AnimatedSection implements OnInit {
       }
       this.type = params.get('type') ?? '';
       this.content = TEST_CATEGORY_CONTENT[this.type] ?? ALL_TESTS_CONTENT;
+      this.condition = conditionForTestCategory(this.type);
       this.updateSeo();
     });
   }

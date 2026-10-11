@@ -36,6 +36,27 @@
     <div class="dnav__inner dnav__inner--bar">
       <ul class="dnav__menu">
 
+        <!-- Conditions dropdown -->
+        <li class="dnav__item" (mouseenter)="openMega('conditions')" (mouseleave)="closeMega()">
+          <button type="button" class="dnav__trigger" [class.is-open]="mega() === 'conditions'"
+                  [attr.aria-expanded]="mega() === 'conditions'" (click)="onTriggerClick('conditions')">
+            Що лікуємо <i class="pi pi-chevron-down"></i>
+          </button>
+          <div class="dnav__panel" [class.is-open]="mega() === 'conditions'">
+            <div class="dnav__inner dnav__mega dnav__mega--narrow">
+              <div class="dnav__col">
+                <span class="dnav__col-title">Лікування</span>
+                <ul>
+                  @for (c of conditionMenu; track c.slug) {
+                    <li><a [routerLink]="'/' + c.slug" (click)="trackNav(c.slug, c.label); closeMega(true)">{{ c.label }}</a></li>
+                  }
+                </ul>
+              </div>
+              <a class="dnav__all" [routerLink]="'/' + ROUTES.VISIT" (click)="closeMega(true)">Записатися на консультацію →</a>
+            </div>
+          </div>
+        </li>
+
         <!-- Tests mega menu -->
         <li class="dnav__item" (mouseenter)="openMega('tests')" (mouseleave)="closeMega()">
           <button type="button" class="dnav__trigger" [class.is-open]="mega() === 'tests'"
@@ -123,6 +144,21 @@
 <nav class="mnav__panel" [class.is-open]="isMenuOpen" aria-label="Мобільна навігація">
   <div class="mnav__scroll">
     <ul class="mnav__list">
+
+      <!-- Conditions accordion -->
+      <li class="mnav__group" [class.is-open]="mobileSection === 'conditions'">
+        <button type="button" class="mnav__row" (click)="toggleMobileSection('conditions')"
+                [attr.aria-expanded]="mobileSection === 'conditions'">
+          Що лікуємо <i class="pi pi-chevron-down"></i>
+        </button>
+        <div class="mnav__sub">
+          <div class="mnav__sub-inner">
+            @for (c of conditionMenu; track c.slug) {
+              <a [routerLink]="'/' + c.slug" (click)="trackNav(c.slug, c.label); closeMenu()">{{ c.label }}</a>
+            }
+          </div>
+        </div>
+      </li>
 
       <!-- Tests accordion -->
       <li class="mnav__group" [class.is-open]="mobileSection === 'tests'">

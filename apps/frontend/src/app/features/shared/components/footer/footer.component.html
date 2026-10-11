@@ -31,6 +31,15 @@
         </ul>
       </nav>
 
+      <nav class="footer__col" aria-label="Що лікуємо">
+        <h4 class="footer__col-title">Що лікуємо</h4>
+        <ul>
+          @for (c of conditions; track c.slug) {
+            <li><a [routerLink]="'/' + c.slug" (click)="trackLinkClick(c.label, '/' + c.slug)">{{ c.label }}</a></li>
+          }
+        </ul>
+      </nav>
+
       <nav class="footer__col" aria-label="Тести">
         <h4 class="footer__col-title">Тести</h4>
         <ul>

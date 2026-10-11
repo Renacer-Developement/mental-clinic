@@ -159,3 +159,47 @@
     }
   }
 }
+
+// Link from a test category to its treatment page (/likuvannya-*)
+.tests-treatment {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin: 2.5rem 0 0;
+  padding: 1.5rem 1.75rem;
+  border-radius: 18px;
+  background: $section-bg;
+  border-left: 4px solid $accent-color;
+  text-decoration: none;
+  transition: transform 0.3s, box-shadow 0.3s;
+
+  &__label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: $muted-text-color;
+  }
+
+  &__title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: $heading-color;
+  }
+
+  &__text {
+    font-size: 0.9rem;
+    color: $body-text-color;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 32px rgba($heading-color, 0.08);
+    .tests-treatment__title { color: $primary-color; }
+  }
+
+  &:focus-visible {
+    outline: 2px solid $primary-color;
+    outline-offset: 3px;
+  }
+}
