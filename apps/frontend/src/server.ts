@@ -6,6 +6,7 @@ import {
 } from '@angular/ssr/node';
 import express from 'express';
 import { API_ARTICLES, API_TESTS } from './app/app.constants';
+import { getSitemap } from './sitemap';
 
 // Resolved from CWD rather than import.meta.url: this project's browserslist
 // targets Safari/iOS versions old enough that esbuild empties `import.meta`
@@ -74,6 +75,18 @@ app.get('/llms.txt', async (_req, res) => {
 
   res.set('Cache-Control', 'public, max-age=0, s-maxage=3600, stale-while-revalidate=86400');
   res.type('text/plain; charset=utf-8').send(body);
+});
+
+app.get('/sitemap.xml', async (_req, res) => {
+  const xml = await getSitemap();
+  if (!xml) {
+    // API asleep/down and no copy yet: tell crawlers to retry instead of serving a partial sitemap.
+    res.set('Retry-After', '120').set('Cache-Control', 'no-store').sendStatus(503);
+    return;
+  }
+  // Vercel's edge keeps a copy for an hour and keeps serving it while it refreshes or if the function errors.
+  res.set('Cache-Control', 'public, max-age=0, s-maxage=3600, stale-while-revalidate=86400, stale-if-error=604800');
+  res.type('application/xml; charset=utf-8').send(xml);
 });
 
 app.use(
