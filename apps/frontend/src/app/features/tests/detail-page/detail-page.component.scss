@@ -302,21 +302,127 @@
     td:first-child { white-space: nowrap; font-weight: 600; }
   }
 
-  &__cta a, &__more a, &__related a {
-    color: $primary-color;
-    font-weight: 600;
+  &__doctor {
+    margin-top: 2.5rem;
+    background: $section-bg;
+    border: 1px solid rgba($primary-color, 0.08);
+    border-radius: 16px;
+    padding: 1.75rem;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, $primary-color, $logo-subtext-color);
+      opacity: 0.4;
+    }
+
+    &:first-child { margin-top: 0; }
+
+    .dp-about__title { margin-top: 0; }
+
+    p { color: #4a5568; margin-bottom: 1.25rem; }
+
+    @media (max-width: 560px) { padding: 1.25rem; }
+  }
+
+  &__cta, &__more {
+    text-decoration: none;
+  }
+
+  &__cta {
+    @media (max-width: 560px) {
+      width: 100%;
+      justify-content: center;
+      text-align: center;
+    }
   }
 
   &__crisis {
-    font-size: 0.85rem;
-    color: #6b7280;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+    margin-top: 1rem;
+    padding: 1rem 1.25rem;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 12px;
+
+    p {
+      margin: 0;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: #7f1d1d;
+    }
+
+    a {
+      color: #b91c1c;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+  }
+
+  &__crisis-icon {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: #fee2e2;
+    color: #dc2626;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   &__related {
+    list-style: none;
     margin: 0;
-    padding-left: 1.2rem;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
 
-    li { margin-bottom: 0.4rem; }
+    @media (max-width: 640px) { grid-template-columns: 1fr; }
+
+    a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      height: 100%;
+      box-sizing: border-box;
+      padding: 0.9rem 1.1rem;
+      background: #fff;
+      border: 1px solid rgba($primary-color, 0.15);
+      border-radius: 12px;
+      color: $heading-color;
+      font-size: 0.92rem;
+      font-weight: 600;
+      line-height: 1.4;
+      text-decoration: none;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+
+      svg {
+        flex-shrink: 0;
+        color: $primary-color;
+        transition: transform 0.2s;
+      }
+
+      &:hover {
+        border-color: rgba($primary-color, 0.45);
+        box-shadow: 0 6px 18px rgba($primary-color, 0.12);
+        transform: translateY(-1px);
+
+        svg { transform: translateX(3px); }
+      }
+    }
+  }
+
+  &__more {
+    margin-top: 1.25rem;
   }
 }
 
