@@ -1,5 +1,6 @@
 {
   "outputDirectory": "dist/mental-clinic-fe/browser",
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- . ../../pnpm-lock.yaml",
   "trailingSlash": false,
   "redirects": [
     {
