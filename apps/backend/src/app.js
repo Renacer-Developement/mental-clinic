@@ -18,16 +18,18 @@ const ALLOWED_ORIGINS = (process.env.CORS_ORIGIN || '')
 
 const isLocalhost = (origin) => /^https?:\/\/localhost(:\d+)?$/.test(origin);
 
-const corsOptions = {
-    origin: (origin, cb) => {
-        if (!origin) return cb(null, true);
-        if (isLocalhost(origin)) return cb(null, true);
-        if (ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
-        cb(new Error(`CORS: origin ${origin} not allowed`));
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+// Any site may call the API (doctor sites, previews, Render/Vercel mirrors), but
+// only trusted origins get credentials: the auth cookie is SameSite=None, so
+// allowing credentials for every origin would let any page act as a logged-in admin.
+const corsOptions = (req, cb) => {
+    const origin = req.header('Origin');
+    const trusted = !origin || isLocalhost(origin) || ALLOWED_ORIGINS.includes(origin);
+    cb(null, {
+        origin: true,
+        credentials: trusted,
+        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
+    });
 };
 
 const app = express();

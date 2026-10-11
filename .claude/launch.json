@@ -4,25 +4,49 @@
     {
       "name": "frontend",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["run", "dev:frontend"],
+      "runtimeArgs": [
+        "run",
+        "dev:frontend"
+      ],
       "port": 4200
+    },
+    {
+      "name": "frontend-alt",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "--filter",
+        "@mental-clinic/frontend",
+        "start",
+        "--port",
+        "4210"
+      ],
+      "port": 4210
     },
     {
       "name": "frontend-ssr",
       "runtimeExecutable": "bash",
-      "runtimeArgs": ["-c", "cd apps/frontend && node dist/mental-clinic-fe/server/server.mjs"],
+      "runtimeArgs": [
+        "-c",
+        "cd apps/frontend && node dist/mental-clinic-fe/server/server.mjs"
+      ],
       "port": 4000
     },
     {
       "name": "admin",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["run", "dev:admin"],
+      "runtimeArgs": [
+        "run",
+        "dev:admin"
+      ],
       "port": 4201
     },
     {
       "name": "backend",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["run", "dev:backend"],
+      "runtimeArgs": [
+        "run",
+        "dev:backend"
+      ],
       "port": 10000
     }
   ]

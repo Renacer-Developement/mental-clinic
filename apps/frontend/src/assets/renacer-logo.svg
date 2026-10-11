@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Favicon variant of the Renewal Loop: Mark on Cobalt, thicker arcs for small sizes. -->
+  <rect width="64" height="64" rx="14" fill="#2B4BFF"/>
+  <g transform="translate(9.5 14.5) scale(0.22)">
+    <path d="M0 80A80 80 0 0 1 160 80H112A32 32 0 0 0 48 80Z" fill="#0E0F12"/>
+    <path d="M45 80A80 80 0 0 0 205 80H157A32 32 0 0 1 93 80Z" fill="#FFFFFF"/>
+  </g>
+</svg>

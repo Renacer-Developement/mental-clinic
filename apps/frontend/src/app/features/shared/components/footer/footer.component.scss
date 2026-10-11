@@ -194,12 +194,28 @@ $footer-line: rgba(255, 255, 255, 0.12);
 
 .footer__copy { flex: 1 1 320px; }
 
-.footer__dev a {
+.footer__dev {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.footer__dev-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   color: $footer-text;
   font-weight: 600;
   text-decoration: none;
 
   &:hover { color: $accent-color; }
+}
+
+.footer__dev-logo {
+  display: block;
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
 }
 
 .footer__top-btn {
