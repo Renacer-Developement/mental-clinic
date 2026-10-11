@@ -287,6 +287,8 @@
 .reviews-submit {
   padding: 4.5rem 0;
   scroll-margin-top: 80px;
+  // Mobile header = logo bar + contacts strip (~135px)
+  @media (max-width: 1024px) { scroll-margin-top: 150px; }
 
   @media (max-width: 768px) { padding: 3.25rem 0; }
 

@@ -193,7 +193,14 @@ $footer-line: rgba(255, 255, 255, 0.12);
   }
 }
 
-.footer__copy { flex: 1 1 320px; }
+.footer__copy {
+  flex: 1 1 320px;
+
+  // In the stacked (column) layout flex-basis would become a 320px *height*.
+  @media (max-width: 600px) {
+    flex: none;
+  }
+}
 
 .footer__dev {
   display: inline-flex;

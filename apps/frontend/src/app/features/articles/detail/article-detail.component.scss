@@ -255,6 +255,8 @@
     letter-spacing: -0.02em;
     color: $heading-color;
     scroll-margin-top: 90px;
+    // Mobile header = logo bar + contacts strip (~135px)
+    @media (max-width: 1024px) { scroll-margin-top: 150px; }
   }
 
   h2 { font-size: 1.6rem; }

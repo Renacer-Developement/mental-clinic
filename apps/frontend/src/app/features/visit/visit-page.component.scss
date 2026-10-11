@@ -1,543 +1,678 @@
-@use "sass:color";
 @use "../../../assets/css/coloristics" as *;
 
-.visit-page {
-  display: flex;
-  flex-direction: column;
+// Same rhythm as the landing sections (consultation-block): 1450px, 6% gutters.
+.v-wrap {
+  max-width: 1450px;
+  margin: 0 auto;
+  padding: 0 6%;
+
+  @media (max-width: 768px) {
+    padding: 0 1.25rem;
+  }
 }
 
-// ── Hero ─────────────────────────────────────────────────────────────────────
+.v-section {
+  padding: 6rem 0;
+  background: $section-bg;
 
-.visit-hero {
-  background: $heading-color;
-  color: #fff;
-  min-height: 440px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 0 0 3.5rem;
+  &--white { background: $section-seconder-bg; }
+
+  @media (max-width: 768px) {
+    padding: 4.5rem 0;
+  }
+}
+
+// ── Shared type ───────────────────────────────────────────────────────────────
+
+.v-eyebrow {
+  display: inline-block;
+  margin-bottom: 1.25rem;
+  padding: 0.35rem 1rem;
+  border: 1.5px solid $heading-color;
+  transform: skewX(-12deg);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: $heading-color;
+
+  &--light {
+    border-color: $accent-color;
+    color: $accent-color;
+  }
+}
+
+.v-title {
+  margin: 0;
+  font-size: clamp(1.6rem, 2.6vw, 2.3rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: $heading-color;
+
+  &--light { color: #fff; }
+}
+
+.v-text {
+  margin: 1.25rem 0 0;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: $body-text-color;
+}
+
+// ── Buttons ───────────────────────────────────────────────────────────────────
+
+.v-cta {
   position: relative;
   overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.85rem 0.85rem 0.85rem 2rem;
+  border: 0;
+  border-radius: 100px;
+  background: $heading-color;
+  color: #fff;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  isolation: isolate;
+  box-shadow: 0 14px 30px rgba($heading-color, 0.22);
+  transition: transform 0.4s $ease-spring, box-shadow 0.4s;
 
+  // brown fill that rises from the bottom on hover
   &::before {
     content: '';
     position: absolute;
     inset: 0;
-    background:
-      radial-gradient(ellipse 65% 100% at 0% 100%, rgba($primary-color, 0.3) 0%, transparent 60%),
-      radial-gradient(ellipse 40% 50% at 100% 0%,  rgba($primary-color, 0.12) 0%, transparent 55%);
+    z-index: -1;
+    background: $primary-color;
+    border-radius: inherit;
+    transform: translateY(101%);
+    transition: transform 0.5s $ease-out-soft;
+  }
+
+  svg {
+    width: 34px;
+    height: 34px;
+    padding: 9px;
+    border-radius: 50%;
+    background: $accent-color;
+    color: $heading-color;
+    transition: transform 0.45s $ease-spring;
+  }
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 38px rgba($primary-color, 0.35);
+
+    &::before { transform: translateY(0); }
+    svg { transform: rotate(-45deg); }
+  }
+
+  &:focus-visible {
+    outline: 2px solid $primary-color;
+    outline-offset: 3px;
+  }
+
+  &--light {
+    background: #fff;
+    color: $heading-color;
+    box-shadow: none;
+
+    &::before { background: $accent-color; }
+
+    &:hover { box-shadow: 0 18px 38px rgba(0, 0, 0, 0.25); }
+  }
+}
+
+.v-link {
+  position: relative;
+  padding-bottom: 4px;
+  color: $heading-color;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: $accent-color;
+    transform-origin: right;
+    transition: transform 0.45s $ease-out-soft;
+  }
+
+  &:hover::after { transform: scaleX(0); }
+}
+
+// ── Hero ──────────────────────────────────────────────────────────────────────
+
+.v-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 3rem 0 5rem;
+  background: $section-bg;
+
+  // soft peach glow behind the booking card
+  &::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    right: -10%;
+    width: 55%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba($accent-color, 0.35), transparent 65%);
     pointer-events: none;
   }
 
-  &__breadcrumb {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.78rem;
-    color: rgba(255, 255, 255, 0.45);
-    margin-bottom: 1.25rem;
+  &__grid {
     position: relative;
-    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    align-items: center;
+    gap: 3rem 5rem;
 
-    a {
-      color: rgba(255, 255, 255, 0.45);
-      text-decoration: none;
-      transition: color 0.2s;
-      &:hover { color: rgba(255, 255, 255, 0.85); }
+    @media (max-width: 960px) {
+      grid-template-columns: 1fr;
     }
-
-    span:last-child { color: rgba(255, 255, 255, 0.75); }
   }
 
   &__title {
-    font-size: clamp(2rem, 4vw, 3rem);
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    line-height: 1.1;
-    margin: 0 0 0.75rem;
-    color: #fff;
-    position: relative;
-    z-index: 1;
-  }
-
-  &__subtitle {
-    font-size: 0.82rem;
-    font-weight: 600;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.42);
     margin: 0 0 1.25rem;
-    position: relative;
-    z-index: 1;
+    max-width: 640px;
+    font-size: clamp(2rem, 3.4vw, 3.1rem);
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    color: $heading-color;
   }
 
   &__lead {
-    font-size: 1rem;
-    line-height: 1.75;
-    color: rgba(255, 255, 255, 0.65);
-    max-width: 520px;
     margin: 0 0 2rem;
-    position: relative;
-    z-index: 1;
+    max-width: 520px;
+    font-size: clamp(0.95rem, 1.25vw, 1.08rem);
+    line-height: 1.7;
+    color: $body-text-color;
   }
 
-  &__cta {
-    display: inline-flex;
+  &__actions {
+    display: flex;
     align-items: center;
-    gap: 0.6rem;
-    width: fit-content;
-    background: $primary-color;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    padding: 0.9rem 2rem;
-    border-radius: 999px;
-    font-size: 0.9rem;
-    font-weight: 700;
-    letter-spacing: 0.01em;
-    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
-    position: relative;
-    z-index: 1;
+    flex-wrap: wrap;
+    gap: 1rem 1.75rem;
+  }
 
-    &:hover {
-      background: color.adjust($primary-color, $lightness: 8%);
-      transform: translateY(-2px);
-      box-shadow: 0 12px 36px rgba($primary-color, 0.5);
-    }
+  @media (max-width: 768px) {
+    padding: 2rem 0 3.5rem;
   }
 }
 
-// ── Quick info ────────────────────────────────────────────────────────────────
+.v-crumbs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  font-size: 0.8rem;
+  color: $muted-text-color;
 
-.visit-info {
-  padding: 3.5rem 0;
-  background: #fff;
-  border-bottom: 1px solid rgba($primary-color, 0.07);
-
-  &__grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-
-    @media (max-width: 720px) {
-      grid-template-columns: 1fr;
-      gap: 1.25rem;
-    }
+  a {
+    color: $muted-text-color;
+    text-decoration: none;
+    &:hover { color: $primary-color; }
   }
 
-  &__card {
-    display: flex;
-    gap: 1rem;
-    align-items: flex-start;
-    padding: 1.5rem;
-    border-radius: 16px;
-    border: 1px solid rgba($primary-color, 0.08);
-    background: $section-bg;
-    transition: box-shadow 0.2s, border-color 0.2s;
-
-    &:hover {
-      box-shadow: 0 8px 24px rgba($primary-color, 0.08);
-      border-color: rgba($primary-color, 0.18);
-    }
-
-    h3 {
-      font-size: 0.9rem;
-      font-weight: 800;
-      color: $heading-color;
-      margin: 0 0 0.35rem;
-      letter-spacing: -0.01em;
-    }
-
-    p {
-      font-size: 0.82rem;
-      line-height: 1.65;
-      color: #5c5552;
-      margin: 0;
-    }
-  }
-
-  &__icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    background: rgba($primary-color, 0.1);
-    color: $primary-color;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
+  [aria-current] { color: $heading-color; }
 }
 
-// ── Feature sections ──────────────────────────────────────────────────────────
+// ── Booking card ──────────────────────────────────────────────────────────────
 
-.visit-feature {
-  padding: 5rem 0;
-
-  &--light { background: $section-bg; }
-  &--dark  { background: $heading-color; }
-
-  &__inner {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: center;
-
-    &--reverse {
-      direction: rtl;
-      > * { direction: ltr; }
-    }
-
-    @media (max-width: 860px) {
-      grid-template-columns: 1fr;
-      gap: 2.5rem;
-      direction: ltr;
-      > * { direction: ltr; }
-    }
-  }
-
-  &__visual {
-    display: flex;
-    justify-content: center;
-  }
-
-  &__visual-wrap {
-    position: relative;
-    width: 100%;
-    max-width: 420px;
-  }
-
-  &__svg {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-
-  &__badge {
-    position: absolute;
-    bottom: 0.75rem;
-    right: 0;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    color: $primary-color;
-    background: #fff;
-    border: 1px solid rgba($primary-color, 0.15);
-    border-radius: 999px;
-    padding: 0.4rem 0.9rem;
-    box-shadow: 0 4px 16px rgba($heading-color, 0.1);
-
-    &--light {
-      background: rgba(255, 255, 255, 0.08);
-      border-color: rgba(255, 255, 255, 0.15);
-      color: rgba(255, 255, 255, 0.75);
-      box-shadow: none;
-    }
-  }
-
-  &__label {
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: $primary-color;
-    margin-bottom: 0.75rem;
-
-    &--light { color: rgba(255, 255, 255, 0.45); }
-  }
+.v-card {
+  padding: 2rem;
+  border-radius: 24px;
+  background: $section-seconder-bg;
+  box-shadow: 0 24px 60px rgba($heading-color, 0.1);
 
   &__title {
-    font-size: clamp(1.5rem, 2.8vw, 2.1rem);
-    font-weight: 800;
+    margin: 0 0 1.5rem;
+    font-size: 1.15rem;
+    font-weight: 700;
     color: $heading-color;
-    letter-spacing: -0.02em;
-    margin: 0 0 1.25rem;
-    line-height: 1.2;
-
-    &--light { color: #fff; }
   }
 
-  &__body {
-    font-size: 1rem;
-    line-height: 1.8;
-    color: #5c5552;
-    margin: 0 0 1rem;
-
-    &--light { color: rgba(255, 255, 255, 0.62); }
-  }
-
-  &__list {
-    list-style: none;
+  &__phones {
+    margin: 0;
     padding: 0;
-    margin: 1rem 0 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
+    list-style: none;
 
     li {
       display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: $heading-color;
-
-      svg { color: $primary-color; flex-shrink: 0; }
-    }
-
-    &--light li {
-      color: rgba(255, 255, 255, 0.75);
-      svg { color: #e7bfa3; }
+      flex-direction: column;
+      gap: 0.2rem;
+      padding: 1rem 0;
+      border-top: 1px solid rgba($heading-color, 0.1);
     }
   }
 
-  &__cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    width: fit-content;
-    background: $primary-color;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    padding: 0.85rem 2rem;
-    border-radius: 999px;
-    font-size: 0.9rem;
-    font-weight: 700;
+  &__label {
+    font-size: 0.8rem;
+    color: $muted-text-color;
+  }
+
+  &__phone {
+    font-size: clamp(1.2rem, 1.8vw, 1.45rem);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    color: $heading-color;
     text-decoration: none;
-    margin-top: 1.75rem;
-    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    font-variant-numeric: tabular-nums;
+    transition: color 0.2s;
+
+    &:hover { color: $primary-color; }
+  }
+
+  &__meta {
+    display: grid;
+    gap: 0.9rem;
+    margin: 0 0 1.75rem;
+    padding: 1.25rem 0 0;
+    border-top: 1px solid rgba($heading-color, 0.1);
+
+    div {
+      display: grid;
+      grid-template-columns: 5.5rem 1fr;
+      gap: 1rem;
+    }
+
+    dt {
+      font-size: 0.8rem;
+      color: $muted-text-color;
+    }
+
+    dd {
+      margin: 0;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: $heading-color;
+    }
+  }
+
+  &__btn {
+    width: 100%;
+    padding: 0.95rem 1rem;
+    border: 1.5px solid $heading-color;
+    border-radius: 100px;
+    background: transparent;
+    color: $heading-color;
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.25s, color 0.25s;
 
     &:hover {
-      background: color.adjust($primary-color, $lightness: 8%);
-      transform: translateY(-2px);
-      box-shadow: 0 12px 32px rgba($primary-color, 0.45);
+      background: $heading-color;
+      color: #fff;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $primary-color;
+      outline-offset: 3px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+  }
+}
+
+// ── Facts strip ───────────────────────────────────────────────────────────────
+
+.v-facts {
+  background: $dark-bg;
+  color: #fff;
+
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__item {
+    padding: 2.25rem 2rem 2.25rem 0;
+
+    & + & {
+      padding-left: 2rem;
+      border-left: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    h3 {
+      margin: 0 0 0.4rem;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: $accent-color;
+    }
+
+    p {
+      margin: 0;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    @media (max-width: 768px) {
+      padding: 1.5rem 0;
+
+      & + & {
+        padding-left: 0;
+        border-left: 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+      }
     }
   }
 }
 
-// ── When to seek help ─────────────────────────────────────────────────────────
+// ── Split layout: heading column + content column ─────────────────────────────
 
-.visit-when {
-  padding: 5rem 0;
-  background: #fff;
+.v-split {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 3rem 6rem;
+  align-items: start;
 
-  &__header {
-    margin-bottom: 3rem;
+  &__head {
+    position: sticky;
+    top: 6rem;
+
+    @media (max-width: 960px) {
+      position: static;
+    }
   }
 
-  &__label {
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: $primary-color;
-    margin-bottom: 0.75rem;
+  @media (max-width: 960px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ── Steps ─────────────────────────────────────────────────────────────────────
+
+.v-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.v-step {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr;
+  gap: 1.5rem;
+  padding: 2rem 0;
+  border-top: 1px solid rgba($heading-color, 0.12);
+
+  &:last-child { border-bottom: 1px solid rgba($heading-color, 0.12); }
+
+  &__num {
+    font-size: clamp(2rem, 3.2vw, 2.8rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: $accent-color;
+    font-variant-numeric: tabular-nums;
   }
 
   &__title {
-    font-size: clamp(1.6rem, 3vw, 2.2rem);
-    font-weight: 800;
+    margin: 0 0 0.5rem;
+    font-size: 1.15rem;
+    font-weight: 700;
     color: $heading-color;
-    letter-spacing: -0.02em;
-    margin: 0 0 0.6rem;
   }
 
-  &__subtitle {
-    font-size: 1rem;
-    color: #5c5552;
+  &__text {
     margin: 0;
-    max-width: 520px;
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: $body-text-color;
   }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 3.25rem 1fr;
+    gap: 1rem;
+    padding: 1.5rem 0;
+  }
+}
+
+// ── Reasons ───────────────────────────────────────────────────────────────────
+
+.v-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem 3rem;
+  margin-bottom: 3.5rem;
+
+  &__aside {
+    max-width: 360px;
+    margin: 0;
+  }
+}
+
+.v-reasons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @media (max-width: 960px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.v-reason {
+  position: relative;
+  padding: 1.75rem 1.75rem 1.75rem 2rem;
+  border-radius: 18px;
+  background: $section-seconder-bg;
+  transition: transform 0.4s $ease-out-soft, box-shadow 0.4s;
+
+  // peach marker on the left edge
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 1.9rem;
+    width: 4px;
+    height: 1.3rem;
+    border-radius: 0 4px 4px 0;
+    background: $accent-color;
+  }
+
+  h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: $heading-color;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: $body-text-color;
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 40px rgba($heading-color, 0.08);
+  }
+}
+
+// ── Privacy band ──────────────────────────────────────────────────────────────
+
+.v-privacy {
+  padding: 6rem 0;
+  background: $dark-bg;
+  color: #fff;
 
   &__grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.25rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem 6rem;
+    align-items: start;
 
-    @media (max-width: 860px) { grid-template-columns: repeat(2, 1fr); }
-    @media (max-width: 480px) { grid-template-columns: 1fr; }
-  }
-
-  &__card {
-    padding: 1.5rem;
-    border-radius: 18px;
-    border: 1px solid rgba($primary-color, 0.08);
-    background: $section-bg;
-    display: flex;
-    flex-direction: column;
-    gap: 0.65rem;
-    transition: box-shadow 0.25s, transform 0.25s, border-color 0.25s;
-
-    &:hover {
-      box-shadow: 0 10px 32px rgba($primary-color, 0.1);
-      transform: translateY(-3px);
-      border-color: rgba($primary-color, 0.2);
-    }
-
-    h3 {
-      font-size: 0.9rem;
-      font-weight: 800;
-      color: $heading-color;
-      margin: 0;
-      letter-spacing: -0.01em;
-    }
-
-    p {
-      font-size: 0.82rem;
-      line-height: 1.65;
-      color: #5c5552;
-      margin: 0;
+    @media (max-width: 960px) {
+      grid-template-columns: 1fr;
     }
   }
 
-  &__card-icon {
-    width: 42px;
-    height: 42px;
-    border-radius: 12px;
-    background: rgba($primary-color, 0.1);
-    color: $primary-color;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
+  &__body p {
+    margin: 0 0 1.75rem;
+    font-size: 1rem;
+    line-height: 1.75;
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  &__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+      position: relative;
+      padding: 0.9rem 0 0.9rem 1.75rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      font-size: 0.95rem;
+      font-weight: 600;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 1.3rem;
+        width: 0.6rem;
+        height: 0.6rem;
+        border-radius: 50%;
+        background: $accent-color;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 4.5rem 0;
   }
 }
 
 // ── FAQ ───────────────────────────────────────────────────────────────────────
 
-.visit-faq {
-  padding: 5rem 0;
-  background: $section-bg;
+.v-faq__item {
+  border-top: 1px solid rgba($heading-color, 0.12);
 
-  &__header {
-    margin-bottom: 2.5rem;
-  }
+  &:last-child { border-bottom: 1px solid rgba($heading-color, 0.12); }
 
-  &__label {
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: $primary-color;
-    margin-bottom: 0.75rem;
-  }
-
-  &__title {
-    font-size: clamp(1.6rem, 3vw, 2.2rem);
-    font-weight: 800;
-    color: $heading-color;
-    letter-spacing: -0.02em;
-    margin: 0;
-  }
-}
-
-::ng-deep .visit-faq__accordion {
-  .p-accordion-header-link {
-    background: #fff !important;
-    border: 1px solid rgba(#8f6b59, 0.1) !important;
-    border-radius: 12px !important;
-    padding: 1.1rem 1.5rem !important;
-    color: #2d2e2e !important;
-    font-weight: 700 !important;
-    font-size: 0.95rem !important;
-    transition: border-color 0.2s !important;
-
-    &:hover {
-      border-color: rgba(#8f6b59, 0.25) !important;
-    }
-  }
-
-  .p-accordion-tab {
-    margin-bottom: 0.75rem;
-  }
-
-  .p-accordion-content {
-    border: 1px solid rgba(#8f6b59, 0.1) !important;
-    border-top: none !important;
-    border-radius: 0 0 12px 12px !important;
-    padding: 1.25rem 1.5rem !important;
-
-    p {
-      font-size: 0.9rem;
-      line-height: 1.75;
-      color: #5c5552;
-      margin: 0;
-
-      & + p { margin-top: 0.6rem; }
-    }
-  }
-}
-
-// ── CTA Section ───────────────────────────────────────────────────────────────
-
-.visit-cta {
-  padding: 4rem 0;
-  background: $heading-color;
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse 60% 120% at 50% 100%, rgba($primary-color, 0.3) 0%, transparent 60%);
-    pointer-events: none;
-  }
-
-  &__inner {
+  summary {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 2rem;
-    position: relative;
-    z-index: 1;
+    gap: 1.5rem;
+    padding: 1.5rem 0;
+    list-style: none;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: $heading-color;
+    cursor: pointer;
+    transition: color 0.2s;
 
-    @media (max-width: 720px) {
-      flex-direction: column;
-      align-items: flex-start;
+    &::-webkit-details-marker { display: none; }
+
+    &:hover { color: $primary-color; }
+
+    &:focus-visible {
+      outline: 2px solid $primary-color;
+      outline-offset: 4px;
+      border-radius: 4px;
     }
+  }
+
+  p {
+    margin: 0;
+    padding: 0 3rem 1.5rem 0;
+    font-size: 0.95rem;
+    line-height: 1.75;
+    color: $body-text-color;
+  }
+
+  &[open] .v-faq__icon::after { transform: rotate(0deg); }
+}
+
+// plus that turns into a minus when open
+.v-faq__icon {
+  position: relative;
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: $accent-soft;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 0.8rem;
+    height: 2px;
+    margin: -1px 0 0 -0.4rem;
+    background: $heading-color;
+    transition: transform 0.3s $ease-out-soft;
+  }
+
+  &::after { transform: rotate(90deg); }
+}
+
+// ── Final CTA ─────────────────────────────────────────────────────────────────
+
+.v-final {
+  padding: 5.5rem 0;
+  background: $primary-color;
+  color: #fff;
+  text-align: center;
+
+  &__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   &__title {
-    font-size: clamp(1.4rem, 2.5vw, 1.9rem);
+    margin: 0 0 0.75rem;
+    font-size: clamp(1.7rem, 3vw, 2.5rem);
     font-weight: 800;
-    color: #fff;
     letter-spacing: -0.02em;
-    margin: 0 0 0.4rem;
-  }
-
-  &__body {
-    font-size: 0.95rem;
-    color: rgba(255, 255, 255, 0.55);
-    margin: 0;
-  }
-
-  &__btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    white-space: nowrap;
-    flex-shrink: 0;
-    background: $primary-color;
     color: #fff;
-    border: none;
-    cursor: pointer;
-    padding: 0.95rem 2.25rem;
-    border-radius: 999px;
-    font-size: 0.92rem;
-    font-weight: 700;
-    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
 
-    &:hover {
-      background: color.adjust($primary-color, $lightness: 8%);
-      transform: translateY(-2px);
-      box-shadow: 0 12px 36px rgba($primary-color, 0.5);
-    }
+  &__text {
+    margin: 0 0 2rem;
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.85);
+  }
 
-    @media (max-width: 720px) { width: 100%; justify-content: center; }
+  @media (max-width: 768px) {
+    padding: 4rem 0;
   }
 }

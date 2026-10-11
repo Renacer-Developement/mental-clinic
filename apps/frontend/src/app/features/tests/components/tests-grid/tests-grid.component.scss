@@ -19,6 +19,8 @@
 
 .tgrid__section {
   scroll-margin-top: 90px; // keep the title clear of the sticky navbar
+  // Mobile header = logo bar + contacts strip (~135px)
+  @media (max-width: 1024px) { scroll-margin-top: 150px; }
 
   & + & { margin-top: 3rem; }
 }

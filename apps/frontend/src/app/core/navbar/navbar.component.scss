@@ -17,7 +17,7 @@ $dnav-top-h: 76px;
 // row slides away and only the menu bar stays pinned.
 @media screen and (min-width: 1025px) {
   :host { top: -$dnav-top-h; }
-  .mnav, .mnav__panel { display: none !important; }
+  .mnav, .mnav__strip, .mnav__panel { display: none !important; }
 }
 
 @media screen and (max-width: 1024px) {
@@ -428,6 +428,94 @@ $mnav-h: 64px;
     span:nth-child(2) { opacity: 0; }
     span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
   }
+}
+
+// ── Contacts strip under the bar ─────────────────────────────────────────────
+
+.mnav__strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 1.25rem;
+  background: #fff;
+  border-bottom: 1px solid rgba($heading-color, 0.08);
+}
+
+.mnav__strip-contacts {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.mnav__strip-social {
+  display: flex;
+  gap: 0.45rem;
+
+  a {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border: 1.5px solid $primary-color;
+    border-radius: 50%;
+    color: $heading-color;
+    font-size: 0.75rem;
+    text-decoration: none;
+    transition: background-color 0.2s, color 0.2s;
+
+    &:hover {
+      background: $primary-color;
+      color: #fff;
+    }
+  }
+}
+
+.mnav__strip-phone {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: $heading-color;
+  font-size: 0.9rem;
+  font-weight: 700;
+  white-space: nowrap;
+  text-decoration: none;
+  font-variant-numeric: tabular-nums;
+
+  i { color: $primary-color; font-size: 0.85rem; }
+}
+
+.mnav__strip-cta {
+  flex-shrink: 0;
+  padding: 0.75rem 1.1rem;
+  border: 2px solid $primary-color;
+  background: transparent;
+  color: $heading-color;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+
+  &:hover {
+    background: $primary-color;
+    color: #fff;
+  }
+
+  @media (max-width: 360px) {
+    padding: 0.6rem 0.7rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+  }
+}
+
+@media (max-width: 360px) {
+  .mnav__strip { gap: 0.6rem; padding-inline: 1rem; }
+  .mnav__strip-phone { font-size: 0.8rem; gap: 0.35rem; }
 }
 
 // full-screen panel under the bar
