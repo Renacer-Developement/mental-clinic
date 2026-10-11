@@ -63,6 +63,11 @@ export class SeoService {
     }
   }
 
+  /** Overrides the robots meta set by updatePage (e.g. noindex once a listing turns out empty). */
+  setRobots(content: string): void {
+    this.meta.updateTag({ name: 'robots', content });
+  }
+
   private setCanonical(path: string): void {
     let link = this.document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
     if (!link) {

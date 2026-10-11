@@ -8,6 +8,12 @@
       "port": 4200
     },
     {
+      "name": "frontend-ssr",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd apps/frontend && node dist/mental-clinic-fe/server/server.mjs"],
+      "port": 4000
+    },
+    {
       "name": "admin",
       "runtimeExecutable": "pnpm",
       "runtimeArgs": ["run", "dev:admin"],

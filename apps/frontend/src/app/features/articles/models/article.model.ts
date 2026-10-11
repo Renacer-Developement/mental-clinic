@@ -20,6 +20,7 @@ export interface Article {
   authorName?: string;
   publishedAt?: string;
   createdAt: string;
+  updatedAt?: string;
   views?: number;
   isFeatured?: boolean;
   readTime?: number;

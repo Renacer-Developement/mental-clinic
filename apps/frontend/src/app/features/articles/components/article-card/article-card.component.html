@@ -1,4 +1,4 @@
-<article class="acard" [routerLink]="['/articles', article.slug ?? article._id]"
+<a class="acard" [routerLink]="['/articles', article.slug ?? article._id]"
          [class.acard--featured]="article.isFeatured">
 
   <!-- Thumbnail -->
@@ -89,4 +89,4 @@
 
   </div>
 
-</article>
+</a>

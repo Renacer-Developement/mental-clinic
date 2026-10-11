@@ -24,6 +24,12 @@ $muted: #5b6475;
     color: $ink;
     line-height: 1.35;
     margin: 0 0 0.75rem;
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      &:hover { color: $primary-color; }
+    }
   }
 
   &__desc {
@@ -46,6 +52,8 @@ $muted: #5b6475;
   }
 
   &__cta {
+    display: inline-block;
+    text-decoration: none;
     border: none;
     border-radius: 999px;
     background: $primary-color;

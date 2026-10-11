@@ -1,5 +1,30 @@
 {
   "outputDirectory": "dist/mental-clinic-fe/browser",
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/test",
+      "destination": "/test/list",
+      "permanent": true
+    },
+    {
+      "source": "/index.html",
+      "destination": "/",
+      "permanent": true
+    }
+  ],
+  "functions": {
+    "api/ssr.mjs": {
+      "includeFiles": "dist/mental-clinic-fe/server/**",
+      "maxDuration": 30
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/api/ssr"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",

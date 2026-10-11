@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, RESPONSE_INIT, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { SeoService } from '../../core/seo/seo.service';
@@ -16,6 +16,7 @@ export class ContractComponent implements OnInit {
   private readonly seo       = inject(SeoService);
   private readonly api       = inject(ContractApiService);
   private readonly sanitizer = inject(DomSanitizer);
+  private readonly responseInit = inject(RESPONSE_INIT, { optional: true });
 
   safeContent = signal<SafeHtml>('');
   loading     = signal(true);
@@ -58,6 +59,9 @@ export class ContractComponent implements OnInit {
     this.api.get().subscribe({
       next: (doc) => {
         if (doc.visible === false) {
+          // Hidden in the admin panel — a real 404 so search engines drop the page
+          if (this.responseInit) this.responseInit.status = 404;
+          this.seo.setRobots('noindex, follow');
           this.notFound.set(true);
           this.loading.set(false);
           return;

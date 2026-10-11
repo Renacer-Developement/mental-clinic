@@ -6,21 +6,54 @@
       <nav class="tests-hero__breadcrumb">
         <a routerLink="/">Головна</a>
         <span>/</span>
-        <span>Тестування</span>
+        @if (type) {
+          <a routerLink="/test/list">Тестування</a>
+          <span>/</span>
+          <span>{{ content.label }}</span>
+        } @else {
+          <span>Тестування</span>
+        }
       </nav>
-      <h1 class="tests-hero__title">Психологічні тести</h1>
+      <h1 class="tests-hero__title">{{ content.h1 }}</h1>
       <p class="tests-hero__subtitle">Доказова медицина · Валідовані методики · Безкоштовно</p>
-      <p class="tests-hero__lead">
-        Клінічно валідовані тести для раннього виявлення депресії, тривожності,
-        ПТСР та інших розладів. Результати допоможуть підготуватись до консультації.
-      </p>
+      <p class="tests-hero__lead">{{ content.intro[0] }}</p>
     </div>
   </section>
 
   <!-- Content -->
   <section class="tests-content">
     <div class="container">
-      <app-tests-grid/>
+      <!-- Category links: real <a href> so every category page is reachable for crawlers -->
+      <nav class="tests-cats" aria-label="Категорії тестів">
+        <a class="tests-cats__item" routerLink="/test/list" [class.tests-cats__item--active]="!type">Усі тести</a>
+        @for (c of CATEGORY_LINKS; track c.slug) {
+          <a class="tests-cats__item" [routerLink]="['/test/list', c.slug]"
+             [class.tests-cats__item--active]="type === c.slug">{{ c.label }}</a>
+        }
+      </nav>
+
+      <app-tests-grid [category]="type"/>
+
+      @if (content.intro.length > 1 || content.faq?.length) {
+        <article class="tests-about">
+          @for (p of content.intro.slice(1); track $index) {
+            <p>{{ p }}</p>
+          }
+          @if (content.faq?.length) {
+            <h2 class="tests-about__heading">Часті запитання</h2>
+            @for (f of content.faq; track f.q) {
+              <details class="tests-about__faq">
+                <summary>{{ f.q }}</summary>
+                <p>{{ f.a }}</p>
+              </details>
+            }
+          }
+          <p class="tests-about__cta">
+            Хочете обговорити результат з лікарем?
+            <a routerLink="/visit">Записатися на онлайн-консультацію психіатра →</a>
+          </p>
+        </article>
+      }
     </div>
   </section>
 

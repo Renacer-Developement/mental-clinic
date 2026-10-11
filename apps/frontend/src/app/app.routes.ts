@@ -28,6 +28,8 @@ export const APP_ROUTES: Routes = [
         path: 'test',
         loadComponent: () => import('./features/tests/tests.component').then(m => m.TestsComponent),
         children: [
+          // /test has no content of its own (Vercel also 301s it — see vercel.json)
+          { path: '', pathMatch: 'full', redirectTo: 'list' },
           {
             path: 'detail/:id',
             loadComponent: () => import('./features/tests/detail-page/detail-page.component').then(m => m.DetailPageComponent),
