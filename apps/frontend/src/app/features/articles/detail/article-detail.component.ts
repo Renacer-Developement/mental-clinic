@@ -16,6 +16,7 @@ import { ImportsModule } from '../../../shared/primeng-imports.module';
 import { ArticleService } from '../services/article.service';
 import { ArticleCardComponent } from '../components/article-card/article-card.component';
 import { Article } from '../models/article.model';
+import { fitDescription, fitTitle } from '../../../core/seo/seo-text.utils';
 import { SeoService } from '../../../core/seo/seo.service';
 import { ClinicContactsService } from '../../shared/components/clinic-contacts-dialog/clinic-contacts.service';
 import { clinicContacts } from '../../shared/constants/contacts.constants';
@@ -350,8 +351,8 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
   private updateSeo(a: Article): void {
     const canonical = `/articles/${a.slug ?? a._id}`;
     this.seo.updatePage({
-      title: `${a.title} | Центр ментального здоров'я`,
-      description: a.excerpt ?? a.title,
+      title: fitTitle(a.title, ' | Психіатр Євген Скрипник', ' | Д-р Скрипник'),
+      description: fitDescription(a.excerpt ?? a.title),
       canonical,
       ogType: 'article',
       schema: {
@@ -359,14 +360,11 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
         '@type': 'Article',
         headline: a.title,
         description: a.excerpt ?? '',
-        image: `${BASE_URL}/assets/logo.avif`,
-        author: { '@type': 'Person', name: 'Євген Скрипник' },
+        image: a.coverImage || `${BASE_URL}/assets/logo.avif`,
+        author: { '@type': 'Person', '@id': `${BASE_URL}/#physician`, name: 'Євген Скрипник', jobTitle: 'Лікар-психіатр', url: `${BASE_URL}/about` },
         datePublished: a.publishedAt ?? a.createdAt,
-        publisher: {
-          '@type': 'Organization',
-          name: "Центр ментального здоров'я Євгена Скрипника",
-          url: BASE_URL,
-        },
+        dateModified: a.updatedAt ?? a.publishedAt ?? a.createdAt,
+        publisher: { '@id': `${BASE_URL}/#organization` },
         mainEntityOfPage: { '@type': 'WebPage', '@id': `${BASE_URL}${canonical}` },
         inLanguage: 'uk',
         breadcrumb: {

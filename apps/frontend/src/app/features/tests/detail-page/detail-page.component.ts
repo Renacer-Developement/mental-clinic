@@ -1,13 +1,18 @@
 import {CommonModule, isPlatformBrowser, NgFor, NgIf} from '@angular/common';
 import { ImportsModule } from '../../../shared/primeng-imports.module';
-import { ChangeDetectorRef, Component, DestroyRef, inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, inject, OnInit, PLATFORM_ID, RESPONSE_INIT } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 import { SeoService } from '../../../core/seo/seo.service';
+import { fitDescription, fitTitle } from '../../../core/seo/seo-text.utils';
 import { TestService } from '../services/test.service';
 import { Test } from '../models/test.model';
 import { specializedTests } from '../constants/specialized-test-types.enum';
+import { CATEGORY_SECTIONS, sectionOf } from '../constants/test-sections.constants';
+import { TEST_CATEGORY_CONTENT } from '../constants/test-category-content.constants';
 import { clinicContacts } from '../../shared/constants/contacts.constants';
 import { ClinicContactsService } from '../../shared/components/clinic-contacts-dialog/clinic-contacts.service';
 import { GoogleAnalyticsService } from '../../../analytics/google-analytics.service';
@@ -39,8 +44,14 @@ export class DetailPageComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly responseInit = inject(RESPONSE_INIT, { optional: true });
   data!: Test;
   loadError = false;
+
+  // Server-rendered context below the quiz
+  scoreBands: { range: string; result: string }[] = [];
+  relatedTests: Test[] = [];
+  categoryLink: { slug: string; label: string } | null = null;
 
   answers: { [key: string]: number } = {};
 
@@ -88,17 +99,30 @@ export class DetailPageComponent implements OnInit {
 
     this.route.params
         .pipe(
-            switchMap(params => this.testService.getTestById(params['id'])),
+            // Malformed ids make the API answer 500 — treat them as a plain 404 up front
+            switchMap(params => /^[0-9a-f]{24}$/i.test(params['id'])
+              ? this.testService.getTestById(params['id'])
+              : throwError(() => new HttpErrorResponse({ status: 404 }))),
             takeUntilDestroyed(this.destroyRef),
         )
         .subscribe({
           next: response => {
             this.data = response;
+            this.scoreBands = this.buildScoreBands(response);
+            this.loadRelated(response);
             this.updateSEO(response.name, response.description);
             this.cdr.detectChanges();
           },
-          error: () => {
+          error: (err: HttpErrorResponse) => {
             this.loadError = true;
+            // SSR only: a missing test is a real 404; anything else (API down, cold start)
+            // is temporary — 503 makes Google retry later instead of de-indexing the page
+            if (this.responseInit) {
+              this.responseInit.status = err?.status === 404 ? 404 : 503;
+              if (err?.status !== 404) {
+                this.responseInit.headers = { 'Retry-After': '120' };
+              }
+            }
             this.cdr.detectChanges();
           },
         });
@@ -646,6 +670,36 @@ export class DetailPageComponent implements OnInit {
     this.subscales = [];
   }
 
+  /** Plain total-score bands only (subscale tests like SMI/HADS keep their own result views). */
+  private buildScoreBands(test: Test): { range: string; result: string }[] {
+    const bands = (test.resultInterpretation ?? [])
+      .filter(r => r.range?.length === 2 && r.result && !r.type && !r.name);
+    return bands.length < 2 ? [] : bands.map(r => ({
+      range: r.range[1] == null ? `${r.range[0]}+` : `${r.range[0]}–${r.range[1]}`,
+      result: r.result.trim().replace(/:$/, ''),
+    }));
+  }
+
+  /** Same-section tests + the category page, as crawlable internal links. */
+  private loadRelated(test: Test): void {
+    const section = sectionOf(test);
+    const slug = Object.keys(CATEGORY_SECTIONS).find(k => CATEGORY_SECTIONS[k].sections.includes(section));
+    this.categoryLink = slug ? { slug, label: TEST_CATEGORY_CONTENT[slug].label } : null;
+
+    this.testService.getTests()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: tests => {
+          const others = tests.filter(t => t._id !== test._id);
+          const sameSection = others.filter(t => sectionOf(t) === section);
+          const sameCategory = slug ? others.filter(t => !sameSection.includes(t) && CATEGORY_SECTIONS[slug].sections.includes(sectionOf(t))) : [];
+          this.relatedTests = [...sameSection, ...sameCategory].slice(0, 5);
+          this.cdr.detectChanges();
+        },
+        error: () => { /* related links are optional */ },
+      });
+  }
+
   goToAllTests(): void {
     this.router.navigate([TEST_ROUTES.LIST]);
   }
@@ -659,23 +713,34 @@ export class DetailPageComponent implements OnInit {
     const canonical = `/test/detail/${id}`;
     const BASE_URL = 'https://doctor-skripnik.com.ua';
 
+    const questions = this.data?.questions?.length;
+    const seoDescription = fitDescription(
+      description?.replace(/([^.!?])$/, '$1.'),
+      questions ? `${questions} питань${this.data?.duration ? `, ${this.data.duration.replace(/\.$/, '')}` : ''}` + '.' : null,
+      'Безкоштовно, результат одразу.',
+      'Консультація психіатра онлайн.',
+    );
+
     this.seo.updatePage({
-      title: `${name} | Центр ментального здоров'я Євгена Скрипника`,
-      description,
+      title: fitTitle(name, ' — тест онлайн безкоштовно', ' — пройти тест онлайн', ' — тест онлайн'),
+      description: seoDescription,
       canonical,
       schema: {
         '@context': 'https://schema.org',
-        '@type': 'WebPage',
+        '@type': 'MedicalWebPage',
         name,
         url: `${BASE_URL}${canonical}`,
-        description,
+        description: seoDescription,
         inLanguage: 'uk',
         isPartOf: { '@id': `${BASE_URL}/#website` },
+        audience: { '@type': 'MedicalAudience', audienceType: 'Patient' },
+        reviewedBy: { '@id': `${BASE_URL}/#organization` },
+        isAccessibleForFree: true,
         breadcrumb: {
           '@type': 'BreadcrumbList',
           itemListElement: [
             { '@type': 'ListItem', position: 1, name: 'Головна', item: `${BASE_URL}/` },
-            { '@type': 'ListItem', position: 2, name: 'Психологічні тести', item: `${BASE_URL}/test` },
+            { '@type': 'ListItem', position: 2, name: 'Психологічні тести', item: `${BASE_URL}/test/list` },
             { '@type': 'ListItem', position: 3, name: name, item: `${BASE_URL}${canonical}` },
           ],
         },

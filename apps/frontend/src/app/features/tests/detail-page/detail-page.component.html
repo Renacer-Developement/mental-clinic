@@ -217,6 +217,53 @@
       </div>
     </section>
 
+    <!-- About the test: server-rendered context for readers and search engines -->
+    <section class="dp-about">
+      <div class="container">
+
+        <ng-container *ngIf="scoreBands.length">
+          <h2 class="dp-about__title">Як інтерпретувати результат</h2>
+          <table class="dp-about__bands">
+            <thead><tr><th>Бали</th><th>Що це означає</th></tr></thead>
+            <tbody>
+              <tr *ngFor="let b of scoreBands">
+                <td>{{ b.range }}</td>
+                <td>{{ b.result }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </ng-container>
+
+        <h2 class="dp-about__title">Коли варто звернутися до психіатра</h2>
+        <p>
+          Результат тесту — це орієнтир, а не діагноз. Якщо тест показав помірний чи високий рівень симптомів,
+          стан не минає понад два тижні або заважає працювати, спати та спілкуватися з близькими, —
+          варто обговорити результат з лікарем. На консультації психіатр уточнить діагноз і, за потреби,
+          підбере лікування.
+        </p>
+        <p class="dp-about__cta">
+          <a routerLink="/visit">Записатися на онлайн-консультацію психіатра →</a>
+        </p>
+        <p class="dp-about__crisis">
+          Якщо у вас з’являються думки про самогубство чи самоушкодження — не чекайте:
+          зателефонуйте на лінію психологічної підтримки 7333 або 112.
+        </p>
+
+        <ng-container *ngIf="relatedTests.length">
+          <h2 class="dp-about__title">Схожі тести</h2>
+          <ul class="dp-about__related">
+            <li *ngFor="let t of relatedTests">
+              <a [routerLink]="['/test/detail', t._id]">{{ t.name }}</a>
+            </li>
+          </ul>
+        </ng-container>
+        <p *ngIf="categoryLink" class="dp-about__more">
+          <a [routerLink]="['/test/list', categoryLink.slug]">Усі тести: {{ categoryLink.label }} →</a>
+        </p>
+
+      </div>
+    </section>
+
     </ng-container><!-- /data -->
 
   </ng-container>

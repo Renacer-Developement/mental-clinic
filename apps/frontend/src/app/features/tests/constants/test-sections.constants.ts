@@ -36,11 +36,13 @@ const MATCH_ORDER = [
 export const sectionOf = (test: Test): string =>
   MATCH_ORDER.find(s => s.match.test(test.name ?? ''))?.title ?? OTHER_SECTION;
 
-// Old category links (/test/list/depression …, e.g. from the landing page) scroll to a section
-export const SECTION_BY_TYPE: Record<string, string> = {
-  [TEST_CATEGORIES_CONST.DEPRESSION]: 'Депресія',
-  [TEST_CATEGORIES_CONST.ANXIETY]: 'Тривога',
-  [TEST_CATEGORIES_CONST.PERSONALITY_DISORDERS]: 'Розлади особистості',
-  [TEST_CATEGORIES_CONST.BEHAVIORAL_DISORDERS]: 'РДУГ',
-  [TEST_CATEGORIES_CONST.ADDICTIONS]: 'Залежності',
+// Which sections each /test/list/:type category page shows. `extra` pulls in single tests
+// that live in another section but belong here too (HADS screens depression as well as anxiety).
+export const CATEGORY_SECTIONS: Record<string, { sections: string[]; extra?: RegExp }> = {
+  [TEST_CATEGORIES_CONST.DEPRESSION]:            { sections: ['Депресія', 'Депресія (діти)'], extra: /HADS/i },
+  [TEST_CATEGORIES_CONST.ANXIETY]:               { sections: ['Тривога', 'Тривога (діти)', 'Паніка', 'ОКР', 'ПТСР'] },
+  [TEST_CATEGORIES_CONST.PERSONALITY_DISORDERS]: { sections: ['Розлади особистості', 'Психотичні розлади'] },
+  [TEST_CATEGORIES_CONST.BEHAVIORAL_DISORDERS]:  { sections: ['РДУГ', 'РДУГ (діти)', 'Аутизм', 'Аутизм (діти)'] },
+  [TEST_CATEGORIES_CONST.ADDICTIONS]:            { sections: ['Залежності', 'Харчова поведінка'] },
+  [TEST_CATEGORIES_CONST.SPECIALIZED]:           { sections: ['Біполярний розлад', 'Схема-терапія', OTHER_SECTION] },
 };

@@ -16,7 +16,7 @@ export class DrugsComponent implements OnInit {
 
   ngOnInit(): void {
     this.seo.updatePage({
-      title: "Перевірка ліків та взаємодія препаратів — доказова медицина | Євген Скрипник",
+      title: "Перевірка ліків і взаємодії препаратів | Євген Скрипник",
       description: "Перевірте взаємодію ліків та рівень доказовості препаратів за допомогою надійних медичних баз даних. Medscape, Drugs.com — актуальна інформація для безпечного лікування.",
       canonical: '/drugs',
       schema: [

@@ -9,6 +9,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:mentalClinicFe": "node dist/mental-clinic-fe/server/server.mjs",
+    "sitemap": "node scripts/generate-sitemap-tests.mjs",
     "sitemap:tests": "node scripts/generate-sitemap-tests.mjs"
   },
   "dependencies": {

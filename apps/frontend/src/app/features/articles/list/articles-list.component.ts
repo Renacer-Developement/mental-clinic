@@ -103,13 +103,16 @@ export class ArticlesListComponent implements OnInit {
     // Drive HTTP calls from the query subject
     this.query$.pipe(
       tap(() => this.loading.set(true)),
+      // Route values are lowercase slugs; articles store categories capitalised ("Депресія")
       switchMap(({ text, category, page }) =>
-        this.articleService.getAll(text, category, page, PAGE_SIZE),
+        this.articleService.getAll(text, category && (ARTICLE_CATEGORIES.find(c => c.value === category)?.name ?? category), page, PAGE_SIZE),
       ),
     ).subscribe({
       next: result => {
         this.articlesResult.set(result);
         this.loading.set(false);
+        // An empty category page is thin content — keep it out of the index until it has articles
+        if (routeCat && !result.total) this.seo.setRobots('noindex, follow');
       },
       error: () => this.loading.set(false),
     });

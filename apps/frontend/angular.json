@@ -35,7 +35,8 @@
               "allowedHosts": [
                 "localhost",
                 "doctor-skripnik.com.ua",
-                "www.doctor-skripnik.com.ua"
+                "www.doctor-skripnik.com.ua",
+                "*.vercel.app"
               ]
             },
             "allowedCommonJsDependencies": [

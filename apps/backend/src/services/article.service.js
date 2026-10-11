@@ -2,14 +2,17 @@ const articleRepository = require('../repositories/article.repository');
 
 const notFound = () => Object.assign(new Error('Article not found'), { statusCode: 404 });
 
+const escapeRegex = s => String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 const buildFilter = ({ status, category, tag, search } = {}) => {
     const filter = {};
     if (status)   filter.status = status;
-    if (category) filter.categories = category;
+    // Case-insensitive exact match: category URLs are lowercase, stored names are capitalised
+    if (category) filter.categories = { $regex: new RegExp(`^${escapeRegex(category)}$`, 'i') };
     if (tag)      filter.tags = tag;
     if (search)   filter.$or = [
-        { title:   { $regex: new RegExp(search, 'i') } },
-        { excerpt: { $regex: new RegExp(search, 'i') } },
+        { title:   { $regex: new RegExp(escapeRegex(search), 'i') } },
+        { excerpt: { $regex: new RegExp(escapeRegex(search), 'i') } },
     ];
     return filter;
 };

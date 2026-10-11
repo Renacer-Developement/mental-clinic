@@ -3,13 +3,13 @@ import { ImportsModule } from '../../../../shared/primeng-imports.module';
 import { Component, inject, Input, OnInit, PLATFORM_ID, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Test } from '../../models/test.model';
-import { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { GoogleAnalyticsService } from '../../../../analytics/google-analytics.service';
 import { EVENT_TRACK } from '../../../../analytics/analytics.constants';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, ImportsModule],
+  imports: [CommonModule, ImportsModule, RouterLink],
   selector: 'app-card',
   templateUrl: './card.component.html',
   styleUrls: ['./card.component.scss']
@@ -22,24 +22,21 @@ export class CardComponent implements OnInit {
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   copied = signal(false);
 
-  constructor(private router: Router, private googleAnalyticsService: GoogleAnalyticsService) {}
+  constructor(private googleAnalyticsService: GoogleAnalyticsService) {}
 
   ngOnInit(): void {}
 
   /**
-   * Handles test card click, tracking analytics before navigation.
+   * Tracks a test card click; navigation itself is a real <a routerLink> so crawlers can follow it.
    * @param testId - The ID of the selected test.
    */
-  redirectToTest(testId: string): void {
+  trackSelect(testId: string): void {
     // Track test card click event with structured analytics data
     this.googleAnalyticsService.trackEvent(EVENT_TRACK.SELECT_CONTENT, {
       content_type: 'test',
       item_id:      testId,
       item_name:    this.testData?.name ?? 'unknown',
     });
-
-    // Navigate to test detail page
-    this.router.navigate([`/test/detail`, testId]);
   }
 
   /** Native share sheet where available (mobile), otherwise copy the link. */
