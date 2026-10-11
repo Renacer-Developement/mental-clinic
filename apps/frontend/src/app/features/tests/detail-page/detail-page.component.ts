@@ -21,6 +21,7 @@ import { GoogleAnalyticsService } from '../../../analytics/google-analytics.serv
 import { TEST_ROUTES } from "../../../shared/constants/routes.constants";
 import { NotFoundComponent } from '../../not-found/not-found.component';
 import { DivaQuizComponent, DivaResult } from '../components/diva-quiz/diva-quiz.component';
+import { EVENT_TRACK } from '../../../analytics/analytics.constants';
 
 interface Subscale {
   name: string;
@@ -43,6 +44,7 @@ export class DetailPageComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly seo = inject(SeoService);
   private readonly contactsService = inject(ClinicContactsService);
+  private readonly analytics = inject(GoogleAnalyticsService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly platformId = inject(PLATFORM_ID);
@@ -352,6 +354,7 @@ export class DetailPageComponent implements OnInit {
     }
 
     this.isTestCompleted = true;
+    this.trackTest(EVENT_TRACK.TEST_COMPLETE);
     setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
   }
 
@@ -372,6 +375,7 @@ export class DetailPageComponent implements OnInit {
   onDivaCompleted(result: DivaResult): void {
     this.divaResult = result;
     this.isTestCompleted = true;
+    this.trackTest(EVENT_TRACK.TEST_COMPLETE);
     setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
   }
 
@@ -657,6 +661,8 @@ export class DetailPageComponent implements OnInit {
   }
 
   selectAnswer(questionId: string, value: number): void {
+    // First answer of a run = the visitor actually started the test (not just opened the page)
+    if (!Object.keys(this.answers).length) this.trackTest(EVENT_TRACK.TEST_START);
     this.answers[questionId] = value;
     this.showError = false;
   }
@@ -687,6 +693,16 @@ export class DetailPageComponent implements OnInit {
     }
   }
 
+
+  /** test_start / test_complete with the test and its category, for GA4 funnels. */
+  private trackTest(event: string): void {
+    if (!this.data) return;
+    this.analytics.trackEvent(event, {
+      test_id: this.data._id,
+      test_name: this.data.name.slice(0, 100),
+      test_category: this.categoryLink?.slug ?? '',
+    });
+  }
 
   restartTest(): void {
     this.currentQuestionIndex = 0;
@@ -761,7 +777,7 @@ export class DetailPageComponent implements OnInit {
   }
 
   openContacts(): void {
-    this.contactsService.openDialog(clinicContacts);
+    this.contactsService.openDialog(clinicContacts, 'test');
   }
 
   /** Answers to what people ask about a test; rendered on the page and mirrored as FAQPage schema. */

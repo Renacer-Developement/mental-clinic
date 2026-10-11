@@ -56,7 +56,7 @@
           @for (c of phones; track c.phone) {
             <li class="footer__phone">
               <span>Для {{ c.name }}</span>
-              <a [href]="'tel:' + c.phone">{{ c.label }}</a>
+              <a [href]="'tel:' + c.phone" (click)="trackPhone()">{{ c.label }}</a>
             </li>
           }
         </ul>

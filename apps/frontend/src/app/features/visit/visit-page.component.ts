@@ -3,6 +3,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ClinicContactsService } from '../shared/components/clinic-contacts-dialog/clinic-contacts.service';
 import { clinicContacts } from '../shared/constants/contacts.constants';
 import { SeoService } from '../../core/seo/seo.service';
+import { GoogleAnalyticsService } from '../../analytics/google-analytics.service';
 import { RevealDirective } from '../../shared/directives/reveal.directive';
 import { TEST_ROUTES } from '../../shared/constants/routes.constants';
 
@@ -20,6 +21,7 @@ const formatPhone = (phone: string) =>
 export class VisitPageComponent implements OnInit {
   private readonly contactsService = inject(ClinicContactsService);
   private readonly seo = inject(SeoService);
+  private readonly analytics = inject(GoogleAnalyticsService);
 
   protected readonly TEST_ROUTES = TEST_ROUTES;
 
@@ -151,7 +153,11 @@ export class VisitPageComponent implements OnInit {
     });
   }
 
+  trackPhone(): void {
+    this.analytics.trackLead('phone', 'visit');
+  }
+
   openContacts() {
-    this.contactsService.openDialog(clinicContacts);
+    this.contactsService.openDialog(clinicContacts, 'visit');
   }
 }

@@ -27,6 +27,15 @@ export const EVENT_TRACK = {
   SOCIAL_CLICK:   'social_click',
   FOOTER_LINK:    'footer_link_click',
   TELEGRAM_OPEN:  'telegram_open',
+
+  // ── Conversions ──────────────────────────────────────────────────────────
+  /** GA4 recommended event — a booking contact (Telegram / Viber / phone). Mark as a key event in GA4. */
+  GENERATE_LEAD:  'generate_lead',
+  TEST_START:     'test_start',
+  TEST_COMPLETE:  'test_complete',
 } as const;
+
+/** How the visitor reached the clinic, sent as `method` with generate_lead. */
+export type LeadMethod = 'telegram' | 'viber' | 'phone';
 
 export type EventTrack = typeof EVENT_TRACK[keyof typeof EVENT_TRACK];

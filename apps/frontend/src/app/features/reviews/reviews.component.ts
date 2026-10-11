@@ -191,6 +191,6 @@ export class ReviewsComponent implements OnInit {
   }
 
   openContacts(): void {
-    this.contacts.openDialog(clinicContacts);
+    this.contacts.openDialog(clinicContacts, 'reviews');
   }
 }

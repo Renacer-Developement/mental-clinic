@@ -3,6 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { EVENT_TRACK, LeadMethod } from './analytics.constants';
 
 // GA4 measurement ID — single source of truth
 export const GA_MEASUREMENT_ID = 'G-QL51QSPEPK';
@@ -69,5 +70,18 @@ export class GoogleAnalyticsService {
   trackEvent(eventName: string, params: Record<string, string | number | boolean> = {}): void {
     if (typeof gtag !== 'function') return;
     gtag('event', eventName, params);
+  }
+
+  /**
+   * Booking contact — the site's main conversion. `source` is where the visitor
+   * started (e.g. 'visit', 'condition-page', 'footer'); `page_path` is the route.
+   */
+  trackLead(method: LeadMethod, source: string): void {
+    this.trackEvent(EVENT_TRACK.GENERATE_LEAD, { method, source, page_path: this.currentPath() });
+  }
+
+  /** Current route without query/fragment, for page_path params. */
+  currentPath(): string {
+    return this.router.url.split(/[?#]/)[0];
   }
 }

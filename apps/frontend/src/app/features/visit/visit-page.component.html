@@ -35,7 +35,7 @@
           @for (p of phones; track p.phone) {
             <li>
               <span class="v-card__label">Запис до {{ p.name }}</span>
-              <a class="v-card__phone" [href]="'tel:' + p.phone">{{ p.label }}</a>
+              <a class="v-card__phone" [href]="'tel:' + p.phone" (click)="trackPhone()">{{ p.label }}</a>
             </li>
           }
         </ul>

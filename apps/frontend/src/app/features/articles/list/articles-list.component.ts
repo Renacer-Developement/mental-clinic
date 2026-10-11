@@ -10,6 +10,8 @@ import { ArticleService } from '../services/article.service';
 import { PaginatedArticlesResponse } from '../models/article.model';
 import { SeoService } from '../../../core/seo/seo.service';
 import { ARTICLE_CATEGORIES } from '../constants/article-categories.constants';
+import { GoogleAnalyticsService } from '../../../analytics/google-analytics.service';
+import { EVENT_TRACK } from '../../../analytics/analytics.constants';
 
 const BASE_URL  = 'https://doctor-skripnik.com.ua';
 const PAGE_SIZE = 10;
@@ -54,6 +56,7 @@ export class ArticlesListComponent implements OnInit {
   private readonly seo            = inject(SeoService);
   private readonly route          = inject(ActivatedRoute);
   private readonly platformId     = inject(PLATFORM_ID);
+  private readonly analytics      = inject(GoogleAnalyticsService);
 
   categories    = ARTICLE_CATEGORIES;
   skeletonItems = Array(6);
@@ -66,6 +69,10 @@ export class ArticlesListComponent implements OnInit {
     text:     new FormControl(''),
     category: new FormControl<{ name: string; value: string }>({ name: 'Всі', value: '' }),
   });
+
+  /** Search term waiting for its results, so the GA4 `search` event can carry the result count. */
+  private pendingSearch = '';
+  private lastTrackedSearch = '';
 
   private readonly query$ = new BehaviorSubject<{ text: string; category: string; page: number }>({
     text: '', category: '', page: 1,
@@ -89,7 +96,9 @@ export class ArticlesListComponent implements OnInit {
       distinctUntilChanged(),
     ).subscribe(({ text, category }) => {
       const cat = typeof category === 'string' ? category : (category as any)?.value ?? '';
-      this.query$.next({ text: text?.trim() ?? '', category: cat, page: 1 });
+      const term = text?.trim() ?? '';
+      if (term.length >= 2 && term !== this.lastTrackedSearch) this.pendingSearch = term;
+      this.query$.next({ text: term, category: cat, page: 1 });
     });
 
     // Drive HTTP calls from the query subject
@@ -103,6 +112,11 @@ export class ArticlesListComponent implements OnInit {
       next: result => {
         this.articlesResult.set(result);
         this.loading.set(false);
+        if (this.pendingSearch) {
+          this.analytics.trackEvent(EVENT_TRACK.SEARCH, { search_term: this.pendingSearch.slice(0, 100), results: result.total });
+          this.lastTrackedSearch = this.pendingSearch;
+          this.pendingSearch = '';
+        }
         // An empty category page is thin content — keep it out of the index until it has articles
         if (routeCat && !result.total) this.seo.setRobots('noindex, follow');
       },

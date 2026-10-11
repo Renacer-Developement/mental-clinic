@@ -23,7 +23,7 @@
           <a href="https://www.instagram.com/dr_skripnik_evgen_/" target="_blank" rel="noopener" aria-label="Instagram"><i class="pi pi-instagram"></i></a>
           <a href="https://www.facebook.com/p/%D0%84%D0%B2%D0%B3%D0%B5%D0%BD-%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D0%BD%D0%B8%D0%BA-100005860367602" target="_blank" rel="noopener" aria-label="Facebook"><i class="pi pi-facebook"></i></a>
         </div>
-        <a class="dnav__phone" [href]="'tel:' + phone">
+        <a class="dnav__phone" [href]="'tel:' + phone" (click)="trackPhone('navbar')">
           <i class="pi pi-phone"></i>{{ phoneLabel }}
         </a>
       </div>
@@ -136,7 +136,7 @@
       <a href="https://www.instagram.com/dr_skripnik_evgen_/" target="_blank" rel="noopener" aria-label="Instagram"><i class="pi pi-instagram"></i></a>
       <a href="https://www.facebook.com/p/%D0%84%D0%B2%D0%B3%D0%B5%D0%BD-%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D0%BD%D0%B8%D0%BA-100005860367602" target="_blank" rel="noopener" aria-label="Facebook"><i class="pi pi-facebook"></i></a>
     </div>
-    <a class="mnav__strip-phone" [href]="'tel:' + phone"><i class="pi pi-phone" aria-hidden="true"></i>{{ phoneLabel }}</a>
+    <a class="mnav__strip-phone" [href]="'tel:' + phone" (click)="trackPhone('navbar-mobile')"><i class="pi pi-phone" aria-hidden="true"></i>{{ phoneLabel }}</a>
   </div>
   <button type="button" class="mnav__strip-cta" (click)="openContacts()">Записатися</button>
 </div>
@@ -200,7 +200,7 @@
   </div>
 
   <div class="mnav__footer">
-    <a class="mnav__phone" [href]="'tel:' + phone"><i class="pi pi-phone"></i>{{ phoneLabel }}</a>
+    <a class="mnav__phone" [href]="'tel:' + phone" (click)="trackPhone('navbar-mobile')"><i class="pi pi-phone"></i>{{ phoneLabel }}</a>
     <div class="mnav__social">
       <a href="https://t.me/skripnik_evgen" target="_blank" rel="noopener" aria-label="Telegram"><i class="pi pi-telegram"></i></a>
       <a href="https://www.instagram.com/dr_skripnik_evgen_/" target="_blank" rel="noopener" aria-label="Instagram"><i class="pi pi-instagram"></i></a>

@@ -46,7 +46,7 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
   private readonly platformId = inject(PLATFORM_ID);
 
   openContacts(): void {
-    this.contacts.openDialog(clinicContacts);
+    this.contacts.openDialog(clinicContacts, 'article');
   }
 
   // ── YouTube IFrame API state (static = shared across all instances) ─────────

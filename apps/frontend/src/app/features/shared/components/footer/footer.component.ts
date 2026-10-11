@@ -63,9 +63,12 @@ export class FooterComponent {
   /**
    * Opens the contacts dialog and tracks the event
    */
+  trackPhone(): void {
+    this.googleAnalyticsService.trackLead('phone', 'footer');
+  }
+
   openContacts() {
-    this.contactsService.openDialog(clinicContacts);
-    this.googleAnalyticsService.trackEvent(EVENT_TRACK.CONTACTS_OPEN, { source: 'footer' });
+    this.contactsService.openDialog(clinicContacts, 'footer');
   }
 
   /** Smoothly returns to the top of the page (instant for reduced-motion users). */

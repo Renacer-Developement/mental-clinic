@@ -4,6 +4,8 @@ import { Component, DestroyRef, HostListener, inject, OnInit } from '@angular/co
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable } from 'rxjs';
 import { ClinicContactsService } from './clinic-contacts.service';
+import { GoogleAnalyticsService } from '../../../../analytics/google-analytics.service';
+import { LeadMethod } from '../../../../analytics/analytics.constants';
 
 @Component({
   standalone: true,
@@ -15,6 +17,7 @@ import { ClinicContactsService } from './clinic-contacts.service';
 export class ClinicContactsDialogComponent implements OnInit {
   private readonly contactsService = inject(ClinicContactsService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly analytics = inject(GoogleAnalyticsService);
 
   visible = false;
   contacts$: Observable<Record<string, { name: string; phone: string }>> = this.contactsService.contacts$;
@@ -28,11 +31,17 @@ export class ClinicContactsDialogComponent implements OnInit {
   }
 
   openTelegram(phone: string) {
+    this.trackLead('telegram');
     window.open(`https://t.me/${phone}`, '_blank');
   }
 
   openViber(phone: string) {
+    this.trackLead('viber');
     window.open(`viber://chat?number=${phone}`, '_blank');
+  }
+
+  trackLead(method: LeadMethod) {
+    this.analytics.trackLead(method, this.contactsService.source);
   }
 
   close() {

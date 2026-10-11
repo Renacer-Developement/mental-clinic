@@ -91,9 +91,12 @@ export class NavbarComponent implements OnDestroy {
     this.googleAnalyticsService.trackEvent(EVENT_TRACK.NAV_CLICK, { link_text: label, destination: route });
   }
 
+  trackPhone(source: string): void {
+    this.googleAnalyticsService.trackLead('phone', source);
+  }
+
   openContactsDesktop(): void {
-    this.googleAnalyticsService.trackEvent(EVENT_TRACK.CONTACTS_OPEN, { source: 'navbar' });
-    this.contactsService.openDialog(clinicContacts);
+    this.contactsService.openDialog(clinicContacts, 'navbar');
   }
   protected readonly SECTION = SECTION;
   protected readonly ROUTES = ROUTES;
@@ -158,8 +161,7 @@ export class NavbarComponent implements OnDestroy {
    * Opens the contact dialog and tracks the click event.
    */
   openContacts(): void {
-    this.googleAnalyticsService.trackEvent(EVENT_TRACK.CONTACTS_OPEN, { source: 'navbar' });
-    this.contactsService.openDialog(clinicContacts);
+    this.contactsService.openDialog(clinicContacts, 'navbar-mobile');
     this.closeMenu();
   }
 }
