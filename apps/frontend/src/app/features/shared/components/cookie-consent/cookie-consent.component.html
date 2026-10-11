@@ -1,0 +1,37 @@
+@if (consent.bannerOpen()) {
+  <section class="cc" role="dialog" aria-live="polite" aria-labelledby="cc-title">
+    <h2 id="cc-title" class="cc__title">Ми використовуємо cookie</h2>
+    <p class="cc__text">
+      Необхідні cookie забезпечують роботу сайту. З вашої згоди ми також використовуємо аналітичні
+      cookie, щоб покращувати сайт, і маркетингові — для реклами.
+      Змінити вибір можна будь-коли внизу сторінки.
+    </p>
+
+    @if (showSettings()) {
+      <div class="cc__options">
+        <label class="cc__option">
+          <input type="checkbox" checked disabled>
+          <span><b>Необхідні</b> — завжди увімкнені</span>
+        </label>
+        <label class="cc__option">
+          <input type="checkbox" [checked]="analytics()" (change)="analytics.set($any($event.target).checked)">
+          <span><b>Аналітичні</b> — Google Analytics, Google Tag Manager, Hotjar (Contentsquare), Plerdy</span>
+        </label>
+        <label class="cc__option">
+          <input type="checkbox" [checked]="marketing()" (change)="marketing.set($any($event.target).checked)">
+          <span><b>Маркетингові</b> — Google Ads, Meta, TikTok, LinkedIn, X</span>
+        </label>
+      </div>
+    }
+
+    <div class="cc__actions">
+      <button type="button" class="cc__btn cc__btn--primary" (click)="acceptAll()">Прийняти всі</button>
+      <button type="button" class="cc__btn" (click)="rejectAll()">Лише необхідні</button>
+      @if (showSettings()) {
+        <button type="button" class="cc__btn cc__btn--link" (click)="saveSelection()">Зберегти вибір</button>
+      } @else {
+        <button type="button" class="cc__btn cc__btn--link" (click)="showSettings.set(true)">Налаштувати</button>
+      }
+    </div>
+  </section>
+}

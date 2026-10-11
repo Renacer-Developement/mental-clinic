@@ -5,6 +5,7 @@ import { Component, inject } from '@angular/core';
 import { ClinicContactsService } from '../clinic-contacts-dialog/clinic-contacts.service';
 import { clinicContacts } from '../../constants/contacts.constants';
 import { GoogleAnalyticsService } from '../../../../analytics/google-analytics.service';
+import { ConsentService } from '../../../../analytics/consent.service';
 import { EVENT_TRACK } from '../../../../analytics/analytics.constants';
 import { TEST_CATEGORY_CONTENT } from '../../../tests/constants/test-category-content.constants';
 
@@ -18,6 +19,11 @@ import { TEST_CATEGORY_CONTENT } from '../../../tests/constants/test-category-co
 export class FooterComponent {
   private readonly contactsService = inject(ClinicContactsService);
   private readonly googleAnalyticsService = inject(GoogleAnalyticsService);
+  private readonly consentService = inject(ConsentService);
+
+  openCookieSettings(): void {
+    this.consentService.reopen();
+  }
 
   readonly testCategories = Object.entries(TEST_CATEGORY_CONTENT).map(([slug, c]) => ({ slug, label: c.label }));
 

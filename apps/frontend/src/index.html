@@ -136,6 +136,23 @@
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
+        // Consent Mode v2: nothing is stored until the visitor agrees in the cookie
+        // banner. A saved choice is restored here so returning visitors are counted
+        // from the first hit (key shared with ConsentService).
+        gtag('consent', 'default', {
+            analytics_storage: 'denied', ad_storage: 'denied',
+            ad_user_data: 'denied', ad_personalization: 'denied',
+            wait_for_update: 500
+        });
+        try {
+            var c = JSON.parse(localStorage.getItem('tracking-consent-v1'));
+            if (c) gtag('consent', 'update', {
+                analytics_storage: c.analytics ? 'granted' : 'denied',
+                ad_storage: c.marketing ? 'granted' : 'denied',
+                ad_user_data: c.marketing ? 'granted' : 'denied',
+                ad_personalization: c.marketing ? 'granted' : 'denied'
+            });
+        } catch (e) {}
         gtag('js', new Date());
         // send_page_view: false — the Angular router sends a page_view event on
         // every NavigationEnd, so we must not fire one here too (would double-count).
