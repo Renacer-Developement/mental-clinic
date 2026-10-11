@@ -271,6 +271,16 @@
           </p>
         </div>
 
+        <ng-container *ngIf="faq.length">
+          <h2 class="dp-about__title">Часті запитання</h2>
+          <div class="dp-about__faq">
+            <details *ngFor="let f of faq; let first = first" [open]="first">
+              <summary>{{ f.q }}</summary>
+              <p>{{ f.a }}</p>
+            </details>
+          </div>
+        </ng-container>
+
         <ng-container *ngIf="relatedTests.length">
           <h2 class="dp-about__title">Схожі тести</h2>
           <ul class="dp-about__related">

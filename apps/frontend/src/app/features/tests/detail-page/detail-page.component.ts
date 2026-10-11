@@ -13,6 +13,7 @@ import { Test } from '../models/test.model';
 import { specializedTests } from '../constants/specialized-test-types.enum';
 import { CATEGORY_SECTIONS, sectionOf } from '../constants/test-sections.constants';
 import { TEST_CATEGORY_CONTENT } from '../constants/test-category-content.constants';
+import { methodCodeOf } from '../constants/test-method-codes.constants';
 import { clinicContacts } from '../../shared/constants/contacts.constants';
 import { ClinicContactsService } from '../../shared/components/clinic-contacts-dialog/clinic-contacts.service';
 import { GoogleAnalyticsService } from '../../../analytics/google-analytics.service';
@@ -51,6 +52,7 @@ export class DetailPageComponent implements OnInit {
   // Server-rendered context below the quiz
   scoreBands: { range: string; result: string }[] = [];
   relatedTests: Test[] = [];
+  faq: { q: string; a: string }[] = [];
   categoryLink: { slug: string; label: string } | null = null;
 
   answers: { [key: string]: number } = {};
@@ -110,7 +112,9 @@ export class DetailPageComponent implements OnInit {
             this.data = response;
             this.scoreBands = this.buildScoreBands(response);
             this.loadRelated(response);
-            this.updateSEO(response.name, response.description);
+            const code = methodCodeOf(response._id, response.name);
+            this.faq = this.buildFaq(response, code);
+            this.updateSEO(response.name, response.description, code);
             this.cdr.detectChanges();
           },
           error: (err: HttpErrorResponse) => {
@@ -708,7 +712,45 @@ export class DetailPageComponent implements OnInit {
     this.contactsService.openDialog(clinicContacts);
   }
 
-  updateSEO(name: string, description: string): void {
+  /** Answers to what people ask about a test; rendered on the page and mirrored as FAQPage schema. */
+  private buildFaq(test: Test, code: string | null): { q: string; a: string }[] {
+    const subject = code ? `${test.name} (${code})` : test.name;
+    const n = test.questions?.length ?? 0;
+    const faq: { q: string; a: string }[] = [];
+
+    if (n) {
+      const duration = test.duration?.trim().replace(/\.$/, '');
+      faq.push({
+        q: `Скільки триває тест «${subject}»?`,
+        a: `Тест містить ${n} ${pluralQuestions(n)}${duration ? ` і займає ${duration}` : ''}. `
+          + 'Він безкоштовний, реєстрація не потрібна, результат з’являється одразу після останньої відповіді.',
+      });
+    }
+
+    if (this.scoreBands.length) {
+      faq.push({
+        q: `Як інтерпретувати результат тесту${code ? ` ${code}` : ''}?`,
+        a: 'Результат залежить від суми балів: '
+          + this.scoreBands.map(b => `${b.range} — ${lowerFirst(b.result.replace(/[.;]$/, ''))}`).join('; ') + '.',
+      });
+    }
+
+    faq.push(
+      {
+        q: 'Чи можна поставити діагноз за результатом тесту?',
+        a: `Ні. ${code ?? 'Цей тест'} — скринінговий інструмент: він показує, чи є ознаки, які варто обговорити з лікарем. `
+          + 'Діагноз ставить психіатр після клінічної бесіди.',
+      },
+      {
+        q: 'Що робити, якщо результат високий?',
+        a: 'Обговоріть результат із психіатром. Євген Скрипник проводить онлайн-консультації щодня з 8:00 до 22:00. '
+          + 'Якщо з’являються думки про самогубство чи самоушкодження — телефонуйте на лінію 7333 або 112.',
+      },
+    );
+    return faq;
+  }
+
+  updateSEO(name: string, description: string, code: string | null = null): void {
     const id = this.route.snapshot.paramMap.get('id') ?? '';
     const canonical = `/test/detail/${id}`;
     const BASE_URL = 'https://doctor-skripnik.com.ua';
@@ -722,13 +764,14 @@ export class DetailPageComponent implements OnInit {
     );
 
     this.seo.updatePage({
-      title: fitTitle(name, ' — тест онлайн безкоштовно', ' — пройти тест онлайн', ' — тест онлайн'),
+      title: fitTitle(code ? `${name} (${code})` : name, ' — тест онлайн безкоштовно', ' — пройти тест онлайн', ' — тест онлайн'),
       description: seoDescription,
       canonical,
-      schema: {
+      schema: [{
         '@context': 'https://schema.org',
         '@type': 'MedicalWebPage',
         name,
+        ...(code ? { alternateName: code } : {}),
         url: `${BASE_URL}${canonical}`,
         description: seoDescription,
         inLanguage: 'uk',
@@ -744,7 +787,23 @@ export class DetailPageComponent implements OnInit {
             { '@type': 'ListItem', position: 3, name: name, item: `${BASE_URL}${canonical}` },
           ],
         },
-      },
+      }, {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: this.faq.map(f => ({
+          '@type': 'Question',
+          name: f.q,
+          acceptedAnswer: { '@type': 'Answer', text: f.a },
+        })),
+      }],
     });
   }
 }
+
+/** 1 питання, 2–4 питання, 5+ питань (11–14 питань). */
+const pluralQuestions = (n: number): string =>
+  n % 10 >= 1 && n % 10 <= 4 && !(n % 100 >= 11 && n % 100 <= 14) ? 'питання' : 'питань';
+
+/** "Норма" → "норма", but keeps abbreviations like "ПТСР" intact. */
+const lowerFirst = (s: string): string =>
+  /^\p{Lu}\p{Ll}/u.test(s) ? s[0].toLowerCase() + s.slice(1) : s;
