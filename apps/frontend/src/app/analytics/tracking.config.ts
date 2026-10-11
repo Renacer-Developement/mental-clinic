@@ -6,7 +6,7 @@
  */
 export const TRACKING_IDS = {
   /** GTM-XXXXXXX — tagmanager.google.com → container ID */
-  gtm: '',
+  gtm: 'GTM-PS843KH9',
   /** Numeric site ID — Hotjar → Settings → Sites & Organizations */
   hotjar: '',
   /** Contentsquare tag ID (new Hotjar accounts) — the <ID> in t.contentsquare.net/uxa/<ID>.js */
