@@ -1,6 +1,17 @@
-$primary-color: #5f75d6;
+// Warm palette inspired by empatia.com.ua: charcoal ink, peach accent, cream surfaces.
+
+$primary-color: #8f6b59;        // warm brown — buttons, links, icons (white text passes AA)
 $secondary-color: #ffffff;
-$logo-subtext-color: #6c86f5;
-$heading-color: #003168;
-$section-bg: #f2f3f3;
+$accent-color: #e7bfa3;         // peach — highlights, badges, decorative shapes
+$accent-soft: #f4eae2;          // light sand — tinted surfaces
+$logo-subtext-color: #a67c67;
+$heading-color: #2d2e2e;        // charcoal
+$body-text-color: #4a4542;      // warm grey for paragraphs (≈8:1 on cream)
+$muted-text-color: #6f6762;     // captions, hints (≥4.5:1 on cream)
+$section-bg: #fcf5ee;           // cream
 $section-seconder-bg: #fff;
+$dark-bg: #2d2e2e;              // dark bands / footer
+
+// Motion
+$ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+$ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);

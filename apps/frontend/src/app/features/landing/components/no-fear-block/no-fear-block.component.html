@@ -1,15 +1,29 @@
 <section class="no-fear-section" aria-label="Чому не варто боятись психіатра">
   <div class="no-fear-inner">
 
-    <h2 class="no-fear-heading">Чому не варто боятись психіатра</h2>
+    <div class="no-fear-aside">
+      <div class="no-fear-sticky">
+        <span class="no-fear-eyebrow">Без стигми</span>
+        <h2 class="no-fear-heading">Чому не варто боятись психіатра</h2>
+        <p class="no-fear-lead">Чотири факти, які варто знати перед першим візитом.</p>
+        <div class="no-fear-progress" aria-hidden="true">
+          <span class="no-fear-progress__bar"></span>
+        </div>
+      </div>
+    </div>
 
-    <ul class="fact-list" role="list">
-      <li *ngFor="let fact of facts" class="fact-row">
-        <span class="fact-title">{{ fact.title }}</span>
-        <span class="fact-divider" aria-hidden="true"></span>
-        <p class="fact-text">{{ fact.text }}</p>
-      </li>
-    </ul>
+    <ol class="fact-list">
+      @for (fact of facts; track fact.title; let i = $index) {
+        <li class="fact-card">
+          <span class="fact-num" aria-hidden="true">{{ (i + 1).toString().padStart(2, '0') }}</span>
+          <div class="fact-body">
+            <h3 class="fact-title">{{ fact.title }}</h3>
+            <p class="fact-text">{{ fact.text }}</p>
+          </div>
+          <span class="fact-glow" aria-hidden="true"></span>
+        </li>
+      }
+    </ol>
 
   </div>
 </section>

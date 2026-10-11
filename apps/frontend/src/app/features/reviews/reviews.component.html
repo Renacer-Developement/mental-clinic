@@ -3,31 +3,32 @@
   <!-- ── Hero ─────────────────────────────────────────────────────────────── -->
   <section class="reviews-hero">
     <div class="container">
-      <a class="reviews-hero__back" routerLink="/about">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="15 18 9 12 15 6"/>
-        </svg>
-        Про лікаря
-      </a>
-      <div class="reviews-hero__content">
-        <h1 class="reviews-hero__title">Відгуки пацієнтів</h1>
-        <p class="reviews-hero__sub">Реальні враження людей, які звернулись до Євгена Скрипника за допомогою</p>
+      <nav class="reviews-hero__breadcrumb">
+        <a routerLink="/">Головна</a>
+        <span>/</span>
+        <a routerLink="/about">Про лікаря</a>
+        <span>/</span>
+        <span>Відгуки</span>
+      </nav>
+
+      <div class="reviews-hero__grid">
+        <div>
+          <h1 class="reviews-hero__title">Відгуки пацієнтів</h1>
+          <p class="reviews-hero__sub">Реальні враження людей, які звернулись до Євгена Скрипника за допомогою</p>
+        </div>
+
         @if (totalCount()) {
           <div class="reviews-hero__stats">
-            <div class="reviews-hero__stat">
-              <span class="reviews-hero__stat-value">{{ avgRating() }}</span>
-              <div class="reviews-hero__stat-stars">
+            <span class="reviews-hero__score">{{ avgRating() }}</span>
+            <div>
+              <div class="reviews-hero__stars" [attr.aria-label]="'Середня оцінка ' + avgRating() + ' з 5'">
                 @for (s of starsArray(avgRating()); track s) {
-                  <svg class="star star--filled" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                  <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
                 }
               </div>
-              <span class="reviews-hero__stat-label">середня оцінка</span>
+              <span class="reviews-hero__count">{{ totalCount() }} відгуків</span>
             </div>
-            <div class="reviews-hero__stat-divider"></div>
-            <div class="reviews-hero__stat">
-              <span class="reviews-hero__stat-value">{{ totalCount() }}</span>
-              <span class="reviews-hero__stat-label">відгуків</span>
-            </div>
+            <button type="button" class="reviews-hero__cta" (click)="scrollToForm()">Залишити відгук</button>
           </div>
         }
       </div>
@@ -35,7 +36,8 @@
   </section>
 
   <!-- ── Reviews grid ───────────────────────────────────────────────────── -->
-  <section class="reviews-list container">
+  <section class="reviews-list">
+    <div class="container">
 
     @if (loading()) {
       <div class="reviews-skeleton">
@@ -57,7 +59,7 @@
       <div class="reviews-list-items">
         @for (review of reviews(); track review._id; let i = $index) {
           <article class="review-card">
-            <div class="review-card__aside">
+            <header class="review-card__head">
               <div class="review-card__avatar">
                 @if (review.photo) {
                   <img [src]="review.photo" [alt]="review.name" />
@@ -67,14 +69,16 @@
               </div>
               <div class="review-card__meta">
                 <p class="review-card__name">{{ review.name }}</p>
-                <p class="review-card__role">{{ review.role }}</p>
-                <div class="review-card__stars">
-                  @for (s of starsArray(review.rating); track s) {
-                    <svg class="star star--filled" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                  }
-                </div>
+                @if (review.role) {
+                  <p class="review-card__role">{{ review.role }}</p>
+                }
               </div>
-            </div>
+              <div class="review-card__stars" [attr.aria-label]="'Оцінка ' + review.rating + ' з 5'">
+                @for (s of starsArray(review.rating); track s) {
+                  <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                }
+              </div>
+            </header>
             <p class="review-card__text">{{ review.text }}</p>
           </article>
         }
@@ -99,10 +103,11 @@
       </div>
     }
 
+    </div>
   </section>
 
   <!-- ── Submit form ────────────────────────────────────────────────────── -->
-  <section class="reviews-submit">
+  <section class="reviews-submit" id="leave-review">
     <div class="container">
       <div class="reviews-submit__inner">
 

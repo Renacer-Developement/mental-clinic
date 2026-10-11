@@ -3,6 +3,8 @@ import { RouterLink } from '@angular/router';
 import { ImportsModule } from '../../shared/primeng-imports.module';
 import { Component, inject, OnInit } from '@angular/core';
 import { SeoService } from '../../core/seo/seo.service';
+import { AnimatedSection } from '../../shared/animation/animated-section';
+import { AnimeModule } from '../../shared/animation/anime.service';
 
 @Component({
   standalone: true,
@@ -11,7 +13,7 @@ import { SeoService } from '../../core/seo/seo.service';
   templateUrl: './drugs.component.html',
   styleUrl: './drugs.component.scss',
 })
-export class DrugsComponent implements OnInit {
+export class DrugsComponent extends AnimatedSection implements OnInit {
   private readonly seo = inject(SeoService);
 
   ngOnInit(): void {
@@ -63,6 +65,14 @@ export class DrugsComponent implements OnInit {
           ],
         },
       ],
+    });
+  }
+
+  /** Blocks fade up gently as they scroll into view. */
+  protected setup({ animate, utils }: AnimeModule, root: HTMLElement): void {
+    root.querySelectorAll<HTMLElement>('[data-reveal]').forEach(el => {
+      utils.set(el, { opacity: 0, translateY: 20 });
+      this.whenVisible(el, () => animate(el, { opacity: 1, translateY: 0, duration: 700, ease: 'outQuad' }), 0.15);
     });
   }
 }

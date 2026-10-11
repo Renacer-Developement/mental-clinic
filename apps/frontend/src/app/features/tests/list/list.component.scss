@@ -6,167 +6,156 @@
 }
 
 .tests-hero {
-  // deep violet — psychological introspection
-  background: linear-gradient(145deg, #0c0820 0%, #130b2e 50%, #180d3a 100%);
-  color: #fff;
-  min-height: 440px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 0 0 3.5rem;
-  position: relative;
-  overflow: hidden;
-
-  // violet/purple radial glows
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 65% 100% at -5% 105%, rgba(139, 92, 246, 0.25) 0%, transparent 60%),
-      radial-gradient(ellipse 40% 55% at 105%   0%, rgba(168, 85, 247, 0.15)  0%, transparent 55%),
-      radial-gradient(ellipse 50% 40% at 50%   110%, rgba(109, 40, 217, 0.12) 0%, transparent 50%);
-    pointer-events: none;
-  }
-
-  // soft concentric ring decoration
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -120px;
-    right: -80px;
-    width: 520px;
-    height: 520px;
-    border-radius: 50%;
-    border: 1px solid rgba(139, 92, 246, 0.12);
-    box-shadow:
-      0 0 0 60px  rgba(139, 92, 246, 0.05),
-      0 0 0 120px rgba(139, 92, 246, 0.03),
-      0 0 0 200px rgba(139, 92, 246, 0.02);
-    pointer-events: none;
-  }
+  background: #fff;
+  padding: 2.5rem 0 2.75rem;
+  border-bottom: 1px solid rgba($heading-color, 0.08);
 
   &__breadcrumb {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: 0.78rem;
-    color: rgba(255,255,255,0.45);
-    margin-bottom: 1.25rem;
-    position: relative;
-    z-index: 1;
+    margin-bottom: 1.75rem;
+    font-size: 0.85rem;
+    color: $muted-text-color;
 
     a {
-      color: rgba(255,255,255,0.45);
+      color: $muted-text-color;
       text-decoration: none;
       transition: color 0.2s;
-      &:hover { color: rgba(255,255,255,0.85); }
+      &:hover { color: $heading-color; }
     }
 
-    span:last-child { color: rgba(255,255,255,0.75); }
+    span:last-child { color: $heading-color; }
   }
 
   &__title {
-    font-size: clamp(2rem, 4vw, 3rem);
+    margin: 0 0 1rem;
+    overflow: hidden;
+    font-size: clamp(1.9rem, 3.4vw, 2.8rem);
     font-weight: 800;
-    letter-spacing: -0.03em;
-    line-height: 1.1;
-    margin: 0 0 0.75rem;
-    color: #fff;
-    position: relative;
-    z-index: 1;
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+    color: $heading-color;
   }
 
-  &__subtitle {
-    font-size: 0.82rem;
-    font-weight: 600;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.42);
-    margin: 0 0 1.25rem;
-    position: relative;
-    z-index: 1;
+  &__title-inner {
+    display: block;
   }
 
   &__lead {
-    font-size: 1rem;
-    line-height: 1.75;
-    color: rgba(255,255,255,0.65);
-    max-width: 540px;
+    max-width: 620px;
     margin: 0;
-    position: relative;
-    z-index: 1;
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: $body-text-color;
   }
+
 }
 
 .tests-content {
   background: $section-bg;
-  padding: 3rem 0 5rem;
+  padding: 0 0 5rem;
 }
 
+// category filter: clear chips, active one filled
 .tests-cats {
   display: flex;
-  flex-wrap: wrap;
   gap: 0.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
+  padding: 2rem 0 0.25rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar { display: none; }
 
   &__item {
-    padding: 0.45rem 1rem;
+    flex-shrink: 0;
+    padding: 0.6rem 1.1rem;
     border-radius: 999px;
-    border: 1px solid rgba(95, 117, 214, 0.18);
+    border: 1px solid rgba($heading-color, 0.18);
     background: #fff;
     color: $heading-color;
-    font-size: 0.85rem;
+    font-size: 0.92rem;
     font-weight: 600;
     text-decoration: none;
-    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    white-space: nowrap;
+    transition: background 0.25s, color 0.25s, border-color 0.25s;
 
-    &:hover { border-color: $primary-color; color: $primary-color; }
+    &:hover { border-color: $heading-color; }
 
     &--active,
     &--active:hover {
-      background: $primary-color;
-      border-color: $primary-color;
+      background: $heading-color;
+      border-color: $heading-color;
       color: #fff;
     }
   }
 }
 
 .tests-about {
-  max-width: 760px;
-  margin: 3rem auto 0;
-  color: #374151;
-  font-size: 0.95rem;
+  max-width: 820px;
+  margin: 5rem 0 0;
+  color: $body-text-color;
+  font-size: 1rem;
   line-height: 1.75;
 
   p { margin: 0 0 1rem; }
 
   &__heading {
-    font-size: 1.25rem;
+    margin: 3rem 0 1rem;
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
     color: $heading-color;
-    margin: 2rem 0 1rem;
   }
 
+  // FAQ as hairline-separated rows with a +/− marker
   &__faq {
-    background: #fff;
-    border-radius: 12px;
-    padding: 0.9rem 1.1rem;
-    margin-bottom: 0.6rem;
-    box-shadow: 0 2px 10px rgba(16, 24, 40, 0.05);
+    border-top: 1px solid rgba($heading-color, 0.18);
+
+    &:last-of-type { border-bottom: 1px solid rgba($heading-color, 0.18); }
 
     summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.25rem 0;
       cursor: pointer;
+      list-style: none;
       font-weight: 700;
       color: $heading-color;
+
+      &::-webkit-details-marker { display: none; }
+
+      &::after {
+        content: '+';
+        flex-shrink: 0;
+        font-size: 1.5rem;
+        font-weight: 300;
+        line-height: 1;
+        transition: transform 0.4s $ease-out-soft;
+      }
     }
 
-    p { margin: 0.75rem 0 0; }
+    &[open] summary::after { transform: rotate(45deg); }
+
+    p { margin: 0 0 1.25rem; }
   }
 
   &__cta {
-    margin-top: 2rem;
+    margin-top: 2.5rem;
     font-weight: 600;
+    color: $heading-color;
 
-    a { color: $primary-color; }
+    a {
+      color: $heading-color;
+      text-decoration: underline;
+      text-decoration-color: $accent-color;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+
+      &:hover { color: $primary-color; }
+    }
   }
 }

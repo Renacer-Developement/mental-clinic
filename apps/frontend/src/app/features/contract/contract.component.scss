@@ -20,7 +20,7 @@ $text-color: #555;
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  color: #8a8fa8;
+  color: #6f6762;
   padding: 4rem 0;
   font-size: 0.95rem;
 }
@@ -29,7 +29,7 @@ $text-color: #555;
   display: inline-block;
   width: 18px;
   height: 18px;
-  border: 2px solid #d1d5db;
+  border: 2px solid #e8dfd8;
   border-top-color: $primary-color;
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
@@ -69,7 +69,7 @@ $text-color: #555;
 
   &__text {
     font-size: 1rem;
-    color: #6b7280;
+    color: #6f6762;
     margin-bottom: 2rem;
   }
 

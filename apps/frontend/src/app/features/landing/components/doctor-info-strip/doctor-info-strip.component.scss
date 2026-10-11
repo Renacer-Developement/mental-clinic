@@ -1,104 +1,208 @@
 @use "../../../../../assets/css/coloristics" as *;
 
 .info-strip {
-  background: $section-bg;
-  padding: 2.75rem 0;
+  background: $dark-bg;
+  color: #fff;
 }
 
 .info-strip__inner {
   max-width: 1450px;
   margin: 0 auto;
-  padding: 0 6%;
-  display: flex;
-  align-items: center;
-  gap: 3.5rem;
+  padding: 6rem 6% 5.5rem;
 
   @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1.5rem;
+    padding: 4rem 1.25rem;
   }
 }
 
-.info-strip__left {
-  flex: 0 0 auto;
-  min-width: 220px;
-}
+// ── Head: title + text ────────────────────────────────────────────────────────
 
-.strip-name {
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: $primary-color;
-  margin: 0 0 0.5rem;
+.strip-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 2rem 5rem;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .strip-title {
-  font-size: clamp(1.25rem, 2vw, 1.6rem);
-  font-weight: 700;
-  color: $heading-color;
-  line-height: 1.25;
   margin: 0;
+  font-size: clamp(1.7rem, 2.8vw, 2.4rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #fff;
 }
 
-.strip-divider {
-  width: 2px;
-  height: 72px;
-  background: rgba($heading-color, 0.15);
-  flex-shrink: 0;
-  border-radius: 2px;
+.strip-title__line { display: block; }
 
-  @media (max-width: 768px) {
-    width: 40px;
-    height: 2px;
-  }
-}
-
-.info-strip__right {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-}
-
-.credentials-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.3rem 1.5rem;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.cred-item {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #3a4a6a;
-  white-space: nowrap;
-}
-
-.cred-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: $primary-color;
-  flex-shrink: 0;
+em.strip-title__line {
+  font-style: normal;
+  color: $accent-color;
 }
 
 .strip-desc {
-  font-size: 0.86rem;
-  color: #5a6a8a;
-  line-height: 1.7;
-  margin: 0;
-  max-width: 640px;
+  margin: 0 0 1.5rem;
+  font-size: 1.02rem;
+  line-height: 1.75;
+  color: rgba(#fff, 0.72);
 
   strong {
-    color: $heading-color;
+    color: #fff;
     font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: $accent-color;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
   }
+}
+
+.strip-meta {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: $accent-color;
+
+  span {
+    margin: 0 0.5rem;
+    color: rgba(#fff, 0.3);
+  }
+}
+
+.strip-rule {
+  display: block;
+  height: 1px;
+  margin: 4rem 0 3.5rem;
+  background: rgba(#fff, 0.18);
+  transform-origin: left;
+
+  @media (max-width: 768px) {
+    margin: 2.5rem 0;
+  }
+}
+
+// ── Body: years + specialties ─────────────────────────────────────────────────
+
+.strip-body {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 2.5rem 5rem;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.strip-years {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
+.strip-years__num {
+  font-size: clamp(3.5rem, 6vw, 5.5rem);
+  font-weight: 800;
+  line-height: 0.8;
+  letter-spacing: -0.02em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px $accent-color;
+  font-variant-numeric: tabular-nums;
+}
+
+.strip-years__caption {
+  padding-bottom: 0.3rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  color: rgba(#fff, 0.6);
+}
+
+.strip-specs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+}
+
+.spec {
+  position: relative;
+  padding-top: 1.25rem;
+  cursor: default;
+
+  // base hairline + peach line that sweeps across on hover
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgba(#fff, 0.12);
+  }
+
+  &:hover .spec__line::after {
+    transform: scaleX(1);
+  }
+
+  &:hover .spec__title {
+    color: $accent-color;
+  }
+}
+
+.spec__line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(#fff, 0.45);
+  transform-origin: left;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: -1px 0;
+    background: $accent-color;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.6s $ease-out-soft;
+  }
+}
+
+.spec__num {
+  display: block;
+  margin-bottom: 1.5rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: rgba(#fff, 0.45);
+}
+
+.spec__title {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.15rem, 1.5vw, 1.35rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #fff;
+  transition: color 0.4s;
+}
+
+.spec__text {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: rgba(#fff, 0.6);
 }

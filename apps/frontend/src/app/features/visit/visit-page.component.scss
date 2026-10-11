@@ -151,7 +151,7 @@
     p {
       font-size: 0.82rem;
       line-height: 1.65;
-      color: #5a6072;
+      color: #5c5552;
       margin: 0;
     }
   }
@@ -263,7 +263,7 @@
   &__body {
     font-size: 1rem;
     line-height: 1.8;
-    color: #5a6072;
+    color: #5c5552;
     margin: 0 0 1rem;
 
     &--light { color: rgba(255, 255, 255, 0.62); }
@@ -290,7 +290,7 @@
 
     &--light li {
       color: rgba(255, 255, 255, 0.75);
-      svg { color: #7dd3fc; }
+      svg { color: #e7bfa3; }
     }
   }
 
@@ -348,7 +348,7 @@
 
   &__subtitle {
     font-size: 1rem;
-    color: #5a6072;
+    color: #5c5552;
     margin: 0;
     max-width: 520px;
   }
@@ -389,7 +389,7 @@
     p {
       font-size: 0.82rem;
       line-height: 1.65;
-      color: #5a6072;
+      color: #5c5552;
       margin: 0;
     }
   }
@@ -438,16 +438,16 @@
 ::ng-deep .visit-faq__accordion {
   .p-accordion-header-link {
     background: #fff !important;
-    border: 1px solid rgba(#5f75d6, 0.1) !important;
+    border: 1px solid rgba(#8f6b59, 0.1) !important;
     border-radius: 12px !important;
     padding: 1.1rem 1.5rem !important;
-    color: #003168 !important;
+    color: #2d2e2e !important;
     font-weight: 700 !important;
     font-size: 0.95rem !important;
     transition: border-color 0.2s !important;
 
     &:hover {
-      border-color: rgba(#5f75d6, 0.25) !important;
+      border-color: rgba(#8f6b59, 0.25) !important;
     }
   }
 
@@ -456,7 +456,7 @@
   }
 
   .p-accordion-content {
-    border: 1px solid rgba(#5f75d6, 0.1) !important;
+    border: 1px solid rgba(#8f6b59, 0.1) !important;
     border-top: none !important;
     border-radius: 0 0 12px 12px !important;
     padding: 1.25rem 1.5rem !important;
@@ -464,7 +464,7 @@
     p {
       font-size: 0.9rem;
       line-height: 1.75;
-      color: #4a5368;
+      color: #5c5552;
       margin: 0;
 
       & + p { margin-top: 0.6rem; }

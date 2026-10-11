@@ -32,7 +32,7 @@ import { SeoService } from '../../core/seo/seo.service';
     .nf__code {
       font-size: clamp(72px, 20vw, 140px);
       font-weight: 800;
-      color: #003168;
+      color: #2d2e2e;
       line-height: 1;
       opacity: .08;
       margin-bottom: -16px;
@@ -41,7 +41,7 @@ import { SeoService } from '../../core/seo/seo.service';
     .nf__title {
       font-size: clamp(20px, 4vw, 28px);
       font-weight: 700;
-      color: #003168;
+      color: #2d2e2e;
       margin: 0 0 12px;
     }
     .nf__desc {
@@ -56,7 +56,7 @@ import { SeoService } from '../../core/seo/seo.service';
       align-items: center;
       gap: 8px;
       padding: 12px 28px;
-      background: #5f75d6;
+      background: #8f6b59;
       color: #fff;
       border-radius: 10px;
       font-size: 15px;

@@ -1,6 +1,6 @@
 import {CommonModule, isPlatformBrowser, NgFor, NgIf} from '@angular/common';
 import { ImportsModule } from '../../../shared/primeng-imports.module';
-import { ChangeDetectorRef, Component, DestroyRef, inject, OnInit, PLATFORM_ID, RESPONSE_INIT } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, HostListener, inject, OnInit, PLATFORM_ID, RESPONSE_INIT } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -50,7 +50,7 @@ export class DetailPageComponent implements OnInit {
   loadError = false;
 
   // Server-rendered context below the quiz
-  scoreBands: { range: string; result: string }[] = [];
+  scoreBands: { range: string; result: string; min: number; max: number | null }[] = [];
   relatedTests: Test[] = [];
   faq: { q: string; a: string }[] = [];
   categoryLink: { slug: string; label: string } | null = null;
@@ -130,6 +130,20 @@ export class DetailPageComponent implements OnInit {
             this.cdr.detectChanges();
           },
         });
+  }
+
+  get isLastQuestion(): boolean {
+    return this.currentQuestionIndex >= (this.data?.questions?.length ?? 0) - 1;
+  }
+
+  get progressPercent(): number {
+    const total = this.data?.questions?.length || 1;
+    return Math.round(((this.currentQuestionIndex + 1) / total) * 100);
+  }
+
+  isSelected(optionIndex: number): boolean {
+    const q = this.data?.questions?.[this.currentQuestionIndex];
+    return !!q && this.answers[q._id] === q.value?.[optionIndex];
   }
 
   nextQuestion(): void {
@@ -407,7 +421,7 @@ export class DetailPageComponent implements OnInit {
 
     // ── Header element (navy bar with logo + Cyrillic text) ───────────────────
     const hdrEl = offscreen(`
-      <div style="background:#003168;color:#fff;padding:8px 22px;
+      <div style="background:#2d2e2e;color:#fff;padding:8px 22px;
                   display:flex;justify-content:space-between;align-items:center;
                   font-family:Arial,sans-serif;font-size:11px;font-weight:600;
                   box-sizing:border-box;width:750px">
@@ -512,9 +526,9 @@ export class DetailPageComponent implements OnInit {
 
     const answersRows = this.data.questions.map((q, i) => `
       <tr style="background:${i % 2 === 1 ? '#fafafa' : '#fff'}">
-        <td style="width:28px;color:#9aa0b2;font-weight:700;padding:6px 10px;border-bottom:1px solid #f0f0f0">${i + 1}</td>
+        <td style="width:28px;color:#6f6762;font-weight:700;padding:6px 10px;border-bottom:1px solid #f0f0f0">${i + 1}</td>
         <td style="padding:6px 10px;border-bottom:1px solid #f0f0f0;font-size:10pt;vertical-align:top">${q.question}</td>
-        <td style="width:200px;font-weight:600;color:#3d4663;padding:6px 10px;border-bottom:1px solid #f0f0f0">${this.getAnswerLabel(q)}</td>
+        <td style="width:200px;font-weight:600;color:#3f3b39;padding:6px 10px;border-bottom:1px solid #f0f0f0">${this.getAnswerLabel(q)}</td>
       </tr>`).join('');
 
     let resultsHtml = '';
@@ -523,13 +537,13 @@ export class DetailPageComponent implements OnInit {
         <table style="width:100%;border-collapse:collapse">
           ${Object.keys(this.rbqSpectraScores).map(k => `
           <tr><td style="padding:5px 10px;border-bottom:1px solid #f0f0f0">${k}</td>
-              <td style="width:80px;font-weight:800;color:#5f75d6;text-align:right;padding:5px 10px;border-bottom:1px solid #f0f0f0">${this.rbqSpectraScores[k]}</td></tr>`).join('')}
+              <td style="width:80px;font-weight:800;color:#8f6b59;text-align:right;padding:5px 10px;border-bottom:1px solid #f0f0f0">${this.rbqSpectraScores[k]}</td></tr>`).join('')}
         </table>`;
     } else if (this.data.specialTest === this.specializedTests.SMI) {
       resultsHtml = `<table style="width:100%;border-collapse:collapse">
           ${Object.keys(this.schemaScores).map(k => `
           <tr><td style="padding:5px 10px;border-bottom:1px solid #f0f0f0">${k}</td>
-              <td style="width:80px;font-weight:800;color:#5f75d6;text-align:right;padding:5px 10px;border-bottom:1px solid #f0f0f0">${this.schemaScores[k].toFixed(2)}</td></tr>`).join('')}
+              <td style="width:80px;font-weight:800;color:#8f6b59;text-align:right;padding:5px 10px;border-bottom:1px solid #f0f0f0">${this.schemaScores[k].toFixed(2)}</td></tr>`).join('')}
         </table>`;
     } else if (this.data.specialTest === this.specializedTests.HADS) {
       resultsHtml = `
@@ -555,23 +569,23 @@ export class DetailPageComponent implements OnInit {
 
     return `
 <div style="font-family:Arial,sans-serif;font-size:11pt;color:#1a1a2e;padding:20px 24px;background:#fff">
-  <h1 style="font-size:15pt;color:#003168;margin:0 0 4px">${this.data.name}</h1>
+  <h1 style="font-size:15pt;color:#2d2e2e;margin:0 0 4px">${this.data.name}</h1>
   <p style="font-size:9pt;color:#718096;margin:0 0 20px">Дата: ${date} · ${this.data.duration} · ${this.data.questions.length} питань</p>
 
-  <h2 style="font-size:9.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#5f75d6;border-bottom:1px solid #e2e8f0;padding-bottom:5px;margin:0 0 10px">Відповіді</h2>
+  <h2 style="font-size:9.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#8f6b59;border-bottom:1px solid #e2e8f0;padding-bottom:5px;margin:0 0 10px">Відповіді</h2>
   <table style="width:100%;border-collapse:collapse;margin-bottom:20px">
     <thead>
       <tr style="background:#f2f3f3">
-        <th style="font-size:9pt;font-weight:700;text-align:left;padding:7px 10px;color:#003168">#</th>
-        <th style="font-size:9pt;font-weight:700;text-align:left;padding:7px 10px;color:#003168">Питання</th>
-        <th style="font-size:9pt;font-weight:700;text-align:left;padding:7px 10px;color:#003168">Відповідь</th>
+        <th style="font-size:9pt;font-weight:700;text-align:left;padding:7px 10px;color:#2d2e2e">#</th>
+        <th style="font-size:9pt;font-weight:700;text-align:left;padding:7px 10px;color:#2d2e2e">Питання</th>
+        <th style="font-size:9pt;font-weight:700;text-align:left;padding:7px 10px;color:#2d2e2e">Відповідь</th>
       </tr>
     </thead>
     <tbody>${answersRows}</tbody>
   </table>
 
-  <h2 style="font-size:9.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#5f75d6;border-bottom:1px solid #e2e8f0;padding-bottom:5px;margin:0 0 10px">Результати</h2>
-  <div style="background:#f2f3f3;border-left:4px solid #5f75d6;padding:12px 16px;border-radius:0 8px 8px 0;line-height:1.6">
+  <h2 style="font-size:9.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#8f6b59;border-bottom:1px solid #e2e8f0;padding-bottom:5px;margin:0 0 10px">Результати</h2>
+  <div style="background:#f2f3f3;border-left:4px solid #8f6b59;padding:12px 16px;border-radius:0 8px 8px 0;line-height:1.6">
     ${resultsHtml}
   </div>
 
@@ -583,16 +597,16 @@ export class DetailPageComponent implements OnInit {
 
   private buildDivaPrintContent(date: string, r: DivaResult): string {
     const cell = 'padding:7px 10px;border-bottom:1px solid #f0f0f0';
-    const head = 'font-size:9pt;font-weight:700;text-align:left;padding:7px 10px;color:#003168';
+    const head = 'font-size:9pt;font-weight:700;text-align:left;padding:7px 10px;color:#2d2e2e';
     const row = (label: string, value: boolean) =>
       `<p style="margin:0 0 5px">${label}: <strong>${this.yesNo(value)}</strong></p>`;
 
     return `
 <div style="font-family:Arial,sans-serif;font-size:11pt;color:#1a1a2e;padding:20px 24px;background:#fff">
-  <h1 style="font-size:15pt;color:#003168;margin:0 0 4px">${this.data.name}</h1>
+  <h1 style="font-size:15pt;color:#2d2e2e;margin:0 0 4px">${this.data.name}</h1>
   <p style="font-size:9pt;color:#718096;margin:0 0 20px">Дата: ${date}</p>
 
-  <h2 style="font-size:9.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#5f75d6;border-bottom:1px solid #e2e8f0;padding-bottom:5px;margin:0 0 10px">Формуляр підрахунку</h2>
+  <h2 style="font-size:9.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#8f6b59;border-bottom:1px solid #e2e8f0;padding-bottom:5px;margin:0 0 10px">Формуляр підрахунку</h2>
   <table style="width:100%;border-collapse:collapse;margin-bottom:16px">
     <thead><tr style="background:#f2f3f3"><th style="${head}">Область</th><th style="${head}">Зрілість</th><th style="${head}">Дитинство</th></tr></thead>
     <tbody>
@@ -601,7 +615,7 @@ export class DetailPageComponent implements OnInit {
     </tbody>
   </table>
 
-  <div style="background:#f2f3f3;border-left:4px solid #5f75d6;padding:12px 16px;border-radius:0 8px 8px 0;line-height:1.6">
+  <div style="background:#f2f3f3;border-left:4px solid #8f6b59;padding:12px 16px;border-radius:0 8px 8px 0;line-height:1.6">
     <p style="margin:0 0 5px">Доповнення A — більше, ніж в однолітків (зрілість): <strong>A1 ${this.yesNo(r.suppA1Adult)} · A2 ${this.yesNo(r.suppA2Adult)}</strong></p>
     <p style="margin:0 0 5px">Доповнення A — більше, ніж в однолітків (дитинство): <strong>A1 ${this.yesNo(r.suppA1Child)} · A2 ${this.yesNo(r.suppA2Child)}</strong></p>
     ${row('Критерій A, зрілість: ≥5 в одній області', r.adultThreshold)}
@@ -636,6 +650,7 @@ export class DetailPageComponent implements OnInit {
   previousQuestion(): void {
     if (this.currentQuestionIndex > 0) {
       this.currentQuestionIndex--;
+      this.showError = false;
     }
   }
 
@@ -643,6 +658,33 @@ export class DetailPageComponent implements OnInit {
     this.answers[questionId] = value;
     this.showError = false;
   }
+
+  /** Keyboard: 1–9 pick an answer, Enter/→ next, ← back. */
+  @HostListener('document:keydown', ['$event'])
+  onKeydown(event: KeyboardEvent): void {
+    if (!this.data || this.isTestCompleted || this.data.specialTest === specializedTests.DIVA) return;
+    if (event.ctrlKey || event.metaKey || event.altKey) return;
+    const target = event.target instanceof Element ? event.target : null;
+    if (target?.closest('input, textarea, select, [contenteditable="true"]')) return;
+
+    const question = this.data.questions?.[this.currentQuestionIndex];
+    if (!question) return;
+
+    const digit = Number(event.key);
+    if (Number.isInteger(digit) && digit >= 1 && digit <= (question.labelText?.length ?? 0)) {
+      event.preventDefault();
+      this.selectAnswer(question._id, question.value[digit - 1]);
+    } else if (event.key === 'Enter' || event.key === 'ArrowRight') {
+      // let Enter activate a focused button natively
+      if (event.key === 'Enter' && target?.closest('button, a')) return;
+      event.preventDefault();
+      this.nextQuestion();
+    } else if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      this.previousQuestion();
+    }
+  }
+
 
   restartTest(): void {
     this.currentQuestionIndex = 0;
@@ -675,12 +717,19 @@ export class DetailPageComponent implements OnInit {
   }
 
   /** Plain total-score bands only (subscale tests like SMI/HADS keep their own result views). */
-  private buildScoreBands(test: Test): { range: string; result: string }[] {
+  /** Index of the score band the user's total falls into (for the result scale), or -1. */
+  get activeBandIndex(): number {
+    return this.scoreBands.findIndex(b => this.totalScore >= b.min && (b.max == null || this.totalScore <= b.max));
+  }
+
+  private buildScoreBands(test: Test): { range: string; result: string; min: number; max: number | null }[] {
     const bands = (test.resultInterpretation ?? [])
       .filter(r => r.range?.length === 2 && r.result && !r.type && !r.name);
     return bands.length < 2 ? [] : bands.map(r => ({
       range: r.range[1] == null ? `${r.range[0]}+` : `${r.range[0]}–${r.range[1]}`,
       result: r.result.trim().replace(/:$/, ''),
+      min: Number(r.range[0]),
+      max: r.range[1] == null ? null : Number(r.range[1]),
     }));
   }
 

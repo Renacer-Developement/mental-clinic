@@ -95,6 +95,10 @@ export class ReviewsComponent implements OnInit {
     });
   }
 
+  scrollToForm(): void {
+    document.getElementById('leave-review')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
   starsArray(n: number): number[] {
     return Array.from({ length: Math.round(n) }, (_, i) => i);
   }

@@ -20,7 +20,7 @@
       <div class="contract-inner">
 
         <!-- left: content -->
-        <div class="contract-content">
+        <div class="contract-content" appReveal="left">
           <span class="contract-eyebrow">Публічна оферта</span>
           <h3 class="contract-heading">Прозорі умови<br>надання послуг</h3>
           <p class="contract-text">
@@ -36,7 +36,7 @@
         </div>
 
         <!-- right: illustration -->
-        <div class="contract-illustration" aria-hidden="true">
+        <div class="contract-illustration" aria-hidden="true" appReveal="zoom" [revealDelay]="150">
           <svg class="contract-illus-svg" viewBox="0 0 260 280" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="40" y="28" width="160" height="210" rx="16" fill="currentColor" opacity="0.06"/>
             <rect x="30" y="18" width="160" height="210" rx="16" fill="white" stroke="currentColor" stroke-opacity="0.18" stroke-width="1.5"/>

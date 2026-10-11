@@ -1,15 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { ImportsModule } from '../../../../shared/primeng-imports.module';
-import { ClinicContactsDialogComponent } from '../clinic-contacts-dialog/clinic-contacts-dialog.component';
+import { RouterLink } from '@angular/router';
 import { Component, inject } from '@angular/core';
 import { ClinicContactsService } from '../clinic-contacts-dialog/clinic-contacts.service';
 import { clinicContacts } from '../../constants/contacts.constants';
 import { GoogleAnalyticsService } from '../../../../analytics/google-analytics.service';
 import { EVENT_TRACK } from '../../../../analytics/analytics.constants';
+import { TEST_CATEGORY_CONTENT } from '../../../tests/constants/test-category-content.constants';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, ImportsModule, ClinicContactsDialogComponent],
+  imports: [CommonModule, ImportsModule, RouterLink],
   selector: 'app-footer',
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss'],
@@ -17,6 +18,14 @@ import { EVENT_TRACK } from '../../../../analytics/analytics.constants';
 export class FooterComponent {
   private readonly contactsService = inject(ClinicContactsService);
   private readonly googleAnalyticsService = inject(GoogleAnalyticsService);
+
+  readonly testCategories = Object.entries(TEST_CATEGORY_CONTENT).map(([slug, c]) => ({ slug, label: c.label }));
+
+  /** Both clinic lines, formatted for display: +380665691677 → +38 (066) 569-16-77 */
+  readonly phones = Object.values(clinicContacts).map(c => ({
+    ...c,
+    label: c.phone.replace(/^\+38(\d{3})(\d{3})(\d{2})(\d{2})$/, '+38 ($1) $2-$3-$4'),
+  }));
 
   /**
    * Tracks social media link clicks
@@ -48,5 +57,11 @@ export class FooterComponent {
   openContacts() {
     this.contactsService.openDialog(clinicContacts);
     this.googleAnalyticsService.trackEvent(EVENT_TRACK.CONTACTS_OPEN, { source: 'footer' });
+  }
+
+  /** Smoothly returns to the top of the page (instant for reduced-motion users). */
+  scrollToTop() {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
   }
 }

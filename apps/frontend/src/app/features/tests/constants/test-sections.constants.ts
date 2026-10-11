@@ -46,3 +46,7 @@ export const CATEGORY_SECTIONS: Record<string, { sections: string[]; extra?: Reg
   [TEST_CATEGORIES_CONST.ADDICTIONS]:            { sections: ['Залежності', 'Харчова поведінка'] },
   [TEST_CATEGORIES_CONST.SPECIALIZED]:           { sections: ['Біполярний розлад', 'Схема-терапія', OTHER_SECTION] },
 };
+
+/** DOM id of a section heading on the tests list page (also used as a URL fragment). */
+export const sectionAnchor = (title: string): string =>
+  'tests-' + title.toLowerCase().replace(/[^a-zа-яіїєґ0-9]+/gi, '-');

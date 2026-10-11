@@ -1,3 +1,4 @@
+import { RevealDirective } from '../../shared/directives/reveal.directive';
 import { CommonModule } from '@angular/common';
 import { ImportsModule } from '../../shared/primeng-imports.module';
 import { HeroBannerComponent } from '../shared/components/hero-banner/hero-banner.component';
@@ -19,7 +20,7 @@ import { ContractApiService } from '../contract/contract.service';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, ImportsModule, RouterLink, HeroBannerComponent, DoctorInfoStripComponent, NoFearBlockComponent, TestingBlockComponent, TestBlockComponent, ConsultationBlockComponent, TelegramBannerComponent, LatestArticlesComponent],
+  imports: [RevealDirective, CommonModule, ImportsModule, RouterLink, HeroBannerComponent, DoctorInfoStripComponent, NoFearBlockComponent, TestingBlockComponent, TestBlockComponent, ConsultationBlockComponent, TelegramBannerComponent, LatestArticlesComponent],
   selector: 'app-landing',
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.scss'],

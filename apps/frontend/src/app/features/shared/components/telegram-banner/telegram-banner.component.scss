@@ -1,120 +1,125 @@
-@use "sass:color";
 @use "../../../../../assets/css/coloristics" as *;
 
 .tg-section {
-  background: $section-bg;
-  padding: 4rem 1.5rem;
+  background: $accent-color;
+  padding: 5.5rem 0;
+
+  @media (max-width: 768px) {
+    padding: 4rem 0;
+  }
 }
 
 .tg-container {
-  max-width: 1200px;
+  max-width: 1450px;
   margin: 0 auto;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 2rem;
+  padding: 0 6%;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  align-items: end;
+  gap: 2.5rem 5rem;
 
-  @media (max-width: 700px) {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1.5rem;
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+    padding: 0 1.25rem;
   }
 }
 
-.tg-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 72px;
-  height: 72px;
-  min-width: 72px;
-  border-radius: 50%;
-  background: rgba($primary-color, 0.1);
-  color: $primary-color;
-
-  svg {
-    width: 38px;
-    height: 38px;
-  }
-}
-
-.tg-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+.tg-eyebrow {
+  display: inline-block;
+  margin-bottom: 1.25rem;
+  padding: 0.35rem 1rem;
+  border: 1.5px solid $heading-color;
+  transform: skewX(-12deg);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: $heading-color;
 }
 
 .tg-heading {
-  font-size: clamp(1.25rem, 2.5vw, 1.6rem);
+  margin: 0 0 1.25rem;
+  max-width: 640px;
+  font-size: clamp(1.6rem, 2.6vw, 2.3rem);
   font-weight: 800;
-  line-height: 1.25;
-  color: $heading-color;
-  margin: 0;
+  line-height: 1.15;
   letter-spacing: -0.02em;
+  color: $heading-color;
 }
 
 .tg-subheading {
-  font-size: 0.9rem;
-  line-height: 1.6;
-  color: #5a6072;
   margin: 0;
+  max-width: 480px;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: rgba($heading-color, 0.75);
 }
+
+// ── Chat links ────────────────────────────────────────────────────────────────
 
 .tg-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  flex-shrink: 0;
+  border-bottom: 1px solid rgba($heading-color, 0.35);
+}
 
-  @media (max-width: 700px) {
-    width: 100%;
+.tg-link {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  padding: 1.5rem 0.25rem;
+  border: 0;
+  background: none;
+  color: $heading-color;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: padding 0.5s $ease-out-soft, color 0.4s;
+
+  // charcoal fill rising from the bottom
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: $heading-color;
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.5s $ease-out-soft;
+  }
+
+  svg {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    transition: transform 0.5s $ease-out-soft;
+  }
+
+  &:hover,
+  &:focus-visible {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    color: $accent-color;
+
+    &::before { transform: scaleY(1); }
+    svg { transform: rotate(45deg); }
   }
 }
 
-.tg-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 0.6rem 1.4rem;
-  border-radius: 8px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  border: 2px solid transparent;
-  width: auto;
-  white-space: nowrap;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+.tg-link__line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba($heading-color, 0.35);
+  transform-origin: left;
+}
 
-  &:hover {
-    transform: translateY(-2px);
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
-
-  &--primary {
-    background: $primary-color;
-    color: #ffffff;
-    box-shadow: 0 4px 16px rgba($primary-color, 0.3);
-
-    &:hover {
-      background: color.adjust($primary-color, $lightness: -8%);
-      box-shadow: 0 8px 24px rgba($primary-color, 0.42);
-    }
-  }
-
-  &--outline {
-    background: $section-seconder-bg;
-    color: $primary-color;
-    border-color: rgba($primary-color, 0.25);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-
-    &:hover {
-      border-color: $primary-color;
-      box-shadow: 0 6px 20px rgba($primary-color, 0.15);
-    }
-  }
+.tg-link__label {
+  font-size: clamp(1.1rem, 1.6vw, 1.35rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }

@@ -4,7 +4,7 @@
 .landing-outer,
 .landing-wrapper {
   width: 100%;
-  overflow-x: hidden;
+  overflow-x: clip; // clip, not hidden: keeps position: sticky working inside sections
 }
 
 // ── Contract section ──────────────────────────────────────────────────────────
@@ -55,7 +55,7 @@
 .contract-heading {
   font-size: clamp(1.35rem, 2vw, 1.8rem);
   font-weight: 800;
-  color: #003168;
+  color: #2d2e2e;
   letter-spacing: -0.02em;
   line-height: 1.2;
   margin: 0;

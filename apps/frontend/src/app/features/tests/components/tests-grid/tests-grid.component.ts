@@ -12,10 +12,14 @@ import {
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute } from '@angular/router';
 import { TESTS_PRIORITY } from '../../constants/test-categories.constants';
-import { CATEGORY_SECTIONS, OTHER_SECTION, sectionOf, TEST_SECTIONS } from '../../constants/test-sections.constants';
+import { CATEGORY_SECTIONS, OTHER_SECTION, sectionAnchor, sectionOf, TEST_SECTIONS } from '../../constants/test-sections.constants';
+export { sectionAnchor } from '../../constants/test-sections.constants';
 import { TestService } from '../../services/test.service';
 import { Test } from '../../models/test.model';
+import { AnimatedSection } from '../../../../shared/animation/animated-section';
+import { AnimeModule } from '../../../../shared/animation/anime.service';
 
 const priorityOf = (test: Test): number => {
   const idx = TESTS_PRIORITY.findIndex(re => re.test(test.name ?? ''));
@@ -29,8 +33,6 @@ const sortByPriority = (tests: Test[]): Test[] =>
     .sort((a, b) => a.p - b.p || a.i - b.i)
     .map(({ test }) => test);
 
-export const sectionAnchor = (title: string): string =>
-  'tests-' + title.toLowerCase().replace(/[^a-zа-яіїєґ0-9]+/gi, '-');
 
 @Component({
   standalone: true,
@@ -40,9 +42,10 @@ export const sectionAnchor = (title: string): string =>
   styleUrls: ['./tests-grid.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TestsGridComponent implements OnInit {
+export class TestsGridComponent extends AnimatedSection implements OnInit {
   private readonly testService = inject(TestService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly route = inject(ActivatedRoute);
 
   /** Category slug (/test/list/:type) — limits the grid to that category's sections; empty shows all tests. */
   readonly category = input('');
@@ -62,14 +65,59 @@ export class TestsGridComponent implements OnInit {
   });
 
   ngOnInit() {
+    // Section links from the navbar (/test/list/:type#tests-…) — sections render
+    // only after the tests load, so the router's own anchor scrolling can't reach them.
+    this.route.fragment
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(fragment => { if (!this.loading()) setTimeout(() => this.scrollToFragment(fragment)); });
+
     this.testService.getTests()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: tests => {
           this.allTests.set(sortByPriority(tests));
           this.loading.set(false);
+          setTimeout(() => {   // after the sections render
+            this.revealSections();
+            this.scrollToFragment(this.route.snapshot.fragment);
+          });
         },
         error: () => this.loading.set(false),
       });
+  }
+
+  protected setup(): void {
+    this.revealSections(); // tests may have loaded before anime.js
+  }
+
+  private revealed = false;
+
+  /** Each section's cards rise in, in order, as the section scrolls into view (first load only). */
+  private revealSections(): void {
+    const root: HTMLElement = this.host.nativeElement;
+    if (!this.anime || this.revealed || !root.querySelector('.tgrid__section')) return;
+    this.revealed = true;
+
+    const { animate, stagger, utils }: AnimeModule = this.anime;
+    root.querySelectorAll<HTMLElement>('.tgrid__section').forEach(section => {
+      const title = section.querySelector('.tgrid__section-title');
+      const cards = section.querySelectorAll('app-card');
+      utils.set(title!, { opacity: 0, translateY: 24 });
+      utils.set(cards, { opacity: 0, translateY: 30 });
+
+      this.whenVisible(section, () => {
+        animate(title!, { opacity: 1, translateY: 0, duration: 900, ease: 'outExpo' });
+        animate(cards, { opacity: 1, translateY: 0, duration: 900, delay: stagger(70, { start: 150 }), ease: 'outExpo' });
+      }, 0.05);
+    });
+  }
+
+  private scrollToFragment(fragment: string | null): void {
+    if (!fragment || typeof document === 'undefined') return;
+    const el = document.getElementById(fragment);
+    if (!el) return;
+    // reveal at once so the section isn't invisible when we land on it
+    el.querySelectorAll<HTMLElement>('.tgrid__section-title, app-card').forEach(n => (n.style.opacity = '1', n.style.transform = 'none'));
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 }

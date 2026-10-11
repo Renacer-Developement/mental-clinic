@@ -7,6 +7,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ALL_TESTS_CONTENT, TEST_CATEGORY_CONTENT, TestCategoryContent } from '../constants/test-category-content.constants';
 import { SECTION } from '../../../shared/constants/section-ids.constants';
 import { SeoService } from '../../../core/seo/seo.service';
+import { AnimatedSection } from '../../../shared/animation/animated-section';
+import { AnimeModule } from '../../../shared/animation/anime.service';
 
 const BASE_URL = 'https://doctor-skripnik.com.ua';
 
@@ -17,7 +19,7 @@ const BASE_URL = 'https://doctor-skripnik.com.ua';
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'
 })
-export class ListComponent implements OnInit {
+export class ListComponent extends AnimatedSection implements OnInit {
   private readonly seo = inject(SeoService);
   private readonly route = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
@@ -69,5 +71,17 @@ export class ListComponent implements OnInit {
     }
 
     this.seo.updatePage({ title, description, canonical, schema });
+  }
+
+  protected setup({ animate, stagger, utils }: AnimeModule): void {
+    // the h1 text is bound and changes per category, so it is revealed as one block rather than split into words
+    utils.set('.tests-hero__title-inner', { translateY: '105%' });
+    utils.set(['.tests-hero__breadcrumb', '.tests-hero__lead'], { opacity: 0, translateY: 20 });
+    utils.set('.tests-cats__item', { opacity: 0, translateY: 12 });
+
+    animate('.tests-hero__breadcrumb', { opacity: 1, translateY: 0, duration: 800, ease: 'outExpo' });
+    animate('.tests-hero__title-inner', { translateY: '0%', duration: 1200, delay: 150, ease: 'outExpo' });
+    animate('.tests-hero__lead', { opacity: 1, translateY: 0, duration: 900, delay: 400, ease: 'outExpo' });
+    animate('.tests-cats__item', { opacity: 1, translateY: 0, duration: 700, delay: stagger(50, { start: 700 }), ease: 'outExpo' });
   }
 }

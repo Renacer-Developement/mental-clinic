@@ -1,152 +1,139 @@
-@use "sass:color";
 @use "../../../../../assets/css/coloristics" as *;
 
 .test-block {
   width: 100%;
 }
 
-// ── Card grid ─────────────────────────────────────────────────────────────────
+// ── Editorial index of tests ──────────────────────────────────────────────────
 
-.cards-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.25rem;
-
-  @media (max-width: 900px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @media (max-width: 560px) {
-    grid-template-columns: 1fr;
-  }
+.test-index {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid rgba($heading-color, 0.2);
 }
 
-// ── Individual card ───────────────────────────────────────────────────────────
-
-.test-card {
+.test-row__link {
   position: relative;
-  background: #ffffff;
-  border: 1px solid rgba($primary-color, 0.1);
-  border-radius: 20px;
-  padding: 1.75rem 1.5rem 1.5rem;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  transition:
-    transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 0.28s ease,
-    border-color 0.28s ease;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1.1fr) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem 1.25rem;
+  color: $heading-color;
+  text-decoration: none;
   overflow: hidden;
-  box-shadow: 0 2px 12px rgba($primary-color, 0.06);
 
-  // top accent bar — faint by default, vivid on hover
+  // charcoal fill that slides up from the bottom on hover
   &::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, $primary-color 0%, color.adjust($primary-color, $lightness: 18%) 100%);
-    opacity: 0.2;
-    transition: opacity 0.28s ease;
+    inset: 0;
+    z-index: -1;
+    background: $heading-color;
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.55s $ease-out-soft;
   }
 
-  &:hover {
-    transform: translateY(-8px);
-    box-shadow:
-      0 0 0 1px rgba($primary-color, 0.18),
-      0 16px 40px rgba($primary-color, 0.16),
-      0 4px 12px rgba($primary-color, 0.1);
-    border-color: rgba($primary-color, 0.25);
+  &:hover,
+  &:focus-visible {
+    &::before { transform: scaleY(1); }
 
-    &::before {
-      opacity: 1;
-    }
+    .test-row__num   { color: $accent-color; }
+    .test-row__title { color: #fff; transform: translateX(10px); }
+    .test-row__desc  { color: rgba(#fff, 0.65); }
+    .test-row__go    { color: $accent-color; }
+    .test-row__go svg { transform: translateX(6px); }
+  }
 
-    .card-arrow {
-      opacity: 1;
-      transform: translateX(0);
-    }
-
-    .card-icon-wrap {
-      background: linear-gradient(135deg, color.adjust($primary-color, $lightness: 28%) 0%, color.adjust($primary-color, $lightness: 18%) 100%);
-    }
+  @media (max-width: 900px) {
+    grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+    gap: 0.5rem 1rem;
+    padding: 1.5rem 0.75rem;
   }
 }
 
-// ── Card internals ────────────────────────────────────────────────────────────
+.test-row__line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba($heading-color, 0.2);
+  transform-origin: left;
+}
 
-.card-index {
-  font-size: 0.65rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
+.test-row__num {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   color: $primary-color;
-  opacity: 0.4;
+  transition: color 0.4s;
 }
 
-.card-icon-wrap {
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
-  background: rgba($primary-color, 0.07);
-  display: flex;
+.test-row__title {
+  margin: 0;
+  overflow: hidden;
+  font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: $heading-color;
+  transition: color 0.4s, transform 0.55s $ease-out-soft;
+}
+
+.test-row__title-inner {
+  display: inline-block;
+}
+
+.test-row__desc {
+  margin: 0;
+  max-width: 440px;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: $body-text-color;
+  transition: color 0.4s;
+
+  @media (max-width: 900px) {
+    grid-column: 2 / -1;
+    grid-row: 2;
+  }
+}
+
+.test-row__go {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: background 0.28s ease;
+  gap: 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  color: $heading-color;
+  transition: color 0.4s;
 
   svg {
-    width: 26px;
-    height: 26px;
-    color: $primary-color;
+    width: 22px;
+    height: 22px;
+    transition: transform 0.45s $ease-out-soft;
+  }
+
+  @media (max-width: 900px) {
+    grid-column: 3;
+    grid-row: 1;
   }
 }
 
-.card-body {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-}
-
-.card-title {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: $heading-color;
-  margin: 0;
-  line-height: 1.3;
-}
-
-.card-desc {
-  font-size: 0.84rem;
-  color: #5a6a8a;
-  line-height: 1.68;
-  margin: 0;
+.test-row__go-label {
+  @media (max-width: 900px) {
+    display: none;
+  }
 }
 
 .cards-disclaimer {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.5rem;
-  font-size: 0.75rem;
-  color: #8a96b0;
-  margin-top: 1.5rem;
+  margin: 1.5rem 0 0;
+  font-size: 0.8rem;
   line-height: 1.55;
-
-  svg {
-    flex-shrink: 0;
-    margin-top: 1px;
-    color: rgba($primary-color, 0.5);
-  }
-}
-
-.card-arrow {
-  align-self: flex-end;
-  font-size: 1rem;
-  color: $primary-color;
-  opacity: 0;
-  transform: translateX(-8px);
-  transition: opacity 0.24s ease, transform 0.24s ease;
+  color: $muted-text-color;
 }

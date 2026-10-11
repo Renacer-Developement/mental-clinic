@@ -1,32 +1,78 @@
-<div id="hero-banner">
+<section id="hero-banner" class="hero">
+
+  <!-- background decor -->
+  <div class="hero-bg" aria-hidden="true">
+    <span class="hero-orb hero-orb--a"></span>
+    <span class="hero-orb hero-orb--b"></span>
+    <svg class="hero-lines" viewBox="0 0 1440 640" preserveAspectRatio="none" fill="none">
+      <path class="hero-line" d="M-20 520 C 240 420, 420 620, 700 500 S 1180 300, 1460 380"/>
+      <path class="hero-line hero-line--thin" d="M-20 580 C 300 480, 520 660, 820 540 S 1240 360, 1460 450"/>
+    </svg>
+  </div>
+
   <div class="hero-inner">
 
     <div class="hero-text">
-      <h1>
-        <span class="hero-name">Євген Скрипник</span>
-        Психіатр онлайн —<br>лікар вищої категорії
+      <span class="hero-tag" data-hero>Центр ментального здоров'я</span>
+
+      <h1 class="hero-title">
+        <span class="hero-name" data-hero>Євген Скрипник</span>
+        <span class="hero-title-main" data-hero-title>Психіатр <span class="nowrap">онлайн —</span><br>лікар вищої категорії</span>
       </h1>
-      <p>
+
+      <p class="hero-lead" data-hero>
         Лікар-невролог, лікар-нарколог — лише доказова медицина та понад 20 років досвіду
       </p>
-      <a class="hero-cta" href="/visit">Записатися на прийом</a>
+
+      <div class="hero-actions" data-hero>
+        <a class="hero-cta" href="/visit">
+          <span>Записатися на прийом</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </a>
+        <a class="hero-link" [routerLink]="'/' + TEST_ROUTES.LIST">Пройти тест</a>
+      </div>
+
+      <dl class="hero-stats">
+        <div class="hero-stat" data-hero-stat>
+          <dt><span data-count="20">20</span>+</dt>
+          <dd>років практики</dd>
+        </div>
+        <div class="hero-stat" data-hero-stat>
+          <dt><span data-count="3">3</span></dt>
+          <dd>спеціалізації</dd>
+        </div>
+        <div class="hero-stat" data-hero-stat>
+          <dt>8–22</dt>
+          <dd>запис щодня</dd>
+        </div>
+      </dl>
     </div>
 
-    <div class="hero-image-wrap">
-      <picture>
-        <source srcset="assets/owner.webp" type="image/webp">
-        <img
-          alt="Лікар Євген Скрипник"
-          class="hero-img"
-          decoding="sync"
-          fetchpriority="high"
-          height="460"
-          loading="eager"
-          src="assets/owner.webp"
-          width="400"
-        />
-      </picture>
+    <div class="hero-visual">
+      <span class="hero-dots" aria-hidden="true"></span>
+
+      <div class="hero-frame">
+        <span class="hero-ring" aria-hidden="true"></span>
+        <div class="hero-circle">
+          <picture class="hero-photo">
+            <source srcset="assets/owner.webp" type="image/webp">
+            <img
+              alt="Лікар Євген Скрипник"
+              class="hero-img"
+              decoding="sync"
+              fetchpriority="high"
+              height="460"
+              loading="eager"
+              src="assets/owner.webp"
+              width="400"
+            />
+          </picture>
+        </div>
+      </div>
     </div>
 
   </div>
-</div>
+</section>

@@ -1,168 +1,348 @@
 @use "sass:color";
 @use "../../../../../assets/css/coloristics" as *;
 
-// ── Keyframes ─────────────────────────────────────────────────────────────────
+// ── Shell ─────────────────────────────────────────────────────────────────────
 
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(28px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeInRight {
-  from { opacity: 0; transform: translateX(48px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-
-// ── Banner shell ──────────────────────────────────────────────────────────────
-
-#hero-banner {
-  background: linear-gradient(
-    115deg,
-    color.adjust($primary-color, $lightness: 22%) 0%,
-    color.adjust($primary-color, $lightness: 14%) 38%,
-    color.adjust($primary-color, $lightness: 8%)  68%,
-    $primary-color               100%
-  );
+.hero {
+  position: relative;
   overflow: hidden;
-  min-height: 440px;
+  background: $section-bg;
   display: flex;
   align-items: stretch;
 }
 
-// ── Inner wrapper ─────────────────────────────────────────────────────────────
-
-.hero-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 1450px;
-  margin: 0 auto;
-  padding: 3.5rem 6% 0;
-  gap: 2rem;
-
-  @media (max-width: 900px) {
-    position: relative;
-    align-items: flex-end;
-    padding: 2.5rem 1.5rem 0;
-    gap: 0;
-    min-height: 420px;
+// Elements anime.js brings in. Hidden only once the inline script in index.html
+// has flagged the page as animated; a fail-safe reveals them if JS never runs.
+:host-context(html.anim) {
+  [data-hero],
+  [data-hero-title],
+  [data-hero-stat] {
+    opacity: 0;
+    animation: hero-failsafe 0s 3s forwards;
   }
 }
 
-// ── Text block ────────────────────────────────────────────────────────────────
+@keyframes hero-failsafe {
+  to { opacity: 1; }
+}
 
-.hero-text {
-  flex: 0 1 50%;
-  max-width: 520px;
-  padding-bottom: 3.5rem;
-  animation: fadeInUp 0.72s ease-out both;
+// ── Background decor ──────────────────────────────────────────────────────────
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+
+  &--a {
+    width: 520px;
+    height: 520px;
+    right: -120px;
+    top: -140px;
+    background: rgba($accent-color, 0.55);
+  }
+
+  &--b {
+    width: 360px;
+    height: 360px;
+    left: -140px;
+    bottom: -160px;
+    background: rgba($accent-color, 0.35);
+  }
+}
+
+.hero-lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-line {
+  stroke: rgba($primary-color, 0.28);
+  stroke-width: 1.5;
+
+  &--thin {
+    stroke: rgba($primary-color, 0.16);
+    stroke-width: 1;
+    stroke-dasharray: 6 8;
+  }
+}
+
+// ── Layout ────────────────────────────────────────────────────────────────────
+
+.hero-inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1450px;
+  margin: 0 auto;
+  padding: 2.5rem 6% 2.5rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  align-items: center;
+  gap: 2rem;
 
   @media (max-width: 900px) {
-    position: relative;
-    z-index: 2;
-    flex: none;
-    width: 62%;
-    padding-bottom: 2.5rem;
+    grid-template-columns: 1fr;
+    padding: 2.5rem 1.25rem 0;
+    gap: 1rem;
   }
+}
 
-  h1 {
-    font-size: clamp(2rem, 3.6vw, 3.25rem);
-    font-weight: 900;
-    line-height: 1.12;
-    color: $heading-color;
-    margin: 0 0 1rem;
-  }
+// ── Text column ───────────────────────────────────────────────────────────────
 
-  p {
-    font-size: clamp(0.88rem, 1.3vw, 1.02rem);
-    color: color.adjust($primary-color, $lightness: -30%);
-    line-height: 1.7;
-    margin: 0 0 1.75rem;
-    opacity: 0.88;
-    animation: fadeInUp 0.72s 0.14s ease-out both;
+.hero-text {
+  padding-bottom: 0;
+
+  @media (max-width: 900px) {
+    padding-bottom: 0;
   }
+}
+
+.hero-tag {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  padding: 0.45rem 1.2rem;
+  border: 1.5px solid $heading-color;
+  background: rgba(#fff, 0.6);
+  color: $heading-color;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  transform: skewX(-12deg);
+}
+
+.hero-title {
+  margin: 0 0 1.25rem;
+  color: $heading-color;
 }
 
 .hero-name {
   display: block;
-  font-size: clamp(1rem, 1.8vw, 1.45rem);
-  font-weight: 300;
-  color: color.adjust($primary-color, $lightness: -18%);
-  letter-spacing: 0.03em;
-  margin-bottom: 0.3rem;
+  font-size: clamp(1rem, 1.6vw, 1.35rem);
+  font-weight: 500;
+  color: $primary-color;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.5rem;
 }
 
-// ── CTA button ────────────────────────────────────────────────────────────────
+.nowrap {
+  white-space: nowrap;
+}
+
+.hero-title-main {
+  display: block;
+  font-size: clamp(2rem, 3.4vw, 3.1rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.hero-lead {
+  font-size: clamp(0.95rem, 1.25vw, 1.08rem);
+  color: $body-text-color;
+  line-height: 1.7;
+  margin: 0 0 2rem;
+  max-width: 470px;
+}
+
+// ── Actions ───────────────────────────────────────────────────────────────────
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem 1.75rem;
+}
 
 .hero-cta {
-  display: inline-block;
-  background: color.adjust($primary-color, $lightness: -28%);
-  color: $secondary-color;
-  padding: 0.72rem 1.8rem;
-  border-radius: 2rem;
-  font-size: 0.92rem;
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 1rem 1.6rem 1rem 2rem;
+  border-radius: 100px;
+  background: $heading-color;
+  color: #fff;
+  font-size: 0.95rem;
   font-weight: 600;
   text-decoration: none;
-  letter-spacing: 0.01em;
-  transition: background 0.22s, transform 0.22s, box-shadow 0.22s;
-  animation: fadeInUp 0.72s 0.26s ease-out both;
+  isolation: isolate;
+  box-shadow: 0 14px 30px rgba($heading-color, 0.22);
+  transition: transform 0.4s $ease-spring, box-shadow 0.4s;
 
-  &:hover {
+  // peach fill that rises from the bottom on hover
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
     background: $primary-color;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba($primary-color, 0.45);
+    border-radius: inherit;
+    transform: translateY(101%);
+    transition: transform 0.5s $ease-out-soft;
   }
 
-  @media (max-width: 900px) {
-    white-space: nowrap;
-    font-size: 0.85rem;
-    padding: 0.65rem 1.4rem;
+  svg {
+    width: 34px;
+    height: 34px;
+    padding: 9px;
+    border-radius: 50%;
+    background: $accent-color;
+    color: $heading-color;
+    transition: transform 0.45s $ease-spring;
+  }
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 38px rgba($primary-color, 0.35);
+
+    &::before { transform: translateY(0); }
+    svg { transform: rotate(-45deg); }
   }
 }
 
-// ── Doctor image ──────────────────────────────────────────────────────────────
+.hero-link {
+  position: relative;
+  color: $heading-color;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  padding-bottom: 4px;
 
-.hero-image-wrap {
-  flex: 0 0 auto;
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: $accent-color;
+    transform-origin: right;
+    transition: transform 0.45s $ease-out-soft;
+  }
+
+  &:hover::after {
+    transform: scaleX(0);
+  }
+}
+
+// ── Stats ─────────────────────────────────────────────────────────────────────
+
+.hero-stats {
+  display: flex;
+  gap: 2.25rem;
+  margin: 2.75rem 0 0;
+  padding-top: 1.75rem;
+  border-top: 1px solid rgba($heading-color, 0.12);
+
+  @media (max-width: 520px) {
+    gap: 1.25rem;
+    justify-content: space-between;
+  }
+}
+
+.hero-stat {
+  dt {
+    font-size: clamp(1.6rem, 2.4vw, 2.2rem);
+    font-weight: 800;
+    color: $heading-color;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  dd {
+    margin: 0.4rem 0 0;
+    font-size: 0.82rem;
+    color: $muted-text-color;
+    letter-spacing: 0.08em;
+  }
+}
+
+// ── Visual column (static composition, no animation) ──────────────────────────
+
+.hero-visual {
+  position: relative;
+  align-self: center;
+  display: flex;
+  justify-content: center;
+  padding: 1.5rem 2.5rem 0 1.5rem;
+
+  @media (max-width: 900px) {
+    padding: 1.5rem 1rem 0;
+    margin-top: 1rem;
+  }
+}
+
+// dotted pattern peeking out behind the frame
+.hero-dots {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 180px;
+  height: 180px;
+  background-image: radial-gradient(rgba($primary-color, 0.45) 1.6px, transparent 1.6px);
+  background-size: 16px 16px;
+  pointer-events: none;
+
+  @media (max-width: 900px) {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+.hero-frame {
+  position: relative;
+  width: min(100%, 440px);
+  margin-bottom: 0;
+
+  @media (max-width: 900px) {
+    width: min(100%, 340px);
+    margin-bottom: 2.5rem;
+  }
+}
+
+// peach disc; the photo is clipped to it so nothing spills outside
+.hero-circle {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1;
+  border-radius: 50%;
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  // fade left edge into banner, fade bottom edge out
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 26%),
-                      linear-gradient(to bottom, black 55%, transparent 100%);
-  -webkit-mask-composite: destination-in;
-  mask-image: linear-gradient(to right, transparent 0%, black 26%),
-              linear-gradient(to bottom, black 55%, transparent 100%);
-  mask-composite: intersect;
-  animation: fadeInRight 0.82s 0.2s ease-out both;
+  background:
+    radial-gradient(circle at 35% 30%, rgba(#fff, 0.5), transparent 55%),
+    linear-gradient(160deg, $accent-color 0%, color.adjust($accent-color, $lightness: -10%) 100%);
+}
 
-  @media (max-width: 900px) {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    width: 48%;
-    justify-content: flex-end;
-    -webkit-mask-image:
-      linear-gradient(to right, transparent 0%, black 22%),
-      linear-gradient(to bottom, black 42%, transparent 100%);
-    -webkit-mask-composite: destination-in;
-    mask-image:
-      linear-gradient(to right, transparent 0%, black 22%),
-      linear-gradient(to bottom, black 42%, transparent 100%);
-    mask-composite: intersect;
-  }
+// thin outline circle, offset for depth
+.hero-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid rgba($heading-color, 0.55);
+  transform: translate(22px, -18px);
+  pointer-events: none;
+}
+
+.hero-photo {
+  display: block;
+  width: 112%;
+  flex-shrink: 0;
+  margin-bottom: -6%;
 }
 
 .hero-img {
   display: block;
   width: 100%;
-  max-width: 460px;
-  min-width: 220px;
   height: auto;
-  object-fit: contain;
-
-  @media (max-width: 900px) {
-    max-width: 100%;
-  }
 }

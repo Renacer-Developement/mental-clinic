@@ -9,6 +9,7 @@ import { ArticleCardComponent } from '../components/article-card/article-card.co
 import { ArticleService } from '../services/article.service';
 import { PaginatedArticlesResponse } from '../models/article.model';
 import { SeoService } from '../../../core/seo/seo.service';
+import { ARTICLE_CATEGORIES } from '../constants/article-categories.constants';
 
 const BASE_URL  = 'https://doctor-skripnik.com.ua';
 const PAGE_SIZE = 10;
@@ -40,15 +41,6 @@ const CATEGORY_SEO: Record<string, { title: string; description: string }> = {
   },
 };
 
-const ARTICLE_CATEGORIES = [
-  { name: 'Всі',        value: '' },
-  { name: 'Депресія',   value: 'депресія' },
-  { name: 'Тривога',    value: 'тривога' },
-  { name: 'ПТСР',       value: 'птср' },
-  { name: 'Залежності', value: 'залежності' },
-  { name: 'Сон',        value: 'сон' },
-  { name: 'Стрес',      value: 'стрес' },
-];
 
 @Component({
   standalone: true,

@@ -60,6 +60,8 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
   relatedArticles  = signal<Article[]>([]);
   safeContent      = signal<SafeHtml>('');
   tocItems         = signal<TocItem[]>([]);
+  /** True once the sticky contents panel starts sliding up under the navbar (end of article). */
+  tocHidden        = signal(false);
 
   @HostListener('window:scroll')
   onScroll(): void {
@@ -67,6 +69,11 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
     const docHeight = document.documentElement.scrollHeight - window.innerHeight;
     this.scrollProgress.set(docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0);
     this.showBackToTop.set(scrollTop > 400);
+
+    // The TOC is sticky at 120px (7.5rem); when it rises above that it is leaving with the
+    // article and would slide under the sticky navbar, so fade it out instead.
+    const toc = document.querySelector('.adetail-toc');
+    if (toc) this.tocHidden.set(toc.getBoundingClientRect().top < 114);
   }
 
   ngOnInit(): void {

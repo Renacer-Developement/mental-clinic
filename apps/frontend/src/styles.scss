@@ -5,6 +5,17 @@
   box-sizing: border-box;
 }
 
+:root {
+  --color-primary: #{$primary-color};
+  --color-accent: #{$accent-color};
+  --color-accent-soft: #{$accent-soft};
+  --color-heading: #{$heading-color};
+  --color-text: #{$body-text-color};
+  --color-muted: #{$muted-text-color};
+  --color-cream: #{$section-bg};
+  --color-dark: #{$dark-bg};
+}
+
 html, body {
   margin: 0;
   padding: 0;
@@ -15,9 +26,20 @@ body {
   font-optical-sizing: auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: $body-text-color;
 }
 h1, h2, h3, h4, h5, h6 {
-  color: #003168;
+  color: $heading-color;
+}
+
+::selection {
+  background: $accent-color;
+  color: $heading-color;
+}
+
+:focus-visible {
+  outline: 2px solid $primary-color;
+  outline-offset: 3px;
 }
 
 .visually-hidden {
@@ -30,4 +52,81 @@ h1, h2, h3, h4, h5, h6 {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+// ── Scroll reveal (driven by RevealDirective) ────────────────────────────────
+// Uses animations (fill-mode: backwards) rather than transitions so components
+// keep their own hover transitions/transforms untouched once revealed.
+
+@keyframes reveal-up    { from { opacity: 0; transform: translateY(32px); } }
+@keyframes reveal-left  { from { opacity: 0; transform: translateX(-40px); } }
+@keyframes reveal-right { from { opacity: 0; transform: translateX(40px); } }
+@keyframes reveal-zoom  { from { opacity: 0; transform: scale(0.94); } }
+@keyframes reveal-fade  { from { opacity: 0; } }
+
+.reveal:not(.is-visible) {
+  opacity: 0;
+}
+
+.reveal.is-visible {
+  animation: 0.85s $ease-out-soft var(--reveal-delay, 0ms) backwards;
+
+  &.reveal--up    { animation-name: reveal-up; }
+  &.reveal--left  { animation-name: reveal-left; }
+  &.reveal--right { animation-name: reveal-right; }
+  &.reveal--zoom  { animation-name: reveal-zoom; }
+  &.reveal--fade  { animation-name: reveal-fade; }
+}
+
+// ── Shared keyframes ─────────────────────────────────────────────────────────
+
+@keyframes float-soft {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-14px); }
+}
+
+@keyframes blob-morph {
+  0%, 100% { border-radius: 42% 58% 63% 37% / 41% 44% 56% 59%; }
+  33%      { border-radius: 63% 37% 42% 58% / 55% 38% 62% 45%; }
+  66%      { border-radius: 38% 62% 55% 45% / 62% 58% 42% 38%; }
+}
+
+@keyframes shine-sweep {
+  from { transform: translateX(-120%) skewX(-20deg); }
+  to   { transform: translateX(220%) skewX(-20deg); }
+}
+
+// Light sweep across a button on hover: add class="btn-shine"
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 40%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+    transform: translateX(-120%) skewX(-20deg);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  &:hover::after {
+    animation: shine-sweep 0.9s $ease-out-soft;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal:not(.is-visible) {
+    opacity: 1;
+  }
 }

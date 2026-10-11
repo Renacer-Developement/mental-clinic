@@ -1,20 +1,18 @@
 @use "../../../../../assets/css/coloristics" as *;
 
-$ink: #1f2a3c;
-$serif: Georgia, 'Times New Roman', serif;
-
 .tgrid {
   display: flex;
   flex-direction: column;
 }
 
+// visually tucked away: the tabs above already name the list
 .tgrid__heading {
-  font-family: $serif;
-  font-size: 1.6rem;
+  margin: 0 0 2rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  color: $ink;
-  text-align: center;
-  margin: 0 0 1.5rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: $muted-text-color;
 }
 
 // ── Sections ──────────────────────────────────────────────────────────────────
@@ -22,23 +20,24 @@ $serif: Georgia, 'Times New Roman', serif;
 .tgrid__section {
   scroll-margin-top: 90px; // keep the title clear of the sticky navbar
 
-  & + & { margin-top: 2rem; }
+  & + & { margin-top: 3rem; }
 }
 
 .tgrid__section-title {
-  font-family: $serif;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: $primary-color;
   margin: 0 0 1rem;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: $heading-color;
 }
 
 .tgrid__grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
 
-  @media (max-width: 900px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 900px) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   @media (max-width: 560px) { grid-template-columns: 1fr; }
 }
 
@@ -48,10 +47,9 @@ $serif: Georgia, 'Times New Roman', serif;
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
+  padding: 1.5rem;
+  border-radius: 14px;
   background: #fff;
-  border-radius: 12px;
-  padding: 1.1rem 1rem;
-  box-shadow: 0 2px 12px rgba(16, 24, 40, 0.06);
 
   &__desc {
     display: flex;
@@ -62,7 +60,7 @@ $serif: Georgia, 'Times New Roman', serif;
 
 .tgrid__empty {
   text-align: center;
-  color: #8a93a6;
+  color: #6f6762;
   padding: 3rem 1rem;
   margin: 0;
 }

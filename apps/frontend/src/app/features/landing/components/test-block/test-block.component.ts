@@ -1,5 +1,7 @@
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ImportsModule } from '../../../../shared/primeng-imports.module';
+import { AnimatedSection } from '../../../../shared/animation/animated-section';
+import { AnimeModule } from '../../../../shared/animation/anime.service';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ROUTES, TEST_ROUTES } from '../../../../shared/constants/routes.constants';
@@ -17,13 +19,15 @@ interface MentalCard {
 
 @Component({
   standalone: true,
-  imports: [CommonModule, ImportsModule, NgOptimizedImage, RouterLink],
+  imports: [CommonModule, ImportsModule, RouterLink],
   selector: 'app-test-block',
   templateUrl: './test-block.component.html',
   styleUrls: ['./test-block.component.scss']
 })
-export class TestBlockComponent {
-  constructor(private googleAnalyticsService: GoogleAnalyticsService) {}
+export class TestBlockComponent extends AnimatedSection {
+  constructor(private googleAnalyticsService: GoogleAnalyticsService) {
+    super();
+  }
 
   mentalCards: MentalCard[] = [
     {
@@ -76,4 +80,21 @@ export class TestBlockComponent {
   protected readonly TEST_ROUTES = TEST_ROUTES;
   protected readonly EVENT_TRACK = EVENT_TRACK;
   protected readonly ROUTES = ROUTES;
+
+  protected setup({ animate, stagger, utils }: AnimeModule, root: HTMLElement): void {
+    utils.set('.test-row__line', { scaleX: 0 });
+    utils.set('.test-row__title-inner', { translateY: '105%' });
+    utils.set(['.test-row__num', '.test-row__desc', '.test-row__go'], { opacity: 0 });
+    utils.set('.cards-disclaimer', { opacity: 0 });
+
+    this.whenVisible(root.querySelector('.test-index'), () => {
+      animate('.test-row__line', { scaleX: 1, duration: 1100, delay: stagger(110), ease: 'inOutQuart' });
+      animate('.test-row__title-inner', { translateY: '0%', duration: 1000, delay: stagger(110, { start: 250 }), ease: 'outExpo' });
+      animate(['.test-row__num', '.test-row__desc', '.test-row__go'], {
+        opacity: 1, duration: 800, ease: 'outQuad',
+        delay: stagger(40, { start: 450 }),
+      });
+      animate('.cards-disclaimer', { opacity: 1, duration: 800, delay: 1200 });
+    }, 0.15);
+  }
 }
