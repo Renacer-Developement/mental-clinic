@@ -148,6 +148,18 @@
     <section class="dp-about">
       <div class="dp-about__wrap">
 
+        <div *ngIf="about" class="dp-about__block dp-about__method">
+          <h2 class="dp-about__title">Про тест «{{ data?.name }}»</h2>
+          <h3>Що це за методика</h3>
+          <p>{{ about.what }}</p>
+          <h3>Кому підходить</h3>
+          <p>{{ about.who }}</p>
+          <h3>Як рахуються бали</h3>
+          <p>{{ about.scoring }}</p>
+          <h3>Чим відрізняється від схожих тестів</h3>
+          <p>{{ about.compare }}</p>
+        </div>
+
         <div *ngIf="relatedTests.length" class="dp-about__block">
           <h2 class="dp-about__title">Схожі тести</h2>
           <ul class="dp-about__related">

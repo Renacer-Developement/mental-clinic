@@ -16,6 +16,7 @@ import { TEST_CATEGORY_CONTENT } from '../constants/test-category-content.consta
 import { ConditionContent, conditionForTestSection } from '../../conditions/conditions.data';
 import { methodCodeOf } from '../constants/test-method-codes.constants';
 import { TEST_KEYWORDS } from '../constants/test-keywords.constants';
+import { TEST_ABOUT, TestAbout } from '../constants/test-about.constants';
 import { clinicContacts } from '../../shared/constants/contacts.constants';
 import { ClinicContactsService } from '../../shared/components/clinic-contacts-dialog/clinic-contacts.service';
 import { GoogleAnalyticsService } from '../../../analytics/google-analytics.service';
@@ -63,6 +64,8 @@ export class DetailPageComponent implements OnInit {
   searchPhrase: string | null = null;
   /** Phrases people search this test by; listed at the end of the page and in the meta/schema keywords. */
   searchKeywords: string[] = [];
+  /** What the method is, who it is for, how it is scored and how it differs from similar tests. */
+  about?: TestAbout;
 
   answers: { [key: string]: number } = {};
 
@@ -135,6 +138,7 @@ export class DetailPageComponent implements OnInit {
             const code = methodCodeOf(response._id, response.name);
             this.searchPhrase = searchPhraseOf(response);
             this.searchKeywords = TEST_KEYWORDS[response._id ?? ''] ?? [];
+            this.about = TEST_ABOUT[response._id ?? ''];
             this.faq = this.buildFaq(response, code);
             this.updateSEO(response.name, response.description, code);
             this.cdr.detectChanges();
