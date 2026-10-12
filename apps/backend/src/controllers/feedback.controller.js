@@ -2,6 +2,10 @@ const Feedback = require('../models/feedback.model');
 const { escapeHtml, sendTelegramMessage } = require('../services/telegram.service');
 
 const CONTACT_LABELS = { phone: 'Дзвінок', telegram: 'Telegram', viber: 'Viber' };
+const SPECIALISTS = {
+    doctor:       { label: 'Лікар-психіатр', env: 'DOCTOR' },
+    psychologist: { label: 'Психолог',       env: 'PSYCHOLOGIST' },
+};
 const STATUSES = ['new', 'in_progress', 'done', 'spam'];
 const ADMIN_URL = process.env.ADMIN_URL || 'https://mental-clinic-admin.vercel.app';
 
@@ -19,9 +23,21 @@ const isRateLimited = (ip) => {
 };
 const clientIp = (req) => (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.ip;
 
+/** Specialists whose requests this user may see: all for admins, otherwise what an admin granted. */
+const allowedSpecialists = (user) =>
+    user.role === 'admin' ? Object.keys(SPECIALISTS) : (user.feedbackAccess || []);
+
+const userName = (user) => [user.name, user.lastName].filter(Boolean).join(' ');
+
+/**
+ * Each specialist has its own bot: FEEDBACK_DOCTOR_BOT_TOKEN / FEEDBACK_DOCTOR_CHAT_ID and
+ * FEEDBACK_PSYCHOLOGIST_BOT_TOKEN / FEEDBACK_PSYCHOLOGIST_CHAT_ID. Unset values fall back to
+ * the clinic bot (TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID).
+ */
 const notify = (f) => {
+    const spec = SPECIALISTS[f.specialist];
     const lines = [
-        '🆕 <b>Нова заявка з сайту</b>',
+        `🆕 <b>Нова заявка: ${spec.label}</b>`,
         '',
         `👤 <b>Імʼя:</b> ${escapeHtml(f.name)}`,
         `📞 <b>Телефон:</b> ${escapeHtml(f.phone)}`,
@@ -34,15 +50,17 @@ const notify = (f) => {
         '',
         `<a href="${ADMIN_URL}/requests">Відкрити в адмінці</a>`,
     );
-    // A separate chat for patient requests, if set; otherwise the bot's default chat
-    return sendTelegramMessage(lines.join('\n'), process.env.FEEDBACK_TELEGRAM_CHAT_ID || process.env.TELEGRAM_CHAT_ID);
+    return sendTelegramMessage(lines.join('\n'), {
+        token:  process.env[`FEEDBACK_${spec.env}_BOT_TOKEN`] || process.env.TELEGRAM_BOT_TOKEN,
+        chatId: process.env[`FEEDBACK_${spec.env}_CHAT_ID`]   || process.env.TELEGRAM_CHAT_ID,
+    });
 };
 
 class FeedbackController {
     // Public
     async create(req, res, next) {
         try {
-            const { name, phone, contactMethod, message, pagePath, website } = req.body || {};
+            const { specialist, name, phone, contactMethod, message, pagePath, website } = req.body || {};
 
             // Honeypot: the form hides this field from people, bots fill it in. Pretend success.
             if (website) return res.status(201).json({ ok: true });
@@ -59,6 +77,7 @@ class FeedbackController {
             }
 
             const feedback = await Feedback.create({
+                specialist:    SPECIALISTS[specialist] ? specialist : 'doctor',
                 name:          String(name).trim().slice(0, 100),
                 phone:         String(phone).trim().slice(0, 30),
                 contactMethod: CONTACT_LABELS[contactMethod] ? contactMethod : 'phone',
@@ -73,32 +92,51 @@ class FeedbackController {
         } catch (e) { next(e); }
     }
 
-    // Staff: newest first, with per-status counts for the filter tabs
+    // Staff: newest first, only the specialists this user may see, with per-status counts
     async getAll(req, res, next) {
         try {
-            const filter = STATUSES.includes(req.query.status) ? { status: req.query.status } : {};
+            const allowed = allowedSpecialists(req.user);
+            const specialists = SPECIALISTS[req.query.specialist] && allowed.includes(req.query.specialist)
+                ? [req.query.specialist]
+                : allowed;
+            const scope = { specialist: { $in: specialists } };
+            const filter = STATUSES.includes(req.query.status) ? { ...scope, status: req.query.status } : scope;
+
             const [items, grouped] = await Promise.all([
                 Feedback.find(filter).sort({ createdAt: -1 }).limit(500),
-                Feedback.aggregate([{ $group: { _id: '$status', n: { $sum: 1 } } }]),
+                Feedback.aggregate([{ $match: scope }, { $group: { _id: '$status', n: { $sum: 1 } } }]),
             ]);
             const counts = Object.fromEntries(STATUSES.map(s => [s, 0]));
             grouped.forEach(g => { counts[g._id] = g.n; });
-            res.json({ items, counts });
+            res.json({ items, counts, specialists: allowed });
         } catch (e) { next(e); }
     }
 
-    // Staff: only status and the internal note can change
+    // Staff: status and the internal note. Marking it done records who called back and when.
     async update(req, res, next) {
         try {
-            const changes = {};
-            if (req.body?.status !== undefined) {
-                if (!STATUSES.includes(req.body.status)) return res.status(400).json({ message: 'Невідомий статус' });
-                changes.status = req.body.status;
+            const feedback = await Feedback.findById(req.params.id);
+            if (!feedback || !allowedSpecialists(req.user).includes(feedback.specialist)) {
+                return res.status(404).json({ message: 'Заявку не знайдено' });
             }
-            if (req.body?.note !== undefined) changes.note = String(req.body.note).slice(0, 2000);
 
-            const feedback = await Feedback.findByIdAndUpdate(req.params.id, changes, { new: true, runValidators: true });
-            if (!feedback) return res.status(404).json({ message: 'Заявку не знайдено' });
+            const { status, note } = req.body || {};
+            if (status !== undefined) {
+                if (!STATUSES.includes(status)) return res.status(400).json({ message: 'Невідомий статус' });
+                if (status === 'done' && feedback.status !== 'done') {
+                    feedback.closedBy = req.user._id;
+                    feedback.closedByName = userName(req.user);
+                    feedback.closedAt = new Date();
+                } else if (status !== 'done') {
+                    feedback.closedBy = undefined;
+                    feedback.closedByName = '';
+                    feedback.closedAt = undefined;
+                }
+                feedback.status = status;
+            }
+            if (note !== undefined) feedback.note = String(note).slice(0, 2000);
+
+            await feedback.save();
             res.json(feedback);
         } catch (e) { next(e); }
     }

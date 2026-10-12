@@ -24,6 +24,7 @@ router.post('/users/invite',    authenticate, requireAdmin, (req, res, next) => 
 router.post('/users/accept',    (req, res, next) => authController.acceptInvite(req, res, next));
 router.patch('/users/:id/role',   authenticate, requireAdmin, (req, res, next) => authController.updateUserRole(req, res, next));
 router.patch('/users/:id/status', authenticate, requireAdmin, (req, res, next) => authController.updateUserStatus(req, res, next));
+router.patch('/users/:id/feedback-access', authenticate, requireAdmin, (req, res, next) => authController.updateFeedbackAccess(req, res, next));
 router.delete('/users/:id',       authenticate, requireAdmin, (req, res, next) => authController.deleteUser(req, res, next));
 
 module.exports = router;

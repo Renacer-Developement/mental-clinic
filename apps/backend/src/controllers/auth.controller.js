@@ -152,6 +152,13 @@ class AuthController {
         } catch (err) { next(err); }
     }
 
+    async updateFeedbackAccess(req, res, next) {
+        try {
+            const user = await authService.updateFeedbackAccess(req.params.id, req.body.access);
+            res.status(200).json(user);
+        } catch (err) { next(err); }
+    }
+
     async deleteUser(req, res, next) {
         try {
             await authService.deleteUser(req.params.id, req.user._id.toString());

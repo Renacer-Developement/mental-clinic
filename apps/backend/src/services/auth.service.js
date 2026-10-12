@@ -351,6 +351,18 @@ class AuthService {
         return user.toJSON();
     }
 
+    /** Which feedback requests («Заявки») the user sees: 'doctor', 'psychologist' or both. */
+    async updateFeedbackAccess(userId, access) {
+        if (!Array.isArray(access) || access.some(a => !['doctor', 'psychologist'].includes(a))) {
+            throw makeError('Невірний доступ до заявок', 400);
+        }
+        const user = await userRepository.findById(userId);
+        if (!user) throw makeError('Користувача не знайдено', 404);
+        user.feedbackAccess = [...new Set(access)];
+        await user.save();
+        return user.toJSON();
+    }
+
     async deleteUser(userId, requestingUserId) {
         if (userId === requestingUserId) throw makeError('Не можна видалити власний акаунт', 400);
         const user = await userRepository.findById(userId);

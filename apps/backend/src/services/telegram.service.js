@@ -5,12 +5,14 @@ const escapeHtml = (s) => String(s ?? '')
     .replace(/>/g, '&gt;');
 
 /**
- * Sends an HTML-formatted message through the clinic bot.
- * `chatId` defaults to TELEGRAM_CHAT_ID; throws if the bot isn't configured
+ * Sends an HTML-formatted message through a bot. Defaults to the clinic bot
+ * (TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID); throws if the bot isn't configured
  * or Telegram rejects the message.
  */
-const sendTelegramMessage = async (text, chatId = process.env.TELEGRAM_CHAT_ID) => {
-    const token = process.env.TELEGRAM_BOT_TOKEN;
+const sendTelegramMessage = async (
+    text,
+    { token = process.env.TELEGRAM_BOT_TOKEN, chatId = process.env.TELEGRAM_CHAT_ID } = {},
+) => {
     if (!token || !chatId) {
         throw new Error('TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID not set');
     }

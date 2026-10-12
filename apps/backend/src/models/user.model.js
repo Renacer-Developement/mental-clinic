@@ -23,6 +23,9 @@ const userSchema = new mongoose.Schema(
         contactOtpSentAt:     { type: Date },
         contactPendingType:   { type: String },
         contactPendingValue:  { type: String },
+        // Which site feedback requests this user sees in the admin («Заявки»);
+        // admins see all of them regardless. Granted by an admin.
+        feedbackAccess:       [{ type: String, enum: ['doctor', 'psychologist'] }],
     },
     { timestamps: true }
 );
