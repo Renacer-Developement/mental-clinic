@@ -1,30 +1,43 @@
 name: Health Check
 
+# Pings the API (also waking it if Render put it to sleep) and the site.
+# GitHub runs scheduled workflows on a best-effort basis — under load the gap
+# can stretch to hours, so this is monitoring, not a reliable keep-alive.
 on:
   schedule:
-    - cron: '*/5 * * * *'   # every 5 minutes
-  workflow_dispatch:          # allow manual trigger from GitHub UI
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
 
 jobs:
   monitor:
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    timeout-minutes: 5
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Check API and site
+        id: check
+        run: |
+          failed=""
+          check() {
+            # A cold Render instance can take ~1 min to answer: allow 90 s and retry once
+            code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 90 --retry 1 --retry-delay 10 "$1") || true
+            echo "$1 -> $code"
+            [ "$code" = "200" ] || failed="$failed $1 ($code)"
+          }
+          check https://mental-clinic-be.onrender.com/api/tests
+          check https://doctor-skripnik.com.ua/
+          check https://doctor-skripnik.com.ua/test/list
+          echo "failed=$failed" >> "$GITHUB_OUTPUT"
+          [ -z "$failed" ]
 
-      - uses: pnpm/action-setup@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'pnpm'
-
-      - run: pnpm install --frozen-lockfile --prod --filter @mental-clinic/backend
-
-      - name: Run health check
-        working-directory: apps/backend
+      - name: Alert in Telegram
+        if: failure()
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID:   ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: node scripts/monitor.js
+          FAILED:             ${{ steps.check.outputs.failed }}
+        run: |
+          [ -n "$TELEGRAM_BOT_TOKEN" ] || exit 0
+          curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            --data-urlencode chat_id="$TELEGRAM_CHAT_ID" \
+            --data-urlencode text="⚠️ doctor-skripnik.com.ua health check failed:${FAILED}" > /dev/null
