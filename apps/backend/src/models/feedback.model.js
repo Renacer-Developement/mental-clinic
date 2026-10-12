@@ -14,7 +14,9 @@ const feedbackSchema = new mongoose.Schema({
     closedBy:      { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     closedByName:  { type: String, default: '' },
     closedAt:      { type: Date },
-    // The Telegram notification, so its text and buttons can follow status changes
+    // The Telegram notification in each staff chat, so its text and buttons follow status changes
+    tgMessages:    [{ _id: false, chatId: String, messageId: Number }],
+    // Single-chat notifications stored before tgMessages existed
     tgChatId:      { type: String },
     tgMessageId:   { type: Number },
 }, { timestamps: true });

@@ -3,7 +3,7 @@ const Feedback = require('../models/feedback.model');
 const { applyStatus } = require('./feedback.controller');
 const {
     SPECIALISTS, STATUS_ACTIONS, MENU, LIST_LIMIT,
-    botFor, render, keyboard, answerCallbackQuery,
+    botFor, isStaffChat, render, keyboard, syncMessage, answerCallbackQuery,
     menuAction, menuKeyboard, kyivDayStart, summaryLine,
 } = require('../services/feedback-telegram.service');
 const { sendTelegramMessage, editTelegramMessage } = require('../services/telegram.service');
@@ -59,8 +59,8 @@ class TelegramWebhookController {
         try {
             const [prefix, id, status] = query.data.split(':');
             const chatId = String(query.message?.chat?.id ?? '');
-            // Only the chat this bot posts requests to may change them
-            if (prefix !== 'fb' || !STATUS_ACTIONS.includes(status) || chatId !== String(bot.chatId)) {
+            // Only the chats this bot posts requests to may change them
+            if (prefix !== 'fb' || !STATUS_ACTIONS.includes(status) || !isStaffChat(bot, chatId)) {
                 return reply('Немає доступу');
             }
 
@@ -74,6 +74,9 @@ class TelegramWebhookController {
             await editTelegramMessage(bot.token, chatId, query.message.message_id, render(feedback), keyboard(feedback))
                 .catch(err => { if (!/not modified/i.test(err.message)) throw err; });
             await reply(TOASTS[status]);
+            // The same request's notification in the other staff chats
+            await syncMessage(feedback, { chatId, messageId: query.message.message_id })
+                .catch(err => console.error('Feedback Telegram sync failed:', err.message));
         } catch (err) {
             await reply('Помилка, спробуйте ще раз');
             throw err;
@@ -87,7 +90,7 @@ class TelegramWebhookController {
         if (!action) return;
 
         const send = (text, replyMarkup) => sendTelegramMessage(text, { token: bot.token, chatId, replyMarkup });
-        if (chatId !== String(bot.chatId)) {
+        if (!isStaffChat(bot, chatId)) {
             return send('Цей бот надсилає заявки клініки лише співробітникам.');
         }
 

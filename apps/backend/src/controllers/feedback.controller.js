@@ -71,8 +71,8 @@ class FeedbackController {
 
             // The request is saved either way; a Telegram outage must not fail the form
             notifyNew(feedback)
-                .then(() => feedback.tgMessageId && feedback.save())
-                .catch(err => console.error('Feedback Telegram notification failed:', err.message));
+                .catch(err => console.error('Feedback Telegram notification failed:', err.message))
+                .finally(() => feedback.tgMessages?.length && feedback.save().catch(() => {}));
 
             res.status(201).json({ ok: true });
         } catch (e) { next(e); }
