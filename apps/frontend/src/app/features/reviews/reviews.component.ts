@@ -65,8 +65,11 @@ export class ReviewsComponent implements OnInit {
         '@context': 'https://schema.org',
         '@type': 'WebPage',
         url,
-        name: 'Відгуки про психіатра Євгена Скрипника',
-        about: { '@id': `${BASE_URL}/#physician` },
+        name: "Відгуки про Євгена Скрипника та лікарів-психіатрів Центру ментального здоров'я",
+        about: [
+          { '@id': `${BASE_URL}/#physician` },
+          { '@id': `${BASE_URL}/#organization` },
+        ],
         breadcrumb: {
           '@type': 'BreadcrumbList',
           itemListElement: [
@@ -80,10 +83,10 @@ export class ReviewsComponent implements OnInit {
     if (result?.total) {
       schema.push({
         '@context': 'https://schema.org',
-        '@type': 'Physician',
-        '@id': `${BASE_URL}/#physician`,
-        name: 'Євген Скрипник',
-        url: `${BASE_URL}/about`,
+        '@type': 'MedicalOrganization',
+        '@id': `${BASE_URL}/#organization`,
+        name: "Онлайн центр ментального здоров'я Євгена Скрипника",
+        url: `${BASE_URL}/`,
         medicalSpecialty: 'https://schema.org/Psychiatric',
         aggregateRating: {
           '@type': 'AggregateRating',
@@ -103,8 +106,8 @@ export class ReviewsComponent implements OnInit {
     }
 
     this.seo.updatePage({
-      title: 'Відгуки про психіатра Євгена Скрипника — реальні пацієнти',
-      description: 'Відгуки пацієнтів про психіатра Євгена Скрипника: онлайн консультації, лікування депресії, тривоги, ПТСР. Доказова психіатрія, відкритий підхід.',
+      title: "Відгуки про психіатра Євгена Скрипника та лікарів центру ментального здоров'я",
+      description: "Відгуки пацієнтів про Євгена Скрипника та лікарів-психіатрів Центру ментального здоров'я Євгена Скрипника: онлайн консультації, лікування депресії, тривоги, ПТСР.",
       canonical: '/reviews',
       ogType: 'website',
       schema,

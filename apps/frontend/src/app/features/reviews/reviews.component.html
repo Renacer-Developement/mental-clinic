@@ -13,8 +13,8 @@
 
       <div class="reviews-hero__grid">
         <div>
-          <h1 class="reviews-hero__title">Відгуки про психіатра Євгена Скрипника</h1>
-          <p class="reviews-hero__sub">Реальні враження людей, які звернулись до <a class="doctor-link" routerLink="/about">Євгена Скрипника</a> за допомогою</p>
+          <h1 class="reviews-hero__title">Відгуки про Євгена Скрипника та лікарів-психіатрів центру</h1>
+          <p class="reviews-hero__sub">Реальні враження людей, які звернулись по допомогу до <a class="doctor-link" routerLink="/about">Євгена Скрипника</a> та лікарів-психіатрів Центру ментального здоров'я Євгена Скрипника</p>
         </div>
 
         @if (totalCount()) {
@@ -176,7 +176,7 @@
                 <textarea
                   id="rv-text"
                   class="rform__textarea"
-                  placeholder="Розкажіть про ваш досвід консультації..."
+                  placeholder="Розкажіть про ваш досвід консультації. Можете вказати, у якого лікаря ви були..."
                   [(ngModel)]="formText"
                   name="rvText"
                   (blur)="textTouched = true"
