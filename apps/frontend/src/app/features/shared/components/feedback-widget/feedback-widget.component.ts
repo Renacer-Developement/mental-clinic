@@ -6,6 +6,7 @@ import { GoogleAnalyticsService } from '../../../../analytics/google-analytics.s
 import { EVENT_TRACK } from '../../../../analytics/analytics.constants';
 
 type ContactMethod = 'phone' | 'telegram' | 'viber';
+type Specialist = 'doctor' | 'psychologist';
 type State = 'form' | 'sending' | 'sent';
 
 /**
@@ -28,11 +29,18 @@ export class FeedbackWidgetComponent {
   readonly state = signal<State>('form');
   readonly error = signal('');
 
+  specialist: Specialist = 'doctor';
   name = '';
   phone = '';
   contactMethod: ContactMethod = 'phone';
   message = '';
   website = ''; // honeypot, hidden from people
+
+  // Each goes to its own Telegram bot and its own access group in the admin
+  readonly specialists: { value: Specialist; label: string }[] = [
+    { value: 'doctor', label: 'Лікар-психіатр' },
+    { value: 'psychologist', label: 'Психолог' },
+  ];
 
   readonly methods: { value: ContactMethod; label: string }[] = [
     { value: 'phone', label: 'Дзвінок' },
@@ -68,6 +76,7 @@ export class FeedbackWidgetComponent {
 
     this.state.set('sending');
     this.http.post(API_FEEDBACK, {
+      specialist: this.specialist,
       name: this.name.trim(),
       phone: this.phone.trim(),
       contactMethod: this.contactMethod,
@@ -77,7 +86,7 @@ export class FeedbackWidgetComponent {
     }).subscribe({
       next: () => {
         this.state.set('sent');
-        this.analytics.trackLead('form', 'feedback-widget');
+        this.analytics.trackLead('form', `feedback-widget-${this.specialist}`);
       },
       error: (err: HttpErrorResponse) => {
         this.state.set('form');
@@ -90,6 +99,7 @@ export class FeedbackWidgetComponent {
   private reset(): void {
     this.name = this.phone = this.message = this.website = '';
     this.contactMethod = 'phone';
+    this.specialist = 'doctor';
     this.error.set('');
     this.state.set('form');
   }

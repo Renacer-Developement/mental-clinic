@@ -59,6 +59,7 @@
         <th>Телефон</th>
         <th>Роль</th>
         <th>Статус</th>
+        <th pTooltip="Які заявки з сайту бачить користувач" tooltipPosition="top">Заявки</th>
         <th>Створено</th>
         <th style="width:120px">Дії</th>
       </tr>
@@ -72,6 +73,7 @@
           <td><p-skeleton height="1.4rem" width="110px" /></td>
           <td><p-skeleton height="1.4rem" width="80px" /></td>
           <td><p-skeleton height="1.4rem" width="80px" /></td>
+          <td><p-skeleton height="1.4rem" width="120px" /></td>
           <td><p-skeleton height="1.4rem" width="90px" /></td>
           <td><p-skeleton height="1.4rem" width="80px" /></td>
         </tr>
@@ -100,6 +102,22 @@
         <td>
           <span [class]="statusClass(u.status)">{{ statusLabel(u.status) }}</span>
         </td>
+        <td>
+          @if (u.role === 'admin') {
+            <span class="access-all">Усі</span>
+          } @else if (u.status !== 'pending') {
+            <div class="access-chips">
+              @for (s of feedbackSpecs; track s.value) {
+                <button type="button" class="access-chip" [class.active]="hasAccess(u, s.value)"
+                        [disabled]="accessSaving() === u._id" (click)="toggleFeedbackAccess(u, s.value)">
+                  {{ s.label }}
+                </button>
+              }
+            </div>
+          } @else {
+            <span class="access-all">—</span>
+          }
+        </td>
         <td>{{ u.createdAt | date:'mediumDate':'':'uk' }}</td>
         <td>
           @if (u._id !== currentId) {
@@ -125,7 +143,7 @@
 
     <ng-template pTemplate="emptymessage">
       <tr>
-        <td colspan="7" class="empty">
+        <td colspan="8" class="empty">
           <i class="pi pi-users" style="font-size:2rem;color:#d1d5db"></i>
           <p>Користувачів ще немає. Надішліть перше запрошення.</p>
         </td>
@@ -247,6 +265,23 @@
                   </select>
                 } @else {
                   <span [class]="roleClass(u.role)">{{ roleLabel(u.role) }}</span>
+                }
+              </div>
+              <div class="mobile-card__row">
+                <span class="mobile-card__label">Заявки</span>
+                @if (u.role === 'admin') {
+                  <span class="access-all">Усі</span>
+                } @else if (u.status !== 'pending') {
+                  <div class="access-chips">
+                    @for (s of feedbackSpecs; track s.value) {
+                      <button type="button" class="access-chip" [class.active]="hasAccess(u, s.value)"
+                              [disabled]="accessSaving() === u._id" (click)="toggleFeedbackAccess(u, s.value)">
+                        {{ s.label }}
+                      </button>
+                    }
+                  </div>
+                } @else {
+                  <span class="access-all">—</span>
                 }
               </div>
               @if (u._id !== currentId) {

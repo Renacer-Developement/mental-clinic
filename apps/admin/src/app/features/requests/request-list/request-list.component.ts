@@ -13,6 +13,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { Feedback, FeedbackService, FeedbackStatus } from '../../../core/services/feedback.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { FeedbackSpecialist } from '../../../core/models/user.model';
 
 type Filter = 'all' | FeedbackStatus;
 
@@ -33,10 +34,12 @@ export class RequestListComponent implements OnInit {
   private confirm = inject(ConfirmationService);
   private auth    = inject(AuthService);
 
-  items   = signal<Feedback[]>([]);
-  counts  = signal<Record<FeedbackStatus, number>>({ new: 0, in_progress: 0, done: 0, spam: 0 });
-  loading = signal(true);
-  filter  = signal<Filter>('new');
+  items       = signal<Feedback[]>([]);
+  loading     = signal(true);
+  filter      = signal<Filter>('new');
+  /** Specialists this user may see (from the API); the switch shows only when there are two */
+  specialists = signal<FeedbackSpecialist[]>([]);
+  specialist  = signal<'all' | FeedbackSpecialist>('all');
 
   noteVisible = signal(false);
   noteItem    = signal<Feedback | null>(null);
@@ -64,9 +67,25 @@ export class RequestListComponent implements OnInit {
     phone: 'Дзвінок', telegram: 'Telegram', viber: 'Viber',
   };
 
+  readonly specialistLabels: Record<FeedbackSpecialist, string> = {
+    doctor: 'Лікар', psychologist: 'Психолог',
+  };
+
+  /** Requests of the selected specialist; status tabs and counts work within it */
+  private scoped = computed(() => {
+    const s = this.specialist();
+    return s === 'all' ? this.items() : this.items().filter(i => i.specialist === s);
+  });
+
+  counts = computed(() => {
+    const c: Record<FeedbackStatus, number> = { new: 0, in_progress: 0, done: 0, spam: 0 };
+    this.scoped().forEach(i => c[i.status]++);
+    return c;
+  });
+
   filtered = computed(() => {
     const f = this.filter();
-    return f === 'all' ? this.items() : this.items().filter(i => i.status === f);
+    return f === 'all' ? this.scoped() : this.scoped().filter(i => i.status === f);
   });
 
   filterOptions = computed(() => this.filterTabs.map(t => ({ label: `${t.label} (${this.countFor(t.value)})`, value: t.value })));
@@ -78,7 +97,7 @@ export class RequestListComponent implements OnInit {
     this.svc.getAll().subscribe({
       next: res => {
         this.items.set(res.items);
-        this.counts.set(res.counts);
+        this.specialists.set(res.specialists);
         this.loading.set(false);
       },
       error: () => this.loading.set(false),
@@ -95,9 +114,12 @@ export class RequestListComponent implements OnInit {
     this.svc.update(item._id, { status }).subscribe({
       next: updated => {
         this.replace(updated);
-        this.counts.update(c => ({ ...c, [item.status]: c[item.status] - 1, [status]: c[status] + 1 }));
-        this.svc.newCount.set(this.counts().new);
-        this.toast.add({ severity: 'success', summary: 'Статус оновлено', life: 2000 });
+        this.syncBadge();
+        this.toast.add({
+          severity: 'success',
+          summary: status === 'done' ? 'Заявку закрито' : 'Статус оновлено',
+          life: 2000,
+        });
       },
     });
   }
@@ -134,8 +156,7 @@ export class RequestListComponent implements OnInit {
         this.svc.delete(item._id).subscribe({
           next: () => {
             this.items.update(list => list.filter(x => x._id !== item._id));
-            this.counts.update(c => ({ ...c, [item.status]: c[item.status] - 1 }));
-            this.svc.newCount.set(this.counts().new);
+            this.syncBadge();
             this.toast.add({ severity: 'success', summary: 'Видалено', life: 2000 });
           },
         });
@@ -158,6 +179,15 @@ export class RequestListComponent implements OnInit {
 
   statusSeverity(s: FeedbackStatus): 'warn' | 'info' | 'success' | 'secondary' {
     return s === 'new' ? 'warn' : s === 'in_progress' ? 'info' : s === 'done' ? 'success' : 'secondary';
+  }
+
+  /** «Передзвонили»: the client was called back, close the request */
+  markCalledBack(item: Feedback) {
+    this.setStatus(item, 'done');
+  }
+
+  private syncBadge() {
+    this.svc.newCount.set(this.items().filter(i => i.status === 'new').length);
   }
 
   private replace(updated: Feedback) {

@@ -12,6 +12,16 @@
     <p-button icon="pi pi-refresh" [text]="true" severity="secondary" pTooltip="Оновити" (onClick)="load()" />
   </div>
 
+  <!-- Doctor / psychologist switch, for users who see both -->
+  @if (specialists().length > 1) {
+    <div class="spec-switch" role="tablist" aria-label="Фахівець">
+      <button role="tab" [class.active]="specialist() === 'all'" (click)="specialist.set('all')">Усі</button>
+      @for (s of specialists(); track s) {
+        <button role="tab" [class.active]="specialist() === s" (click)="specialist.set(s)">{{ specialistLabels[s] }}</button>
+      }
+    </div>
+  }
+
   <!-- Filter tabs (desktop) -->
   <div class="filter-tabs">
     @for (tab of filterTabs; track tab.value) {
@@ -45,7 +55,10 @@
         <article class="req-card" [class.is-new]="r.status === 'new'">
           <header class="req-card__head">
             <div class="req-card__who">
-              <span class="req-card__name">{{ r.name }}</span>
+              <span class="req-card__name">
+                {{ r.name }}
+                <span class="req-card__spec" [class.is-psy]="r.specialist === 'psychologist'">{{ specialistLabels[r.specialist] }}</span>
+              </span>
               <a class="req-card__phone" [href]="contactHref(r)">
                 <i class="pi" [class.pi-phone]="r.contactMethod === 'phone'"
                    [class.pi-telegram]="r.contactMethod === 'telegram'"
@@ -66,11 +79,24 @@
           @if (r.pagePath) {
             <p class="req-card__page"><i class="pi pi-link"></i> {{ r.pagePath }}</p>
           }
+          @if (r.status === 'done' && r.closedAt) {
+            <p class="req-card__closed">
+              <i class="pi pi-check-circle"></i>
+              Передзвонили{{ r.closedByName ? ': ' + r.closedByName : '' }} · {{ r.closedAt | date: 'dd.MM.yyyy HH:mm' }}
+            </p>
+          }
           @if (r.note) {
             <p class="req-card__note"><i class="pi pi-bookmark"></i> {{ r.note }}</p>
           }
 
           <footer class="req-card__actions">
+            @if (r.status === 'new' || r.status === 'in_progress') {
+              <p-button size="small" icon="pi pi-check" label="Передзвонили" severity="success"
+                        (onClick)="markCalledBack(r)" />
+            } @else if (r.status === 'done') {
+              <p-button size="small" icon="pi pi-replay" label="Повернути в роботу" severity="secondary"
+                        [text]="true" (onClick)="setStatus(r, 'in_progress')" />
+            }
             <p-select [options]="statusOptions" [ngModel]="r.status" optionLabel="label" optionValue="value"
                       styleClass="status-select" (onChange)="setStatus(r, $event.value)" />
             <p-button size="small" icon="pi pi-pencil" [label]="r.note ? 'Нотатка' : 'Додати нотатку'"

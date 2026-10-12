@@ -2,12 +2,14 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
+import { FeedbackSpecialist } from '../models/user.model';
 
 export type FeedbackStatus = 'new' | 'in_progress' | 'done' | 'spam';
 
 /** A "call me back" request left through the public site's feedback form. */
 export interface Feedback {
   _id:           string;
+  specialist:    FeedbackSpecialist;
   name:          string;
   phone:         string;
   contactMethod: 'phone' | 'telegram' | 'viber';
@@ -15,13 +17,17 @@ export interface Feedback {
   pagePath:      string;
   status:        FeedbackStatus;
   note:          string;
+  closedByName?: string;
+  closedAt?:     string;
   createdAt:     string;
   updatedAt:     string;
 }
 
 export interface FeedbackList {
-  items:  Feedback[];
-  counts: Record<FeedbackStatus, number>;
+  items:       Feedback[];
+  counts:      Record<FeedbackStatus, number>;
+  /** Specialists whose requests the current user may see */
+  specialists: FeedbackSpecialist[];
 }
 
 @Injectable({ providedIn: 'root' })

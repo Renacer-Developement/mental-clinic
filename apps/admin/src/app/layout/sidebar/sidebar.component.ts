@@ -5,6 +5,7 @@ import { inject } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
 import { SupportService } from '../../core/services/support.service';
 import { FeedbackService } from '../../core/services/feedback.service';
+import { canSeeFeedback } from '../../core/models/user.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { interval, startWith, switchMap } from 'rxjs';
 
@@ -13,6 +14,7 @@ interface NavItem {
   icon: string;
   route: string;
   roles?: string[]; // if set, only these roles can see the item
+  feedback?: boolean; // shown to users with access to feedback requests (see canSeeFeedback)
 }
 
 @Component({
@@ -68,8 +70,7 @@ export class SidebarComponent implements OnInit {
 
   /** Keeps the "Заявки" badge current: new requests arrive while the admin is open. */
   ngOnInit() {
-    const role = this.auth.currentUser()?.role;
-    if (role !== 'admin' && role !== 'doctor') return;
+    if (!canSeeFeedback(this.auth.currentUser())) return;
     interval(2 * 60_000).pipe(
       startWith(0),
       switchMap(() => this.feedback.getAll('new')),
@@ -82,15 +83,18 @@ export class SidebarComponent implements OnInit {
     { label: 'Статті',      icon: 'pi-file-edit', route: '/articles' },
     { label: 'Тести',       icon: 'pi-clipboard', route: '/tests' },
     { label: 'Команда',     icon: 'pi-id-card',   route: '/team',  roles: ['admin'] },
-    { label: 'Заявки',      icon: 'pi-inbox',     route: '/requests', roles: ['admin', 'doctor'] },
+    { label: 'Заявки',      icon: 'pi-inbox',     route: '/requests', feedback: true },
     { label: 'Відгуки',     icon: 'pi-star',      route: '/reviews' },
     { label: 'Договір',     icon: 'pi-file-edit', route: '/contract', roles: ['admin'] },
     { label: 'Користувачі', icon: 'pi-users',     route: '/users', roles: ['admin'] },
   ];
 
   get items(): NavItem[] {
-    const role = this.auth.currentUser()?.role;
-    return this.allItems.filter(item => !item.roles || item.roles.includes(role ?? ''));
+    const user = this.auth.currentUser();
+    const role = user?.role;
+    return this.allItems.filter(item => item.feedback
+      ? canSeeFeedback(user)
+      : !item.roles || item.roles.includes(role ?? ''));
   }
 
   doLogout() { this.auth.logout(); }

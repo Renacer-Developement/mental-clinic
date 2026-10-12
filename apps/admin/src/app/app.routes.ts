@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
+import { feedbackGuard } from './core/guards/feedback.guard';
 
 export const routes: Routes = [
   {
@@ -32,7 +33,7 @@ export const routes: Routes = [
       { path: 'team',             canActivate: [roleGuard('admin')], loadComponent: () => import('./features/team/team-list/team-list.component').then(m => m.TeamListComponent) },
       { path: 'team/new',         canActivate: [roleGuard('admin')], loadComponent: () => import('./features/team/team-form/team-form.component').then(m => m.TeamFormComponent) },
       { path: 'team/:id/edit',    canActivate: [roleGuard('admin')], loadComponent: () => import('./features/team/team-form/team-form.component').then(m => m.TeamFormComponent) },
-      { path: 'requests',         canActivate: [roleGuard('admin', 'doctor')], loadComponent: () => import('./features/requests/request-list/request-list.component').then(m => m.RequestListComponent) },
+      { path: 'requests',         canActivate: [feedbackGuard], loadComponent: () => import('./features/requests/request-list/request-list.component').then(m => m.RequestListComponent) },
       { path: 'reviews',           loadComponent: () => import('./features/reviews/review-list/review-list.component').then(m => m.ReviewListComponent) },
       { path: 'contract',         canActivate: [roleGuard('admin')], loadComponent: () => import('./features/contract/contract.component').then(m => m.ContractComponent) },
       { path: 'account',          loadComponent: () => import('./features/account/account.component').then(m => m.AccountComponent) },

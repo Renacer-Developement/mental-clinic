@@ -7,8 +7,16 @@ export interface User {
   role: 'admin' | 'user' | 'doctor';
   status: 'pending' | 'active' | 'inactive';
   twoFactorEnabled?: boolean;
+  /** Feedback requests («Заявки») this user sees; admins see all */
+  feedbackAccess?: FeedbackSpecialist[];
   createdAt: string;
 }
+
+export type FeedbackSpecialist = 'doctor' | 'psychologist';
+
+/** Whether the user can open «Заявки»: admins always, others once an admin grants access. */
+export const canSeeFeedback = (user: Pick<User, 'role' | 'feedbackAccess'> | null | undefined): boolean =>
+  user?.role === 'admin' || !!user?.feedbackAccess?.length;
 
 export interface SessionInfo {
   _id: string;

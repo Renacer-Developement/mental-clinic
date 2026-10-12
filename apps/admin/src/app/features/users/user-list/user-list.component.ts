@@ -11,7 +11,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { SkeletonModule } from 'primeng/skeleton';
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../../../core/services/auth.service';
-import { User } from '../../../core/models/user.model';
+import { FeedbackSpecialist, User } from '../../../core/models/user.model';
 
 @Component({
   selector: 'app-user-list',
@@ -66,6 +66,34 @@ export class UserListComponent implements OnInit {
 
   inviteEmail = '';
   inviteRole: 'admin' | 'user' | 'doctor' = 'user';
+
+  // Which site requests («Заявки») a user sees. Admins always see all.
+  readonly feedbackSpecs: { value: FeedbackSpecialist; label: string }[] = [
+    { value: 'doctor',       label: 'Лікар' },
+    { value: 'psychologist', label: 'Психолог' },
+  ];
+  accessSaving = signal<string | null>(null);
+
+  hasAccess(user: User, spec: FeedbackSpecialist): boolean {
+    return !!user.feedbackAccess?.includes(spec);
+  }
+
+  toggleFeedbackAccess(user: User, spec: FeedbackSpecialist) {
+    const current = user.feedbackAccess ?? [];
+    const access = current.includes(spec) ? current.filter(s => s !== spec) : [...current, spec];
+    this.accessSaving.set(user._id);
+    this.auth.updateFeedbackAccess(user._id, access).subscribe({
+      next: (updated) => {
+        this.users.update(list => list.map(u => u._id === updated._id ? updated : u));
+        this.accessSaving.set(null);
+        this.toast.add({ severity: 'success', summary: 'Доступ до заявок оновлено', life: 2000 });
+      },
+      error: (err) => {
+        this.accessSaving.set(null);
+        this.toast.add({ severity: 'error', summary: err.error?.message ?? 'Помилка' });
+      },
+    });
+  }
 
   roleOptions = [
     { label: 'Користувач', value: 'user'   },

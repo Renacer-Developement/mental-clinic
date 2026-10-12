@@ -27,6 +27,18 @@
     </div>
   } @else {
     <form class="fw-form" (ngSubmit)="submit()" novalidate>
+      <fieldset class="fw-methods fw-methods--spec">
+        <legend>До кого звертаєтесь</legend>
+        <div class="fw-methods__list">
+          @for (s of specialists; track s.value) {
+            <label class="fw-chip fw-chip--wide" [class.is-active]="specialist === s.value">
+              <input type="radio" name="specialist" [value]="s.value" [(ngModel)]="specialist" />
+              {{ s.label }}
+            </label>
+          }
+        </div>
+      </fieldset>
+
       <label class="fw-field">
         <span>Імʼя</span>
         <input #nameInput name="name" [(ngModel)]="name" autocomplete="name" maxlength="100" required />

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
-import { CreateUserDto, User, SessionInfo } from '../models/user.model';
+import { CreateUserDto, FeedbackSpecialist, User, SessionInfo } from '../models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -119,6 +119,10 @@ export class AuthService {
 
   updateUserStatus(userId: string, status: 'active' | 'inactive') {
     return this.http.patch<User>(`${environment.apiUrl}/auth/users/${userId}/status`, { status }, { withCredentials: true });
+  }
+
+  updateFeedbackAccess(userId: string, access: FeedbackSpecialist[]) {
+    return this.http.patch<User>(`${environment.apiUrl}/auth/users/${userId}/feedback-access`, { access }, { withCredentials: true });
   }
 
   deleteUser(userId: string) {
