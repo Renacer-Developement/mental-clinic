@@ -59,10 +59,12 @@
 
         <!-- Tests mega menu -->
         <li class="dnav__item" (mouseenter)="openMega('tests')" (mouseleave)="closeMega()">
-          <button type="button" class="dnav__trigger" [class.is-open]="mega() === 'tests'"
-                  [attr.aria-expanded]="mega() === 'tests'" (click)="onTriggerClick('tests')">
+          <!-- A link, not a button: clicking goes to the section page; hover opens the panel -->
+          <a class="dnav__trigger" [routerLink]="'/' + TEST_ROUTES.LIST" [class.is-open]="mega() === 'tests'"
+             aria-haspopup="true" [attr.aria-expanded]="mega() === 'tests'"
+             (click)="trackNav('/' + TEST_ROUTES.LIST, 'Психологічні тести'); closeMega(true)">
             Психологічні тести <i class="pi pi-chevron-down"></i>
-          </button>
+          </a>
           <div class="dnav__panel" [class.is-open]="mega() === 'tests'">
             <div class="dnav__inner dnav__mega">
               @for (cat of testMenu; track cat.slug) {
@@ -82,10 +84,12 @@
 
         <!-- Articles dropdown -->
         <li class="dnav__item" (mouseenter)="openMega('articles')" (mouseleave)="closeMega()">
-          <button type="button" class="dnav__trigger" [class.is-open]="mega() === 'articles'"
-                  [attr.aria-expanded]="mega() === 'articles'" (click)="onTriggerClick('articles')">
+          <!-- A link, not a button: clicking goes to the section page; hover opens the panel -->
+          <a class="dnav__trigger" [routerLink]="'/' + ROUTES.ARTICLES" [class.is-open]="mega() === 'articles'"
+             aria-haspopup="true" [attr.aria-expanded]="mega() === 'articles'"
+             (click)="trackNav('/' + ROUTES.ARTICLES, 'Статті'); closeMega(true)">
             Статті <i class="pi pi-chevron-down"></i>
-          </button>
+          </a>
           <div class="dnav__panel" [class.is-open]="mega() === 'articles'">
             <div class="dnav__inner dnav__mega dnav__mega--narrow">
               <div class="dnav__col">
