@@ -12,6 +12,31 @@
       "source": "/index.html",
       "destination": "/",
       "permanent": true
+    },
+    {
+      "source": "/tests",
+      "destination": "/test/list",
+      "permanent": true
+    },
+    {
+      "source": "/tests/:path*",
+      "destination": "/test/list/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/doctor-skripnik.com.ua/:path*",
+      "destination": "/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/kk",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/kk/:path*",
+      "destination": "/",
+      "permanent": true
     }
   ],
   "functions": {
