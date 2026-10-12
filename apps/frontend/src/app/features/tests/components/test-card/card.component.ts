@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ImportsModule } from '../../../../shared/primeng-imports.module';
 import { Component, inject, Input, OnInit, PLATFORM_ID, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { Test } from '../../models/test.model';
+import { Test, testKey } from '../../models/test.model';
 import { RouterLink } from '@angular/router';
 import { GoogleAnalyticsService } from '../../../../analytics/google-analytics.service';
 import { EVENT_TRACK } from '../../../../analytics/analytics.constants';
@@ -18,6 +18,7 @@ export class CardComponent implements OnInit {
 
   @Input() testData: any;
   protected readonly JSON = JSON;
+  protected readonly testKey = testKey;
 
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   copied = signal(false);
@@ -42,7 +43,7 @@ export class CardComponent implements OnInit {
   /** Native share sheet where available (mobile), otherwise copy the link. */
   async share(): Promise<void> {
     if (!this.isBrowser) return;
-    const url = `${location.origin}/test/detail/${this.testData?._id}`;
+    const url = `${location.origin}/test/detail/${testKey(this.testData)}`;
     const title = this.testData?.name ?? 'Тест';
 
     this.googleAnalyticsService.trackEvent('share', { content_type: 'test', item_id: this.testData?._id });

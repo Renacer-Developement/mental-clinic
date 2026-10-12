@@ -7,6 +7,7 @@ import {
 import express from 'express';
 import { API_ARTICLES, API_TESTS } from './app/app.constants';
 import { getSitemap } from './sitemap';
+import { CONDITIONS } from './app/features/conditions/conditions.data';
 
 // Resolved from CWD rather than import.meta.url: this project's browserslist
 // targets Safari/iOS versions old enough that esbuild empties `import.meta`
@@ -33,9 +34,31 @@ const fetchJson = async <T>(url: string): Promise<T[]> => {
   }
 };
 
+// Tests moved from /test/detail/<mongo id> to /test/detail/<slug>. Old URLs are
+// what Google indexed, so they get a permanent redirect; the id→slug map is
+// refreshed at most every 10 min per warm instance.
+let testSlugs: { map: Map<string, string>; at: number } | null = null;
+const slugForTestId = async (id: string): Promise<string | undefined> => {
+  if (!testSlugs || Date.now() - testSlugs.at > 10 * 60_000) {
+    const tests = await fetchJson<{ _id: string; slug?: string }>(API_TESTS);
+    if (tests.length) {
+      testSlugs = { map: new Map(tests.filter(t => t.slug).map(t => [t._id, t.slug!])), at: Date.now() };
+    }
+  }
+  return testSlugs?.map.get(id);
+};
+
+app.get('/test/detail/:id', async (req, res, next) => {
+  if (!/^[0-9a-f]{24}$/i.test(req.params.id)) return next();
+  const slug = await slugForTestId(req.params.id.toLowerCase());
+  if (!slug) return next(); // API down or test has no slug yet: render the id URL as before
+  res.set('Cache-Control', 'public, max-age=3600, s-maxage=86400');
+  res.redirect(301, `/test/detail/${encodeURIComponent(slug)}`);
+});
+
 app.get('/llms.txt', async (_req, res) => {
   const [tests, articles] = await Promise.all([
-    fetchJson<{ _id: string; name: string; description?: string }>(API_TESTS),
+    fetchJson<{ _id: string; slug?: string; name: string; description?: string }>(API_TESTS),
     fetchJson<{ slug: string; title: string; excerpt?: string; status?: string }>(API_ARTICLES),
   ]);
   const line = (title: string, url: string, note?: string) =>
@@ -58,9 +81,12 @@ app.get('/llms.txt', async (_req, res) => {
     line('Відгуки пацієнтів', `${SITE}/reviews`),
     line('Препарати', `${SITE}/drugs`, 'довідник препаратів, які застосовуються в психіатрії'),
     '',
+    '## Що лікуємо',
+    ...CONDITIONS.map(c => line(c.h1, `${SITE}/${c.slug}`, `${c.teaser}. ${c.description}`)),
+    '',
     '## Психологічні тести онлайн (безкоштовно)',
     line('Усі тести', `${SITE}/test/list`),
-    ...tests.map(t => line(t.name, `${SITE}/test/detail/${t._id}`, t.description?.split(/(?<=\.)\s/)[0])),
+    ...tests.map(t => line(t.name, `${SITE}/test/detail/${t.slug ?? t._id}`, t.description?.split(/(?<=\.)\s/)[0])),
     '',
     '## Статті',
     line('Усі статті', `${SITE}/articles`),

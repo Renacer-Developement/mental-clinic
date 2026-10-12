@@ -1,11 +1,11 @@
 <article class="tcard">
   <h4 class="tcard__title">
-    <a [routerLink]="['/test/detail', testData?._id]" (click)="trackSelect(testData?._id)">{{ testData?.name }}</a>
+    <a [routerLink]="['/test/detail', testKey(testData)]" (click)="trackSelect(testData?._id)">{{ testData?.name }}</a>
   </h4>
   <p class="tcard__desc">{{ testData?.description }}</p>
 
   <div class="tcard__actions">
-    <a class="tcard__cta" [routerLink]="['/test/detail', testData?._id]" (click)="trackSelect(testData?._id)">Пройти тест</a>
+    <a class="tcard__cta" [routerLink]="['/test/detail', testKey(testData)]" (click)="trackSelect(testData?._id)">Пройти тест</a>
     <button class="tcard__share" type="button" (click)="share()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
            stroke-linecap="round" stroke-linejoin="round" width="14" height="14">

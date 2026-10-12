@@ -5,6 +5,7 @@ export interface RelatedTest {
   duration?: string;
   type?: string;
   factor?: any;
+  slug?: string;
 }
 
 export interface Article {

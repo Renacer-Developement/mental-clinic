@@ -181,7 +181,7 @@
                 </span>
                 @for (test of article()!.relatedTests; track test._id) {
                   <a class="adetail-related-tests__row"
-                     [routerLink]="['/test/detail', test._id]">
+                     [routerLink]="['/test/detail', test.slug || test._id]">
                     <span class="adetail-related-tests__name">{{ test.name }}</span>
                     <span class="adetail-related-tests__cta">
                       Пройти тест

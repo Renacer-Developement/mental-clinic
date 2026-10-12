@@ -44,5 +44,10 @@ export interface Test {
   domains?: TestDomain[];
   questionCount?: number; // list endpoint only
   _id?: string;
+  slug?: string;
   __v?: number;
 }
+
+/** URL key for /test/detail/:id — the slug once the API has one, else the Mongo id. */
+export const testKey = (t?: Pick<Test, '_id' | 'slug'> | null): string => t?.slug || t?._id || '';
+

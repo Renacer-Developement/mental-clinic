@@ -33,14 +33,14 @@ class ArticleRepository {
             : { slug: idOrSlug };
         return Article.findOne(query)
             .populate('author', 'name')
-            .populate('relatedTests', 'name description duration type');
+            .populate('relatedTests', 'name description duration type slug');
     }
 
     /** Internal lookup by _id only (used by admin / related queries) */
     findById(id) {
         return Article.findById(id)
             .populate('author', 'name')
-            .populate('relatedTests', 'name description duration type');
+            .populate('relatedTests', 'name description duration type slug');
     }
 
     incrementViews(id) {

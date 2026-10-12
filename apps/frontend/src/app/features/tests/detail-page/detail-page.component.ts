@@ -9,7 +9,7 @@ import { throwError } from 'rxjs';
 import { SeoService } from '../../../core/seo/seo.service';
 import { fitDescription, fitTitle } from '../../../core/seo/seo-text.utils';
 import { TestService } from '../services/test.service';
-import { Test } from '../models/test.model';
+import { Test, testKey } from '../models/test.model';
 import { specializedTests } from '../constants/specialized-test-types.enum';
 import { CATEGORY_SECTIONS, sectionOf } from '../constants/test-sections.constants';
 import { TEST_CATEGORY_CONTENT } from '../constants/test-category-content.constants';
@@ -97,6 +97,7 @@ export class DetailPageComponent implements OnInit {
 
   protected readonly Object = Object;
   protected readonly specializedTests = specializedTests;
+  protected readonly testKey = testKey;
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -105,15 +106,25 @@ export class DetailPageComponent implements OnInit {
 
     this.route.params
         .pipe(
-            // Malformed ids make the API answer 500 — treat them as a plain 404 up front
-            switchMap(params => /^[0-9a-f]{24}$/i.test(params['id'])
+            // Mongo id (old URLs) or slug; anything else is a plain 404 up front
+            switchMap(params => /^([0-9a-f]{24}|[a-z0-9]+(-[a-z0-9]+)*)$/i.test(params['id'])
               ? this.testService.getTestById(params['id'])
               : throwError(() => new HttpErrorResponse({ status: 404 }))),
             takeUntilDestroyed(this.destroyRef),
         )
         .subscribe({
           next: response => {
+            // Same component is reused when a "what next" link opens another test
+            if (this.isTestCompleted) {
+              this.restartTest();
+              if (isPlatformBrowser(this.platformId)) window.scrollTo(0, 0);
+            }
             this.data = response;
+            // Old /test/detail/<id> link followed in the app: show the slug URL instead
+            // (SSR answers those with a 301 in server.ts before Angular runs)
+            if (isPlatformBrowser(this.platformId) && response.slug && this.route.snapshot.paramMap.get('id') !== response.slug) {
+              this.router.navigate(['/test/detail', response.slug], { replaceUrl: true });
+            }
             this.scoreBands = this.buildScoreBands(response);
             this.loadRelated(response);
             const code = methodCodeOf(response._id, response.name);
@@ -818,8 +829,7 @@ export class DetailPageComponent implements OnInit {
   }
 
   updateSEO(name: string, description: string, code: string | null = null): void {
-    const id = this.route.snapshot.paramMap.get('id') ?? '';
-    const canonical = `/test/detail/${id}`;
+    const canonical = `/test/detail/${testKey(this.data) || this.route.snapshot.paramMap.get('id')}`;
     const BASE_URL = 'https://doctor-skripnik.com.ua';
 
     const questions = this.data?.questions?.length;

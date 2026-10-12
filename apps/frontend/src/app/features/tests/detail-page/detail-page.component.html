@@ -151,7 +151,7 @@
           <h2 class="dp-about__title">Схожі тести</h2>
           <ul class="dp-about__related">
             <li *ngFor="let t of relatedTests">
-              <a [routerLink]="['/test/detail', t._id]">
+              <a [routerLink]="['/test/detail', testKey(t)]">
                 <span>{{ t.name }}</span>
                 <span class="dp-about__arrow" aria-hidden="true">→</span>
               </a>
@@ -445,6 +445,25 @@
             Записатися на консультацію
           </button>
         </div>
+
+        <!-- Where to go from the result: treatment page and related screenings -->
+        <nav *ngIf="condition || relatedTests.length" class="dp-result-next" aria-label="Що далі">
+          <p class="dp-result-next__title">Що далі</p>
+          <ul class="dp-about__related">
+            <li *ngIf="condition">
+              <a [routerLink]="'/' + condition.slug">
+                <span>{{ condition.h1 }}</span>
+                <span class="dp-about__arrow" aria-hidden="true">→</span>
+              </a>
+            </li>
+            <li *ngFor="let t of relatedTests.slice(0, 3)">
+              <a [routerLink]="['/test/detail', testKey(t)]">
+                <span>{{ t.name }}</span>
+                <span class="dp-about__arrow" aria-hidden="true">→</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
 
         <div class="dp-result-actions">
           <button class="dp-link" type="button" (click)="restartTest()">↻ Пройти ще раз</button>

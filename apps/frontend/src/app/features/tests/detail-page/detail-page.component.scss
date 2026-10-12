@@ -1168,6 +1168,17 @@
   .dp-btn { flex-shrink: 0; justify-content: center; }
 }
 
+.dp-result-next {
+  margin-top: 2rem;
+
+  &__title {
+    margin: 0 0 0.75rem;
+    color: $heading-color;
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+}
+
 .dp-result-actions {
   display: flex;
   flex-wrap: wrap;

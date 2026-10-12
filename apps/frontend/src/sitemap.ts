@@ -18,7 +18,7 @@ interface Entry {
   lastmod?: string;
 }
 
-interface ApiTest { _id: string }
+interface ApiTest { _id: string; slug?: string }
 interface ApiArticle {
   _id: string;
   slug?: string;
@@ -90,7 +90,7 @@ async function build(): Promise<string> {
       lastmod: a.updatedAt ?? a.publishedAt ?? a.createdAt,
     })),
     ...tests.filter(t => t._id).map(t => ({
-      path: `/test/detail/${encodeURIComponent(t._id)}`,
+      path: `/test/detail/${encodeURIComponent(t.slug ?? t._id)}`,
       changefreq: 'monthly' as const,
       priority: '0.7',
     })),

@@ -1,6 +1,6 @@
 const Test = require('../models/test.model');
 
-const LIST_FIELDS = '_id name description type specialTest duration';
+const LIST_FIELDS = '_id name description type specialTest duration slug';
 
 class TestRepository {
     create(data) {
@@ -13,6 +13,22 @@ class TestRepository {
 
     findById(id) {
         return Test.findById(id);
+    }
+
+    findBySlug(slug) {
+        return Test.findOne({ slug });
+    }
+
+    findWithoutSlug() {
+        return Test.find({ $or: [{ slug: { $exists: false } }, { slug: null }, { slug: '' }] }).select('_id name');
+    }
+
+    findSlugs() {
+        return Test.find({ slug: { $type: 'string' } }).select('slug');
+    }
+
+    setSlug(id, slug) {
+        return Test.updateOne({ _id: id }, { $set: { slug } });
     }
 
     updateById(id, data) {

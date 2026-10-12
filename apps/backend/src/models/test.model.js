@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { ukrainianToSlug } = require('../utils/slug');
 
 const questionSchema = new mongoose.Schema({
     question:  { type: String },
@@ -35,6 +36,13 @@ const testSchema = new mongoose.Schema({
     commonMessage:       { type: String, required: true },
     resultInterpretation:[interpretationSchema],
     factor:              [spectraSchema],
+    // Public URL key (/test/detail/<slug>). Set once from the name and never
+    // regenerated, so renaming a test doesn't break links that Google indexed.
+    slug:                { type: String, unique: true, sparse: true, index: true },
+});
+
+testSchema.pre('save', function () {
+    if (!this.slug) this.slug = ukrainianToSlug(this.name);
 });
 
 module.exports = mongoose.model('Test', testSchema);
