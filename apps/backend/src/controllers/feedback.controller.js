@@ -1,13 +1,7 @@
 const Feedback = require('../models/feedback.model');
-const { escapeHtml, sendTelegramMessage } = require('../services/telegram.service');
+const { SPECIALISTS, CONTACT_LABELS, notifyNew, syncMessage } = require('../services/feedback-telegram.service');
 
-const CONTACT_LABELS = { phone: 'Дзвінок', telegram: 'Telegram', viber: 'Viber' };
-const SPECIALISTS = {
-    doctor:       { label: 'Лікар-психіатр', env: 'DOCTOR' },
-    psychologist: { label: 'Психолог',       env: 'PSYCHOLOGIST' },
-};
 const STATUSES = ['new', 'in_progress', 'done', 'spam'];
-const ADMIN_URL = process.env.ADMIN_URL || 'https://mental-clinic-admin.vercel.app';
 
 // Per-IP limit on public submissions: 5 per 10 minutes, kept in memory (one instance).
 const WINDOW_MS = 10 * 60 * 1000;
@@ -30,30 +24,20 @@ const allowedSpecialists = (user) =>
 const userName = (user) => [user.name, user.lastName].filter(Boolean).join(' ');
 
 /**
- * Each specialist has its own bot: FEEDBACK_DOCTOR_BOT_TOKEN / FEEDBACK_DOCTOR_CHAT_ID and
- * FEEDBACK_PSYCHOLOGIST_BOT_TOKEN / FEEDBACK_PSYCHOLOGIST_CHAT_ID. Unset values fall back to
- * the clinic bot (TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID).
+ * Sets the status; marking it done records who called back and when, anything else clears that.
+ * Shared by the admin and the Telegram buttons. Doesn't save.
  */
-const notify = (f) => {
-    const spec = SPECIALISTS[f.specialist];
-    const lines = [
-        `🆕 <b>Нова заявка: ${spec.label}</b>`,
-        '',
-        `👤 <b>Імʼя:</b> ${escapeHtml(f.name)}`,
-        `📞 <b>Телефон:</b> ${escapeHtml(f.phone)}`,
-        `💬 <b>Звʼязок:</b> ${CONTACT_LABELS[f.contactMethod]}`,
-    ];
-    if (f.message) lines.push('', `📝 ${escapeHtml(f.message)}`);
-    if (f.pagePath) lines.push('', `🔗 Сторінка: ${escapeHtml(f.pagePath)}`);
-    lines.push(
-        `🕐 ${f.createdAt.toLocaleString('uk-UA', { timeZone: 'Europe/Kyiv' })}`,
-        '',
-        `<a href="${ADMIN_URL}/requests">Відкрити в адмінці</a>`,
-    );
-    return sendTelegramMessage(lines.join('\n'), {
-        token:  process.env[`FEEDBACK_${spec.env}_BOT_TOKEN`] || process.env.TELEGRAM_BOT_TOKEN,
-        chatId: process.env[`FEEDBACK_${spec.env}_CHAT_ID`]   || process.env.TELEGRAM_CHAT_ID,
-    });
+const applyStatus = (feedback, status, closer) => {
+    if (status === 'done' && feedback.status !== 'done') {
+        feedback.closedBy = closer.id;
+        feedback.closedByName = closer.name;
+        feedback.closedAt = new Date();
+    } else if (status !== 'done') {
+        feedback.closedBy = undefined;
+        feedback.closedByName = '';
+        feedback.closedAt = undefined;
+    }
+    feedback.status = status;
 };
 
 class FeedbackController {
@@ -86,7 +70,9 @@ class FeedbackController {
             });
 
             // The request is saved either way; a Telegram outage must not fail the form
-            notify(feedback).catch(err => console.error('Feedback Telegram notification failed:', err.message));
+            notifyNew(feedback)
+                .then(() => feedback.tgMessageId && feedback.save())
+                .catch(err => console.error('Feedback Telegram notification failed:', err.message));
 
             res.status(201).json({ ok: true });
         } catch (e) { next(e); }
@@ -123,20 +109,15 @@ class FeedbackController {
             const { status, note } = req.body || {};
             if (status !== undefined) {
                 if (!STATUSES.includes(status)) return res.status(400).json({ message: 'Невідомий статус' });
-                if (status === 'done' && feedback.status !== 'done') {
-                    feedback.closedBy = req.user._id;
-                    feedback.closedByName = userName(req.user);
-                    feedback.closedAt = new Date();
-                } else if (status !== 'done') {
-                    feedback.closedBy = undefined;
-                    feedback.closedByName = '';
-                    feedback.closedAt = undefined;
-                }
-                feedback.status = status;
+                applyStatus(feedback, status, { id: req.user._id, name: userName(req.user) });
             }
             if (note !== undefined) feedback.note = String(note).slice(0, 2000);
 
             await feedback.save();
+            // Keep the Telegram message's status line and buttons in step with the admin
+            if (status !== undefined) {
+                syncMessage(feedback).catch(err => console.error('Feedback Telegram sync failed:', err.message));
+            }
             res.json(feedback);
         } catch (e) { next(e); }
     }
@@ -151,3 +132,4 @@ class FeedbackController {
 }
 
 module.exports = new FeedbackController();
+module.exports.applyStatus = applyStatus;

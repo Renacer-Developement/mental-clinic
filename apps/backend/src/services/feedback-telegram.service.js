@@ -1,0 +1,94 @@
+const { escapeHtml, sendTelegramMessage, editTelegramMessage, answerCallbackQuery } = require('./telegram.service');
+
+// Telegram side of site feedback requests: one bot per specialist, a message per
+// request whose buttons (Передзвонили / В роботі / Спам) change its status.
+
+const SPECIALISTS = {
+    doctor:       { label: 'Лікар-психіатр', env: 'DOCTOR' },
+    psychologist: { label: 'Психолог',       env: 'PSYCHOLOGIST' },
+};
+const CONTACT_LABELS = { phone: 'Дзвінок', telegram: 'Telegram', viber: 'Viber' };
+const ADMIN_URL = process.env.ADMIN_URL || 'https://mental-clinic-admin.vercel.app';
+const STATUS_ACTIONS = ['done', 'in_progress', 'spam'];
+
+/**
+ * FEEDBACK_<DOCTOR|PSYCHOLOGIST>_BOT_TOKEN / _CHAT_ID, falling back to the clinic bot.
+ * `own` is true only for the specialist's own bot — the one whose webhook handles buttons.
+ */
+const botFor = (specialist) => {
+    const env = SPECIALISTS[specialist].env;
+    const token = process.env[`FEEDBACK_${env}_BOT_TOKEN`];
+    return {
+        token:  token || process.env.TELEGRAM_BOT_TOKEN,
+        chatId: process.env[`FEEDBACK_${env}_CHAT_ID`] || process.env.TELEGRAM_CHAT_ID,
+        own:    !!token,
+    };
+};
+
+const kyivTime = (d) => new Date(d).toLocaleString('uk-UA', {
+    timeZone: 'Europe/Kyiv', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit',
+});
+
+const statusLine = (f) => {
+    if (f.status === 'done') {
+        return `✅ <b>Передзвонили</b>${f.closedByName ? `: ${escapeHtml(f.closedByName)}` : ''}${f.closedAt ? ` · ${kyivTime(f.closedAt)}` : ''}`;
+    }
+    if (f.status === 'in_progress') return '🕐 <b>В роботі</b>';
+    if (f.status === 'spam') return '🚫 <b>Спам</b>';
+    return null;
+};
+
+const render = (f) => {
+    const lines = [
+        `🆕 <b>Нова заявка: ${SPECIALISTS[f.specialist].label}</b>`,
+        '',
+        `👤 <b>Імʼя:</b> ${escapeHtml(f.name)}`,
+        `📞 <b>Телефон:</b> ${escapeHtml(f.phone)}`,
+        `💬 <b>Звʼязок:</b> ${CONTACT_LABELS[f.contactMethod]}`,
+    ];
+    if (f.message) lines.push('', `📝 ${escapeHtml(f.message)}`);
+    if (f.pagePath) lines.push('', `🔗 Сторінка: ${escapeHtml(f.pagePath)}`);
+    lines.push(`🕐 ${f.createdAt.toLocaleString('uk-UA', { timeZone: 'Europe/Kyiv' })}`);
+    const status = statusLine(f);
+    if (status) lines.push('', status);
+    lines.push('', `<a href="${ADMIN_URL}/requests">Відкрити в адмінці</a>`);
+    return lines.join('\n');
+};
+
+// callback_data is limited to 64 bytes: "fb:<24-char id>:<status>" fits
+const button = (f, status, text) => ({ text, callback_data: `fb:${f._id}:${status}` });
+const keyboard = (f) => {
+    if (f.status === 'done' || f.status === 'spam') {
+        return { inline_keyboard: [[button(f, 'in_progress', '↩️ Повернути в роботу')]] };
+    }
+    const row = [button(f, 'done', '✅ Передзвонили')];
+    if (f.status === 'new') row.push(button(f, 'in_progress', '🕐 В роботі'));
+    row.push(button(f, 'spam', '🚫 Спам'));
+    return { inline_keyboard: [row] };
+};
+
+/** Sends the new-request message and remembers it on the request (saved by the caller). */
+const notifyNew = async (f) => {
+    const bot = botFor(f.specialist);
+    // Buttons only work through the specialist's own bot (its webhook); the fallback bot gets plain text
+    const msg = await sendTelegramMessage(render(f), { ...bot, replyMarkup: bot.own ? keyboard(f) : undefined });
+    if (bot.own) {
+        f.tgChatId = String(msg.chat.id);
+        f.tgMessageId = msg.message_id;
+    }
+};
+
+/** Brings the Telegram message in line with the request (after a status change in the admin). */
+const syncMessage = async (f) => {
+    if (!f.tgMessageId) return;
+    const bot = botFor(f.specialist);
+    if (!bot.own) return;
+    try {
+        await editTelegramMessage(bot.token, f.tgChatId, f.tgMessageId, render(f), keyboard(f));
+    } catch (err) {
+        // "message is not modified" and deleted messages are fine to ignore
+        if (!/not modified|not found/i.test(err.message)) throw err;
+    }
+};
+
+module.exports = { SPECIALISTS, CONTACT_LABELS, STATUS_ACTIONS, botFor, render, keyboard, notifyNew, syncMessage, answerCallbackQuery };

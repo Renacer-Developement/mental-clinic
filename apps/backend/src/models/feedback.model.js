@@ -14,6 +14,9 @@ const feedbackSchema = new mongoose.Schema({
     closedBy:      { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     closedByName:  { type: String, default: '' },
     closedAt:      { type: Date },
+    // The Telegram notification, so its text and buttons can follow status changes
+    tgChatId:      { type: String },
+    tgMessageId:   { type: Number },
 }, { timestamps: true });
 
 module.exports = mongoose.model('Feedback', feedbackSchema);
