@@ -13,7 +13,7 @@ import { Test, testKey } from '../models/test.model';
 import { specializedTests } from '../constants/specialized-test-types.enum';
 import { CATEGORY_SECTIONS, sectionOf } from '../constants/test-sections.constants';
 import { TEST_CATEGORY_CONTENT } from '../constants/test-category-content.constants';
-import { ConditionContent, conditionForTestCategory } from '../../conditions/conditions.data';
+import { ConditionContent, conditionForTestSection } from '../../conditions/conditions.data';
 import { methodCodeOf } from '../constants/test-method-codes.constants';
 import { clinicContacts } from '../../shared/constants/contacts.constants';
 import { ClinicContactsService } from '../../shared/components/clinic-contacts-dialog/clinic-contacts.service';
@@ -767,7 +767,7 @@ export class DetailPageComponent implements OnInit {
     const section = sectionOf(test);
     const slug = Object.keys(CATEGORY_SECTIONS).find(k => CATEGORY_SECTIONS[k].sections.includes(section));
     this.categoryLink = slug ? { slug, label: TEST_CATEGORY_CONTENT[slug].label } : null;
-    this.condition = conditionForTestCategory(slug);
+    this.condition = conditionForTestSection(section);
 
     this.testService.getTests()
       .pipe(takeUntilDestroyed(this.destroyRef))
