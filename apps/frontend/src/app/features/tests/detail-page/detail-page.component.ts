@@ -11,7 +11,7 @@ import { fitDescription, fitTitle } from '../../../core/seo/seo-text.utils';
 import { TestService } from '../services/test.service';
 import { Test, testKey } from '../models/test.model';
 import { specializedTests } from '../constants/specialized-test-types.enum';
-import { CATEGORY_SECTIONS, sectionOf } from '../constants/test-sections.constants';
+import { CATEGORY_SECTIONS, searchPhraseOf, sectionOf } from '../constants/test-sections.constants';
 import { TEST_CATEGORY_CONTENT } from '../constants/test-category-content.constants';
 import { ConditionContent, conditionForTestSection } from '../../conditions/conditions.data';
 import { methodCodeOf } from '../constants/test-method-codes.constants';
@@ -58,6 +58,8 @@ export class DetailPageComponent implements OnInit {
   faq: { q: string; a: string }[] = [];
   categoryLink: { slug: string; label: string } | null = null;
   condition?: ConditionContent;
+  /** "Тест на РДУГ" for questionnaires/scales, shown above the H1 and used in the page title. */
+  searchPhrase: string | null = null;
 
   answers: { [key: string]: number } = {};
 
@@ -128,6 +130,7 @@ export class DetailPageComponent implements OnInit {
             this.scoreBands = this.buildScoreBands(response);
             this.loadRelated(response);
             const code = methodCodeOf(response._id, response.name);
+            this.searchPhrase = searchPhraseOf(response);
             this.faq = this.buildFaq(response, code);
             this.updateSEO(response.name, response.description, code);
             this.cdr.detectChanges();
@@ -822,7 +825,7 @@ export class DetailPageComponent implements OnInit {
       },
       {
         q: 'Що робити, якщо результат високий?',
-        a: 'Обговоріть результат із психіатром. Євген Скрипник проводить онлайн-консультації щодня з 8:00 до 22:00.',
+        a: 'Обговоріть результат із психіатром. Євген Скрипник проводить онлайн-консультації щодня, окрім неділі, з 8:00 до 22:00.',
       },
     );
     return faq;
@@ -834,21 +837,30 @@ export class DetailPageComponent implements OnInit {
 
     const questions = this.data?.questions?.length;
     const seoDescription = fitDescription(
+      this.searchPhrase ? `${this.searchPhrase} онлайн.` : null,
       description?.replace(/([^.!?])$/, '$1.'),
       questions ? `${questions} питань${this.data?.duration ? `, ${this.data.duration.replace(/\.$/, '')}` : ''}` + '.' : null,
       'Безкоштовно, результат одразу.',
       'Консультація психіатра онлайн.',
     );
 
+    const subject = code ? `${name} (${code})` : name;
+    const phrase = this.searchPhrase;
+    // "Тест на РДУГ: …" is never cut: the search phrase leads, and cutting would drop
+    // the scale code (GAD-7, ASRS-v1.1) or leave a dangling word — Google shows "…" itself.
+    const searchTitle = `${phrase}: ${subject}`;
+
     this.seo.updatePage({
-      title: fitTitle(code ? `${name} (${code})` : name, ' — тест онлайн безкоштовно', ' — пройти тест онлайн', ' — тест онлайн'),
+      title: phrase
+        ? [' — онлайн безкоштовно', ' — онлайн'].map(s => searchTitle + s).find(t => t.length <= 60) ?? searchTitle
+        : fitTitle(subject, ' — тест онлайн безкоштовно', ' — пройти тест онлайн', ' — тест онлайн'),
       description: seoDescription,
       canonical,
       schema: [{
         '@context': 'https://schema.org',
         '@type': 'MedicalWebPage',
         name,
-        ...(code ? { alternateName: code } : {}),
+        ...(code || phrase ? { alternateName: [code, phrase].filter(Boolean) } : {}),
         url: `${BASE_URL}${canonical}`,
         description: seoDescription,
         inLanguage: 'uk',

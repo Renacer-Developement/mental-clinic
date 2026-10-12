@@ -31,7 +31,8 @@
           <span>{{ data?.name }}</span>
         </nav>
 
-        <h1 class="dp-header__title">{{ data?.name }}</h1>
+        <p *ngIf="searchPhrase" class="dp-header__eyebrow">{{ searchPhrase }} онлайн</p>
+        <h1 class="dp-header__title" [class.dp-header__title--after-eyebrow]="searchPhrase">{{ data?.name }}</h1>
 
         <ul class="dp-header__meta">
           <li *ngIf="data?.duration">{{ data?.duration }}</li>

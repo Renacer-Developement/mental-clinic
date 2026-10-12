@@ -68,6 +68,17 @@
     line-height: 1.2;
     letter-spacing: -0.025em;
     color: $heading-color;
+
+    &--after-eyebrow { margin-top: 0.35rem; }
+  }
+
+  &__eyebrow {
+    margin: 1rem 0 0;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba($heading-color, 0.55);
   }
 
   &__meta {
