@@ -139,7 +139,7 @@ export class NavbarComponent implements OnDestroy {
    * Redirects to the main page and tracks the logo click event.
    */
   redirectToMainPage(): void {
-    this.googleAnalyticsService.trackEvent(EVENT_TRACK.LOGO_CLICK, { source: 'navbar' });
+    this.googleAnalyticsService.trackEvent(EVENT_TRACK.LOGO_CLICK, { cta_location: 'navbar' });
     this.router.navigate(['/']);
   }
 

@@ -153,9 +153,11 @@
             });
         } catch (e) {}
         gtag('js', new Date());
-        // send_page_view: false — the Angular router sends a page_view event on
-        // every NavigationEnd, so we must not fire one here too (would double-count).
-        gtag('config', 'G-QL51QSPEPK', { send_page_view: false });
+        // The landing page_view goes out here, as soon as gtag loads: waiting for
+        // Angular to boot lost it for visitors who left early, leaving sessions with
+        // landing page "(not set)". The router sends page_view for every later
+        // navigation and skips the first one (GoogleAnalyticsService).
+        gtag('config', 'G-QL51QSPEPK');
     </script>
 </head>
 <body>

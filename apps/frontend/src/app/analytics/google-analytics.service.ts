@@ -26,8 +26,8 @@ export class GoogleAnalyticsService {
    * Subscribe to Angular router events and send a GA4 page_view on every
    * completed navigation.  Must be called once from AppComponent.ngOnInit().
    *
-   * index.html initialises gtag with `send_page_view: false` so the SDK
-   * never fires an automatic page_view — this method owns all page_view hits.
+   * index.html's gtag config sends the landing page_view itself, so the first
+   * NavigationEnd is skipped — this method owns every page_view after that.
    *
    * No-op on the server — gtag isn't loaded there and window/document aren't available.
    */
@@ -41,19 +41,17 @@ export class GoogleAnalyticsService {
       )
       .subscribe(event => {
         const url = event.urlAfterRedirects;
+        const previous = this.previousUrl;
+        this.previousUrl = url;
+        if (!previous) return; // landing page_view is sent by index.html
 
         gtag('event', 'page_view', {
           // GA4 expects the full URL, not just the path
           page_location: `${window.location.origin}${url}`,
           page_title:    document.title,
-          // For the first navigation use the browser's actual referrer;
-          // for subsequent SPA navigations use the previous Angular route.
-          page_referrer: this.previousUrl
-            ? `${window.location.origin}${this.previousUrl}`
-            : document.referrer,
+          // SPA navigation: the referrer is the previous Angular route
+          page_referrer: `${window.location.origin}${previous}`,
         });
-
-        this.previousUrl = url;
       });
   }
 
@@ -75,9 +73,11 @@ export class GoogleAnalyticsService {
   /**
    * Booking contact — the site's main conversion. `source` is where the visitor
    * started (e.g. 'visit', 'condition-page', 'footer'); `page_path` is the route.
+   * Sent as `cta_location`: GA4 reads a `source` event param as the traffic source
+   * and rewrites the session's attribution with it.
    */
   trackLead(method: LeadMethod, source: string): void {
-    this.trackEvent(EVENT_TRACK.GENERATE_LEAD, { method, source, page_path: this.currentPath() });
+    this.trackEvent(EVENT_TRACK.GENERATE_LEAD, { method, cta_location: source, page_path: this.currentPath() });
   }
 
   /** Current route without query/fragment, for page_path params. */
