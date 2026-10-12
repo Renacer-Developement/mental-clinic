@@ -202,6 +202,13 @@
           </div>
         </div>
 
+        <div *ngIf="searchKeywords.length" class="dp-about__block">
+          <h2 class="dp-about__title">Як люди шукають цей тест</h2>
+          <ul class="dp-about__searches">
+            <li *ngFor="let k of searchKeywords">{{ k }}</li>
+          </ul>
+        </div>
+
 
       </div>
     </section>

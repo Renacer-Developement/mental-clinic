@@ -8,6 +8,7 @@ import express from 'express';
 import { API_ARTICLES, API_TESTS } from './app/app.constants';
 import { getSitemap } from './sitemap';
 import { CONDITIONS } from './app/features/conditions/conditions.data';
+import { TEST_KEYWORDS } from './app/features/tests/constants/test-keywords.constants';
 
 // Resolved from CWD rather than import.meta.url: this project's browserslist
 // targets Safari/iOS versions old enough that esbuild empties `import.meta`
@@ -86,7 +87,12 @@ app.get('/llms.txt', async (_req, res) => {
     '',
     '## Психологічні тести онлайн (безкоштовно)',
     line('Усі тести', `${SITE}/test/list`),
-    ...tests.map(t => line(t.name, `${SITE}/test/detail/${t.slug ?? t._id}`, t.description?.split(/(?<=\.)\s/)[0])),
+    ...tests.map(t => line(
+      t.name,
+      `${SITE}/test/detail/${t.slug ?? t._id}`,
+      [t.description?.split(/(?<=\.)\s/)[0], TEST_KEYWORDS[t._id] && `Шукають як: ${TEST_KEYWORDS[t._id].join(', ')}.`]
+        .filter(Boolean).join(' '),
+    )),
     '',
     '## Статті',
     line('Усі статті', `${SITE}/articles`),

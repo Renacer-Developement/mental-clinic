@@ -15,6 +15,7 @@ import { CATEGORY_SECTIONS, searchPhraseOf, sectionOf } from '../constants/test-
 import { TEST_CATEGORY_CONTENT } from '../constants/test-category-content.constants';
 import { ConditionContent, conditionForTestSection } from '../../conditions/conditions.data';
 import { methodCodeOf } from '../constants/test-method-codes.constants';
+import { TEST_KEYWORDS } from '../constants/test-keywords.constants';
 import { clinicContacts } from '../../shared/constants/contacts.constants';
 import { ClinicContactsService } from '../../shared/components/clinic-contacts-dialog/clinic-contacts.service';
 import { GoogleAnalyticsService } from '../../../analytics/google-analytics.service';
@@ -60,6 +61,8 @@ export class DetailPageComponent implements OnInit {
   condition?: ConditionContent;
   /** "Тест на РДУГ" for questionnaires/scales, shown above the H1 and used in the page title. */
   searchPhrase: string | null = null;
+  /** Phrases people search this test by; listed at the end of the page and in the meta/schema keywords. */
+  searchKeywords: string[] = [];
 
   answers: { [key: string]: number } = {};
 
@@ -131,6 +134,7 @@ export class DetailPageComponent implements OnInit {
             this.loadRelated(response);
             const code = methodCodeOf(response._id, response.name);
             this.searchPhrase = searchPhraseOf(response);
+            this.searchKeywords = TEST_KEYWORDS[response._id ?? ''] ?? [];
             this.faq = this.buildFaq(response, code);
             this.updateSEO(response.name, response.description, code);
             this.cdr.detectChanges();
@@ -855,6 +859,7 @@ export class DetailPageComponent implements OnInit {
         ? [' — онлайн безкоштовно', ' — онлайн'].map(s => searchTitle + s).find(t => t.length <= 60) ?? searchTitle
         : fitTitle(subject, ' — тест онлайн безкоштовно', ' — пройти тест онлайн', ' — тест онлайн'),
       description: seoDescription,
+      keywords: this.searchKeywords,
       canonical,
       schema: [{
         '@context': 'https://schema.org',
@@ -863,6 +868,7 @@ export class DetailPageComponent implements OnInit {
         ...(code || phrase ? { alternateName: [code, phrase].filter(Boolean) } : {}),
         url: `${BASE_URL}${canonical}`,
         description: seoDescription,
+        ...(this.searchKeywords.length ? { keywords: this.searchKeywords.join(', ') } : {}),
         inLanguage: 'uk',
         isPartOf: { '@id': `${BASE_URL}/#website` },
         audience: { '@type': 'MedicalAudience', audienceType: 'Patient' },

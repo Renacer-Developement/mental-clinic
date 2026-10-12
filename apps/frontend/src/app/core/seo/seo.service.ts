@@ -5,6 +5,8 @@ import { Title, Meta } from '@angular/platform-browser';
 export interface PageSeoConfig {
   title: string;
   description: string;
+  /** Search phrases for the keywords meta; pages without them drop the tag. */
+  keywords?: string[];
   canonical?: string;
   schema?: object | object[];
   ogTitle?: string;
@@ -34,6 +36,11 @@ export class SeoService {
     this.title.setTitle(config.title);
 
     this.meta.updateTag({ name: 'description', content: config.description });
+    if (config.keywords?.length) {
+      this.meta.updateTag({ name: 'keywords', content: config.keywords.join(', ') });
+    } else {
+      this.meta.removeTag('name="keywords"');
+    }
     this.meta.updateTag({ property: 'og:title',       content: ogTitle });
     this.meta.updateTag({ property: 'og:description', content: ogDesc });
     this.meta.updateTag({ property: 'og:image',       content: OG_IMAGE });

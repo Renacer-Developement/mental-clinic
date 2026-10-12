@@ -210,6 +210,25 @@
 
   p { margin: 0 0 1rem; }
 
+  // "how people search for this test": quiet chips at the very end of the page
+  &__searches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      background: rgba($heading-color, 0.05);
+      font-size: 0.9rem;
+      line-height: 1.4;
+      color: rgba($heading-color, 0.7);
+    }
+  }
+
   // score bands
   &__bands {
     width: 100%;
