@@ -84,7 +84,7 @@ export class ReviewsComponent implements OnInit {
         '@id': `${BASE_URL}/#physician`,
         name: 'Євген Скрипник',
         url: `${BASE_URL}/about`,
-        medicalSpecialty: 'Psychiatric',
+        medicalSpecialty: 'https://schema.org/Psychiatric',
         aggregateRating: {
           '@type': 'AggregateRating',
           ratingValue: result.avgRating,

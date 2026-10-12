@@ -100,9 +100,17 @@ app.use(
 app.use((req, res, next) => {
   angularApp
     .handle(req)
-    .then((response) =>
-      response ? writeResponseToNodeResponse(response, res) : next(),
-    )
+    .then((response) => {
+      if (!response) return next();
+      // Server-rendered pages (articles, tests) hit the Render API on every request,
+      // which made them slow (TTFB ~0.6–1.1 s). Let Vercel's edge serve a copy for
+      // 5 min and refresh it in the background. Only successful pages are cached —
+      // a 404/503 (API asleep) must never be stored in place of the real page.
+      if (response.status === 200 && !response.headers.has('Cache-Control')) {
+        response.headers.set('Cache-Control', 'public, max-age=0, s-maxage=300, stale-while-revalidate=86400');
+      }
+      return writeResponseToNodeResponse(response, res);
+    })
     .catch(next);
 });
 

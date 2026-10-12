@@ -1,9 +1,15 @@
 const TITLE_MAX = 60;
 const DESCRIPTION_MAX = 160;
 
-/** `main` plus the longest suffix that still fits in ~60 chars (Google truncates longer titles). */
+/**
+ * `main` plus the longest suffix that still fits in ~60 chars (Google truncates longer titles).
+ * If `main` alone is too long, it is cut at the last whole word that fits.
+ */
 export const fitTitle = (main: string, ...suffixes: string[]): string =>
-  suffixes.map(s => main + s).find(t => t.length <= TITLE_MAX) ?? main;
+  suffixes.map(s => main + s).find(t => t.length <= TITLE_MAX) ?? cutAtWord(main, TITLE_MAX);
+
+const cutAtWord = (text: string, max: number): string =>
+  text.length <= max ? text : text.slice(0, max + 1).replace(/\s+\S*$/, '').replace(/[\s,:;—–-]+$/, '');
 
 /** Joins sentences until the next one would push the description past ~160 chars. */
 export const fitDescription = (...parts: (string | undefined | null)[]): string => {

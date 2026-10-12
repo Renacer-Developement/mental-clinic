@@ -44,7 +44,7 @@ export class AboutComponent extends AnimatedSection implements OnInit {
   ngOnInit(): void {
     this.seo.updatePage({
       title: "Євген Скрипник — психіатр, психотерапевт, нарколог | Про лікаря",
-      description: "Євген Скрипник — лікар-психіатр вищої категорії з 20+ роками досвіду. Спеціалізація: депресія, тривожні розлади, ПТСР, ОКР, залежності. Доказова медицина, онлайн консультація.",
+      description: "Євген Скрипник — лікар-психіатр вищої категорії, 20+ років досвіду. Депресія, тривожні розлади, ПТСР, ОКР, залежності. Доказова медицина, онлайн.",
       canonical: '/about',
       ogType: 'profile',
       schema: {
@@ -70,8 +70,9 @@ export class AboutComponent extends AnimatedSection implements OnInit {
           image: 'https://doctor-skripnik.com.ua/assets/owner.webp',
           telephone: '+380665691677',
           award: 'Лікар року 2021',
-          knowsAbout: ['Депресія', 'Тривожні розлади', 'ПТСР', 'ОКР', 'Біполярний розлад', 'Залежності', 'Психосоматика', 'Неврози'],
-          medicalSpecialty: ['Psychiatry', 'Neurology', 'Psychotherapy', 'Addiction Medicine'],
+          knowsAbout: ['Психотерапія', 'Наркологія', 'Депресія', 'Тривожні розлади', 'ПТСР', 'ОКР', 'Біполярний розлад', 'Залежності', 'Психосоматика', 'Неврози'],
+          // Only values from schema.org's MedicalSpecialty enum are valid here; the rest live in knowsAbout.
+          medicalSpecialty: ['https://schema.org/Psychiatric', 'https://schema.org/Neurologic'],
           alumniOf: {
             '@type': 'CollegeOrUniversity',
             name: 'Сумський державний університет',
