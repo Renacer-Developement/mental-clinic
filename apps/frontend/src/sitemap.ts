@@ -18,7 +18,7 @@ interface Entry {
   lastmod?: string;
 }
 
-interface ApiTest { _id: string; slug?: string }
+interface ApiTest { _id: string; slug?: string; updatedAt?: string }
 interface ApiArticle {
   _id: string;
   slug?: string;
@@ -93,6 +93,7 @@ async function build(): Promise<string> {
       path: `/test/detail/${encodeURIComponent(t.slug ?? t._id)}`,
       changefreq: 'monthly' as const,
       priority: '0.7',
+      lastmod: t.updatedAt,
     })),
   ]);
 }

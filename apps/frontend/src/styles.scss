@@ -130,3 +130,14 @@ h1, h2, h3, h4, h5, h6 {
     opacity: 1;
   }
 }
+
+// Doctor's name in running text, linked to /about (internal links with the name
+// as anchor text tell Google which page answers "Євген Скрипник" searches).
+.doctor-link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+
+  &:hover { text-decoration-thickness: 2px; }
+}
