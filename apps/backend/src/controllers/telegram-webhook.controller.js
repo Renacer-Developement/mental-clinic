@@ -1,8 +1,12 @@
 const crypto = require('crypto');
 const Feedback = require('../models/feedback.model');
 const { applyStatus } = require('./feedback.controller');
-const { SPECIALISTS, STATUS_ACTIONS, botFor, render, keyboard, answerCallbackQuery } = require('../services/feedback-telegram.service');
-const { editTelegramMessage } = require('../services/telegram.service');
+const {
+    SPECIALISTS, STATUS_ACTIONS, MENU, LIST_LIMIT,
+    botFor, render, keyboard, answerCallbackQuery,
+    menuAction, menuKeyboard, kyivDayStart, summaryLine,
+} = require('../services/feedback-telegram.service');
+const { sendTelegramMessage, editTelegramMessage } = require('../services/telegram.service');
 
 const TOASTS = { done: 'Заявку закрито', in_progress: 'Взято в роботу', spam: 'Позначено як спам' };
 
@@ -15,36 +19,53 @@ const secretMatches = (header) => {
 const telegramName = (from) =>
     `${[from.first_name, from.last_name].filter(Boolean).join(' ') || from.username || 'Telegram'} (Telegram)`;
 
+const menuCounts = async (specialist) => {
+    const [n, p, d] = await Promise.all([
+        Feedback.countDocuments({ specialist, status: 'new' }),
+        Feedback.countDocuments({ specialist, status: 'in_progress' }),
+        Feedback.countDocuments({ specialist, status: 'done', closedAt: { $gte: kyivDayStart() } }),
+    ]);
+    return { new: n, in_progress: p, done_today: d };
+};
+
 /**
- * POST /api/telegram/webhook/:specialist — buttons under feedback notifications.
- * Registered per bot with setWebhook (secret_token = TELEGRAM_WEBHOOK_SECRET). Telegram
- * retries anything but a 2xx, so handled-but-rejected updates still answer 200.
+ * POST /api/telegram/webhook/:specialist — one webhook per specialist bot.
+ * Registered with setWebhook (secret_token = TELEGRAM_WEBHOOK_SECRET). Telegram retries
+ * anything but a 2xx, so handled-but-rejected updates still answer 200.
+ *
+ * - callback_query: the buttons under a request (Передзвонили / В роботі / Спам / Повернути)
+ * - message: the bot menu (/start, 🆕 Нові, 🕐 В роботі, ✅ Закриті сьогодні)
  */
 class TelegramWebhookController {
     async handle(req, res) {
         if (!secretMatches(req.get('X-Telegram-Bot-Api-Secret-Token'))) return res.sendStatus(401);
 
         const specialist = req.params.specialist;
-        const query = req.body?.callback_query;
-        if (!SPECIALISTS[specialist] || !query?.data) return res.sendStatus(200);
-
+        if (!SPECIALISTS[specialist]) return res.sendStatus(200);
         const bot = botFor(specialist);
-        const reply = (text) => answerCallbackQuery(bot.token, query.id, text).catch(() => {});
 
+        try {
+            if (req.body?.callback_query) await this.onButton(specialist, bot, req.body.callback_query);
+            else if (req.body?.message?.text) await this.onMessage(specialist, bot, req.body.message);
+        } catch (err) {
+            console.error('Telegram webhook failed:', err.message);
+        }
+        res.sendStatus(200);
+    }
+
+    /** A status button under a request message. */
+    async onButton(specialist, bot, query) {
+        const reply = (text) => answerCallbackQuery(bot.token, query.id, text).catch(() => {});
         try {
             const [prefix, id, status] = query.data.split(':');
             const chatId = String(query.message?.chat?.id ?? '');
             // Only the chat this bot posts requests to may change them
             if (prefix !== 'fb' || !STATUS_ACTIONS.includes(status) || chatId !== String(bot.chatId)) {
-                await reply('Немає доступу');
-                return res.sendStatus(200);
+                return reply('Немає доступу');
             }
 
             const feedback = /^[0-9a-f]{24}$/i.test(id) ? await Feedback.findById(id) : null;
-            if (!feedback || feedback.specialist !== specialist) {
-                await reply('Заявку не знайдено');
-                return res.sendStatus(200);
-            }
+            if (!feedback || feedback.specialist !== specialist) return reply('Заявку не знайдено');
 
             if (feedback.status !== status) {
                 applyStatus(feedback, status, { id: undefined, name: telegramName(query.from) });
@@ -54,10 +75,52 @@ class TelegramWebhookController {
                 .catch(err => { if (!/not modified/i.test(err.message)) throw err; });
             await reply(TOASTS[status]);
         } catch (err) {
-            console.error('Telegram webhook failed:', err.message);
             await reply('Помилка, спробуйте ще раз');
+            throw err;
         }
-        res.sendStatus(200);
+    }
+
+    /** The persistent menu: lists of requests, each with its own status buttons. */
+    async onMessage(specialist, bot, message) {
+        const chatId = String(message.chat.id);
+        const action = menuAction(message.text);
+        if (!action) return;
+
+        const send = (text, replyMarkup) => sendTelegramMessage(text, { token: bot.token, chatId, replyMarkup });
+        if (chatId !== String(bot.chatId)) {
+            return send('Цей бот надсилає заявки клініки лише співробітникам.');
+        }
+
+        if (action === 'menu') {
+            return send(
+                `Заявки: <b>${SPECIALISTS[specialist].label}</b>\nКнопки внизу показують нові заявки, заявки в роботі й закриті сьогодні.`,
+                menuKeyboard(await menuCounts(specialist)),
+            );
+        }
+
+        if (action === 'done_today') {
+            const closed = await Feedback.find({ specialist, status: 'done', closedAt: { $gte: kyivDayStart() } })
+                .sort({ closedAt: -1 }).limit(50);
+            const text = closed.length
+                ? `${MENU.done_today.emoji} <b>Закриті сьогодні: ${closed.length}</b>\n\n${closed.map(summaryLine).join('\n')}`
+                : 'Сьогодні ще жодної закритої заявки.';
+            return send(text, menuKeyboard(await menuCounts(specialist)));
+        }
+
+        // 🆕 Нові / 🕐 В роботі: oldest first, so the longest-waiting request is on top
+        const [items, total] = await Promise.all([
+            Feedback.find({ specialist, status: action }).sort({ createdAt: 1 }).limit(LIST_LIMIT),
+            Feedback.countDocuments({ specialist, status: action }),
+        ]);
+        const { emoji, label } = MENU[action];
+        if (!items.length) {
+            return send(`${emoji} ${label}: заявок немає.`, menuKeyboard(await menuCounts(specialist)));
+        }
+
+        // Each request is its own message so its buttons edit just that one
+        for (const f of items) await send(render(f), keyboard(f));
+        const more = total > items.length ? ` Показано ${items.length} найстаріших з ${total}.` : '';
+        await send(`${emoji} <b>${label}: ${total}</b>.${more}`, menuKeyboard(await menuCounts(specialist)));
     }
 }
 

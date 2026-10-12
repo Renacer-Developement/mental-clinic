@@ -91,4 +91,44 @@ const syncMessage = async (f) => {
     }
 };
 
-module.exports = { SPECIALISTS, CONTACT_LABELS, STATUS_ACTIONS, botFor, render, keyboard, notifyNew, syncMessage, answerCallbackQuery };
+// ── Bot menu: persistent reply keyboard with request lists ──────────────────
+
+const MENU = {
+    new:         { emoji: '🆕', label: 'Нові' },
+    in_progress: { emoji: '🕐', label: 'В роботі' },
+    done_today:  { emoji: '✅', label: 'Закриті сьогодні' },
+};
+const LIST_LIMIT = 10;
+
+/** Which menu button a message text came from (labels carry counts, so match by emoji). */
+const menuAction = (text = '') => {
+    if (/^\/(start|menu)\b/.test(text)) return 'menu';
+    return Object.keys(MENU).find(k => text.startsWith(MENU[k].emoji)) || null;
+};
+
+/** Reply keyboard with live counts, e.g. "🆕 Нові (3)". */
+const menuKeyboard = (counts) => ({
+    keyboard: [
+        [{ text: `${MENU.new.emoji} ${MENU.new.label} (${counts.new})` },
+         { text: `${MENU.in_progress.emoji} ${MENU.in_progress.label} (${counts.in_progress})` }],
+        [{ text: `${MENU.done_today.emoji} ${MENU.done_today.label} (${counts.done_today})` }],
+    ],
+    resize_keyboard: true,
+    is_persistent: true,
+});
+
+/** Start of today in Kyiv, as a Date: now minus the time already passed on the Kyiv clock. */
+const kyivDayStart = (now = new Date()) => {
+    const [h, m, s] = now.toLocaleTimeString('en-GB', { timeZone: 'Europe/Kyiv', hourCycle: 'h23' }).split(':').map(Number);
+    return new Date(now.getTime() - ((h * 60 + m) * 60 + s) * 1000 - now.getMilliseconds());
+};
+
+/** One line per request for the "closed today" summary. */
+const summaryLine = (f) =>
+    `• ${escapeHtml(f.name)}, ${escapeHtml(f.phone)} — ${f.closedByName ? escapeHtml(f.closedByName) + ', ' : ''}${kyivTime(f.closedAt)}`;
+
+module.exports = {
+    SPECIALISTS, CONTACT_LABELS, STATUS_ACTIONS, MENU, LIST_LIMIT,
+    botFor, render, keyboard, notifyNew, syncMessage, answerCallbackQuery,
+    menuAction, menuKeyboard, kyivDayStart, summaryLine,
+};
