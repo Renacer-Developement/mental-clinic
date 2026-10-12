@@ -1,9 +1,12 @@
-import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
+import { Component, DestroyRef, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { inject } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
 import { SupportService } from '../../core/services/support.service';
+import { FeedbackService } from '../../core/services/feedback.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { interval, startWith, switchMap } from 'rxjs';
 
 interface NavItem {
   label: string;
@@ -31,6 +34,9 @@ interface NavItem {
              (click)="closeRequest.emit()">
             <i [class]="'pi ' + item.icon"></i>
             <span>{{ item.label }}</span>
+            @if (item.route === '/requests' && feedback.newCount() > 0) {
+              <span class="nav-badge">{{ feedback.newCount() }}</span>
+            }
           </a>
         }
       </nav>
@@ -49,7 +55,7 @@ interface NavItem {
   `,
   styleUrl: './sidebar.component.scss',
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
   @Input() open = false;
   @Output() closeRequest  = new EventEmitter<void>();
   @Output() logoutRequest = new EventEmitter<void>();
@@ -57,12 +63,26 @@ export class SidebarComponent {
 
   private auth = inject(AuthService);
   support      = inject(SupportService);
+  feedback     = inject(FeedbackService);
+  private destroyRef = inject(DestroyRef);
+
+  /** Keeps the "Заявки" badge current: new requests arrive while the admin is open. */
+  ngOnInit() {
+    const role = this.auth.currentUser()?.role;
+    if (role !== 'admin' && role !== 'doctor') return;
+    interval(2 * 60_000).pipe(
+      startWith(0),
+      switchMap(() => this.feedback.getAll('new')),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({ error: () => {} });
+  }
 
   private allItems: NavItem[] = [
     { label: 'Панель',      icon: 'pi-home',      route: '/dashboard' },
     { label: 'Статті',      icon: 'pi-file-edit', route: '/articles' },
     { label: 'Тести',       icon: 'pi-clipboard', route: '/tests' },
     { label: 'Команда',     icon: 'pi-id-card',   route: '/team',  roles: ['admin'] },
+    { label: 'Заявки',      icon: 'pi-inbox',     route: '/requests', roles: ['admin', 'doctor'] },
     { label: 'Відгуки',     icon: 'pi-star',      route: '/reviews' },
     { label: 'Договір',     icon: 'pi-file-edit', route: '/contract', roles: ['admin'] },
     { label: 'Користувачі', icon: 'pi-users',     route: '/users', roles: ['admin'] },

@@ -1,0 +1,97 @@
+<div class="page">
+  <p-toast />
+  <p-confirmDialog />
+
+  <div class="page-header">
+    <div class="header-left">
+      <h2>Заявки з сайту</h2>
+      @if (counts().new > 0) {
+        <span class="pending-badge">{{ counts().new }} нових</span>
+      }
+    </div>
+    <p-button icon="pi pi-refresh" [text]="true" severity="secondary" pTooltip="Оновити" (onClick)="load()" />
+  </div>
+
+  <!-- Filter tabs (desktop) -->
+  <div class="filter-tabs">
+    @for (tab of filterTabs; track tab.value) {
+      <button class="filter-tab" [class.active]="filter() === tab.value"
+              [style.--tab-color]="tab.color" (click)="filter.set(tab.value)">
+        {{ tab.label }}
+        <span class="tab-count">{{ countFor(tab.value) }}</span>
+      </button>
+    }
+  </div>
+
+  <!-- Filter dropdown (mobile) -->
+  <div class="filter-row">
+    <p-select [options]="filterOptions()" [ngModel]="filter()" optionLabel="label" optionValue="value"
+              styleClass="filter-select" (onChange)="filter.set($event.value)" />
+  </div>
+
+  <div class="cards">
+    @if (loading()) {
+      @for (i of [1, 2, 3]; track i) {
+        <div class="req-card">
+          <p-skeleton height="1.2rem" width="180px" />
+          <p-skeleton height="1rem" width="140px" />
+          <p-skeleton height="3rem" />
+        </div>
+      }
+    } @else if (filtered().length === 0) {
+      <div class="empty">Заявок немає.</div>
+    } @else {
+      @for (r of filtered(); track r._id) {
+        <article class="req-card" [class.is-new]="r.status === 'new'">
+          <header class="req-card__head">
+            <div class="req-card__who">
+              <span class="req-card__name">{{ r.name }}</span>
+              <a class="req-card__phone" [href]="contactHref(r)">
+                <i class="pi" [class.pi-phone]="r.contactMethod === 'phone'"
+                   [class.pi-telegram]="r.contactMethod === 'telegram'"
+                   [class.pi-comments]="r.contactMethod === 'viber'"></i>
+                {{ r.phone }}
+              </a>
+              <span class="req-card__method">{{ contactLabels[r.contactMethod] }}</span>
+            </div>
+            <div class="req-card__side">
+              <p-tag [value]="statusLabel(r.status)" [severity]="statusSeverity(r.status)" />
+              <time class="req-card__time">{{ r.createdAt | date: 'dd.MM.yyyy HH:mm' }}</time>
+            </div>
+          </header>
+
+          @if (r.message) {
+            <p class="req-card__message">{{ r.message }}</p>
+          }
+          @if (r.pagePath) {
+            <p class="req-card__page"><i class="pi pi-link"></i> {{ r.pagePath }}</p>
+          }
+          @if (r.note) {
+            <p class="req-card__note"><i class="pi pi-bookmark"></i> {{ r.note }}</p>
+          }
+
+          <footer class="req-card__actions">
+            <p-select [options]="statusOptions" [ngModel]="r.status" optionLabel="label" optionValue="value"
+                      styleClass="status-select" (onChange)="setStatus(r, $event.value)" />
+            <p-button size="small" icon="pi pi-pencil" [label]="r.note ? 'Нотатка' : 'Додати нотатку'"
+                      severity="secondary" [outlined]="true" (onClick)="openNote(r)" />
+            @if (isAdmin()) {
+              <p-button size="small" icon="pi pi-trash" [text]="true" severity="danger" (onClick)="delete(r)" />
+            }
+          </footer>
+        </article>
+      }
+    }
+  </div>
+</div>
+
+<p-dialog header="Нотатка до заявки" [modal]="true" [visible]="noteVisible()"
+          (visibleChange)="noteVisible.set($event)" [style]="{ width: '480px' }"
+          [breakpoints]="{ '640px': 'calc(100vw - 24px)' }">
+  <p class="note-hint">Бачать лише співробітники. Наприклад: «передзвонили, запис на 14.10 о 18:00».</p>
+  <textarea pTextarea rows="4" class="w-full" [ngModel]="noteText()" (ngModelChange)="noteText.set($event)"></textarea>
+  <ng-template pTemplate="footer">
+    <p-button label="Скасувати" severity="secondary" [text]="true" (onClick)="noteVisible.set(false)" />
+    <p-button label="Зберегти" icon="pi pi-check" [loading]="saving()" (onClick)="saveNote()" />
+  </ng-template>
+</p-dialog>
