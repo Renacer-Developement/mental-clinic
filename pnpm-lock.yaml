@@ -53,8 +53,8 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
       primeicons:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.2
+        version: 8.0.2
       primeng:
         specifier: ^18.0.2
         version: 18.0.2(bbd80247478969d7c049af4a0f9624fb)
@@ -241,8 +241,8 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1
       primeicons:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.2
+        version: 8.0.2
       primeng:
         specifier: ^21.1.9
         version: 21.1.10(2df259b0b069ea660a257224e7cc8d66)
@@ -8814,8 +8814,8 @@ packages:
   primeflex@4.0.0:
     resolution: {integrity: sha512-UOEZCRjR36+sm5bUpDhS1xbA068l9VC6y1aTNVqQPtXuKIdPTqAWHRUxj3mKAoPrQ9W373ooJJMgNVXfiaw04g==}
 
-  primeicons@7.0.0:
-    resolution: {integrity: sha512-jK3Et9UzwzTsd6tzl2RmwrVY/b8raJ3QZLzoDACj+oTJ0oX7L9Hy+XnVwgo4QVKlKpnP/Ur13SXV/pVh4LzaDw==}
+  primeicons@8.0.2:
+    resolution: {integrity: sha512-o3UQey3nXMEQRAudVYZZWswz6mmnWpPnksYb7wIu4rEEVfdS3pLnxnmSJx5gKBRMer1MxnhJZG5QRDxVVJFNkA==}
 
   primeng@18.0.2:
     resolution: {integrity: sha512-Tt4KmbstxRmrUdxvVjV1j/1L3SnN8QdkPdC5hRHWQjOCheX71BA0aQ7aTJ4CXZZuw6wiDKlb7Jrm0aqTixE7+A==}
@@ -20499,7 +20499,7 @@ snapshots:
 
   primeflex@4.0.0: {}
 
-  primeicons@7.0.0: {}
+  primeicons@8.0.2: {}
 
   primeng@18.0.2(bbd80247478969d7c049af4a0f9624fb):
     dependencies:
@@ -22012,6 +22012,17 @@ snapshots:
       schema-utils: 4.5.0
       webpack: 5.76.1(esbuild@0.15.5)(postcss@8.4.31)
 
+  webpack-dev-middleware@7.4.2(webpack@5.105.2(esbuild@0.28.1)(postcss@8.4.41)):
+    dependencies:
+      colorette: 2.0.20
+      memfs: 4.79.0
+      mime-types: 2.1.35
+      on-finished: 2.4.1
+      range-parser: 1.3.0
+      schema-utils: 4.5.0
+    optionalDependencies:
+      webpack: 5.105.2(esbuild@0.28.1)(postcss@8.4.41)
+
   webpack-dev-middleware@7.4.2(webpack@5.94.0(esbuild@0.23.0)(postcss@8.4.41)):
     dependencies:
       colorette: 2.0.20
@@ -22100,7 +22111,7 @@ snapshots:
       serve-index: 1.9.2
       sockjs: 0.3.24
       spdy: 4.0.2
-      webpack-dev-middleware: 7.4.2(webpack@5.94.0(esbuild@0.23.0)(postcss@8.4.41))
+      webpack-dev-middleware: 7.4.2(webpack@5.105.2(esbuild@0.28.1)(postcss@8.4.41))
       ws: 8.22.0
     optionalDependencies:
       webpack: 5.105.2(esbuild@0.28.1)(postcss@8.4.41)
