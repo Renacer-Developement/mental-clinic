@@ -28,7 +28,7 @@ export class VisitPageComponent implements OnInit {
   readonly phones = Object.values(clinicContacts).map(c => ({ ...c, label: formatPhone(c.phone) }));
 
   readonly facts = [
-    { title: 'Щодня 8:00–22:00', text: 'Запис у зручний час без черг, зокрема у вихідні' },
+    { title: 'Пн–Сб 8:00–22:00', text: 'Запис у зручний час без черг, зокрема в суботу' },
     { title: 'Відеоконсультація', text: 'Telegram, Viber, Google Meet або Zoom — як вам зручніше' },
     { title: 'Скасування без втрат', text: 'Перенесемо запис або повернемо кошти — на ваш вибір' },
   ];
@@ -99,8 +99,8 @@ export class VisitPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.seo.updatePage({
-      title: 'Запис до психіатра онлайн — Євген Скрипник, щодня 8:00–22:00',
-      description: "Запишіться на онлайн консультацію до психіатра Євгена Скрипника. Відеоконсультація щодня 8:00–22:00. Конфіденційно й безпечно — перший крок до здоров'я.",
+      title: 'Запис до психіатра онлайн — Євген Скрипник, пн–сб 8:00–22:00',
+      description: "Запишіться на онлайн консультацію до психіатра Євгена Скрипника. Відеоконсультація пн–сб 8:00–22:00. Конфіденційно й безпечно — перший крок до здоров'я.",
       canonical: '/visit',
       schema: [
         {
@@ -109,8 +109,8 @@ export class VisitPageComponent implements OnInit {
           name: "Онлайн центр ментального здоров'я Євгена Скрипника",
           url: 'https://doctor-skripnik.com.ua/visit',
           telephone: '+380665691677',
-          openingHours: 'Mo-Su 08:00-22:00',
-          description: 'Онлайн консультація психіатра щодня з 8:00 до 22:00. Відеозустріч, конфіденційно, доступно з будь-якого місця.',
+          openingHours: 'Mo-Sa 08:00-22:00',
+          description: 'Онлайн консультація психіатра щодня, окрім неділі, з 8:00 до 22:00. Відеозустріч, конфіденційно, доступно з будь-якого місця.',
           hasOfferCatalog: {
             '@type': 'OfferCatalog',
             name: 'Послуги психіатра',
