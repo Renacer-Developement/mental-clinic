@@ -11,6 +11,7 @@ const supportRoutes   = require('./routes/support.routes');
 const contractRoutes  = require('./routes/contract.routes');
 const feedbackRoutes  = require('./routes/feedback.routes');
 const telegramRoutes  = require('./routes/telegram.routes');
+const goRoutes        = require('./routes/go.routes');
 const errorHandler    = require('./middleware/error.middleware');
 
 const ALLOWED_ORIGINS = (process.env.CORS_ORIGIN || '')
@@ -50,6 +51,7 @@ app.use('/api/support',   supportRoutes);
 app.use('/api/contract',  contractRoutes);
 app.use('/api/feedback',  feedbackRoutes);
 app.use('/api/telegram',  telegramRoutes);
+app.use('/api/go',        goRoutes);
 
 app.get('/api/health', (req, res) => res.json({ ok: true, ts: Date.now() }));
 

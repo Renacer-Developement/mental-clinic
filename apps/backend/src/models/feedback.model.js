@@ -10,7 +10,7 @@ const feedbackSchema = new mongoose.Schema({
     pagePath:      { type: String, trim: true, maxlength: 300, default: '' },
     status:        { type: String, enum: ['new', 'in_progress', 'done', 'spam'], default: 'new', index: true },
     note:          { type: String, trim: true, maxlength: 2000, default: '' }, // staff only
-    // Who marked the request done («Передзвонили») and when
+    // Who marked the request done («Сконтактовано з клієнтом») and when
     closedBy:      { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     closedByName:  { type: String, default: '' },
     closedAt:      { type: Date },

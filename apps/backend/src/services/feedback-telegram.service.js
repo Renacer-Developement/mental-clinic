@@ -1,7 +1,7 @@
 const { escapeHtml, sendTelegramMessage, editTelegramMessage, answerCallbackQuery } = require('./telegram.service');
 
 // Telegram side of site feedback requests: one bot per specialist, a message per
-// request whose buttons (Передзвонили / В роботі / Спам) change its status.
+// request whose buttons (Сконтактовано з клієнтом / В роботі / Спам) change its status.
 
 const SPECIALISTS = {
     doctor:       { label: 'Лікар-психіатр', env: 'DOCTOR' },
@@ -9,6 +9,24 @@ const SPECIALISTS = {
 };
 const CONTACT_LABELS = { phone: 'Дзвінок', telegram: 'Telegram', viber: 'Viber' };
 const ADMIN_URL = process.env.ADMIN_URL || 'https://mental-clinic-admin.vercel.app';
+const API_URL = process.env.API_URL || 'https://mental-clinic-be.onrender.com';
+
+/** International digits for a Ukrainian-style number: 0661234567 → 380661234567. */
+const intlDigits = (phone) => {
+    const d = String(phone).replace(/\D/g, '');
+    if (d.length === 10 && d.startsWith('0')) return `38${d}`;
+    if (d.length === 9) return `380${d}`;
+    return d;
+};
+
+/**
+ * Chat links for the client's number. Telegram only allows http(s)/tg links in messages,
+ * so Viber goes through a redirect on this API (/api/go/viber/:digits → viber://).
+ */
+const contactLinks = (phone) => {
+    const d = intlDigits(phone);
+    return { telegram: `https://t.me/+${d}`, viber: `${API_URL}/api/go/viber/${d}` };
+};
 const STATUS_ACTIONS = ['done', 'in_progress', 'spam'];
 
 /**
@@ -34,7 +52,7 @@ const kyivTime = (d) => new Date(d).toLocaleString('uk-UA', {
 
 const statusLine = (f) => {
     if (f.status === 'done') {
-        return `✅ <b>Передзвонили</b>${f.closedByName ? `: ${escapeHtml(f.closedByName)}` : ''}${f.closedAt ? ` · ${kyivTime(f.closedAt)}` : ''}`;
+        return `✅ <b>Сконтактовано з клієнтом</b>${f.closedByName ? `: ${escapeHtml(f.closedByName)}` : ''}${f.closedAt ? ` · ${kyivTime(f.closedAt)}` : ''}`;
     }
     if (f.status === 'in_progress') return '🕐 <b>В роботі</b>';
     if (f.status === 'spam') return '🚫 <b>Спам</b>';
@@ -46,7 +64,7 @@ const render = (f) => {
         `🆕 <b>Нова заявка: ${SPECIALISTS[f.specialist].label}</b>`,
         '',
         `👤 <b>Імʼя:</b> ${escapeHtml(f.name)}`,
-        `📞 <b>Телефон:</b> ${escapeHtml(f.phone)}`,
+        `📞 <b>Телефон:</b> +${intlDigits(f.phone)}`,
         `💬 <b>Звʼязок:</b> ${CONTACT_LABELS[f.contactMethod]}`,
     ];
     if (f.message) lines.push('', `📝 ${escapeHtml(f.message)}`);
@@ -61,13 +79,15 @@ const render = (f) => {
 // callback_data is limited to 64 bytes: "fb:<24-char id>:<status>" fits
 const button = (f, status, text) => ({ text, callback_data: `fb:${f._id}:${status}` });
 const keyboard = (f) => {
+    const links = contactLinks(f.phone);
+    const contactRow = [{ text: '✈️ Telegram', url: links.telegram }, { text: '💬 Viber', url: links.viber }];
     if (f.status === 'done' || f.status === 'spam') {
-        return { inline_keyboard: [[button(f, 'in_progress', '↩️ Повернути в роботу')]] };
+        return { inline_keyboard: [contactRow, [button(f, 'in_progress', '↩️ Повернути в роботу')]] };
     }
-    const row = [button(f, 'done', '✅ Передзвонили')];
-    if (f.status === 'new') row.push(button(f, 'in_progress', '🕐 В роботі'));
-    row.push(button(f, 'spam', '🚫 Спам'));
-    return { inline_keyboard: [row] };
+    const second = [];
+    if (f.status === 'new') second.push(button(f, 'in_progress', '🕐 В роботі'));
+    second.push(button(f, 'spam', '🚫 Спам'));
+    return { inline_keyboard: [contactRow, [button(f, 'done', '✅ Сконтактовано з клієнтом')], second] };
 };
 
 /** Sends the new-request message and remembers it on the request (saved by the caller). */
@@ -144,7 +164,7 @@ const summaryLine = (f) =>
     `• ${escapeHtml(f.name)}, ${escapeHtml(f.phone)} — ${f.closedByName ? escapeHtml(f.closedByName) + ', ' : ''}${kyivTime(f.closedAt)}`;
 
 module.exports = {
-    SPECIALISTS, CONTACT_LABELS, STATUS_ACTIONS, MENU, LIST_LIMIT,
+    SPECIALISTS, CONTACT_LABELS, STATUS_ACTIONS, MENU, LIST_LIMIT, intlDigits,
     botFor, isStaffChat, render, keyboard, notifyNew, syncMessage, answerCallbackQuery,
     menuAction, menuKeyboard, kyivDayStart, summaryLine,
 };

@@ -8,7 +8,7 @@ const {
 } = require('../services/feedback-telegram.service');
 const { sendTelegramMessage, editTelegramMessage } = require('../services/telegram.service');
 
-const TOASTS = { done: 'Заявку закрито', in_progress: 'Взято в роботу', spam: 'Позначено як спам' };
+const TOASTS = { done: 'Сконтактовано з клієнтом', in_progress: 'Взято в роботу', spam: 'Позначено як спам' };
 
 const secretMatches = (header) => {
     const secret = process.env.TELEGRAM_WEBHOOK_SECRET;
@@ -33,7 +33,7 @@ const menuCounts = async (specialist) => {
  * Registered with setWebhook (secret_token = TELEGRAM_WEBHOOK_SECRET). Telegram retries
  * anything but a 2xx, so handled-but-rejected updates still answer 200.
  *
- * - callback_query: the buttons under a request (Передзвонили / В роботі / Спам / Повернути)
+ * - callback_query: the buttons under a request (Сконтактовано з клієнтом / В роботі / Спам / Повернути)
  * - message: the bot menu (/start, 🆕 Нові, 🕐 В роботі, ✅ Закриті сьогодні)
  */
 class TelegramWebhookController {

@@ -164,13 +164,15 @@ export class RequestListComponent implements OnInit {
     });
   }
 
-  /** tel:/Telegram/Viber link for the number, matching how the person asked to be contacted. */
-  contactHref(item: Feedback): string {
-    const digits = item.phone.replace(/[^\d+]/g, '');
-    const intl = digits.startsWith('+') ? digits : digits.startsWith('0') ? `+38${digits}` : `+${digits}`;
-    if (item.contactMethod === 'viber') return `viber://chat?number=${encodeURIComponent(intl)}`;
-    if (item.contactMethod === 'telegram') return `https://t.me/${intl}`;
-    return `tel:${intl}`;
+  /** Call, Telegram and Viber links for the client's number (0661234567 → +380661234567). */
+  links(item: Feedback): { tel: string; telegram: string; viber: string } {
+    const d = item.phone.replace(/\D/g, '');
+    const intl = d.length === 10 && d.startsWith('0') ? `38${d}` : d.length === 9 ? `380${d}` : d;
+    return {
+      tel: `tel:+${intl}`,
+      telegram: `https://t.me/+${intl}`,
+      viber: `viber://chat?number=%2B${intl}`,
+    };
   }
 
   statusLabel(s: FeedbackStatus): string {
@@ -181,8 +183,8 @@ export class RequestListComponent implements OnInit {
     return s === 'new' ? 'warn' : s === 'in_progress' ? 'info' : s === 'done' ? 'success' : 'secondary';
   }
 
-  /** «Передзвонили»: the client was called back, close the request */
-  markCalledBack(item: Feedback) {
+  /** «Сконтактовано з клієнтом»: someone reached the client, close the request */
+  markContacted(item: Feedback) {
     this.setStatus(item, 'done');
   }
 
