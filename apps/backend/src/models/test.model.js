@@ -39,6 +39,10 @@ const testSchema = new mongoose.Schema({
     // Public URL key (/test/detail/<slug>). Set once from the name and never
     // regenerated, so renaming a test doesn't break links that Google indexed.
     slug:                { type: String, unique: true, sparse: true, index: true },
+}, {
+    // updatedAt feeds <lastmod> in the sitemap. Tests saved before this existed
+    // have none until their next edit — better no date than an invented one.
+    timestamps: true,
 });
 
 testSchema.pre('save', function () {

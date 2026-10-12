@@ -1,6 +1,6 @@
 const Test = require('../models/test.model');
 
-const LIST_FIELDS = '_id name description type specialTest duration slug';
+const LIST_FIELDS = '_id name description type specialTest duration slug updatedAt';
 
 class TestRepository {
     create(data) {
