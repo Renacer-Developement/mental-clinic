@@ -103,6 +103,7 @@
 
   &__close {
     flex-shrink: 0;
+    margin-left: auto; // stays right when the title is hidden after sending
     display: grid;
     place-items: center;
     width: 36px;

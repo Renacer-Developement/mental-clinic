@@ -5,10 +5,12 @@
 <section class="fw-panel" [class.is-open]="open()" role="dialog" aria-modal="false"
          aria-labelledby="fw-title" [attr.aria-hidden]="!open()" [attr.inert]="open() ? null : ''">
   <header class="fw-panel__head">
-    <div>
-      <h2 id="fw-title" class="fw-panel__title">Залиште заявку</h2>
-      <p class="fw-panel__sub">Передзвонимо або напишемо щодня з 8:00 до 22:00</p>
-    </div>
+    @if (state() !== 'sent') {
+      <div>
+        <h2 id="fw-title" class="fw-panel__title">Залиште заявку</h2>
+        <p class="fw-panel__sub">Передзвонимо або напишемо щодня з 8:00 до 22:00</p>
+      </div>
+    }
     <button type="button" class="fw-panel__close" (click)="close()" aria-label="Закрити">
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
         <line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/>
@@ -21,7 +23,7 @@
       <div class="fw-done__icon" aria-hidden="true">
         <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
       </div>
-      <p class="fw-done__title">Дякуємо, заявку отримано!</p>
+      <h2 id="fw-title" class="fw-done__title">Дякуємо, заявку отримано!</h2>
       <p class="fw-done__text">Ми звʼяжемося з вами найближчим часом у робочі години (щодня 8:00–22:00).</p>
       <button type="button" class="fw-btn fw-btn--ghost" (click)="close()">Закрити</button>
     </div>
