@@ -43,7 +43,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
   protected readonly ROUTES = ROUTES;
 
   ngOnInit(): void {
-    this.contractApi.get().subscribe({
+    this.contractApi.getMeta().subscribe({
       next: (doc) => this.contractVisible.set(doc.visible !== false),
       error: ()    => this.contractVisible.set(false),
     });

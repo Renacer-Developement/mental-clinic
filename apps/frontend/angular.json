@@ -66,8 +66,7 @@
             ],
             "styles": [
               "src/styles.scss",
-              "primeicons/primeicons.css",
-              "primeflex/primeflex.css"
+              "primeicons/primeicons.css"
             ],
             "scripts": []
           },
@@ -137,8 +136,7 @@
               "src/styles.scss",
               "primeng/resources/themes/lara-light-blue/theme.css",
               "primeng/resources/primeng.min.css",
-              "primeicons/primeicons.css",
-              "primeflex/primeflex.css"
+              "primeicons/primeicons.css"
             ],
             "scripts": []
           }
