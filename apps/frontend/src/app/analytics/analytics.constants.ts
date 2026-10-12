@@ -12,6 +12,7 @@ export const EVENT_TRACK = {
   LOGO_CLICK:     'logo_click',
   NAV_CLICK:      'nav_click',
   CONTACTS_OPEN:  'contacts_open',
+  FEEDBACK_OPEN:  'feedback_open',
 
   // ── Content interaction ──────────────────────────────────────────────────
   /** GA4 recommended event for selecting a piece of content */
@@ -29,13 +30,13 @@ export const EVENT_TRACK = {
   TELEGRAM_OPEN:  'telegram_open',
 
   // ── Conversions ──────────────────────────────────────────────────────────
-  /** GA4 recommended event — a booking contact (Telegram / Viber / phone). Mark as a key event in GA4. */
+  /** GA4 recommended event — a booking contact (Telegram / Viber / phone / feedback form). Mark as a key event in GA4. */
   GENERATE_LEAD:  'generate_lead',
   TEST_START:     'test_start',
   TEST_COMPLETE:  'test_complete',
 } as const;
 
 /** How the visitor reached the clinic, sent as `method` with generate_lead. */
-export type LeadMethod = 'telegram' | 'viber' | 'phone';
+export type LeadMethod = 'telegram' | 'viber' | 'phone' | 'form';
 
 export type EventTrack = typeof EVENT_TRACK[keyof typeof EVENT_TRACK];

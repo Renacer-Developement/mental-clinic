@@ -1,0 +1,88 @@
+@if (open()) {
+  <div class="fw-backdrop" (click)="close()" aria-hidden="true"></div>
+}
+
+<section class="fw-panel" [class.is-open]="open()" role="dialog" aria-modal="false"
+         aria-labelledby="fw-title" [attr.aria-hidden]="!open()" [attr.inert]="open() ? null : ''">
+  <header class="fw-panel__head">
+    <div>
+      <h2 id="fw-title" class="fw-panel__title">Залиште заявку</h2>
+      <p class="fw-panel__sub">Передзвонимо або напишемо щодня з 8:00 до 22:00</p>
+    </div>
+    <button type="button" class="fw-panel__close" (click)="close()" aria-label="Закрити">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/>
+      </svg>
+    </button>
+  </header>
+
+  @if (state() === 'sent') {
+    <div class="fw-done" role="status">
+      <div class="fw-done__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <p class="fw-done__title">Дякуємо, заявку отримано!</p>
+      <p class="fw-done__text">Ми звʼяжемося з вами найближчим часом у робочі години (щодня 8:00–22:00).</p>
+      <button type="button" class="fw-btn fw-btn--ghost" (click)="close()">Закрити</button>
+    </div>
+  } @else {
+    <form class="fw-form" (ngSubmit)="submit()" novalidate>
+      <label class="fw-field">
+        <span>Імʼя</span>
+        <input #nameInput name="name" [(ngModel)]="name" autocomplete="name" maxlength="100" required />
+      </label>
+
+      <label class="fw-field">
+        <span>Телефон</span>
+        <input name="phone" [(ngModel)]="phone" type="tel" inputmode="tel" autocomplete="tel"
+               placeholder="+38 0__ ___ __ __" maxlength="30" required />
+      </label>
+
+      <fieldset class="fw-methods">
+        <legend>Як з вами звʼязатися</legend>
+        <div class="fw-methods__list">
+          @for (m of methods; track m.value) {
+            <label class="fw-chip" [class.is-active]="contactMethod === m.value">
+              <input type="radio" name="contactMethod" [value]="m.value" [(ngModel)]="contactMethod" />
+              {{ m.label }}
+            </label>
+          }
+        </div>
+      </fieldset>
+
+      <label class="fw-field">
+        <span>Що вас турбує <em>(необовʼязково)</em></span>
+        <textarea name="message" [(ngModel)]="message" rows="3" maxlength="2000"></textarea>
+      </label>
+
+      <!-- Honeypot: invisible to people, bots fill it in -->
+      <label class="fw-hp" aria-hidden="true">
+        Website <input name="website" [(ngModel)]="website" tabindex="-1" autocomplete="off" />
+      </label>
+
+      @if (error()) {
+        <p class="fw-error" role="alert">{{ error() }}</p>
+      }
+
+      <button type="submit" class="fw-btn" [disabled]="state() === 'sending'">
+        {{ state() === 'sending' ? 'Надсилаємо…' : 'Надіслати заявку' }}
+      </button>
+      <p class="fw-consent">Надсилаючи форму, ви погоджуєтеся на обробку персональних даних для звʼязку з вами. Дані конфіденційні.</p>
+    </form>
+  }
+</section>
+
+<button type="button" class="fw-fab" [class.is-open]="open()" (click)="toggle()"
+        [attr.aria-expanded]="open()" aria-controls="fw-title"
+        [attr.aria-label]="open() ? 'Закрити форму заявки' : 'Залишити заявку на звʼязок'">
+  @if (open()) {
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+      <line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/>
+    </svg>
+  } @else {
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>
+    </svg>
+    <span class="fw-fab__label">Звʼязатися з нами</span>
+  }
+</button>
