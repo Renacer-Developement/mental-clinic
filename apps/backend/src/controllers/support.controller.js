@@ -1,21 +1,4 @@
-const sendTelegramMessage = async (text) => {
-    const token  = process.env.TELEGRAM_BOT_TOKEN;
-    const chatId = process.env.TELEGRAM_CHAT_ID;
-
-    if (!token || !chatId) {
-        throw new Error('TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID not set');
-    }
-
-    const res  = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ chat_id: chatId, text, parse_mode: 'HTML' }),
-    });
-    const data = await res.json();
-    if (!data.ok) {
-        throw new Error(`Telegram error: ${data.description ?? JSON.stringify(data)}`);
-    }
-};
+const { escapeHtml, sendTelegramMessage } = require('../services/telegram.service');
 
 class SupportController {
     async send(req, res, next) {
@@ -28,13 +11,13 @@ class SupportController {
             const lines = [
                 '💬 <b>Нове повідомлення підтримки</b>',
                 '',
-                `👤 <b>Імʼя:</b> ${name.trim()}`,
+                `👤 <b>Імʼя:</b> ${escapeHtml(name.trim())}`,
             ];
-            if (email?.trim()) lines.push(`✉️ <b>Email:</b> ${email.trim()}`);
-            if (phone?.trim()) lines.push(`📞 <b>Телефон:</b> ${phone.trim()}`);
+            if (email?.trim()) lines.push(`✉️ <b>Email:</b> ${escapeHtml(email.trim())}`);
+            if (phone?.trim()) lines.push(`📞 <b>Телефон:</b> ${escapeHtml(phone.trim())}`);
             lines.push('');
             lines.push(`📝 <b>Повідомлення:</b>`);
-            lines.push(message.trim());
+            lines.push(escapeHtml(message.trim()));
             lines.push('');
             lines.push(`🕐 ${new Date().toLocaleString('uk-UA', { timeZone: 'Europe/Kyiv' })}`);
 

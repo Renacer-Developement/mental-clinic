@@ -37,4 +37,10 @@ const requireAdmin = (req, res, next) => {
     next();
 };
 
-module.exports = { authenticate, requireAdmin };
+/** Allows any of the given roles, e.g. requireRole('admin', 'doctor'). */
+const requireRole = (...roles) => (req, res, next) => {
+    if (!roles.includes(req.user?.role)) return next(makeError('Access denied', 403));
+    next();
+};
+
+module.exports = { authenticate, requireAdmin, requireRole };
