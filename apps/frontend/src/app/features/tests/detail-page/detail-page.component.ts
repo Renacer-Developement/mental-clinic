@@ -1,6 +1,6 @@
 import {CommonModule, isPlatformBrowser, NgFor, NgIf} from '@angular/common';
 import { ImportsModule } from '../../../shared/primeng-imports.module';
-import { ChangeDetectorRef, Component, DestroyRef, HostListener, inject, OnInit, PLATFORM_ID, RESPONSE_INIT } from '@angular/core';
+import { afterNextRender, ChangeDetectorRef, Component, DestroyRef, HostListener, inject, OnInit, PLATFORM_ID, RESPONSE_INIT, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -53,6 +53,12 @@ export class DetailPageComponent implements OnInit {
   private readonly responseInit = inject(RESPONSE_INIT, { optional: true });
   data!: Test;
   loadError = false;
+  /** False in the server-rendered HTML until the app takes over in the browser; the quiz ignores taps till then. */
+  readonly ready = signal(false);
+
+  constructor() {
+    afterNextRender(() => this.ready.set(true));
+  }
 
   // Server-rendered context below the quiz
   scoreBands: { range: string; result: string; min: number; max: number | null }[] = [];
@@ -122,8 +128,9 @@ export class DetailPageComponent implements OnInit {
         )
         .subscribe({
           next: response => {
-            // Same component is reused when a "what next" link opens another test
-            if (this.isTestCompleted) {
+            // Same component is reused when a related-test link (or browser back) opens another
+            // test — mid-run too, so the question index and answers must not carry over
+            if (this.data && this.data._id !== response._id) {
               this.restartTest();
               if (isPlatformBrowser(this.platformId)) window.scrollTo(0, 0);
             }
@@ -364,11 +371,7 @@ export class DetailPageComponent implements OnInit {
           .map(key => this.answers[key])
           .reduce((sum, v) => sum + Number(v), 0);
 
-      const interpretation = this.data.resultInterpretation.find(
-          ({ range: [min, max] }) =>
-              this.totalScore >= min &&
-              (max === null || this.totalScore <= max)
-      );
+      const interpretation = bandFor(this.data.resultInterpretation, this.totalScore);
 
       this.resultMessage = interpretation?.result || 'Не вдалося визначити рівень.';
       this.resultDescription = interpretation?.['description'] || '';
@@ -692,7 +695,7 @@ export class DetailPageComponent implements OnInit {
   /** Keyboard: 1–9 pick an answer, Enter/→ next, ← back. */
   @HostListener('document:keydown', ['$event'])
   onKeydown(event: KeyboardEvent): void {
-    if (!this.data || this.isTestCompleted || this.data.specialTest === specializedTests.DIVA) return;
+    if (!this.ready() || !this.data || this.isTestCompleted || this.data.specialTest === specializedTests.DIVA) return;
     if (event.ctrlKey || event.metaKey || event.altKey) return;
     const target = event.target instanceof Element ? event.target : null;
     if (target?.closest('input, textarea, select, [contenteditable="true"]')) return;
@@ -729,6 +732,7 @@ export class DetailPageComponent implements OnInit {
   restartTest(): void {
     this.currentQuestionIndex = 0;
     this.answers = {};
+    this.showError = false;
     this.isTestCompleted = false;
 
     this.totalScore = 0;
@@ -759,7 +763,8 @@ export class DetailPageComponent implements OnInit {
   /** Plain total-score bands only (subscale tests like SMI/HADS keep their own result views). */
   /** Index of the score band the user's total falls into (for the result scale), or -1. */
   get activeBandIndex(): number {
-    return this.scoreBands.findIndex(b => this.totalScore >= b.min && (b.max == null || this.totalScore <= b.max));
+    const band = bandFor(this.scoreBands.map(b => ({ range: [b.min, b.max] as [number, number | null] })), this.totalScore);
+    return band ? this.scoreBands.findIndex(b => b.min === band.range[0]) : -1;
   }
 
   private buildScoreBands(test: Test): { range: string; result: string; min: number; max: number | null }[] {
@@ -898,6 +903,16 @@ export class DetailPageComponent implements OnInit {
     });
   }
 }
+
+/**
+ * Score band for a total: the band with the highest lower bound the score reaches.
+ * Bands are stored as whole-number ranges (0–4, 5–9), but some tests score in halves
+ * (4.5) and a few top bands stop below the maximum, so a strict min–max match finds nothing.
+ */
+const bandFor = <T extends { range: [number, number | null] }>(bands: T[], score: number): T | undefined =>
+  bands
+    .filter(b => b.range?.length === 2 && score >= b.range[0])
+    .sort((a, b) => b.range[0] - a.range[0])[0];
 
 /** 1 питання, 2–4 питання, 5+ питань (11–14 питань). */
 const pluralQuestions = (n: number): string =>

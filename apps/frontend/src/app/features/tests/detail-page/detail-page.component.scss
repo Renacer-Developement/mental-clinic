@@ -171,6 +171,17 @@
 .dp-quiz {
   padding: 2.5rem 0 3.5rem;
 
+  // Server-rendered quiz before the app takes over: taps would do nothing visible and
+  // then all fire at once, so make them miss the controls and look not-yet-ready
+  &--loading {
+    cursor: progress;
+
+    .dp-options, .dv-yn, .dv-examples, .dv-other, .dp-nav {
+      pointer-events: none;
+      opacity: 0.55;
+    }
+  }
+
   // same width as the page header
   &__wrap {
     width: 100%;

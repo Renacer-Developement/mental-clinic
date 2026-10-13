@@ -1,5 +1,5 @@
 import { isPlatformBrowser, NgTemplateOutlet } from '@angular/common';
-import { Component, computed, EventEmitter, inject, Input, OnInit, Output, PLATFORM_ID, signal } from '@angular/core';
+import { afterNextRender, Component, computed, EventEmitter, inject, Input, OnInit, Output, PLATFORM_ID, signal } from '@angular/core';
 import { Question, Test, TestDomain } from '../../models/test.model';
 
 type Period = 'adult' | 'child';
@@ -55,6 +55,12 @@ export class DivaQuizComponent implements OnInit {
   @Output() completed = new EventEmitter<DivaResult>();
 
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+  /** False in the server-rendered HTML until the app takes over in the browser; the quiz ignores taps till then. */
+  readonly ready = signal(false);
+
+  constructor() {
+    afterNextRender(() => this.ready.set(true));
+  }
 
   steps: Step[] = [];
   items: Question[] = [];
