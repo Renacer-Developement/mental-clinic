@@ -38,13 +38,16 @@
     <div class="dp-progress">
       <div class="dp-progress__header">
         <span class="dp-progress__label">Крок</span>
-        <span class="dp-progress__count">{{ index() + 1 }}<em>/{{ steps.length }}</em></span>
+        <span class="dp-progress__count"><span [textContent]="index() + 1"></span><em [textContent]="'/' + steps.length"></em></span>
       </div>
       <div class="dp-progress__track">
         <div class="dp-progress__fill" [style.width.%]="((index() + 1) / steps.length) * 100"></div>
       </div>
     </div>
 
+    <!-- Rebuilt for every step: Google Translate swaps text nodes for its own,
+         so text bindings updated in place stay stuck on the first translated step. -->
+    @for (si of [index()]; track si) {
     <div class="dp-question">
       @switch (step().kind) {
 
@@ -178,6 +181,7 @@
         </div>
       }
     </div>
+    }
 
     <div class="dp-nav" [class.dp-nav--start]="index() === 0">
       @if (index() > 0) {
@@ -190,7 +194,7 @@
         </button>
       }
       <button class="dp-btn dp-btn--primary" type="button" (click)="next()">
-        {{ isLast() ? 'Формуляр підрахунку' : 'Далі' }}
+        <span [textContent]="isLast() ? 'Формуляр підрахунку' : 'Далі'"></span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
              stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
           @if (isLast()) { <polyline points="20 6 9 17 4 12"/> }

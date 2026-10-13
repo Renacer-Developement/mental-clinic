@@ -73,16 +73,19 @@
         <div class="dp-progress">
           <div class="dp-progress__header">
             <span class="dp-progress__label">
-              Питання <strong>{{ currentQuestionIndex + 1 }}</strong> з {{ data?.questions?.length }}
+              Питання <strong [textContent]="currentQuestionIndex + 1"></strong> з <span [textContent]="data?.questions?.length"></span>
             </span>
-            <span class="dp-progress__count">{{ progressPercent }}%</span>
+            <span class="dp-progress__count" [textContent]="progressPercent + '%'"></span>
           </div>
           <div class="dp-progress__track">
             <div class="dp-progress__fill" [style.width.%]="progressPercent"></div>
           </div>
         </div>
 
-        <!-- Question card -->
+        <!-- Question card. Rebuilt for every question: Google Translate swaps text
+             nodes for its own, so text bindings updated in place stay stuck on the
+             first translated question. -->
+        @for (qi of [currentQuestionIndex]; track qi) {
         <div class="dp-question">
 
           <p class="dp-question__text">
@@ -121,6 +124,7 @@
           </div>
 
         </div>
+        }
 
         <!-- Navigation -->
         <div class="dp-nav">
@@ -136,8 +140,8 @@
           </button>
 
           <button class="dp-btn dp-btn--primary" type="button" (click)="nextQuestion()">
-            {{ isLastQuestion ? 'Завершити тест' : 'Далі' }}
-            <span aria-hidden="true">{{ isLastQuestion ? '✓' : '→' }}</span>
+            <span [textContent]="isLastQuestion ? 'Завершити тест' : 'Далі'"></span>
+            <span aria-hidden="true" [textContent]="isLastQuestion ? '✓' : '→'"></span>
           </button>
         </div>
 
