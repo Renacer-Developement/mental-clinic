@@ -1,4 +1,13 @@
 <div class="layout">
+  <div class="license-strip">
+    <div class="license-strip__inner">
+      <span class="license-strip__text">
+        <i class="pi pi-shield" aria-hidden="true"></i>
+        Ліцензія МОЗ, рішення № 1285 від 17.07.2023
+      </span>
+      <a class="license-strip__link" [routerLink]="'/' + ROUTES.ABOUT">Про центр</a>
+    </div>
+  </div>
   <app-navbar></app-navbar>
   <main class="layout__content">
     <router-outlet></router-outlet>

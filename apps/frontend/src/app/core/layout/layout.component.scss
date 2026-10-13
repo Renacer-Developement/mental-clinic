@@ -1,3 +1,5 @@
+@use "../../../assets/css/coloristics" as *;
+
 .layout {
   min-height: 100vh;
   display: flex;
@@ -8,4 +10,52 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+}
+
+// Thin licence band above the header; scrolls away with the page.
+.license-strip {
+  background: $dark-bg;
+  color: rgba(#fff, 0.7);
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+}
+
+.license-strip__inner {
+  max-width: 1450px;
+  height: 32px;
+  margin: 0 auto;
+  padding: 0 6%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.license-strip__text {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  .pi { font-size: 0.75rem; color: $accent-color; }
+}
+
+.license-strip__link {
+  flex-shrink: 0;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s;
+
+  &:hover { color: $accent-color; }
+}
+
+@media screen and (max-width: 480px) {
+  .license-strip { font-size: 0.7rem; }
+  .license-strip__inner { height: 28px; padding: 0 16px; justify-content: center; }
+  // Not enough room for both on a phone — the licence line matters more.
+  .license-strip__link { display: none; }
 }
