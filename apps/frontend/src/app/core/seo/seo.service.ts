@@ -12,6 +12,9 @@ export interface PageSeoConfig {
   ogTitle?: string;
   ogDescription?: string;
   ogType?: string;
+  /** Absolute URL or site path of the share image; defaults to the logo. */
+  ogImage?: string;
+  ogImageAlt?: string;
   robots?: string;
 }
 
@@ -32,6 +35,8 @@ export class SeoService {
     const ogTitle = config.ogTitle       ?? config.title;
     const ogDesc  = config.ogDescription ?? config.description;
     const ogType  = config.ogType        ?? 'website';
+    const ogImage = config.ogImage ? this.fullUrl(config.ogImage) : OG_IMAGE;
+    const ogAlt   = config.ogImageAlt    ?? OG_IMAGE_ALT;
 
     this.title.setTitle(config.title);
 
@@ -43,17 +48,23 @@ export class SeoService {
     }
     this.meta.updateTag({ property: 'og:title',       content: ogTitle });
     this.meta.updateTag({ property: 'og:description', content: ogDesc });
-    this.meta.updateTag({ property: 'og:image',       content: OG_IMAGE });
-    this.meta.updateTag({ property: 'og:image:alt',   content: OG_IMAGE_ALT });
-    this.meta.updateTag({ property: 'og:image:width',  content: '512' });
-    this.meta.updateTag({ property: 'og:image:height', content: '512' });
+    this.meta.updateTag({ property: 'og:image',       content: ogImage });
+    this.meta.updateTag({ property: 'og:image:alt',   content: ogAlt });
+    // the size is only known for the default logo
+    if (config.ogImage) {
+      this.meta.removeTag('property="og:image:width"');
+      this.meta.removeTag('property="og:image:height"');
+    } else {
+      this.meta.updateTag({ property: 'og:image:width',  content: '512' });
+      this.meta.updateTag({ property: 'og:image:height', content: '512' });
+    }
     this.meta.updateTag({ property: 'og:type',        content: ogType });
     this.meta.updateTag({ property: 'og:url',         content: config.canonical ? this.fullUrl(config.canonical) : BASE_URL });
 
     this.meta.updateTag({ name: 'twitter:title',       content: ogTitle });
     this.meta.updateTag({ name: 'twitter:description', content: ogDesc });
-    this.meta.updateTag({ name: 'twitter:image',       content: OG_IMAGE });
-    this.meta.updateTag({ name: 'twitter:image:alt',   content: OG_IMAGE_ALT });
+    this.meta.updateTag({ name: 'twitter:image',       content: ogImage });
+    this.meta.updateTag({ name: 'twitter:image:alt',   content: ogAlt });
 
     this.meta.updateTag({ name: 'robots', content: config.robots ?? 'index, follow' });
 
@@ -68,6 +79,11 @@ export class SeoService {
     } else {
       this.document.getElementById(PAGE_SCRIPT_ID)?.remove();
     }
+  }
+
+  /** Replaces only the page's JSON-LD — for pages whose schema depends on data loaded after updatePage. */
+  setSchema(schema: object | object[]): void {
+    this.setJsonLd(Array.isArray(schema) ? schema : [schema]);
   }
 
   /** Overrides the robots meta set by updatePage (e.g. noindex once a listing turns out empty). */

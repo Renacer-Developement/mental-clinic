@@ -7,6 +7,8 @@ export const ROUTES = {
   VISIT: 'visit',
   ARTICLES: 'articles',
   REVIEWS: 'reviews',
+  TEAM: 'team',
+  CENTER: 'pro-tsentr',
 } as const;
 
 export const TEST_ROUTES = {

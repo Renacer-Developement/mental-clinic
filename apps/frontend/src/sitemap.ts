@@ -39,6 +39,9 @@ const STATIC_ENTRIES: Entry[] = [
   { path: '/test/list', changefreq: 'weekly', priority: '0.8' },
   ...Object.keys(TEST_CATEGORY_CONTENT).map(slug => ({ path: `/test/list/${slug}`, changefreq: 'weekly' as const, priority: '0.7' })),
   { path: '/reviews',  changefreq: 'weekly',  priority: '0.8' },
+  // Team page hidden until specialists are added
+  // { path: '/team',     changefreq: 'monthly', priority: '0.7' },
+  { path: '/pro-tsentr', changefreq: 'monthly', priority: '0.8' },
   { path: '/drugs',    changefreq: 'monthly', priority: '0.7' },
 ];
 

@@ -1,0 +1,640 @@
+@use "../../../assets/css/coloristics" as *;
+
+// Soft, low-contrast surfaces and rounded shapes — this page is meant to feel calm,
+// so it avoids hard rules, uppercase labels and dark bands.
+$soft-bg: #fbf7f3;
+$tint-peach: #f8ece3;
+$tint-sage: #eef2ea;
+$tint-sand: #f3eee6;
+$tint-mist: #edf1f3;
+$radius-lg: 28px;
+$radius-md: 20px;
+
+.center-page {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  color: $body-text-color;
+}
+
+.sf-tint-0 { background: $tint-peach; }
+.sf-tint-1 { background: $tint-sage; }
+.sf-tint-2 { background: $tint-sand; }
+.sf-tint-3 { background: $tint-mist; }
+
+// ── Shared bits ───────────────────────────────────────────────────────────────
+
+.sf-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0.8rem 1.6rem;
+  border-radius: 999px;
+  background: $primary-color;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.25s, transform 0.25s $ease-out-soft;
+
+  &:hover { background: #7d5c4c; transform: translateY(-1px); }
+}
+
+.sf-link {
+  color: $heading-color;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: $accent-color;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 5px;
+
+  &:hover { color: $primary-color; }
+}
+
+.sf-inline {
+  color: $primary-color;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.sf-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  background: #fff;
+  color: $primary-color;
+  font-size: 0.85rem;
+  font-weight: 600;
+
+  .pi { font-size: 0.85rem; }
+}
+
+.sf-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(#fff, 0.85);
+  color: $primary-color;
+
+  .pi { font-size: 1.25rem; }
+
+  &--sm {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    background: $accent-soft;
+
+    .pi { font-size: 1.05rem; }
+  }
+}
+
+// ── Sections ──────────────────────────────────────────────────────────────────
+
+.sf-section {
+  padding: 4.5rem 0;
+
+  &--soft { background: $soft-bg; }
+
+  @media (max-width: 768px) { padding: 3.25rem 0; }
+}
+
+.sf-head {
+  max-width: 640px;
+  margin: 0 0 2.5rem;
+
+  @media (max-width: 768px) { margin-bottom: 2rem; }
+
+  h2 {
+    margin: 0 0 0.65rem;
+    font-size: clamp(1.45rem, 2.4vw, 2rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: $heading-color;
+  }
+
+  p {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+}
+
+.sf-crumbs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.75rem;
+  font-size: 0.85rem;
+  color: $muted-text-color;
+
+  a {
+    color: $muted-text-color;
+    text-decoration: none;
+    &:hover { color: $heading-color; }
+  }
+}
+
+// ── Hero: centred statement on soft blurred colour ─────────────────────────
+
+.sf-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 1.75rem 0 4.5rem;
+  background: $soft-bg;
+
+  @media (max-width: 768px) { padding-bottom: 3rem; }
+
+  &__blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.85;
+    pointer-events: none;
+
+    &--a {
+      top: -120px;
+      left: -80px;
+      width: 420px;
+      height: 420px;
+      background: $tint-peach;
+    }
+
+    &--b {
+      right: -100px;
+      bottom: -140px;
+      width: 460px;
+      height: 460px;
+      background: $tint-sage;
+    }
+  }
+
+  &__inner {
+    position: relative;
+
+    .sf-crumbs { margin-bottom: 2.5rem; }
+  }
+
+  &__title {
+    max-width: 880px;
+    margin: 0 0 1.25rem;
+    font-size: clamp(2rem, 4.4vw, 3.4rem);
+    font-weight: 700;
+    line-height: 1.12;
+    letter-spacing: -0.025em;
+    color: $heading-color;
+
+    // soft highlighter stroke under the key phrase
+    mark {
+      padding: 0 0.1em;
+      background: linear-gradient(transparent 62%, rgba($accent-color, 0.55) 62%);
+      color: inherit;
+    }
+  }
+
+  &__lead {
+    max-width: 640px;
+    margin: 0 0 2.25rem;
+    font-size: 1.05rem;
+    line-height: 1.8;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+    margin-bottom: 3rem;
+  }
+}
+
+.sf-btn--ghost {
+  background: #fff;
+  color: $heading-color;
+  box-shadow: inset 0 0 0 1px rgba($heading-color, 0.12);
+
+  &:hover { background: #fff; color: $primary-color; }
+}
+
+// one soft white bar with the four facts
+.sf-trust {
+  display: inline-grid;
+  grid-template-columns: repeat(4, auto);
+  align-items: center;
+  margin: 0;
+  padding: 0.5rem;
+  border-radius: 999px;
+  background: rgba(#fff, 0.8);
+  box-shadow: 0 10px 34px rgba($heading-color, 0.06);
+  list-style: none;
+  backdrop-filter: blur(6px);
+
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    border-radius: 24px;
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.7rem 1.25rem;
+    font-size: 0.88rem;
+    color: $muted-text-color;
+    text-align: left;
+
+    & + li { border-left: 1px solid rgba($heading-color, 0.08); }
+
+    @media (max-width: 900px) {
+      padding: 0.85rem 1rem;
+      & + li { border-left: 0; }
+    }
+  }
+
+  .pi {
+    flex-shrink: 0;
+    font-size: 1rem;
+    color: $primary-color;
+  }
+
+  strong {
+    font-weight: 700;
+    color: $heading-color;
+
+    @media (max-width: 900px) { display: block; }
+  }
+}
+
+// ── Principles ────────────────────────────────────────────────────────────────
+
+.sf-principles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @media (max-width: 1024px) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 560px) { grid-template-columns: 1fr; }
+
+  li {
+    padding: 1.75rem 1.5rem;
+    border-radius: $radius-lg;
+  }
+
+  .sf-icon { margin-bottom: 1.25rem; }
+
+  h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: $heading-color;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+}
+
+// ── Conditions ────────────────────────────────────────────────────────────────
+
+.sf-conditions {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @media (max-width: 1100px) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  @media (max-width: 760px) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 520px) { grid-template-columns: 1fr; gap: 0.75rem; }
+
+  a {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 1.5rem 1.5rem 3.75rem;
+    border-radius: $radius-md;
+    background: #fff;
+    box-shadow: 0 4px 18px rgba($heading-color, 0.04);
+    color: inherit;
+    text-decoration: none;
+    transition: box-shadow 0.3s, transform 0.35s $ease-out-soft;
+
+    @media (max-width: 520px) { padding: 1.1rem 3.5rem 1.1rem 1.25rem; }
+
+    &:hover {
+      box-shadow: 0 12px 30px rgba($heading-color, 0.08);
+      transform: translateY(-2px);
+    }
+  }
+
+  h3 {
+    margin: 0 0 0.45rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: $heading-color;
+  }
+
+  p {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.65;
+
+    @media (max-width: 520px) { -webkit-line-clamp: 2; }
+  }
+
+  &__go {
+    position: absolute;
+    left: 1.5rem;
+    bottom: 1.25rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: $accent-soft;
+    color: $primary-color;
+    transition: background 0.25s, color 0.25s;
+
+    .pi { font-size: 0.8rem; }
+
+    @media (max-width: 520px) { left: auto; right: 1rem; top: 50%; bottom: auto; transform: translateY(-50%); }
+  }
+
+  a:hover &__go { background: $primary-color; color: #fff; }
+
+  &__other a {
+    background: $accent-soft;
+    box-shadow: none;
+
+    .sf-conditions__go { background: #fff; }
+  }
+}
+
+// ── Services ──────────────────────────────────────────────────────────────────
+
+.sf-services {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @media (max-width: 900px) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 560px) { grid-template-columns: 1fr; }
+
+  a {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    height: 100%;
+    padding: 1.4rem;
+    border-radius: $radius-md;
+    color: inherit;
+    text-decoration: none;
+    transition: background 0.25s;
+
+    &:hover { background: $soft-bg; }
+  }
+
+  h3 {
+    margin: 0.15rem 0 0.35rem;
+    font-size: 1.02rem;
+    font-weight: 700;
+    color: $heading-color;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.65;
+  }
+}
+
+// ── Steps ─────────────────────────────────────────────────────────────────────
+
+.sf-steps {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2rem 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  // soft dotted path joining the step circles (first to last circle centre)
+  &::before {
+    content: '';
+    position: absolute;
+    top: 26px;
+    left: 26px;
+    right: calc((100% - 4.5rem) / 4 - 26px);
+    border-top: 2px dotted rgba($primary-color, 0.3);
+
+    @media (max-width: 900px) { display: none; }
+  }
+
+  @media (max-width: 900px) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 480px) { grid-template-columns: 1fr; }
+
+  li { position: relative; }
+
+  &__dot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    margin-bottom: 1rem;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 6px 20px rgba($heading-color, 0.07);
+    color: $primary-color;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  h3 {
+    margin: 0 0 0.4rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: $heading-color;
+  }
+
+  p {
+    max-width: 260px;
+    margin: 0;
+    font-size: 0.93rem;
+    line-height: 1.65;
+  }
+}
+
+// ── Founder ───────────────────────────────────────────────────────────────────
+
+.sf-founder {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  align-items: center;
+  gap: 2rem 3.5rem;
+  padding: clamp(1.5rem, 4vw, 2.75rem);
+  border-radius: 36px;
+  background: $tint-sage;
+
+  @media (max-width: 760px) { grid-template-columns: 1fr; }
+
+  img {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: center 30%;
+    border-radius: $radius-lg;
+
+    @media (max-width: 760px) { max-width: 240px; }
+  }
+
+  .sf-pill { margin-bottom: 1rem; }
+
+  &__name {
+    margin: 0 0 0.35rem;
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    font-weight: 700;
+    color: $heading-color;
+  }
+
+  &__role {
+    margin: 0 0 1.1rem;
+    color: $primary-color;
+    font-weight: 600;
+  }
+
+  &__text {
+    max-width: 680px;
+    margin: 0 0 1.75rem;
+    line-height: 1.8;
+  }
+
+  &__links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.75rem;
+  }
+}
+
+// ── Documents & contacts ──────────────────────────────────────────────────────
+
+.sf-info {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+
+  @media (max-width: 900px) { grid-template-columns: 1fr; }
+
+  &__card {
+    padding: 1.75rem;
+    border-radius: $radius-lg;
+    background: #fff;
+    box-shadow: 0 4px 18px rgba($heading-color, 0.04);
+  }
+
+  h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0 0 1.25rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: $heading-color;
+
+    .pi { color: $primary-color; }
+  }
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  a {
+    color: $heading-color;
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: $accent-color;
+    text-underline-offset: 3px;
+
+    &:hover { color: $primary-color; }
+  }
+
+  li span {
+    font-size: 0.88rem;
+    color: $muted-text-color;
+  }
+
+  address {
+    font-style: normal;
+    line-height: 1.75;
+    color: $heading-color;
+  }
+
+  &__hours {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 1rem 0 0;
+    padding: 0.4rem 0.85rem;
+    border-radius: 999px;
+    background: $soft-bg;
+    font-size: 0.88rem;
+
+    .pi { color: $primary-color; font-size: 0.85rem; }
+  }
+}
+
+// ── CTA ───────────────────────────────────────────────────────────────────────
+
+.sf-cta {
+  padding: clamp(2rem, 5vw, 3.5rem);
+  border-radius: 36px;
+  background: $accent-soft;
+
+  h2 {
+    margin: 0 0 0.6rem;
+    font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+    font-weight: 700;
+    color: $heading-color;
+  }
+
+  p { margin: 0 0 1.75rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sf-btn, .sf-conditions a { transition: none; }
+  .sf-btn:hover, .sf-conditions a:hover { transform: none; }
+}

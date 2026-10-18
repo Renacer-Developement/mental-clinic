@@ -1,6 +1,6 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { Component, inject, OnDestroy, PLATFORM_ID, signal } from '@angular/core';
+import { Component, ElementRef, inject, OnDestroy, PLATFORM_ID, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { ClinicContactsService } from '../../features/shared/components/clinic-contacts-dialog/clinic-contacts.service';
 import { clinicContacts } from '../../features/shared/constants/contacts.constants';
@@ -29,13 +29,14 @@ export class NavbarComponent implements OnDestroy {
   private readonly contactsService = inject(ClinicContactsService);
   private readonly googleAnalyticsService = inject(GoogleAnalyticsService);
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
   isMenuOpen = false;
   /** Which accordion is expanded in the mobile menu. */
-  mobileSection: 'conditions' | 'tests' | 'articles' | null = null;
+  mobileSection: 'conditions' | 'tests' | 'articles' | 'about' | null = null;
   /** Which desktop dropdown is open. A signal, because it is also changed from a
    *  timer (delayed close) and the app runs without zone.js change detection. */
-  readonly mega = signal<'conditions' | 'tests' | 'articles' | null>(null);
+  readonly mega = signal<'conditions' | 'tests' | 'articles' | 'about' | null>(null);
   private megaCloseTimer?: ReturnType<typeof setTimeout>;
 
   /** Test categories with their sections, for the tests mega menu. */
@@ -62,7 +63,7 @@ export class NavbarComponent implements OnDestroy {
     });
   }
 
-  openMega(which: 'conditions' | 'tests' | 'articles'): void {
+  openMega(which: 'conditions' | 'tests' | 'articles' | 'about'): void {
     clearTimeout(this.megaCloseTimer);
     this.mega.set(which);
   }
@@ -72,7 +73,7 @@ export class NavbarComponent implements OnDestroy {
    * already opened it via mouseenter, so a toggle would immediately close it again.
    * Closing happens on mouseleave, Escape, backdrop click or navigation.
    */
-  onTriggerClick(which: 'conditions' | 'tests' | 'articles'): void {
+  onTriggerClick(which: 'conditions' | 'tests' | 'articles' | 'about'): void {
     clearTimeout(this.megaCloseTimer);
     this.mega.set(which);
   }
@@ -105,6 +106,7 @@ export class NavbarComponent implements OnDestroy {
   ngOnDestroy(): void {
     if (isPlatformBrowser(this.platformId)) {
       document.body.style.overflow = '';
+      document.body.classList.remove('is-menu-open');
     }
   }
 
@@ -122,7 +124,7 @@ export class NavbarComponent implements OnDestroy {
     if (this.isMenuOpen) this.setMenu(false);
   }
 
-  toggleMobileSection(which: 'conditions' | 'tests' | 'articles'): void {
+  toggleMobileSection(which: 'conditions' | 'tests' | 'articles' | 'about'): void {
     this.mobileSection = this.mobileSection === which ? null : which;
   }
 
@@ -132,6 +134,12 @@ export class NavbarComponent implements OnDestroy {
     if (!open) this.mobileSection = null;
     if (isPlatformBrowser(this.platformId)) {
       document.body.style.overflow = open ? 'hidden' : '';
+      // lets global styles hide floating UI (the contact widget) behind the open menu
+      document.body.classList.toggle('is-menu-open', open);
+      // The licence strip above the header scrolls away, so the header's bottom edge moves —
+      // start the fixed panel right under wherever the header is now
+      const bar = this.host.nativeElement.querySelector('.mnav');
+      if (open && bar) this.host.nativeElement.style.setProperty('--mnav-panel-top', `${bar.getBoundingClientRect().bottom}px`);
     }
   }
 

@@ -1,0 +1,174 @@
+<div class="team-page">
+
+  <!-- Hero -->
+  <section class="team-hero">
+    <div class="container">
+      <nav class="team-hero__breadcrumb" aria-label="Хлібні крихти">
+        <a routerLink="/">Головна</a>
+        <span aria-hidden="true">/</span>
+        <span>Команда</span>
+      </nav>
+
+      <div class="team-hero__grid">
+        <div>
+          <p class="team-hero__eyebrow">Команда</p>
+          <h1 class="team-hero__title">Психіатри та психологи<br />центру Євгена Скрипника</h1>
+        </div>
+        <div class="team-hero__aside">
+          <p class="team-hero__lead">
+            Лікарі-психіатри та психологи центру працюють за принципами доказової медицини
+            та міжнародними протоколами.
+          </p>
+          <nav class="team-hero__jump" aria-label="Розділи сторінки">
+            <a href="#founder">Засновник</a>
+            @for (group of groups(); track group.category) {
+              <a [href]="'#' + group.category">{{ group.title }}</a>
+            }
+            <a href="#faq">Питання</a>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Founder -->
+  <section class="tm-section" id="founder">
+    <div class="container">
+      <header class="tm-head">
+        <span class="tm-head__index">01</span>
+        <h2 class="tm-head__title">Засновник центру</h2>
+      </header>
+
+      <article class="founder">
+        <figure class="founder__media">
+          <img src="assets/founder.jpg" alt="Євген Скрипник — засновник центру, лікар-психіатр вищої категорії" width="600" height="815" fetchpriority="high" />
+          <figcaption class="founder__badge">
+            <strong>20+</strong>
+            <span>років практики<br />у психіатрії</span>
+          </figcaption>
+        </figure>
+
+        <div class="founder__body">
+          <p class="founder__eyebrow">Засновник центру</p>
+          <h3 class="founder__name">Євген Скрипник</h3>
+          <p class="founder__role">Лікар-психіатр вищої категорії · психотерапевт · нарколог · невролог</p>
+
+          <p class="founder__text">
+            Заснував центр, щоб пацієнти отримували допомогу за міжнародними протоколами — без
+            псевдонаукових методів. Працює лікарем-експертом у Центрі громадського здоров’я МОЗ України,
+            «Лікар року» 2021.
+          </p>
+
+          <ol class="founder__principles">
+            <li>
+              <h4>Доказовий підхід</h4>
+              <p>Лише перевірені протоколи лікування та міжнародні стандарти.</p>
+            </li>
+            <li>
+              <h4>Відкритість</h4>
+              <p>Засновник двох спільнот доказових фахівців, де пацієнти отримують чесні відповіді.</p>
+            </li>
+            <li>
+              <h4>Постійний розвиток</h4>
+              <p>Регулярна участь у міжнародних семінарах і конференціях.</p>
+            </li>
+          </ol>
+
+          <div class="founder__actions">
+            <a class="founder__btn" [routerLink]="'/' + ROUTES.ABOUT">Детальніше про засновника</a>
+            <a class="tm-arrow" [routerLink]="'/' + ROUTES.VISIT">Записатися <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Psychiatrists / psychologists -->
+  @for (group of groups(); track group.category; let i = $index) {
+    <section class="tm-section" [id]="group.category">
+      <div class="container">
+        <header class="tm-head">
+          <span class="tm-head__index">0{{ i + 2 }}</span>
+          <h2 class="tm-head__title">{{ group.title }}</h2>
+          <p class="tm-head__lead">{{ group.lead }}</p>
+        </header>
+
+        @if (loading()) {
+          <ul class="tm-grid" aria-busy="true">
+            @for (n of [1, 2, 3]; track n) {
+              <li class="tm-card tm-card--skeleton" aria-hidden="true">
+                <div class="tm-card__media"></div>
+                <span class="tm-skel tm-skel--name"></span>
+                <span class="tm-skel tm-skel--role"></span>
+              </li>
+            }
+          </ul>
+        } @else if (failed()) {
+          <p class="tm-empty">Не вдалося завантажити список фахівців. Спробуйте оновити сторінку.</p>
+        } @else if (group.members.length === 0) {
+          <p class="tm-empty">Незабаром тут з’являться фахівці.</p>
+        } @else {
+          <ul class="tm-grid">
+            @for (m of group.members; track m._id) {
+              <li class="tm-card">
+                <div class="tm-card__media">
+                  @if (m.photo) {
+                    <img [src]="m.photo" [alt]="m.name + ' — ' + m.role" width="300" height="360" loading="lazy" decoding="async" />
+                  } @else {
+                    <span class="tm-card__initials" aria-hidden="true">{{ initials(m.name) }}</span>
+                  }
+                </div>
+                <h3 class="tm-card__name">{{ m.name }}</h3>
+                <p class="tm-card__role">
+                  {{ m.role }}
+                  @if (m.experience) { <span class="tm-card__exp">{{ m.experience }}</span> }
+                </p>
+                @if (m.bio) {
+                  <p class="tm-card__bio">{{ m.bio }}</p>
+                }
+                @if (m.specializations.length) {
+                  <p class="tm-card__tags">{{ m.specializations.join(' · ') }}</p>
+                }
+              </li>
+            }
+          </ul>
+        }
+      </div>
+    </section>
+  }
+
+  <!-- FAQ -->
+  <section class="tm-section" id="faq">
+    <div class="container">
+      <header class="tm-head">
+        <span class="tm-head__index">0{{ groups().length + 2 }}</span>
+        <h2 class="tm-head__title">Часті питання</h2>
+        <p class="tm-head__lead">
+          Ще не визначилися? Пройдіть <a class="tm-inline" [routerLink]="'/' + ROUTES.TEST + '/list'">психологічний тест</a>
+          або дізнайтеся, <a class="tm-inline" [routerLink]="'/' + ROUTES.VISIT">як проходить консультація</a>.
+        </p>
+      </header>
+
+      <div class="tm-faq">
+        @for (f of faq; track f.q; let first = $first) {
+          <details class="tm-faq__item" [open]="first">
+            <summary><h3>{{ f.q }}</h3><i class="pi pi-plus" aria-hidden="true"></i></summary>
+            <p>{{ f.a }}</p>
+          </details>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="tm-cta">
+    <div class="container tm-cta__inner">
+      <div>
+        <h2 class="tm-cta__title">Не знаєте, до кого звернутися?</h2>
+        <p class="tm-cta__lead">Запишіться на консультацію — ми підберемо фахівця під ваш запит.</p>
+      </div>
+      <a class="tm-cta__btn" [routerLink]="'/' + ROUTES.VISIT">Записатися <span aria-hidden="true">→</span></a>
+    </div>
+  </section>
+
+</div>

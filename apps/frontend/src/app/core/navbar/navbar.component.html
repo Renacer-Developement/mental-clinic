@@ -12,9 +12,21 @@
       </a>
 
       <nav class="dnav__links" aria-label="Сторінки">
-        <a [routerLink]="'/' + ROUTES.ABOUT" routerLinkActive="is-active" (click)="trackNav(ROUTES.ABOUT, 'Про лікаря')">Про лікаря</a>
         <a [routerLink]="'/' + ROUTES.REVIEWS" routerLinkActive="is-active" (click)="trackNav(ROUTES.REVIEWS, 'Відгуки')">Відгуки</a>
         <a [routerLink]="'/' + ROUTES.DRUGS" routerLinkActive="is-active" (click)="trackNav(ROUTES.DRUGS, 'Перевірка ліків')">Перевірка ліків</a>
+        <!-- "Про нас" dropdown — routerLinkActive on the wrapper lights the trigger up on /about and /team -->
+        <div class="dnav__drop" routerLinkActive="is-active" (mouseenter)="openMega('about')" (mouseleave)="closeMega()">
+          <button type="button" class="dnav__drop-trigger" [class.is-open]="mega() === 'about'"
+                  [attr.aria-expanded]="mega() === 'about'" (click)="onTriggerClick('about')">
+            Про нас <i class="pi pi-chevron-down"></i>
+          </button>
+          <div class="dnav__drop-panel" [class.is-open]="mega() === 'about'">
+            <a [routerLink]="'/' + ROUTES.CENTER" routerLinkActive="is-active" (click)="trackNav(ROUTES.CENTER, 'Про центр'); closeMega(true)">Про центр</a>
+            <a [routerLink]="'/' + ROUTES.ABOUT" routerLinkActive="is-active" (click)="trackNav(ROUTES.ABOUT, 'Про засновника'); closeMega(true)">Про засновника</a>
+            <!-- Team page hidden until specialists are added -->
+            <!-- <a [routerLink]="'/' + ROUTES.TEAM" routerLinkActive="is-active" (click)="trackNav(ROUTES.TEAM, 'Команда'); closeMega(true)">Команда</a> -->
+          </div>
+        </div>
       </nav>
 
       <div class="dnav__contacts">
@@ -196,10 +208,24 @@
         </div>
       </li>
 
-      <li><a class="mnav__row" [routerLink]="'/' + ROUTES.ABOUT" routerLinkActive="is-active" (click)="trackNav(ROUTES.ABOUT, 'Про лікаря'); closeMenu()">Про лікаря</a></li>
       <li><a class="mnav__row" [routerLink]="'/' + ROUTES.REVIEWS" routerLinkActive="is-active" (click)="trackNav(ROUTES.REVIEWS, 'Відгуки'); closeMenu()">Відгуки</a></li>
       <li><a class="mnav__row" [routerLink]="'/' + ROUTES.DRUGS" routerLinkActive="is-active" (click)="trackNav(ROUTES.DRUGS, 'Перевірка ліків'); closeMenu()">Перевірка ліків</a></li>
       <li><a class="mnav__row" [routerLink]="'/' + ROUTES.VISIT" routerLinkActive="is-active" (click)="trackNav(ROUTES.VISIT, 'Правила відвідування'); closeMenu()">Правила відвідування</a></li>
+      <!-- About accordion -->
+      <li class="mnav__group" [class.is-open]="mobileSection === 'about'">
+        <button type="button" class="mnav__row" (click)="toggleMobileSection('about')"
+                [attr.aria-expanded]="mobileSection === 'about'">
+          Про нас <i class="pi pi-chevron-down"></i>
+        </button>
+        <div class="mnav__sub">
+          <div class="mnav__sub-inner">
+            <a [routerLink]="'/' + ROUTES.CENTER" (click)="trackNav(ROUTES.CENTER, 'Про центр'); closeMenu()">Про центр</a>
+            <a [routerLink]="'/' + ROUTES.ABOUT" (click)="trackNav(ROUTES.ABOUT, 'Про засновника'); closeMenu()">Про засновника</a>
+            <!-- Team page hidden until specialists are added -->
+            <!-- <a [routerLink]="'/' + ROUTES.TEAM" (click)="trackNav(ROUTES.TEAM, 'Команда'); closeMenu()">Команда</a> -->
+          </div>
+        </div>
+      </li>
     </ul>
   </div>
 

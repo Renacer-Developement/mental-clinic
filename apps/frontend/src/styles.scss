@@ -141,3 +141,6 @@ h1, h2, h3, h4, h5, h6 {
 
   &:hover { text-decoration-thickness: 2px; }
 }
+
+// The floating contact widget would sit on top of the open mobile menu's own CTA
+body.is-menu-open app-feedback-widget { display: none; }

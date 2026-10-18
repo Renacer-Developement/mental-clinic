@@ -1,0 +1,228 @@
+<div class="center-page">
+
+  <!-- Hero -->
+  <section class="sf-hero">
+    <span class="sf-hero__blob sf-hero__blob--a" aria-hidden="true"></span>
+    <span class="sf-hero__blob sf-hero__blob--b" aria-hidden="true"></span>
+
+    <div class="container sf-hero__inner">
+      <nav class="sf-crumbs" aria-label="Хлібні крихти">
+        <a routerLink="/">Головна</a>
+        <span aria-hidden="true">·</span>
+        <span>Про центр</span>
+      </nav>
+
+      <h1 class="sf-hero__title">
+        Онлайн центр <mark>ментального здоров’я</mark> Євгена Скрипника
+      </h1>
+      <p class="sf-hero__lead">
+        Тут вас вислухають без поспіху й засуджень. Лікарі-психіатри та психологи допомагають дорослим
+        із депресією, тривогою, ПТСР, залежностями та іншими станами — онлайн, конфіденційно
+        й за принципами доказової медицини.
+      </p>
+      <div class="sf-hero__actions">
+        <a class="sf-btn" [routerLink]="'/' + ROUTES.VISIT">Записатися на консультацію</a>
+        <!-- Team page hidden until specialists are added -->
+        <!-- <a class="sf-btn sf-btn--ghost" [routerLink]="'/' + ROUTES.TEAM">Наша команда</a> -->
+      </div>
+
+      <ul class="sf-trust">
+        @for (f of facts; track f.value) {
+          <li>
+            <i class="pi" [class]="f.icon" aria-hidden="true"></i>
+            <span><strong>{{ f.value }}</strong> {{ f.label }}</span>
+          </li>
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Approach -->
+  <section class="sf-section">
+    <div class="container">
+      <header class="sf-head">
+        <h2>Що для нас важливо</h2>
+        <p>Чотири принципи, на яких тримається робота кожного фахівця центру.</p>
+      </header>
+
+      <ul class="sf-principles">
+        @for (p of principles; track p.title; let i = $index) {
+          <li [class]="'sf-tint-' + (i % 4)">
+            <span class="sf-icon"><i class="pi" [class]="p.icon" aria-hidden="true"></i></span>
+            <h3>{{ p.title }}</h3>
+            <p>{{ p.text }}</p>
+          </li>
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Conditions -->
+  <section class="sf-section sf-section--soft">
+    <div class="container">
+      <header class="sf-head">
+        <h2>З чим ми допомагаємо</h2>
+        <p>Оберіть стан, щоб дізнатися про симптоми, діагностику та лікування.</p>
+      </header>
+
+      <ul class="sf-conditions">
+        @for (c of conditions; track c.slug) {
+          <li>
+            <a [routerLink]="'/' + c.slug">
+              <h3>{{ c.label }}</h3>
+              <p>{{ c.text }}</p>
+              <span class="sf-conditions__go" aria-hidden="true"><i class="pi pi-arrow-right"></i></span>
+            </a>
+          </li>
+        }
+        <li class="sf-conditions__other">
+          <a [routerLink]="'/' + ROUTES.VISIT">
+            <h3>Не знайшли свій стан?</h3>
+            <p>Розкажіть, що вас турбує, — ми підберемо фахівця і формат допомоги.</p>
+            <span class="sf-conditions__go" aria-hidden="true"><i class="pi pi-arrow-right"></i></span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="sf-section">
+    <div class="container">
+      <header class="sf-head">
+        <h2>Чим ми можемо бути корисні</h2>
+        <p>Від першої консультації до безкоштовних інструментів для самоперевірки.</p>
+      </header>
+
+      <ul class="sf-services">
+        @for (s of services; track s.title) {
+          <li>
+            <a [routerLink]="s.link">
+              <span class="sf-icon sf-icon--sm"><i class="pi" [class]="s.icon" aria-hidden="true"></i></span>
+              <div>
+                <h3>{{ s.title }}</h3>
+                <p>{{ s.text }}</p>
+              </div>
+            </a>
+          </li>
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="sf-section sf-section--soft">
+    <div class="container">
+      <header class="sf-head">
+        <h2>Як проходить консультація</h2>
+        <p>
+          Відеозустріч нічим не поступається очному прийому. Детальніше — у
+          <a class="sf-inline" [routerLink]="'/' + ROUTES.VISIT">правилах відвідування</a>.
+        </p>
+      </header>
+
+      <ol class="sf-steps">
+        @for (s of steps; track s.title; let i = $index) {
+          <li>
+            <span class="sf-steps__dot">{{ i + 1 }}</span>
+            <h3>{{ s.title }}</h3>
+            <p>{{ s.text }}</p>
+          </li>
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- Founder -->
+  <section class="sf-section">
+    <div class="container">
+      <div class="sf-founder">
+        <img src="assets/founder.jpg" alt="Євген Скрипник — засновник центру" width="600" height="815" loading="lazy" decoding="async" />
+        <div>
+          <span class="sf-pill">Засновник центру</span>
+          <h2 class="sf-founder__name">Євген Скрипник</h2>
+          <p class="sf-founder__role">Лікар-психіатр вищої категорії, понад 20 років практики</p>
+          <p class="sf-founder__text">
+            Починав дільничним лікарем Третьої обласної психіатричної лікарні в Глухові, сьогодні — лікар-експерт
+            Національного превентивного механізму, який перевіряє психіатричні заклади від Уповноваженого
+            Верховної Ради з прав людини. Номінант «Лікар року» 2021, засновник спільнот «Доказові психіатри,
+            психотерапевти та психологи» та «Доказові лікарі України».
+          </p>
+          <div class="sf-founder__links">
+            <a class="sf-btn" [routerLink]="'/' + ROUTES.ABOUT">Про засновника</a>
+            <!-- Team page hidden until specialists are added -->
+            <!-- <a class="sf-link" [routerLink]="'/' + ROUTES.TEAM">Уся команда</a> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Documents & contacts -->
+  <section class="sf-section sf-section--soft">
+    <div class="container">
+      <header class="sf-head">
+        <h2>Документи та контакти</h2>
+        <p>Усе офіційне — відкрито. Маєте запитання? Напишіть або зателефонуйте.</p>
+      </header>
+
+      <div class="sf-info">
+        <div class="sf-info__card">
+          <h3><i class="pi pi-file-pdf" aria-hidden="true"></i> Документи</h3>
+          <ul>
+            <li>
+              <a href="assets/docs/license-moz.pdf" target="_blank" rel="noopener">Ліцензія МОЗ України (PDF)</a>
+              <span>Рішення № 1285 від 17.07.2023</span>
+            </li>
+            <li>
+              <a [routerLink]="'/' + ROUTES.CONTRACT">Публічний договір (оферта)</a>
+              <span>Умови консультацій, оплати та повернення коштів</span>
+            </li>
+            <li>
+              <a [routerLink]="'/' + ROUTES.VISIT">Правила відвідування</a>
+              <span>Формат, конфіденційність, скасування запису</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="sf-info__card">
+          <h3><i class="pi pi-phone" aria-hidden="true"></i> Контакти</h3>
+          <ul>
+            @for (p of phones; track p.phone) {
+              <li>
+                <a [href]="'tel:' + p.phone">{{ p.text }}</a>
+                <span>{{ p.label }}</span>
+              </li>
+            }
+            <li>
+              <a href="https://t.me/skripnik_evgen" target="_blank" rel="noopener">Telegram</a>
+              <span>Запис і запитання в месенджері</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="sf-info__card">
+          <h3><i class="pi pi-map-marker" aria-hidden="true"></i> Реквізити</h3>
+          <address>
+            ФОП Скрипник Є.В.<br />
+            Сумська обл., м. Глухів,<br />
+            вул. Терещенків, 56
+          </address>
+          <p class="sf-info__hours"><i class="pi pi-clock" aria-hidden="true"></i> Пн–Сб, 8:00–22:00</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="sf-section">
+    <div class="container">
+      <div class="sf-cta">
+        <h2>Перший крок — найважчий. Ми поруч.</h2>
+        <p>Запишіться на консультацію — без черг, з будь-якого місця.</p>
+        <a class="sf-btn" [routerLink]="'/' + ROUTES.VISIT">Записатися</a>
+      </div>
+    </div>
+  </section>
+
+</div>

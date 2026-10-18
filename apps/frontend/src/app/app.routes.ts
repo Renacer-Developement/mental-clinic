@@ -6,6 +6,7 @@ import { AboutComponent } from './features/about/about.component';
 import { DrugsComponent } from './features/drugs/drugs.component';
 import { VisitPageComponent } from './features/visit/visit-page.component';
 import { ReviewsComponent } from './features/reviews/reviews.component';
+import { CenterComponent } from './features/center/center.component';
 import { ConditionPageComponent } from './features/conditions/condition-page.component';
 import { CONDITIONS } from './features/conditions/conditions.data';
 
@@ -23,6 +24,7 @@ export const APP_ROUTES: Routes = [
       { path: ROUTES.DRUGS, component: DrugsComponent },
       { path: ROUTES.VISIT, component: VisitPageComponent },
       { path: ROUTES.REVIEWS, component: ReviewsComponent },
+      { path: ROUTES.CENTER, component: CenterComponent },
       ...CONDITIONS.map(c => ({ path: c.slug, component: ConditionPageComponent, data: { slug: c.slug } })),
 
       // Everything below is RenderMode.Server (rendered per-request, not at
@@ -46,6 +48,10 @@ export const APP_ROUTES: Routes = [
             loadComponent: () => import('./features/tests/list/list.component').then(m => m.ListComponent),
           },
         ],
+      },
+      {
+        path: ROUTES.TEAM,
+        loadComponent: () => import('./features/team/team.component').then(m => m.TeamComponent),
       },
       {
         path: ROUTES.CONTRACT,

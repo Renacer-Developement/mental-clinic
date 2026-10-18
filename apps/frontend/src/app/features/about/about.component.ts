@@ -43,7 +43,7 @@ export class AboutComponent extends AnimatedSection implements OnInit {
 
   ngOnInit(): void {
     this.seo.updatePage({
-      title: "Євген Скрипник — психіатр, психотерапевт, нарколог | Про лікаря",
+      title: "Євген Скрипник — психіатр, психотерапевт, нарколог | Про засновника центру",
       description: "Євген Скрипник — лікар-психіатр вищої категорії, 20+ років досвіду. Депресія, тривожні розлади, ПТСР, ОКР, залежності. Доказова медицина, онлайн.",
       canonical: '/about',
       ogType: 'profile',
@@ -51,12 +51,12 @@ export class AboutComponent extends AnimatedSection implements OnInit {
         '@context': 'https://schema.org',
         '@type': 'ProfilePage',
         url: 'https://doctor-skripnik.com.ua/about',
-        name: 'Про лікаря — Євген Скрипник',
+        name: 'Про засновника центру — Євген Скрипник',
         breadcrumb: {
           '@type': 'BreadcrumbList',
           itemListElement: [
             { '@type': 'ListItem', position: 1, name: 'Головна', item: 'https://doctor-skripnik.com.ua/' },
-            { '@type': 'ListItem', position: 2, name: 'Про лікаря', item: 'https://doctor-skripnik.com.ua/about' },
+            { '@type': 'ListItem', position: 2, name: 'Про засновника центру', item: 'https://doctor-skripnik.com.ua/about' },
           ],
         },
         mainEntity: {

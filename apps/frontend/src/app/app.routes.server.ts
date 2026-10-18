@@ -8,10 +8,12 @@ export const serverRoutes: ServerRoute[] = [
   { path: 'drugs', renderMode: RenderMode.Prerender },
   { path: 'visit', renderMode: RenderMode.Prerender },
   { path: 'reviews', renderMode: RenderMode.Prerender },
+  { path: 'pro-tsentr', renderMode: RenderMode.Prerender },
   ...CONDITIONS.map(c => ({ path: c.slug, renderMode: RenderMode.Prerender as const })),
 
   // Dynamic content backed by the API — render per-request so bots/crawlers
   // always see the current tests, articles and contract text, not a stale build-time snapshot
+  { path: 'team', renderMode: RenderMode.Server },
   { path: 'contract', renderMode: RenderMode.Server },
   { path: 'test', renderMode: RenderMode.Server, status: 301 },
   { path: 'test/list', renderMode: RenderMode.Server },
