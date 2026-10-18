@@ -83,6 +83,8 @@ export class TeamComponent implements OnInit {
       description: "Команда центру ментального здоров'я Євгена Скрипника: засновник, лікарі-психіатри та психологи. Доказовий підхід, онлайн-консультації пн–сб 8:00–22:00.",
       keywords: ['психіатр онлайн', 'психолог онлайн', 'команда психіатрів', 'Євген Скрипник'],
       canonical: '/' + ROUTES.TEAM,
+      // Hidden from search until specialists are added — remove together with the commented-out links
+      robots: 'noindex, follow',
       ogImage: '/assets/founder.jpg',
       ogImageAlt: 'Євген Скрипник — засновник центру ментального здоров’я',
       schema: this.buildSchema([]),
