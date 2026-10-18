@@ -1,7 +1,10 @@
+export type TeamCategory = 'psychiatrist' | 'psychologist';
+
 export interface TeamMember {
   _id: string;
   name: string;
   role: string;
+  category: TeamCategory;
   bio: string;
   specializations: string[];
   photo: string;

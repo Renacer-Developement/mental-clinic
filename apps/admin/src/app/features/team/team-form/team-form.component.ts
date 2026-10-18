@@ -8,6 +8,7 @@ import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { SelectModule } from 'primeng/select';
 import { MessageService } from 'primeng/api';
 import { TeamService } from '../../../core/services/team.service';
 import { TeamMember } from '../../../core/models/team.model';
@@ -16,7 +17,7 @@ import { TeamMember } from '../../../core/models/team.model';
   selector: 'app-team-form',
   standalone: true,
   imports: [CommonModule, FormsModule, InputTextModule, TextareaModule,
-            ButtonModule, ToastModule, ToggleButtonModule, InputNumberModule],
+            ButtonModule, ToastModule, ToggleButtonModule, InputNumberModule, SelectModule],
   providers: [MessageService],
   templateUrl: './team-form.component.html',
   styleUrl: './team-form.component.scss',
@@ -31,8 +32,13 @@ export class TeamFormComponent implements OnInit {
   loading = signal(false);
   saving  = signal(false);
 
+  readonly categoryOptions = [
+    { label: 'Лікар-психіатр', value: 'psychiatrist' },
+    { label: 'Психолог',       value: 'psychologist' },
+  ];
+
   form: Partial<TeamMember> = {
-    name: '', role: '', bio: '', experience: '',
+    name: '', role: '', category: 'psychiatrist', bio: '', experience: '',
     email: '', phone: '', photo: '',
     specializations: [], education: [],
     isActive: true, order: 0,

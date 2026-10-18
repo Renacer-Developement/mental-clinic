@@ -3,6 +3,8 @@ const { Schema, model } = require('mongoose');
 const teamSchema = new Schema({
     name:             { type: String, required: true },
     role:             { type: String, required: true },
+    // Which group the member is shown in on the public /team page
+    category:         { type: String, enum: ['psychiatrist', 'psychologist'], default: 'psychiatrist' },
     bio:              { type: String, default: '' },
     specializations:  [String],
     photo:            { type: String, default: '' },

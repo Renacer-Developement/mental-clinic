@@ -30,6 +30,14 @@
             <input pInputText [(ngModel)]="form.role" placeholder="напр. Психіатр" class="w-full" />
           </div>
           <div class="field">
+            <label>Напрям *</label>
+            <p-select [(ngModel)]="form.category"
+                      [options]="categoryOptions"
+                      optionLabel="label"
+                      optionValue="value"
+                      styleClass="w-full" />
+          </div>
+          <div class="field">
             <label>Досвід</label>
             <input pInputText [(ngModel)]="form.experience" placeholder="напр. 10+ років" class="w-full" />
           </div>
