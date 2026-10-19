@@ -35,7 +35,6 @@ export class HeroBannerComponent implements AfterViewInit, OnDestroy {
       // ── Text entrance (the visual column is intentionally static) ─────
       createTimeline({ defaults: { ease: 'outExpo', duration: 1100 } })
         .add('.hero-tag', { opacity: [0, 1], translateX: [-40, 0], skewX: [-12, -12] }, 150)
-        .add('.hero-name', { opacity: [0, 1], translateY: [24, 0] }, 250)
         .add(title.words, { translateY: ['110%', '0%'], rotate: [6, 0], delay: stagger(55) }, 320)
         .add('.hero-lead', { opacity: [0, 1], translateY: [24, 0] }, 650)
         .add('.hero-actions', { opacity: [0, 1], translateY: [24, 0] }, 760)

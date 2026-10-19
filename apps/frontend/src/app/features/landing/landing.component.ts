@@ -50,7 +50,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
     });
     this.seo.updatePage({
       title: "Ментальне здоров'я Євгена Скрипника — психіатр онлайн",
-      description: "Психіатр Євген Скрипник — 20+ років досвіду. Лікування депресії, тривоги, ПТСР, ОКР та залежностей онлайн. Доказова медицина. Запис пн–сб 8:00–22:00.",
+      description: "Центр ментального здоров'я Євгена Скрипника — доказові психіатри, психотерапевти та психологи онлайн. Депресія, тривога, ПТСР, ОКР, залежності. Запис пн–сб 8:00–22:00.",
       canonical: '/',
       schema: [
         {
@@ -59,7 +59,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
           '@id': 'https://doctor-skripnik.com.ua/#webpage',
           url: 'https://doctor-skripnik.com.ua/',
           name: "Онлайн центр ментального здоров'я Євгена Скрипника",
-          description: "Психіатр Євген Скрипник — 20+ років досвіду. Лікування депресії, тривоги, ПТСР та залежностей методами доказової медицини.",
+          description: "Онлайн центр ментального здоров'я Євгена Скрипника: доказові психіатри, психотерапевти та психологи. Лікування депресії, тривоги, ПТСР та залежностей.",
           inLanguage: 'uk',
           isPartOf: { '@id': 'https://doctor-skripnik.com.ua/#website' },
           about: { '@id': 'https://doctor-skripnik.com.ua/#organization' },

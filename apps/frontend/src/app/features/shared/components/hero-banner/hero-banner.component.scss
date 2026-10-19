@@ -123,14 +123,6 @@
   color: $heading-color;
 }
 
-.hero-name {
-  display: block;
-  font-size: clamp(1rem, 1.6vw, 1.35rem);
-  font-weight: 500;
-  color: $primary-color;
-  letter-spacing: 0.04em;
-  margin-bottom: 0.5rem;
-}
 
 .nowrap {
   white-space: nowrap;
@@ -158,6 +150,13 @@
   line-height: 1.7;
   margin: 0 0 2rem;
   max-width: 470px;
+}
+
+.hero-lead--accent {
+  font-size: clamp(1.05rem, 1.6vw, 1.3rem);
+  font-weight: 500;
+  line-height: 1.5;
+  color: $primary-color;
 }
 
 // ── Actions ───────────────────────────────────────────────────────────────────
