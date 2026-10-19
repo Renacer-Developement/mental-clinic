@@ -12,13 +12,6 @@ interface Video {
   title: string;
 }
 
-interface Review {
-  name: string;
-  date: string;
-  rating: number;
-  text: string;
-}
-
 interface Specialization {
   title: string;
   description: string;
@@ -65,7 +58,7 @@ export class AboutComponent extends AnimatedSection implements OnInit {
           name: 'Євген Скрипник',
           honorificPrefix: 'Лікар',
           jobTitle: 'Психіатр, психотерапевт, нарколог, невролог',
-          description: 'Лікар-психіатр вищої категорії з понад 20-річним досвідом. Приймає онлайн та офлайн. Спеціалізується на доказовій психіатрії та лікуванні депресії, тривоги, ПТСР, ОКР та залежностей.',
+          description: 'Лікар-психіатр вищої категорії з понад 20-річним досвідом. Консультує онлайн. Спеціалізується на доказовій психіатрії та лікуванні депресії, тривоги, ПТСР, ОКР та залежностей.',
           url: 'https://doctor-skripnik.com.ua/about',
           image: 'https://doctor-skripnik.com.ua/assets/owner.webp',
           telephone: '+380665691677',
@@ -129,44 +122,6 @@ export class AboutComponent extends AnimatedSection implements OnInit {
     { breakpoint: '1199px', numVisible: 3, numScroll: 1 },
     { breakpoint: '900px',  numVisible: 2, numScroll: 1 },
     { breakpoint: '560px',  numVisible: 1, numScroll: 1 },
-  ];
-
-  reviewCarouselOptions = [
-    { breakpoint: '1100px', numVisible: 2, numScroll: 1 },
-    { breakpoint: '640px',  numVisible: 1, numScroll: 1 },
-  ];
-
-  reviews: Review[] = [
-    {
-      name: 'Анна К.',
-      date: 'Квітень 2025',
-      rating: 5,
-      text: 'Після місяців панічних атак нарешті знайшла лікаря, який пояснив причину та призначив чітке лікування. Євген Васильович — справжній професіонал без зайвих слів.',
-    },
-    {
-      name: 'Олексій М.',
-      date: 'Лютий 2025',
-      rating: 5,
-      text: 'Звернувся з тяжкою депресією. Лікар уважно вислухав, не знецінив стан і підібрав терапію, яка справді спрацювала. Вдячний за людяність та компетентність.',
-    },
-    {
-      name: 'Марія Л.',
-      date: 'Грудень 2025',
-      rating: 5,
-      text: 'Тривожність заважала жити роками. Після консультації отримала зрозумілий план — без зайвих пігулок, лише те, що реально потрібно. Дуже ціную доказовий підхід.',
-    },
-    {
-      name: 'Дмитро В.',
-      date: 'Жовтень 2025',
-      rating: 5,
-      text: 'Звернувся щодо залежності. Лікар без осуду, конкретно і по суті пояснив механізм і шлях виходу. Вперше відчув, що одужання — це реально.',
-    },
-    {
-      name: 'Наталія С.',
-      date: 'Серпень 2025',
-      rating: 5,
-      text: 'Онлайн-консультація пройшла чудово. Євген Васильович відповів на всі питання, розвіяв страхи щодо антидепресантів і дав чіткі рекомендації.',
-    },
   ];
 
   specializations: Specialization[] = [

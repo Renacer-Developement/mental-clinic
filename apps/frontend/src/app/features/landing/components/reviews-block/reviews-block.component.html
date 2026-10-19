@@ -1,0 +1,60 @@
+@if (reviews().length) {
+<section class="reviews-block">
+  <div class="reviews-block__inner">
+
+    <header class="rb-head">
+      <div>
+        <span class="rb-head__eyebrow">Відгуки</span>
+        <h2 class="rb-head__title">Що кажуть пацієнти</h2>
+      </div>
+      <a class="rb-head__all" [routerLink]="'/' + ROUTES.REVIEWS">
+        Всі відгуки
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/>
+        </svg>
+      </a>
+    </header>
+
+    <p-carousel
+      [value]="reviews()"
+      [numVisible]="3"
+      [numScroll]="1"
+      [circular]="true"
+      [showIndicators]="true"
+      [responsiveOptions]="carouselOptions"
+      styleClass="reviews-block__carousel"
+    >
+      <ng-template let-review pTemplate="item">
+        <div class="rb-slide">
+          <div class="rb-card">
+            <p class="rb-card__text">{{ review.text }}</p>
+            <div class="rb-card__stars" [attr.aria-label]="'Оцінка ' + review.rating + ' з 5'">
+              @for (s of starsArray(review.rating); track s) {
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+              }
+            </div>
+            <div class="rb-card__author">
+              <div class="rb-card__avatar">
+                @if (review.photo) {
+                  <img [src]="review.photo" [alt]="review.name" loading="lazy" />
+                } @else {
+                  {{ review.name.charAt(0) }}
+                }
+              </div>
+              <div class="rb-card__meta">
+                <span class="rb-card__name">{{ review.name }}</span>
+                @if (review.role) {
+                  <span class="rb-card__role">{{ review.role }}</span>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </p-carousel>
+
+  </div>
+</section>
+}

@@ -488,78 +488,6 @@
   }
 }
 
-// ── Reviews carousel ──────────────────────────────────────────────────────────
-
-.about-reviews {
-  &__slide {
-    display: flex;
-    flex: 1;
-    min-width: 0;
-    padding: 0 0.5rem;
-  }
-
-  &__card {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-width: 0;
-    padding: 1.75rem;
-    border-radius: 16px;
-    background: $section-bg;
-    overflow-wrap: break-word;
-  }
-
-  &__quote { display: none; }
-
-  &__text {
-    flex: 1;
-    margin: 0 0 1.25rem;
-    font-size: 0.98rem;
-    line-height: 1.7;
-    color: $heading-color;
-  }
-
-  &__stars {
-    display: flex;
-    gap: 2px;
-    margin-bottom: 1rem;
-    color: $primary-color;
-  }
-
-  &__author {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  &__avatar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    background: $accent-color;
-    color: $heading-color;
-    font-weight: 700;
-  }
-
-  &__meta {
-    display: flex;
-    flex-direction: column;
-  }
-
-  &__name {
-    font-weight: 700;
-    color: $heading-color;
-  }
-
-  &__date {
-    font-size: 0.85rem;
-    color: $muted-text-color;
-  }
-}
-
 // ── Videos carousel ───────────────────────────────────────────────────────────
 
 .about-videos {
@@ -626,7 +554,6 @@
 }
 
 // PrimeNG carousel overrides — must be at host level to pierce encapsulation
-::ng-deep .about-reviews__carousel,
 ::ng-deep .about-videos__carousel {
   .p-carousel-indicator-list {
     padding: 1.25rem 0 0;

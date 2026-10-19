@@ -12,7 +12,7 @@
         <h1 class="about-hero__title">Євген Скрипник</h1>
         <p class="about-hero__subtitle">Лікар-психіатр · Психотерапевт · Нарколог · Невролог</p>
         <p class="about-hero__lead">
-          Понад 20 років практики у психіатрії та психотерапії. Онлайн і офлайн консультації —
+          Понад 20 років практики у психіатрії та психотерапії. Онлайн-консультації —
           лікування депресії, тривожності, ПТСР та залежностей за доказовими протоколами.
         </p>
         <ul class="about-hero__tags">
@@ -181,47 +181,6 @@
       </figure>
     </div>
   }
-
-  <!-- Reviews -->
-  <section class="ab-section about-reviews">
-    <div class="container">
-      <h2 class="ab-title">Що кажуть пацієнти</h2>
-      <p class="ab-lead">Реальний досвід людей, які звернулись по допомогу.</p>
-
-      <p-carousel
-        [value]="reviews"
-        [numVisible]="3"
-        [numScroll]="1"
-        [circular]="true"
-        [showIndicators]="true"
-        [responsiveOptions]="reviewCarouselOptions"
-        styleClass="about-reviews__carousel"
-      >
-        <ng-template let-review pTemplate="item">
-          <div class="about-reviews__slide">
-            <div class="about-reviews__card">
-              <div class="about-reviews__quote">"</div>
-              <p class="about-reviews__text">{{ review.text }}</p>
-              <div class="about-reviews__stars">
-                @for (i of [1,2,3,4,5]; track i) {
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                  </svg>
-                }
-              </div>
-              <div class="about-reviews__author">
-                <div class="about-reviews__avatar">{{ review.name.charAt(0) }}</div>
-                <div class="about-reviews__meta">
-                  <span class="about-reviews__name">{{ review.name }}</span>
-                  <span class="about-reviews__date">{{ review.date }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </ng-template>
-      </p-carousel>
-    </div>
-  </section>
 
   <!-- Videos -->
   <section class="ab-section ab-section--cream about-videos">
