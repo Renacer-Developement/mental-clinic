@@ -6,6 +6,7 @@ import { TelegramBannerComponent } from '../shared/components/telegram-banner/te
 import { SeoService } from '../../core/seo/seo.service';
 import { AnimatedSection } from '../../shared/animation/animated-section';
 import { AnimeModule } from '../../shared/animation/anime.service';
+import { CAROUSEL_NAV_BUTTON_PROPS } from '../../shared/constants/carousel.constants';
 
 interface Video {
   id: string;
@@ -117,6 +118,8 @@ export class AboutComponent extends AnimatedSection implements OnInit {
   closeCredential(): void {
     this.selectedCredential = null;
   }
+
+  protected readonly navButtonProps = CAROUSEL_NAV_BUTTON_PROPS;
 
   carouselResponsiveOptions = [
     { breakpoint: '1199px', numVisible: 3, numScroll: 1 },

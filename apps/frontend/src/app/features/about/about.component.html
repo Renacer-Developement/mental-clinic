@@ -196,6 +196,8 @@
         [showIndicators]="true"
         [responsiveOptions]="carouselResponsiveOptions"
         styleClass="about-videos__carousel"
+        [prevButtonProps]="navButtonProps"
+        [nextButtonProps]="navButtonProps"
       >
         <ng-template let-video pTemplate="item">
           <div class="about-videos__slide">

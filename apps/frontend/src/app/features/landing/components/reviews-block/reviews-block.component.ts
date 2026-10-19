@@ -2,6 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ImportsModule } from '../../../../shared/primeng-imports.module';
 import { ROUTES } from '../../../../shared/constants/routes.constants';
+import { CAROUSEL_NAV_BUTTON_PROPS } from '../../../../shared/constants/carousel.constants';
 import { Review, ReviewService } from '../../../reviews/review.service';
 
 @Component({
@@ -15,6 +16,7 @@ export class ReviewsBlockComponent implements OnInit {
   private readonly service = inject(ReviewService);
 
   protected readonly ROUTES = ROUTES;
+  protected readonly navButtonProps = CAROUSEL_NAV_BUTTON_PROPS;
 
   reviews = signal<Review[]>([]);
 

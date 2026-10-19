@@ -23,6 +23,8 @@
       [showIndicators]="true"
       [responsiveOptions]="carouselOptions"
       styleClass="reviews-block__carousel"
+      [prevButtonProps]="navButtonProps"
+      [nextButtonProps]="navButtonProps"
     >
       <ng-template let-review pTemplate="item">
         <div class="rb-slide">
