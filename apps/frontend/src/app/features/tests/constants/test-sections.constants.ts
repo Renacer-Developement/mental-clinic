@@ -11,7 +11,7 @@ export const TEST_SECTIONS: { title: string; match: RegExp }[] = [
   { title: 'Тривога (діти)',       match: /SCARED/i },
   { title: 'ОКР',                  match: /ОКР|Йеля-Брауна/i },
   { title: 'ПТСР',                 match: /ПТСР/i },
-  { title: 'Паніка',               match: /панічн/i },
+  { title: 'Панічні атаки',        match: /панічн/i },
   { title: 'Біполярний розлад',    match: /біполяр|гіпоман/i },
   { title: 'Розлади особистості',  match: /особистост|МРО|межов/i },
   { title: 'Психотичні розлади',   match: /шизотип|психот/i },
@@ -29,7 +29,7 @@ export const OTHER_SECTION = 'Інше';
 // Which rules are checked first (independent of display order above)
 const MATCH_ORDER = [
   'Депресія (діти)', 'Тривога (діти)', 'РДУГ (діти)', 'Аутизм', 'Аутизм (діти)', 'РДУГ', 'Біполярний розлад', 'Схема-терапія',
-  'Психотичні розлади', 'Розлади особистості', 'ОКР', 'ПТСР', 'Паніка', 'Тривога', 'Депресія',
+  'Психотичні розлади', 'Розлади особистості', 'ОКР', 'ПТСР', 'Панічні атаки', 'Тривога', 'Депресія',
   'Залежності', 'Харчова поведінка',
 ].map(title => TEST_SECTIONS.find(s => s.title === title)!);
 
@@ -46,7 +46,7 @@ const SECTION_SEARCH_PHRASES: Record<string, string> = {
   'Тривога (діти)':      'Тест на тривожність у дітей',
   'ОКР':                 'Тест на ОКР',
   'ПТСР':                'Тест на ПТСР',
-  'Паніка':              'Тест на панічні атаки',
+  'Панічні атаки':       'Тест на панічні атаки',
   'Біполярний розлад':   'Тест на біполярний розлад',
   'Розлади особистості': 'Тест на розлад особистості',
   'Психотичні розлади':  'Тест на психотичні розлади',
@@ -77,7 +77,7 @@ export const searchPhraseOf = (test: Test): string | null => {
 // that live in another section but belong here too (HADS screens depression as well as anxiety).
 export const CATEGORY_SECTIONS: Record<string, { sections: string[]; extra?: RegExp }> = {
   [TEST_CATEGORIES_CONST.DEPRESSION]:            { sections: ['Депресія', 'Депресія (діти)'], extra: /HADS/i },
-  [TEST_CATEGORIES_CONST.ANXIETY]:               { sections: ['Тривога', 'Тривога (діти)', 'Паніка', 'ОКР', 'ПТСР'] },
+  [TEST_CATEGORIES_CONST.ANXIETY]:               { sections: ['Тривога', 'Тривога (діти)', 'Панічні атаки', 'ОКР', 'ПТСР'] },
   [TEST_CATEGORIES_CONST.PERSONALITY_DISORDERS]: { sections: ['Розлади особистості', 'Психотичні розлади'] },
   [TEST_CATEGORIES_CONST.BEHAVIORAL_DISORDERS]:  { sections: ['РДУГ', 'РДУГ (діти)', 'Аутизм', 'Аутизм (діти)'] },
   [TEST_CATEGORIES_CONST.ADDICTIONS]:            { sections: ['Залежності', 'Харчова поведінка'] },

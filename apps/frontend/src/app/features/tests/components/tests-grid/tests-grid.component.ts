@@ -1,5 +1,4 @@
 import { CommonModule } from '@angular/common';
-import { ImportsModule } from '../../../../shared/primeng-imports.module';
 import { CardComponent } from '../test-card/card.component';
 import {
   ChangeDetectionStrategy,
@@ -18,8 +17,6 @@ import { CATEGORY_SECTIONS, OTHER_SECTION, sectionAnchor, sectionOf, TEST_SECTIO
 export { sectionAnchor } from '../../constants/test-sections.constants';
 import { TestService } from '../../services/test.service';
 import { Test } from '../../models/test.model';
-import { AnimatedSection } from '../../../../shared/animation/animated-section';
-import { AnimeModule } from '../../../../shared/animation/anime.service';
 
 const priorityOf = (test: Test): number => {
   const idx = TESTS_PRIORITY.findIndex(re => re.test(test.name ?? ''));
@@ -36,13 +33,13 @@ const sortByPriority = (tests: Test[]): Test[] =>
 
 @Component({
   standalone: true,
-  imports: [CommonModule, ImportsModule, CardComponent],
+  imports: [CommonModule, CardComponent],
   selector: 'app-tests-grid',
   templateUrl: './tests-grid.component.html',
   styleUrls: ['./tests-grid.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TestsGridComponent extends AnimatedSection implements OnInit {
+export class TestsGridComponent implements OnInit {
   private readonly testService = inject(TestService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly route = inject(ActivatedRoute);
@@ -52,13 +49,26 @@ export class TestsGridComponent extends AnimatedSection implements OnInit {
 
   skeletonItems = Array(6);
   loading = signal(true);
+  readonly query = signal('');
   private allTests = signal<Test[]>([]);
+
+  /** PHQ-9 and GAD-7: the usual first screeners, offered on the all-tests page. */
+  readonly starters = computed(() => {
+    if (this.category()) return [];
+    return [/PHQ-9/i, /GAD-7/i]
+      .map(re => this.allTests().find(t => re.test(t.name ?? '')))
+      .filter((t): t is Test => !!t);
+  });
+
+  readonly total = computed(() => this.groups().reduce((n, g) => n + g.tests.length, 0));
 
   groups = computed(() => {
     const filter = CATEGORY_SECTIONS[this.category()];
-    const tests = filter
+    const q = this.query().trim().toLowerCase();
+    const tests = (filter
       ? this.allTests().filter(t => filter.sections.includes(sectionOf(t)) || filter.extra?.test(t.name ?? ''))
-      : this.allTests();
+      : this.allTests()
+    ).filter(t => !q || `${t.name} ${t.description}`.toLowerCase().includes(q));
     return [...TEST_SECTIONS.map(s => s.title), OTHER_SECTION]
       .map(title => ({ title, anchor: sectionAnchor(title), tests: tests.filter(t => sectionOf(t) === title) }))
       .filter(g => g.tests.length);
@@ -77,47 +87,16 @@ export class TestsGridComponent extends AnimatedSection implements OnInit {
         next: tests => {
           this.allTests.set(sortByPriority(tests));
           this.loading.set(false);
-          setTimeout(() => {   // after the sections render
-            this.revealSections();
-            this.scrollToFragment(this.route.snapshot.fragment);
-          });
+          setTimeout(() => this.scrollToFragment(this.route.snapshot.fragment));   // after the sections render
         },
         error: () => this.loading.set(false),
       });
-  }
-
-  protected setup(): void {
-    this.revealSections(); // tests may have loaded before anime.js
-  }
-
-  private revealed = false;
-
-  /** Each section's cards rise in, in order, as the section scrolls into view (first load only). */
-  private revealSections(): void {
-    const root: HTMLElement = this.host.nativeElement;
-    if (!this.anime || this.revealed || !root.querySelector('.tgrid__section')) return;
-    this.revealed = true;
-
-    const { animate, stagger, utils }: AnimeModule = this.anime;
-    root.querySelectorAll<HTMLElement>('.tgrid__section').forEach(section => {
-      const title = section.querySelector('.tgrid__section-title');
-      const cards = section.querySelectorAll('app-card');
-      utils.set(title!, { opacity: 0, translateY: 24 });
-      utils.set(cards, { opacity: 0, translateY: 30 });
-
-      this.whenVisible(section, () => {
-        animate(title!, { opacity: 1, translateY: 0, duration: 280, ease: 'outExpo' });
-        animate(cards, { opacity: 1, translateY: 0, duration: 280, delay: stagger(70, { start: 50 }), ease: 'outExpo' });
-      }, 0.05);
-    });
   }
 
   private scrollToFragment(fragment: string | null): void {
     if (!fragment || typeof document === 'undefined') return;
     const el = document.getElementById(fragment);
     if (!el) return;
-    // reveal at once so the section isn't invisible when we land on it
-    el.querySelectorAll<HTMLElement>('.tgrid__section-title, app-card').forEach(n => (n.style.opacity = '1', n.style.transform = 'none'));
     el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 }

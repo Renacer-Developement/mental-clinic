@@ -1,22 +1,21 @@
-<article class="tcard">
-  <h4 class="tcard__title">
-    <a [routerLink]="['/test/detail', testKey(testData)]" (click)="trackSelect(testData?._id)">{{ testData?.name }}</a>
-  </h4>
-  <p class="tcard__desc">{{ testData?.description }}</p>
-
-  <div class="tcard__actions">
-    <a class="tcard__cta" [routerLink]="['/test/detail', testKey(testData)]" (click)="trackSelect(testData?._id)">Пройти тест</a>
-    <button class="tcard__share" type="button" (click)="share()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-           stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
-        <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
-        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
-      </svg>
-      {{ copied() ? 'Скопійовано' : 'Поділитися' }}
-    </button>
+<!-- One test as an index row: what it is, how long, take it -->
+<article class="trow">
+  <div class="trow__main">
+    <h4 class="trow__title">
+      <a [routerLink]="['/test/detail', testKey(testData)]" (click)="trackSelect(testData?._id)">{{ testData?.name }}</a>
+    </h4>
+    @if (testData?.description) {
+      <p class="trow__desc">{{ testData.description }}</p>
+    }
   </div>
 
-  @if (testData?.questionCount ?? testData?.questions?.length; as count) {
-    <span class="tcard__count">{{ count }} питань</span>
-  }
+  <div class="trow__side">
+    @if (testData?.duration) {
+      <span class="trow__time"><i class="pi pi-clock" aria-hidden="true"></i>{{ testData.duration }}</span>
+    }
+    <button class="trow__share" type="button" (click)="share()" [attr.aria-label]="copied() ? 'Посилання скопійовано' : 'Поділитися тестом'">
+      <i class="pi" [class.pi-share-alt]="!copied()" [class.pi-check]="copied()" aria-hidden="true"></i>
+    </button>
+    <a class="trow__cta" [routerLink]="['/test/detail', testKey(testData)]" (click)="trackSelect(testData?._id)" tabindex="-1" aria-hidden="true">Пройти тест <span>→</span></a>
+  </div>
 </article>

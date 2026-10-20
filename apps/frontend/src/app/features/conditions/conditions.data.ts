@@ -124,7 +124,7 @@ export const CONDITIONS: ConditionContent[] = [
       },
     ],
     testCategory: TEST_CATEGORIES_CONST.ANXIETY,
-    testSections: ['Тривога', 'Тривога (діти)', 'Паніка'],
+    testSections: ['Тривога', 'Тривога (діти)', 'Панічні атаки'],
     articleCategory: 'тривога',
   },
   {

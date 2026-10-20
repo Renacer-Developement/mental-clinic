@@ -1,32 +1,58 @@
 <div class="tgrid">
   <h2 class="visually-hidden">Доступні тести</h2>
 
+  <!-- Search across the tests on this page -->
+  <form class="tgrid__search" role="search" (submit)="$event.preventDefault(); searchInput.blur()">
+    <label class="visually-hidden" for="tgrid-q">Пошук тесту</label>
+    <i class="pi pi-search" aria-hidden="true"></i>
+    <input #searchInput id="tgrid-q" type="search" placeholder="Знайти тест: PHQ-9, тривога, РДУГ…" enterkeyhint="search"
+           autocomplete="off" [value]="query()" (input)="query.set(searchInput.value)" />
+  </form>
+
   @if (loading()) {
-    <div class="tgrid__grid">
+    <ul class="tgrid__skel" aria-hidden="true">
       @for (item of skeletonItems; track $index) {
-        <div class="tcard-skeleton">
-          <p-skeleton width="75%" height="16px" borderRadius="6px"/>
-          <div class="tcard-skeleton__desc">
-            <p-skeleton width="100%" height="12px" borderRadius="4px"/>
-            <p-skeleton width="100%" height="12px" borderRadius="4px"/>
-            <p-skeleton width="60%"  height="12px" borderRadius="4px"/>
-          </div>
-          <p-skeleton width="96px" height="32px" borderRadius="999px"/>
-        </div>
+        <li><span class="skel skel--title"></span><span class="skel skel--line"></span></li>
       }
-    </div>
+    </ul>
   } @else {
-    @for (g of groups(); track g.title) {
-      <section class="tgrid__section" [id]="g.anchor">
-        <h3 class="tgrid__section-title">{{ g.title }}</h3>
-        <div class="tgrid__grid">
-          @for (test of g.tests; track test._id) {
+    <!-- Where to start: the two most widely used screeners, on the all-tests page only -->
+    @if (starters().length && !query().trim()) {
+      <section class="tgrid__start" aria-labelledby="tgrid-start">
+        <h3 class="tgrid__start-title" id="tgrid-start">Не знаєте, з чого почати?</h3>
+        <p class="tgrid__start-text">Ці два короткі скринінги найчастіше використовують лікарі, щоб оцінити депресію і тривогу.</p>
+        <div class="tgrid__start-list">
+          @for (test of starters(); track test._id) {
             <app-card [testData]="test"/>
           }
         </div>
       </section>
+    }
+
+    <p class="tgrid__count" aria-live="polite">
+      @if (query().trim()) {
+        Знайдено: {{ total() }}
+      } @else {
+        Тестів: {{ total() }}
+      }
+    </p>
+
+    @for (g of groups(); track g.title) {
+      <section class="tgrid__section" [id]="g.anchor">
+        <h3 class="tgrid__section-title">{{ g.title }} <span>{{ g.tests.length }}</span></h3>
+        @for (test of g.tests; track test._id) {
+          <app-card [testData]="test"/>
+        }
+      </section>
     } @empty {
-      <p class="tgrid__empty">Не вдалося завантажити тести. Спробуйте пізніше.</p>
+      @if (query().trim()) {
+        <div class="tgrid__empty">
+          <p>За запитом «{{ query() }}» тестів немає.</p>
+          <button type="button" class="tgrid__reset" (click)="query.set('')">Показати всі тести</button>
+        </div>
+      } @else {
+        <p class="tgrid__empty">Не вдалося завантажити тести. Спробуйте пізніше.</p>
+      }
     }
   }
 </div>

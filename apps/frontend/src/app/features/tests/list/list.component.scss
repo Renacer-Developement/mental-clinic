@@ -1,205 +1,369 @@
 @use "../../../../assets/css/coloristics" as *;
 
-.tests-list-page {
-  display: flex;
-  flex-direction: column;
+// Tests catalogue (/test/list and /test/list/:type): hero with facts and a
+// "not a diagnosis" note, category tabs, the tests index beside a sticky
+// next-step / consultation column, then intro text and FAQ.
+
+$rule: 1px solid rgba($heading-color, 0.14);
+
+.tl { background: $paper; }
+
+.tl-kicker { @include kicker; }
+.tl-title  { @include section-title; font-size: clamp(1.75rem, 2.8vw, 2.4rem); }
+
+// ── Hero ──────────────────────────────────────────────────────────────────────
+
+.tl-hero { background: $section-bg; }
+
+.tl-hero__inner {
+  @include grid-12;
+  row-gap: 1.75rem;
+  padding-block: 2rem 2.5rem;
+
+  @media (max-width: 768px) { padding-block: 1.5rem 2rem; }
 }
 
-.tests-hero {
-  background: $paper;
-  padding: 2.5rem 0 2.75rem;
-  border-bottom: 1px solid rgba($heading-color, 0.08);
+.tl-crumbs {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: $muted-text-color;
 
-  &__breadcrumb {
+  a { color: inherit; text-decoration: none; }
+  a:hover { color: $heading-color; text-decoration: underline; }
+  [aria-current] { color: $heading-color; }
+}
+
+.tl-hero__text {
+  grid-column: 1 / span 8;
+
+  @media (max-width: 960px) { grid-column: 1 / -1; }
+}
+
+.tl-hero__title {
+  @include section-title;
+  overflow: hidden;
+  font-size: clamp(2.3rem, 5vw, 4.1rem);
+  line-height: 1.04;
+  letter-spacing: -0.025em;
+}
+
+.tl-hero__title-inner { display: inline-block; }
+
+.tl-hero__lead {
+  max-width: 40rem;
+  margin: 1.25rem 0 0;
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: $body-text-color;
+}
+
+.tl-facts {
+  grid-column: 1 / span 8;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: $grid-gutter;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @media (max-width: 960px) { grid-column: 1 / -1; }
+  @media (max-width: 520px) { grid-template-columns: 1fr; }
+
+  li {
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 1.75rem;
-    font-size: 0.85rem;
-    color: $muted-text-color;
-
-    a {
-      color: $muted-text-color;
-      text-decoration: none;
-      transition: color 0.2s;
-      &:hover { color: $heading-color; }
-    }
-
-    span:last-child { color: $heading-color; }
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 0.85rem 0;
+    border-top: $rule;
   }
 
-  &__title {
-    margin: 0 0 1rem;
-    overflow: hidden;
-    font-size: clamp(1.9rem, 3.4vw, 2.8rem);
-    font-weight: 800;
-    line-height: 1.15;
-    letter-spacing: -0.025em;
+  strong {
+    font-family: $font-display;
+    font-size: 1.15rem;
+    font-weight: 500;
     color: $heading-color;
   }
 
-  &__title-inner {
-    display: block;
+  span {
+    font-size: 0.88rem;
+    color: $muted-text-color;
   }
-
-  &__lead {
-    max-width: 620px;
-    margin: 0;
-    font-size: 1.05rem;
-    line-height: 1.75;
-    color: $body-text-color;
-  }
-
 }
 
-.tests-content {
-  background: $section-bg;
-  padding: 0 0 5rem;
-}
-
-// category filter: clear chips, active one filled
-.tests-cats {
+.tl-note {
+  grid-column: 1 / span 8;
   display: flex;
-  gap: 0.5rem;
-  margin-bottom: 2.5rem;
-  padding: 2rem 0 0.25rem;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: $body-text-color;
+
+  i { font-size: 0.85rem; color: $primary-ink; }
+
+  @media (max-width: 960px) { grid-column: 1 / -1; }
+}
+
+// ── Category tabs ─────────────────────────────────────────────────────────────
+
+.tl-cats {
+  border-top: $rule;
+  background: $paper;
+}
+
+.tl-cats__list {
+  @include page-frame;
+  display: flex;
+  gap: 1.75rem;
+  margin-block: 0;
+  list-style: none;
   overflow-x: auto;
   scrollbar-width: none;
 
   &::-webkit-scrollbar { display: none; }
 
-  &__item {
-    flex-shrink: 0;
-    padding: 0.6rem 1.1rem;
-    border-radius: 999px;
-    border: 1px solid rgba($heading-color, 0.18);
-    background: $paper;
-    color: $heading-color;
-    font-size: 0.92rem;
-    font-weight: 600;
-    text-decoration: none;
-    white-space: nowrap;
-    transition: background 0.25s, color 0.25s, border-color 0.25s;
-
-    &:hover { border-color: $heading-color; }
-
-    &--active,
-    &--active:hover {
-      background: $heading-color;
-      border-color: $heading-color;
-      color: $paper;
-    }
-  }
+  @media (max-width: 640px) { gap: 1.25rem; }
 }
 
-.tests-about {
-  max-width: 820px;
-  margin: 5rem 0 0;
+.tl-cats__item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 56px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  white-space: nowrap;
   color: $body-text-color;
-  font-size: 1rem;
-  line-height: 1.75;
+  text-decoration: none;
 
-  p { margin: 0 0 1rem; }
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: transparent;
+  }
 
-  &__heading {
-    margin: 3rem 0 1rem;
-    font-size: 1.4rem;
-    font-weight: 800;
-    letter-spacing: -0.02em;
+  &:hover { color: $heading-color; }
+
+  &.is-active {
     color: $heading-color;
-  }
-
-  // FAQ as hairline-separated rows with a +/− marker
-  &__faq {
-    border-top: 1px solid rgba($heading-color, 0.18);
-
-    &:last-of-type { border-bottom: 1px solid rgba($heading-color, 0.18); }
-
-    summary {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      padding: 1.25rem 0;
-      cursor: pointer;
-      list-style: none;
-      font-weight: 700;
-      color: $heading-color;
-
-      &::-webkit-details-marker { display: none; }
-
-      &::after {
-        content: '+';
-        flex-shrink: 0;
-        font-size: 1.5rem;
-        font-weight: 300;
-        line-height: 1;
-        transition: transform 0.24s $ease-out-soft;
-      }
-    }
-
-    &[open] summary::after { transform: rotate(45deg); }
-
-    p { margin: 0 0 1.25rem; }
-  }
-
-  &__cta {
-    margin-top: 2.5rem;
     font-weight: 600;
-    color: $heading-color;
 
-    a {
-      color: $heading-color;
-      text-decoration: underline;
-      text-decoration-color: $accent-color;
-      text-decoration-thickness: 2px;
-      text-underline-offset: 4px;
-
-      &:hover { color: $primary-color; }
-    }
+    &::after { background: $heading-color; }
   }
 }
 
-// Link from a test category to its treatment page (/likuvannya-*)
-.tests-treatment {
+// ── Body ──────────────────────────────────────────────────────────────────────
+
+.tl-body {
+  border-top: $rule;
+  // switching tabs swaps the whole list; the browser's scroll anchoring would latch onto
+  // a moved test row and fling the page, so the alignment is done by hand instead
+  overflow-anchor: none;
+}
+
+.tl-body__inner {
+  @include grid-12;
+  row-gap: 2.5rem;
+  padding-block: 3rem 5rem;
+
+  @media (max-width: 768px) { padding-block: 2rem 3.5rem; }
+}
+
+.tl-main {
+  grid-column: 1 / span 8;
+  min-width: 0;
+
+  @media (max-width: 960px) { grid-column: 1 / -1; }
+}
+
+.tl-aside {
+  grid-column: 10 / -1;
+
+  @media (max-width: 960px) { grid-column: 1 / -1; }
+}
+
+.tl-aside__sticky {
+  position: sticky;
+  top: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  @media (max-width: 960px) { position: static; }
+}
+
+.tl-next {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
-  margin: 2.5rem 0 0;
-  padding: 1.5rem 1.75rem;
-  border-radius: 18px;
-  background: $section-bg;
-  border-left: 4px solid $accent-color;
+  padding: 1.25rem 2.5rem 1.25rem 1.25rem;
+  border: $rule;
+  border-radius: 12px;
+  color: inherit;
   text-decoration: none;
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition: border-color 0.15s;
 
-  &__label {
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: $muted-text-color;
+  &:hover {
+    border-color: $heading-color;
+
+    .tl-next__title { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
   }
+}
 
-  &__title {
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: $heading-color;
-  }
+.tl-next__label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: $primary-ink;
+}
 
-  &__text {
-    font-size: 0.9rem;
+.tl-next__title {
+  font-family: $font-display;
+  font-size: 1.2rem;
+  line-height: 1.3;
+  color: $heading-color;
+}
+
+.tl-next__text {
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: $body-text-color;
+}
+
+.tl-next__go {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  color: $primary-ink;
+}
+
+.tl-consult {
+  padding: 1.25rem;
+  border-radius: 12px;
+  background: $section-bg;
+}
+
+.tl-consult__title {
+  margin: 0 0 0.35rem;
+  font-family: $font-display;
+  font-size: 1.2rem;
+  line-height: 1.3;
+  color: $heading-color;
+}
+
+.tl-consult__text {
+  margin: 0 0 1rem;
+  font-size: 0.88rem;
+  color: $body-text-color;
+}
+
+.tl-consult__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  border-radius: 999px;
+  background: $heading-color;
+  color: $paper;
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.15s;
+
+  &:hover { background: $primary-ink; }
+}
+
+// ── About + FAQ ───────────────────────────────────────────────────────────────
+
+.tl-about {
+  padding-block: 4.5rem;
+  background: $section-bg;
+
+  @media (max-width: 768px) { padding-block: 3.25rem; }
+}
+
+.tl-about__inner {
+  @include grid-12;
+  row-gap: 2rem;
+}
+
+.tl-about__head {
+  grid-column: 1 / span 4;
+
+  p {
+    margin: 1rem 0 0;
+    font-size: 0.98rem;
+    line-height: 1.65;
     color: $body-text-color;
   }
 
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 14px 32px rgba($heading-color, 0.08);
-    .tests-treatment__title { color: $primary-color; }
+  @media (max-width: 900px) { grid-column: 1 / -1; }
+}
+
+.tl-faq {
+  grid-column: 6 / -1;
+  border-bottom: $rule;
+
+  @media (max-width: 900px) { grid-column: 1 / -1; }
+
+  details { border-top: $rule; }
+
+  summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 56px;
+    padding: 1rem 0;
+    font-family: $font-display;
+    font-size: 1.2rem;
+    line-height: 1.35;
+    color: $heading-color;
+    cursor: pointer;
+    list-style: none;
+
+    &::-webkit-details-marker { display: none; }
+    &:hover { color: $primary-ink; }
   }
 
-  &:focus-visible {
-    outline: 2px solid $primary-color;
-    outline-offset: 3px;
+  p {
+    max-width: 40rem;
+    margin: 0 0 1.25rem;
+    font-size: 0.98rem;
+    line-height: 1.7;
+    color: $body-text-color;
   }
+}
+
+.tl-faq__icon {
+  position: relative;
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 6px;
+    width: 14px;
+    height: 2px;
+    background: currentColor;
+    transition: transform 0.2s $ease-out-soft;
+  }
+
+  &::after { transform: rotate(90deg); }
+
+  details[open] &::after { transform: rotate(0deg); }
 }

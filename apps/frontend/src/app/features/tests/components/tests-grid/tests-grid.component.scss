@@ -1,68 +1,166 @@
 @use "../../../../../assets/css/coloristics" as *;
 
-.tgrid {
-  display: flex;
-  flex-direction: column;
+// Search, "where to start", then tests grouped into titled index sections.
+
+$rule: 1px solid rgba($heading-color, 0.14);
+
+:host { display: block; }
+
+.tgrid__search {
+  position: relative;
+  max-width: 32rem;
+  margin-bottom: 2rem;
+
+  i {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.9rem;
+    color: $muted-text-color;
+    pointer-events: none;
+  }
+
+  input {
+    width: 100%;
+    height: 52px;
+    padding: 0 1rem 0 2.75rem;
+    border: 1px solid rgba($heading-color, 0.22);
+    border-radius: 999px;
+    background: $paper;
+    font: inherit;
+    font-size: 1rem;
+    color: $heading-color;
+
+    &::placeholder { color: $muted-text-color; }
+
+    &:focus {
+      outline: none;
+      border-color: $heading-color;
+      box-shadow: 0 0 0 3px rgba($primary-color, 0.18);
+    }
+  }
 }
 
-// visually tucked away: the tabs above already name the list
-.tgrid__heading {
-  margin: 0 0 2rem;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: $muted-text-color;
+// ── Where to start ────────────────────────────────────────────────────────────
+
+.tgrid__start {
+  margin-bottom: 3rem;
+  padding: 1.5rem 1.75rem 0.5rem;
+  border-radius: 16px;
+  background: $accent-soft;
+
+  // phones: the same two tests already lead the Депресія and Тривога sections below
+  @media (max-width: 640px) { display: none; }
+}
+
+.tgrid__start-title {
+  margin: 0;
+  font-family: $font-display;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: $heading-color;
+}
+
+.tgrid__start-text {
+  max-width: 34rem;
+  margin: 0.4rem 0 0.75rem;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: $body-text-color;
 }
 
 // ── Sections ──────────────────────────────────────────────────────────────────
 
-.tgrid__section {
-  scroll-margin-top: 90px; // keep the title clear of the sticky navbar
-  // Mobile header = logo bar + contacts strip (~135px)
-  @media (max-width: 1024px) { scroll-margin-top: 150px; }
+.tgrid__count {
+  margin: 0 0 1rem;
+  font-size: 0.88rem;
+  color: $muted-text-color;
+}
 
-  & + & { margin-top: 3rem; }
+.tgrid__section {
+  margin-bottom: 3rem;
+  scroll-margin-top: 80px;
+  border-bottom: $rule;
+
+  // phones: a category heading over a stack of cards
+  @media (max-width: 640px) {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 2.25rem;
+    border-bottom: 0;
+  }
 }
 
 .tgrid__section-title {
-  margin: 0 0 1rem;
-  font-size: 1.35rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
-  color: $heading-color;
-}
-
-.tgrid__grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
-
-  @media (max-width: 900px) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  @media (max-width: 560px) { grid-template-columns: 1fr; }
-}
-
-// ── Skeleton cards ────────────────────────────────────────────────────────────
-
-.tcard-skeleton {
   display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-  padding: 1.5rem;
-  border-radius: 14px;
-  background: $paper;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin: 0 0 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: $primary-ink;
 
-  &__desc {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
+  span {
+    font-weight: 500;
+    letter-spacing: 0;
+    color: $muted-text-color;
   }
 }
 
 .tgrid__empty {
-  text-align: center;
-  color: #6f6762;
-  padding: 3rem 1rem;
+  padding: 2rem 0;
+  color: $body-text-color;
+
+  p { margin: 0 0 1rem; }
+}
+
+.tgrid__reset {
+  height: 48px;
+  padding: 0 1.4rem;
+  border: 1px solid rgba($heading-color, 0.35);
+  border-radius: 999px;
+  background: none;
+  font: inherit;
+  font-weight: 600;
+  color: $heading-color;
+  cursor: pointer;
+
+  &:hover { border-color: $heading-color; }
+}
+
+// ── Loading ───────────────────────────────────────────────────────────────────
+
+.tgrid__skel {
   margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1.25rem 0;
+    border-top: $rule;
+  }
+}
+
+.skel {
+  display: block;
+  height: 14px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, rgba($heading-color, 0.05), rgba($heading-color, 0.1), rgba($heading-color, 0.05));
+  background-size: 200% 100%;
+  animation: tgrid-shimmer 1.4s linear infinite;
+
+  &--title { width: 45%; height: 18px; }
+  &--line  { width: 80%; }
+}
+
+@keyframes tgrid-shimmer {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
 }

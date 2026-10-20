@@ -1,68 +1,99 @@
-<div class="tests-list-page">
+<div class="tl">
 
-  <!-- Hero -->
-  <section class="tests-hero">
-    <div class="container">
-      <nav class="tests-hero__breadcrumb">
+  <!-- ── Hero ────────────────────────────────────────────────────────────── -->
+  <section class="tl-hero">
+    <div class="tl-hero__inner">
+      <nav class="tl-crumbs" aria-label="Навігаційний ланцюжок">
         <a routerLink="/">Головна</a>
-        <span>/</span>
+        <span aria-hidden="true">/</span>
         @if (type) {
           <a routerLink="/test/list">Тестування</a>
-          <span>/</span>
-          <span>{{ content.label }}</span>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">{{ content.label }}</span>
         } @else {
-          <span>Тестування</span>
+          <span aria-current="page">Тестування</span>
         }
       </nav>
 
-      <h1 class="tests-hero__title"><span class="tests-hero__title-inner">{{ content.h1 }}</span></h1>
-      <p class="tests-hero__lead">{{ content.intro[0] }}</p>
+      <div class="tl-hero__text">
+        <span class="tl-kicker">Самоперевірка</span>
+        <h1 class="tl-hero__title"><span class="tl-hero__title-inner">{{ content.h1 }}</span></h1>
+        <p class="tl-hero__lead">{{ content.intro[0] }}</p>
+      </div>
+
+      <ul class="tl-facts">
+        <li><strong>Безкоштовно</strong><span>і без реєстрації</span></li>
+        <li><strong>Кілька хвилин</strong><span>на один тест</span></li>
+        <li><strong>Результат одразу</strong><span>з поясненням</span></li>
+      </ul>
+
+      <p class="tl-note">
+        <i class="pi pi-info-circle" aria-hidden="true"></i>
+        Тест не є діагнозом. Він допомагає зрозуміти свій стан і підготуватися до консультації.
+      </p>
+    </div>
+
+    <!-- Category tabs: real <a href> so every category page is reachable for crawlers -->
+    <nav #cats class="tl-cats" aria-label="Категорії тестів">
+      <ul class="tl-cats__list">
+        <li><a class="tl-cats__item" routerLink="/test/list" (click)="keepTabsInPlace(cats)" [class.is-active]="!type" [attr.aria-current]="!type ? 'page' : null">Усі тести</a></li>
+        @for (c of CATEGORY_LINKS; track c.slug) {
+          <li><a class="tl-cats__item" [routerLink]="['/test/list', c.slug]" (click)="keepTabsInPlace(cats)" [class.is-active]="type === c.slug"
+                 [attr.aria-current]="type === c.slug ? 'page' : null">{{ c.label }}</a></li>
+        }
+      </ul>
+    </nav>
+  </section>
+
+  <!-- ── Tests ───────────────────────────────────────────────────────────── -->
+  <section class="tl-body">
+    <div class="tl-body__inner">
+      <div class="tl-main">
+        <app-tests-grid [category]="type"/>
+      </div>
+
+      <aside class="tl-aside">
+        <div class="tl-aside__sticky">
+          @if (condition) {
+            <a class="tl-next" [routerLink]="'/' + condition.slug">
+              <span class="tl-next__label">Наступний крок</span>
+              <span class="tl-next__title">{{ condition.h1 }}</span>
+              <span class="tl-next__text">Як проходить діагностика і лікування у психіатра</span>
+              <span class="tl-next__go" aria-hidden="true">→</span>
+            </a>
+          }
+          <div class="tl-consult">
+            <p class="tl-consult__title">Хочете обговорити результат з лікарем?</p>
+            <p class="tl-consult__text">Онлайн-консультація психіатра, пн–сб 8:00–22:00.</p>
+            <a class="tl-consult__btn" routerLink="/visit">Записатися на консультацію</a>
+          </div>
+        </div>
+      </aside>
     </div>
   </section>
 
-  <!-- Content -->
-  <section class="tests-content">
-    <div class="container">
-      <!-- Category links: real <a href> so every category page is reachable for crawlers -->
-      <nav class="tests-cats" aria-label="Категорії тестів">
-        <a class="tests-cats__item" routerLink="/test/list" [class.tests-cats__item--active]="!type">Усі тести</a>
-        @for (c of CATEGORY_LINKS; track c.slug) {
-          <a class="tests-cats__item" [routerLink]="['/test/list', c.slug]"
-             [class.tests-cats__item--active]="type === c.slug">{{ c.label }}</a>
-        }
-      </nav>
-
-      <app-tests-grid [category]="type"/>
-
-      @if (condition) {
-        <a class="tests-treatment" [routerLink]="'/' + condition.slug">
-          <span class="tests-treatment__label">Наступний крок</span>
-          <span class="tests-treatment__title">{{ condition.h1 }} →</span>
-          <span class="tests-treatment__text">Як проходить діагностика і лікування у психіатра</span>
-        </a>
-      }
-
-      @if (content.intro.length > 1 || content.faq?.length) {
-        <article class="tests-about">
+  <!-- ── About + FAQ ─────────────────────────────────────────────────────── -->
+  @if (content.intro.length > 1 || content.faq?.length) {
+    <section class="tl-about" aria-labelledby="tl-about-title">
+      <div class="tl-about__inner">
+        <header class="tl-about__head">
+          <h2 class="tl-title" id="tl-about-title">{{ content.faq?.length ? 'Часті запитання' : 'Про тести' }}</h2>
           @for (p of content.intro.slice(1); track $index) {
             <p>{{ p }}</p>
           }
-          @if (content.faq?.length) {
-            <h2 class="tests-about__heading">Часті запитання</h2>
+        </header>
+        @if (content.faq?.length) {
+          <div class="tl-faq">
             @for (f of content.faq; track f.q) {
-              <details class="tests-about__faq">
-                <summary>{{ f.q }}</summary>
+              <details>
+                <summary>{{ f.q }}<span class="tl-faq__icon" aria-hidden="true"></span></summary>
                 <p>{{ f.a }}</p>
               </details>
             }
-          }
-          <p class="tests-about__cta">
-            Хочете обговорити результат з лікарем?
-            <a routerLink="/visit">Записатися на онлайн-консультацію психіатра →</a>
-          </p>
-        </article>
-      }
-    </div>
-  </section>
+          </div>
+        }
+      </div>
+    </section>
+  }
 
 </div>
