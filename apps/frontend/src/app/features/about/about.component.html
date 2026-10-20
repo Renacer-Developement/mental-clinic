@@ -1,64 +1,85 @@
-<div class="about-page">
+<div class="ab">
 
-  <!-- Hero -->
-  <section class="about-hero">
-    <div class="container about-hero__grid">
-      <div>
-        <nav class="about-hero__breadcrumb">
-          <a routerLink="/">Головна</a>
-          <span>/</span>
-          <span>Про засновника центру</span>
-        </nav>
-        <h1 class="about-hero__title">Євген Скрипник</h1>
-        <p class="about-hero__subtitle">Лікар-психіатр · Психотерапевт · Нарколог · Невролог</p>
-        <p class="about-hero__lead">
-          Понад 20 років практики у психіатрії та психотерапії. Онлайн-консультації —
+  <!-- ── Hero: who, what he treats, proof, booking ───────────────────────── -->
+  <section class="ab-hero">
+    <div class="ab-hero__inner">
+      <nav class="ab-crumbs" aria-label="Навігаційний ланцюжок">
+        <a routerLink="/">Головна</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Про засновника центру</span>
+      </nav>
+
+      <div class="ab-hero__text">
+        <span class="ab-kicker">Засновник центру</span>
+        <h1 class="ab-hero__title">Євген Скрипник</h1>
+        <p class="ab-hero__role">Лікар-психіатр вищої категорії · психотерапевт · нарколог · невролог</p>
+        <p class="ab-hero__lead">
+          Понад 20 років практики у психіатрії та психотерапії. Онлайн-консультації:
           лікування депресії, тривожності, ПТСР та залежностей за доказовими протоколами.
         </p>
-        <ul class="about-hero__tags">
-          <li>Депресія</li>
-          <li>Тривожність</li>
-          <li>ПТСР</li>
-          <li>Панічні атаки</li>
-          <li>Залежності</li>
-          <li>Біполярний розлад</li>
-          <li>ОКР</li>
-        </ul>
-        <div class="about-hero__actions">
-          <a routerLink="/visit" class="ab-btn">Записатися на консультацію <span aria-hidden="true">→</span></a>
-          <a routerLink="/test/list" class="ab-link">Пройти тест</a>
+        <div class="ab-actions">
+          <a routerLink="/visit" class="ab-btn">Записатися на консультацію</a>
+          <a class="ab-btn ab-btn--ghost" [href]="phone.href"><i class="pi pi-phone" aria-hidden="true"></i>{{ phone.text }}</a>
         </div>
+
+        <dl class="ab-proof">
+          <div>
+            <dt>Досвід</dt>
+            <dd>20+ років</dd>
+          </div>
+          <div>
+            <dt>Відгуки центру</dt>
+            <dd>
+              <a routerLink="/reviews">
+                @if (rating(); as r) { {{ r.avg }} з 5 · {{ r.total }} {{ r.noun }} } @else { Читати відгуки }
+              </a>
+            </dd>
+          </div>
+          <div>
+            <dt>Визнання</dt>
+            <dd>Номінант «Лікар року» 2021</dd>
+          </div>
+        </dl>
       </div>
 
-      <div class="about-hero__photo">
-        <img src="assets/owner.webp" alt="Лікар Євген Скрипник" width="400" height="460" fetchpriority="high" />
-      </div>
+      <figure class="ab-hero__photo">
+        <img src="assets/founder.jpg" alt="Євген Скрипник — лікар-психіатр, у своєму кабінеті" width="600" height="815" fetchpriority="high" decoding="async" />
+      </figure>
     </div>
   </section>
 
-  <!-- About me (bio + story merged) -->
-  <section class="ab-section">
-    <div class="container about-me">
-      <div>
-        <h2 class="ab-title">Про мене</h2>
-        <ul class="about-me__points">
-          <li data-reveal>
+  <!-- ── In-page navigation for a long profile ───────────────────────────── -->
+  <nav class="ab-toc" aria-label="Розділи сторінки">
+    <ul class="ab-toc__list">
+      @for (s of sections; track s.id) {
+        <li><a [href]="'/about#' + s.id" (click)="$event.preventDefault(); scrollTo(s.id)">{{ s.label }}</a></li>
+      }
+    </ul>
+  </nav>
+
+  <!-- ── Bio ─────────────────────────────────────────────────────────────── -->
+  <section class="ab-section" id="bio" aria-labelledby="ab-bio">
+    <div class="ab-split">
+      <header class="ab-split__head">
+        <h2 class="ab-title" id="ab-bio">Про мене</h2>
+        <ul class="ab-points">
+          <li>
             <h3>Доказовий підхід</h3>
-            <p>Жодних псевдонаукових методів — лише міжнародні стандарти та перевірені протоколи лікування.</p>
+            <p>Жодних псевдонаукових методів, лише міжнародні стандарти та перевірені протоколи лікування.</p>
           </li>
-          <li data-reveal>
+          <li>
             <h3>Спільноти лікарів</h3>
             <p>Засновник двох Facebook-спільнот доказових фахівців, де пацієнти отримують перевірені відповіді.</p>
           </li>
-          <li data-reveal>
+          <li>
             <h3>Постійний розвиток</h3>
             <p>Регулярна участь у міжнародних семінарах і конференціях з обміну клінічним досвідом.</p>
           </li>
         </ul>
-      </div>
+      </header>
 
-      <div class="about-me__text" data-reveal>
-        <p>
+      <div class="ab-prose" data-reveal>
+        <p class="ab-prose__lede">
           Лікар-психіатр, психотерапевт, нарколог та невролог з понад 20-річним досвідом. Я народився у
           селі Велика Чернеччина, Сумського району Сумської області, у сім'ї педагогів.
         </p>
@@ -68,6 +89,12 @@
           який дозволяє мені працювати з пацієнтами різного віку та з найскладнішими випадками. Мій підхід
           ґрунтується виключно на доказовій медицині, що забезпечує найкращі результати лікування.
         </p>
+
+        <blockquote class="ab-pull">
+          Моя мета — не лише лікувати, а й покращувати якість життя людей, працюючи на стику
+          медицини, громадського здоров'я та освіти.
+        </blockquote>
+
         <p>
           Моя робота не обмежується лише консультаціями та лікуванням. Я регулярно беру участь у
           професійних семінарах і конференціях, де обмінююся досвідом із колегами, а також вивчаю
@@ -86,148 +113,144 @@
           а також створюють платформу для відкритого обговорення актуальних питань охорони здоров'я.
           Користувачі можуть задавати питання лікарям, отримуючи професійні поради та роз'яснення.
         </p>
-        <blockquote class="about-me__quote">
-          Моя мета — не лише лікувати, а й покращувати якість життя людей, працюючи на стику
-          медицини, громадського здоров'я та освіти. Завдяки цьому я можу допомогти своїм пацієнтам
-          знайти гармонію та психічне здоров'я, орієнтуючись виключно на доказові та сучасні методи
-          лікування.
-        </blockquote>
+        <p>
+          Завдяки цьому я можу допомогти своїм пацієнтам знайти гармонію та психічне здоров'я,
+          орієнтуючись виключно на доказові та сучасні методи лікування.
+        </p>
       </div>
     </div>
   </section>
 
-  <!-- Career -->
-  <section class="ab-section ab-section--cream">
-    <div class="container">
-      <h2 class="ab-title">Професійний шлях</h2>
-      <p class="ab-lead">Освіта та кар'єра</p>
+  <!-- ── Career timeline ─────────────────────────────────────────────────── -->
+  <section class="ab-section ab-section--sand" id="path" aria-labelledby="ab-path">
+    <div class="ab-split">
+      <header class="ab-split__head">
+        <h2 class="ab-title" id="ab-path">Професійний шлях</h2>
+        <p>Освіта та кар'єра.</p>
+      </header>
 
-      <ol class="about-path">
-        <li data-reveal><span class="about-path__year">1997–2003</span><div><h3>Медичний факультет СумДУ</h3><p>Сумський державний університет, медичний факультет.</p></div></li>
-        <li data-reveal><span class="about-path__year">2003–2004</span><div><h3>Інтернатура</h3><p>Харківська медична академія післядипломної освіти.</p></div></li>
-        <li data-reveal><span class="about-path__year">2004–2009</span><div><h3>Дільничний лікар-психіатр</h3><p>Третя обласна психіатрична лікарня, м. Глухів.</p></div></li>
-        <li data-reveal><span class="about-path__year">2007–2013</span><div><h3>Викладання</h3><p>Анатомія, фізіологія та патологічна анатомія — Глухівське медичне училище.</p></div></li>
-        <li data-reveal><span class="about-path__year">2013–дотепер</span><div><h3>Психіатр інтернату</h3><p>КУСОР «Будищанський психоневрологічний інтернат» для жінок із хронічними психічними захворюваннями.</p></div></li>
-        <li data-reveal><span class="about-path__year">2018–дотепер</span><div><h3>Лікар-експерт НПМ</h3><p>Перевірка психіатричних лікарень та інтернатів від Уповноваженого Верховної Ради з прав людини.</p></div></li>
-        <li data-reveal class="about-path__award"><span class="about-path__year">2021</span><div><h3>Номінація «Лікар року»</h3><p>Багаторазово нагороджений грамотами обласної ради та управління охорони здоров'я.</p></div></li>
+      <ol class="ab-path">
+        <li><span class="ab-path__year">1997–2003</span><div><h3>Медичний факультет СумДУ</h3><p>Сумський державний університет, медичний факультет.</p></div></li>
+        <li><span class="ab-path__year">2003–2004</span><div><h3>Інтернатура</h3><p>Харківська медична академія післядипломної освіти.</p></div></li>
+        <li><span class="ab-path__year">2004–2009</span><div><h3>Дільничний лікар-психіатр</h3><p>Третя обласна психіатрична лікарня, м. Глухів.</p></div></li>
+        <li><span class="ab-path__year">2007–2013</span><div><h3>Викладання</h3><p>Анатомія, фізіологія та патологічна анатомія, Глухівське медичне училище.</p></div></li>
+        <li><span class="ab-path__year">2013 — тепер</span><div><h3>Психіатр інтернату</h3><p>КУСОР «Будищанський психоневрологічний інтернат» для жінок із хронічними психічними захворюваннями.</p></div></li>
+        <li><span class="ab-path__year">2018 — тепер</span><div><h3>Лікар-експерт НПМ</h3><p>Перевірка психіатричних лікарень та інтернатів від Уповноваженого Верховної Ради з прав людини.</p></div></li>
+        <li class="is-award"><span class="ab-path__year">2021</span><div><h3>Номінація «Лікар року»</h3><p>Багаторазово нагороджений грамотами обласної ради та управління охорони здоров'я.</p></div></li>
       </ol>
     </div>
   </section>
 
-  <!-- Specializations -->
-  <section class="ab-section">
-    <div class="container">
-      <h2 class="ab-title">Напрямки лікування</h2>
-      <p class="ab-lead">Доказова психіатрія, психотерапія та наркологія — лікування за міжнародними стандартами.</p>
+  <!-- ── Specializations ─────────────────────────────────────────────────── -->
+  <section class="ab-section" id="spec" aria-labelledby="ab-spec">
+    <div class="ab-frame">
+      <header class="ab-head">
+        <h2 class="ab-title" id="ab-spec">Напрямки лікування</h2>
+        <p>Доказова психіатрія, психотерапія та наркологія за міжнародними стандартами.</p>
+      </header>
 
-      <div class="about-spec">
+      <ul class="ab-spec">
         @for (spec of specializations; track spec.title) {
-          <div class="about-spec__item" data-reveal>
-            <h3>{{ spec.title }}</h3>
-            <p>{{ spec.description }}</p>
-          </div>
+          <li>
+            @if (spec.slug) {
+              <a [routerLink]="'/' + spec.slug">
+                <h3>{{ spec.title }}</h3>
+                <p>{{ spec.description }}</p>
+                <span class="ab-go" aria-hidden="true">→</span>
+              </a>
+            } @else {
+              <div>
+                <h3>{{ spec.title }}</h3>
+                <p>{{ spec.description }}</p>
+              </div>
+            }
+          </li>
         }
-      </div>
+      </ul>
 
-      <div class="about-callout" data-reveal>
-        <div>
-          <h3 class="about-callout__title">Перевірте свій психічний стан</h3>
-          <p class="about-callout__text">
-            Пройдіть клінічно валідовані тести для раннього виявлення депресії, тривожності,
-            ПТСР та інших розладів. Результати допоможуть підготуватись до консультації.
-          </p>
-        </div>
-        <a routerLink="/test/list" class="ab-btn ab-btn--accent">Пройти тести <span aria-hidden="true">→</span></a>
+      <div class="ab-callout">
+        <p>Не впевнені, з чим звертатися? Клінічно валідовані тести допоможуть підготуватися до консультації.</p>
+        <a routerLink="/test/list" class="ab-btn ab-btn--ghost">Пройти тест</a>
       </div>
     </div>
   </section>
 
-  <!-- Credentials -->
-  <section class="ab-section ab-section--cream">
-    <div class="container">
-      <h2 class="ab-title">Дипломи та сертифікати</h2>
-      <p class="ab-lead">
-        Офіційні документи, що підтверджують кваліфікацію лікаря-психіатра. Натисніть на зображення, щоб переглянути у повному розмірі.
-      </p>
+  <!-- ── Documents ───────────────────────────────────────────────────────── -->
+  <section class="ab-section ab-section--sand" id="docs" aria-labelledby="ab-docs">
+    <div class="ab-frame">
+      <header class="ab-head">
+        <h2 class="ab-title" id="ab-docs">Дипломи та сертифікати</h2>
+        <p>Офіційні документи, що підтверджують кваліфікацію. Натисніть, щоб переглянути у повному розмірі.</p>
+      </header>
 
-      <div class="about-credentials__grid">
+      <ul class="ab-docs">
         @for (doc of credentials; track doc.title) {
-          <button type="button" class="about-credentials__card" data-reveal (click)="openCredential(doc)">
-            <div class="about-credentials__img-wrap">
-              <img [src]="doc.src" [alt]="doc.title" loading="lazy" />
-              <span class="about-credentials__view" aria-hidden="true">Переглянути</span>
-            </div>
-            <div class="about-credentials__info">
-              <h3>{{ doc.title }}</h3>
-              <p>{{ doc.subtitle }}</p>
-            </div>
-          </button>
+          <li>
+            <button #docBtn type="button" class="ab-doc" (click)="openCredential(doc, docBtn)" [attr.aria-label]="'Переглянути: ' + doc.title">
+              <span class="ab-doc__img"><img [src]="doc.src" alt="" loading="lazy" /></span>
+              <span class="ab-doc__title">{{ doc.title }}</span>
+              <span class="ab-doc__sub">{{ doc.subtitle }}</span>
+            </button>
+          </li>
         }
-      </div>
+      </ul>
     </div>
   </section>
 
   @if (selectedCredential) {
-    <div class="about-credentials__lightbox" (click)="closeCredential()">
-      <button type="button" class="about-credentials__lightbox-close" (click)="closeCredential()" aria-label="Закрити">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">
-          <line x1="18" y1="6" x2="6" y2="18"/>
-          <line x1="6" y1="6" x2="18" y2="18"/>
-        </svg>
+    <div class="ab-lightbox" role="dialog" aria-modal="true" [attr.aria-label]="selectedCredential.title" (click)="closeCredential()">
+      <button type="button" class="ab-lightbox__close" (click)="closeCredential()" aria-label="Закрити">
+        <i class="pi pi-times" aria-hidden="true"></i>
       </button>
-      <figure class="about-credentials__lightbox-content" (click)="$event.stopPropagation()">
+      <figure class="ab-lightbox__content" (click)="$event.stopPropagation()">
         <img [src]="selectedCredential.src" [alt]="selectedCredential.title" />
-        <figcaption>{{ selectedCredential.title }}</figcaption>
+        <figcaption>{{ selectedCredential.title }} · {{ selectedCredential.subtitle }}</figcaption>
       </figure>
     </div>
   }
 
-  <!-- Videos -->
-  <section class="ab-section ab-section--cream about-videos">
-    <div class="container">
-      <h2 class="ab-title">Виступи та інтерв'ю</h2>
-      <p class="ab-lead">Освітні матеріали, публічні лекції та інтерв'ю про психічне здоров'я.</p>
+  <!-- ── Patients ────────────────────────────────────────────────────────── -->
+  <section class="ab-section" id="patients" aria-labelledby="ab-pat">
+    <div class="ab-frame">
+      <header class="ab-head ab-head--row">
+        <h2 class="ab-title" id="ab-pat">Що пишуть пацієнти</h2>
+        <a class="ab-more" routerLink="/reviews">
+          @if (rating(); as r) { Усі {{ r.total }} {{ r.noun }} · {{ r.avg }} з 5 } @else { Усі відгуки }
+        </a>
+      </header>
+      <ul class="ab-quotes">
+        @for (q of quotes; track q.author) {
+          <li>
+            <figure>
+              <blockquote>«{{ q.text }}»</blockquote>
+              <figcaption>{{ q.author }}</figcaption>
+            </figure>
+          </li>
+        }
+      </ul>
+    </div>
+  </section>
 
-      <p-carousel
-        [value]="videos"
-        [numVisible]="3"
-        [numScroll]="1"
-        [circular]="true"
-        [showIndicators]="true"
-        [responsiveOptions]="carouselResponsiveOptions"
-        styleClass="about-videos__carousel"
-        [prevButtonProps]="navButtonProps"
-        [nextButtonProps]="navButtonProps"
-      >
-        <ng-template let-video pTemplate="item">
-          <div class="about-videos__slide">
-            <a
-              class="about-videos__card"
-              [href]="'https://www.youtube.com/watch?v=' + video.id"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <div class="about-videos__thumb">
-                <img
-                  [src]="'https://img.youtube.com/vi/' + video.id + '/hqdefault.jpg'"
-                  [alt]="video.title"
-                  loading="lazy"
-                  width="480"
-                  height="270"
-                />
-                <div class="about-videos__play">
-                  <svg viewBox="0 0 24 24" fill="currentColor" width="48" height="48">
-                    <path d="M8 5v14l11-7z"/>
-                  </svg>
-                </div>
-              </div>
-              <div class="about-videos__info">
-                <h3 class="about-videos__card-title">{{ video.title }}</h3>
-              </div>
-            </a>
-          </div>
-        </ng-template>
-      </p-carousel>
+  <!-- ── Videos: one featured, the rest as a list ────────────────────────── -->
+  <section class="ab-section ab-section--sand" id="videos" aria-labelledby="ab-vid">
+    <div class="ab-frame">
+      <header class="ab-head">
+        <h2 class="ab-title" id="ab-vid">Виступи та інтерв'ю</h2>
+        <p>Освітні матеріали, публічні лекції та інтерв'ю про психічне здоров'я. Відкриваються на YouTube.</p>
+      </header>
+
+      <div class="ab-videos">
+        @for (video of videos; track video.id; let first = $first) {
+          <a class="ab-video" [class.ab-video--feature]="first"
+             [href]="'https://www.youtube.com/watch?v=' + video.id" target="_blank" rel="noopener noreferrer">
+            <span class="ab-video__thumb">
+              <img [src]="'https://img.youtube.com/vi/' + video.id + '/hqdefault.jpg'" alt="" loading="lazy" width="480" height="360" />
+              <span class="ab-video__play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+            </span>
+            <span class="ab-video__title">{{ video.title }}<span class="visually-hidden"> (відео на YouTube, відкриється в новій вкладці)</span></span>
+          </a>
+        }
+      </div>
     </div>
   </section>
 
