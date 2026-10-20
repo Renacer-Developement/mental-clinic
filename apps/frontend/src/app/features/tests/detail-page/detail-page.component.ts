@@ -729,6 +729,14 @@ export class DetailPageComponent implements OnInit {
     });
   }
 
+  /** Mobile "Почати тест" — scroll past the instructions, clearing the sticky header. */
+  scrollToQuiz(): void {
+    const quiz = document.getElementById('test-quiz');
+    if (!quiz) return;
+    const headerH = document.querySelector('app-navbar')?.getBoundingClientRect().height ?? 0;
+    window.scrollTo({ top: quiz.getBoundingClientRect().top + window.scrollY - headerH, behavior: 'smooth' });
+  }
+
   restartTest(): void {
     this.currentQuestionIndex = 0;
     this.answers = {};

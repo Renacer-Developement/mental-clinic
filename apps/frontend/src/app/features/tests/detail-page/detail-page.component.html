@@ -35,15 +35,20 @@
         <h1 class="dp-header__title" [class.dp-header__title--after-eyebrow]="searchPhrase">{{ data?.name }}</h1>
 
         <ul class="dp-header__meta">
-          <li *ngIf="data?.duration">{{ data?.duration }}</li>
-          <li>{{ data?.questions?.length }} питань</li>
-          <li>Безкоштовно, без реєстрації</li>
-          <li *ngIf="data?.pdfLink !== 'null' && data?.pdfLink">
-            <button class="dp-header__pdf" type="button" (click)="openPdf(data?.pdfLink)">
-              Офіційний PDF ↗
-            </button>
-          </li>
+          <li *ngIf="data?.duration"><i class="pi pi-clock" aria-hidden="true"></i>{{ data?.duration }}</li>
+          <li><i class="pi pi-list" aria-hidden="true"></i>{{ data?.questions?.length }} питань</li>
+          <li><i class="pi pi-check-circle" aria-hidden="true"></i>Безкоштовно, без реєстрації</li>
         </ul>
+
+        <div class="dp-header__actions">
+          <!-- Mobile: the instructions push the first question below the fold, so offer a jump straight to it -->
+          <button class="dp-btn dp-btn--primary dp-header__start" type="button" (click)="scrollToQuiz()">
+            Почати тест <span aria-hidden="true">↓</span>
+          </button>
+          <button *ngIf="data?.pdfLink !== 'null' && data?.pdfLink" class="dp-header__pdf" type="button" (click)="openPdf(data?.pdfLink)">
+            Офіційний PDF ↗
+          </button>
+        </div>
 
         <div class="dp-info">
           <div class="dp-info__col">
@@ -60,13 +65,14 @@
 
     <!-- DIVA-5 has its own multi-column interview flow -->
     <app-diva-quiz
+      id="test-quiz"
       *ngIf="data?.specialTest === specializedTests.DIVA"
       [test]="data"
       (completed)="onDivaCompleted($event)"
     />
 
     <!-- Quiz -->
-    <section class="dp-quiz" [class.dp-quiz--loading]="!ready()" *ngIf="data?.specialTest !== specializedTests.DIVA">
+    <section id="test-quiz" class="dp-quiz" [class.dp-quiz--loading]="!ready()" *ngIf="data?.specialTest !== specializedTests.DIVA">
       <div class="dp-quiz__wrap">
 
         <!-- Progress -->
@@ -152,18 +158,7 @@
     <section class="dp-about">
       <div class="dp-about__wrap">
 
-        <div *ngIf="about" class="dp-about__block dp-about__method">
-          <h2 class="dp-about__title">Про тест «{{ data?.name }}»</h2>
-          <h3>Що це за методика</h3>
-          <p>{{ about.what }}</p>
-          <h3>Кому підходить</h3>
-          <p>{{ about.who }}</p>
-          <h3>Як рахуються бали</h3>
-          <p>{{ about.scoring }}</p>
-          <h3>Чим відрізняється від схожих тестів</h3>
-          <p>{{ about.compare }}</p>
-        </div>
-
+        <!-- Right after the quiz: the next test is the most likely next step -->
         <div *ngIf="relatedTests.length" class="dp-about__block">
           <h2 class="dp-about__title">Схожі тести</h2>
           <ul class="dp-about__related">
@@ -180,6 +175,18 @@
           <a *ngIf="condition" class="dp-about__more" [routerLink]="'/' + condition.slug">
             {{ condition.h1 }} →
           </a>
+        </div>
+
+        <div *ngIf="about" class="dp-about__block dp-about__method">
+          <h2 class="dp-about__title">Про тест «{{ data?.name }}»</h2>
+          <h3>Що це за методика</h3>
+          <p>{{ about.what }}</p>
+          <h3>Кому підходить</h3>
+          <p>{{ about.who }}</p>
+          <h3>Як рахуються бали</h3>
+          <p>{{ about.scoring }}</p>
+          <h3>Чим відрізняється від схожих тестів</h3>
+          <p>{{ about.compare }}</p>
         </div>
 
         <div *ngIf="scoreBands.length" class="dp-about__block">
