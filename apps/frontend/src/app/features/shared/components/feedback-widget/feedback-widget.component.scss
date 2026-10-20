@@ -40,6 +40,9 @@
     justify-content: center;
 
     .fw-fab__label { display: none; }
+
+    // The bottom sheet has its own close button — the FAB would just sit on top of the form
+    &.is-open { display: none; }
   }
 }
 
@@ -85,7 +88,7 @@
     bottom: 0;
     width: auto;
     max-height: 88vh;
-    padding: 1.25rem 1rem calc(1rem + 56px + 1rem);
+    padding: 1.25rem 1rem calc(1.25rem + env(safe-area-inset-bottom));
     border-radius: 20px 20px 0 0;
     transform: translateY(24px);
   }
