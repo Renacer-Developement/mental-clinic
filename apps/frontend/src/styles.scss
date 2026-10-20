@@ -146,4 +146,5 @@ h1, h2 {
 }
 
 // The floating contact widget would sit on top of the open mobile menu's own CTA
-body.is-menu-open app-feedback-widget { display: none; }
+body.is-menu-open app-feedback-widget,
+body.is-contacts-open app-feedback-widget { display: none; }

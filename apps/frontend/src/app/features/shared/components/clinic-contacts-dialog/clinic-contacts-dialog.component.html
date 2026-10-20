@@ -2,33 +2,41 @@
 
   <div class="cc-backdrop" (click)="close()"></div>
 
-  <div class="cc-modal" role="dialog" aria-modal="true" aria-labelledby="cc-title">
+  <div class="cc-modal" role="dialog" aria-modal="true" aria-labelledby="cc-title" aria-describedby="cc-sub">
+    <span class="cc-handle" aria-hidden="true"></span>
 
-    <div class="cc-header">
+    <header class="cc-header">
       <div>
         <h2 class="cc-header__title" id="cc-title">Записатися на консультацію</h2>
-        <p class="cc-header__sub">Напишіть або зателефонуйте — адміністратор підбере зручний час.</p>
+        <p class="cc-header__sub" id="cc-sub">Напишіть або зателефонуйте, адміністратор підбере фахівця і зручний час.</p>
       </div>
       <button class="cc-close" type="button" (click)="close()" aria-label="Закрити">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-             stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+             stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true">
           <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
         </svg>
       </button>
-    </div>
+    </header>
 
     <div class="cc-body">
       <ng-container *ngIf="contacts$ | async as contacts">
-        <div *ngFor="let contact of contacts | keyvalue" class="cc-contact">
+        <section *ngFor="let contact of contacts | keyvalue" class="cc-contact" [attr.aria-label]="'Запис до ' + contact.value.name">
+          <p class="cc-contact__label">Запис до {{ contact.value.name }}</p>
 
-          <div class="cc-contact__head">
-            <span class="cc-contact__label">Запис до {{ contact.value.name }}</span>
-            <a class="cc-contact__phone" [href]="'tel:' + contact.value.phone" (click)="trackLead('phone')">{{ formatPhone(contact.value.phone) }}</a>
-          </div>
+          <!-- The number itself is the call button -->
+          <a class="cc-call" [href]="'tel:' + contact.value.phone" (click)="trackLead('phone')">
+            <span class="cc-call__num">{{ formatPhone(contact.value.phone) }}</span>
+            <span class="cc-call__go">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.86a16 16 0 0 0 6 6l.86-.86a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.6 16.92z"/>
+              </svg>
+              Подзвонити
+            </span>
+          </a>
 
           <div class="cc-contact__btns">
             <button class="cc-btn cc-btn--primary" type="button" (click)="openTelegram(contact.value.phone)">
-              <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18" aria-hidden="true">
                 <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0
                          12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506
                          0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499
@@ -41,23 +49,20 @@
               Telegram
             </button>
             <button class="cc-btn" type="button" (click)="openViber(contact.value.phone)">
-              <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18" aria-hidden="true">
                 <path d="M11.4 0C5.7.3 1 4.6.1 10.2c-.5 3-.2 5.8 1 8.4.2.4.3.8.2 1.2l-.8 3.8c-.1.4.3.8.7.7l3.9-.9c.3-.1.7 0 1 .2 2 1 4.3 1.5 6.7 1.4C19 24.5 24 19.2 24 12.6 24 5.5 18.3-.3 11.4 0zm5 15.6c-.3.8-.9 1.3-1.7 1.5-.5.1-.9.1-1.4-.1-1.4-.5-2.7-1.3-3.8-2.3C8.4 13.6 7.5 12.2 7 10.7c-.3-.8-.4-1.6-.1-2.4.2-.6.6-1.1 1.1-1.4.4-.2.8-.2 1.2 0 .2.1.4.3.5.5l.9 1.5c.1.2.2.4.1.7-.1.2-.2.3-.3.5l-.4.4c-.1.1-.2.3-.1.4.4.8 1 1.5 1.6 2.1.7.6 1.4 1.1 2.3 1.4.2.1.4 0 .5-.2l.4-.5c.1-.2.3-.4.6-.4.2 0 .4.1.6.2l1.5 1c.3.2.4.4.5.7.1.3.1.5-.1.9z"/>
               </svg>
               Viber
             </button>
-            <a class="cc-btn" [href]="'tel:' + contact.value.phone" (click)="trackLead('phone')">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17">
-                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.86a16 16 0 0 0 6 6l.86-.86a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.6 16.92z"/>
-              </svg>
-              Подзвонити
-            </a>
           </div>
-        </div>
+        </section>
       </ng-container>
     </div>
 
-    <p class="cc-footer">Запис щодня, окрім неділі, з 8:00 до 22:00</p>
+    <p class="cc-footer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
+      Запис щодня, окрім неділі, з 8:00 до 22:00
+    </p>
   </div>
 
 </ng-container>
