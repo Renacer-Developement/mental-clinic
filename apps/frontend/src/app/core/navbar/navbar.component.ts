@@ -1,6 +1,6 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { Component, ElementRef, inject, OnDestroy, PLATFORM_ID, signal } from '@angular/core';
+import { Component, ElementRef, HostListener, inject, OnDestroy, PLATFORM_ID, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { ClinicContactsService } from '../../features/shared/components/clinic-contacts-dialog/clinic-contacts.service';
 import { clinicContacts } from '../../features/shared/constants/contacts.constants';
@@ -136,11 +136,16 @@ export class NavbarComponent implements OnDestroy {
       document.body.style.overflow = open ? 'hidden' : '';
       // lets global styles hide floating UI (the contact widget) behind the open menu
       document.body.classList.toggle('is-menu-open', open);
-      // The licence strip above the header scrolls away, so the header's bottom edge moves —
-      // start the fixed panel right under wherever the header is now
-      const bar = this.host.nativeElement.querySelector('.mnav');
-      if (open && bar) this.host.nativeElement.style.setProperty('--mnav-panel-top', `${bar.getBoundingClientRect().bottom}px`);
+      // Drawer focus: into the drawer on open, back to the burger on close
+      const root: HTMLElement = this.host.nativeElement;
+      const target = open ? root.querySelector<HTMLElement>('.mnav__close') : root.querySelector<HTMLElement>('.mnav__toggle');
+      setTimeout(() => target?.focus({ preventScroll: true }));
     }
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    this.closeMenu();
   }
 
   /** There's no "conditions" hub page — the home page's conditions block plays that role. */

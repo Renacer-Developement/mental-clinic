@@ -33,35 +33,17 @@ export class NoFearBlockComponent extends AnimatedSection {
     }
   ];
 
-  protected setup({ animate, onScroll, stagger, utils }: AnimeModule, root: HTMLElement): void {
-    // Progress bar fills as the list scrolls past.
-    animate('.no-fear-progress__bar', {
-      scaleY: [0, 1],
-      ease: 'linear',
-      autoplay: onScroll({
-        target: root.querySelector<HTMLElement>('.fact-list')!,
-        enter: { container: 'bottom', target: 'top' },
-        leave: { container: 'center', target: 'bottom' },
-        sync: 0.25,
-      }),
-    });
-
-    utils.set(['.no-fear-eyebrow', '.no-fear-heading', '.no-fear-lead'], { opacity: 0, translateY: 40 });
+  protected setup({ animate, stagger, utils }: AnimeModule, root: HTMLElement): void {
+    utils.set(['.no-fear-eyebrow', '.no-fear-heading', '.no-fear-lead'], { opacity: 0, translateY: 24 });
     this.whenVisible(root.querySelector('.no-fear-sticky'), () => {
       animate(['.no-fear-eyebrow', '.no-fear-heading', '.no-fear-lead'], {
-        opacity: 1, translateY: 0, duration: 1000, delay: stagger(120), ease: 'outExpo',
+        opacity: 1, translateY: 0, duration: 280, delay: stagger(100), ease: 'outExpo',
       });
     });
 
-    // Each card flips up and its number counts in as it enters.
-    root.querySelectorAll<HTMLElement>('.fact-card').forEach(card => {
-      const num = card.querySelector('.fact-num');
-      utils.set(card, { opacity: 0, translateY: 80, rotateX: -25, perspective: 900 });
-      utils.set(num, { opacity: 0, translateX: -30 });
-      this.whenVisible(card, () => {
-        animate(card, { opacity: 1, translateY: 0, rotateX: 0, duration: 1100, ease: 'outExpo' });
-        animate(num!, { opacity: 1, translateX: 0, duration: 900, delay: 200, ease: 'outBack(1.4)' });
-      }, 0.25);
-    });
+    utils.set('.fact-card', { opacity: 0, translateY: 24 });
+    this.whenVisible(root.querySelector('.fact-list'), () => {
+      animate('.fact-card', { opacity: 1, translateY: 0, duration: 280, delay: stagger(90), ease: 'outExpo' });
+    }, 0.2);
   }
 }

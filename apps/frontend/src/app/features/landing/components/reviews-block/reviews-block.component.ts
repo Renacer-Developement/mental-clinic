@@ -19,6 +19,7 @@ export class ReviewsBlockComponent implements OnInit {
   protected readonly navButtonProps = CAROUSEL_NAV_BUTTON_PROPS;
 
   reviews = signal<Review[]>([]);
+  total = signal(0);
 
   carouselOptions = [
     { breakpoint: '1100px', numVisible: 2, numScroll: 1 },
@@ -27,12 +28,11 @@ export class ReviewsBlockComponent implements OnInit {
 
   ngOnInit(): void {
     this.service.getPublic(1, 9).subscribe({
-      next: res => this.reviews.set(res.data ?? []),
+      next: res => {
+        this.reviews.set(res.data ?? []);
+        this.total.set(res.total ?? 0);
+      },
       error: () => this.reviews.set([]),
     });
-  }
-
-  starsArray(n: number): number[] {
-    return Array.from({ length: Math.round(n) }, (_, i) => i);
   }
 }

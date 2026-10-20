@@ -1,54 +1,74 @@
-<div class="center-page">
+<div class="ct">
 
-  <!-- Hero -->
-  <section class="sf-hero">
-    <span class="sf-hero__blob sf-hero__blob--a" aria-hidden="true"></span>
-    <span class="sf-hero__blob sf-hero__blob--b" aria-hidden="true"></span>
-
-    <div class="container sf-hero__inner">
-      <nav class="sf-crumbs" aria-label="Хлібні крихти">
+  <!-- ── Hero: who we are, how we work, proof you can check ──────────────── -->
+  <section class="ct-hero">
+    <div class="ct-hero__inner">
+      <nav class="ct-crumbs" aria-label="Навігаційний ланцюжок">
         <a routerLink="/">Головна</a>
-        <span aria-hidden="true">·</span>
-        <span>Про центр</span>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Про центр</span>
       </nav>
 
-      <h1 class="sf-hero__title">
-        Онлайн центр <mark>ментального здоров’я</mark> Євгена Скрипника
-      </h1>
-      <p class="sf-hero__lead">
-        Тут вас вислухають без поспіху й засуджень. Лікарі-психіатри та психологи допомагають дорослим
-        із депресією, тривогою, ПТСР, залежностями та іншими станами — онлайн, конфіденційно
-        й за принципами доказової медицини.
-      </p>
-      <div class="sf-hero__actions">
-        <a class="sf-btn" [routerLink]="'/' + ROUTES.VISIT">Записатися на консультацію</a>
-        <!-- Team page hidden until specialists are added -->
-        <!-- <a class="sf-btn sf-btn--ghost" [routerLink]="'/' + ROUTES.TEAM">Наша команда</a> -->
+      <div class="ct-hero__text">
+        <span class="ct-kicker">Про центр</span>
+        <h1 class="ct-hero__title">Онлайн центр ментального здоров’я <em>Євгена Скрипника</em></h1>
+        <p class="ct-hero__lead">
+          Тут вас вислухають без поспіху й засуджень. Лікарі-психіатри та психологи допомагають
+          з депресією, тривогою, ПТСР, залежностями та іншими станами: онлайн, конфіденційно
+          й за принципами доказової медицини.
+        </p>
+        <div class="ct-actions">
+          <a class="ct-btn" [routerLink]="'/' + ROUTES.VISIT">Записатися на консультацію</a>
+          <a class="ct-btn ct-btn--ghost" [href]="mainPhone.href">
+            <i class="pi pi-phone" aria-hidden="true"></i>{{ mainPhone.text }}
+          </a>
+        </div>
       </div>
 
-      <ul class="sf-trust">
-        @for (f of facts; track f.value) {
-          <li>
-            <i class="pi" [class]="f.icon" aria-hidden="true"></i>
-            <span><strong>{{ f.value }}</strong> {{ f.label }}</span>
-          </li>
-        }
-      </ul>
+      <dl class="ct-proof">
+        <div>
+          <dt>Ліцензія МОЗ</dt>
+          <dd><a href="assets/docs/license-moz.pdf" target="_blank" rel="noopener">№ 1285 від 17.07.2023 <span class="ct-file">PDF, 427 КБ</span></a></dd>
+        </div>
+        <div>
+          <dt>Відгуки пацієнтів</dt>
+          <dd>
+            <a [routerLink]="'/' + ROUTES.REVIEWS">
+              @if (rating(); as r) { {{ r.avg }} з 5 · {{ r.total }} {{ r.noun }} } @else { Читати відгуки }
+            </a>
+          </dd>
+        </div>
+        <div>
+          <dt>Досвід засновника</dt>
+          <dd>20+ років клінічної практики</dd>
+        </div>
+        <div>
+          <dt>Запис</dt>
+          <dd>Пн–Сб, 8:00–22:00, онлайн з будь-якого місця</dd>
+        </div>
+      </dl>
     </div>
   </section>
 
-  <!-- Approach -->
-  <section class="sf-section">
-    <div class="container">
-      <header class="sf-head">
-        <h2>Що для нас важливо</h2>
+  <!-- ── A real voice: the doctor's words, as a patient remembered them ──── -->
+  <section class="ct-voice" aria-label="Слова лікаря">
+    <figure class="ct-voice__inner">
+      <blockquote>«Тепер Ви не одна, і я Вам допоможу, просто довіртеся мені»</blockquote>
+      <figcaption>Слова Євгена Скрипника на першій консультації, як їх запам’ятала пацієнтка Рімма. <a [routerLink]="'/' + ROUTES.REVIEWS">З відгуків</a></figcaption>
+    </figure>
+  </section>
+
+  <!-- ── Principles ──────────────────────────────────────────────────────── -->
+  <section class="ct-section">
+    <div class="ct-split">
+      <header class="ct-split__head">
+        <span class="ct-kicker">Як ми працюємо</span>
+        <h2 class="ct-title">Що для нас важливо</h2>
         <p>Чотири принципи, на яких тримається робота кожного фахівця центру.</p>
       </header>
-
-      <ul class="sf-principles">
-        @for (p of principles; track p.title; let i = $index) {
-          <li [class]="'sf-tint-' + (i % 4)">
-            <span class="sf-icon"><i class="pi" [class]="p.icon" aria-hidden="true"></i></span>
+      <ul class="ct-principles">
+        @for (p of principles; track p.title) {
+          <li>
             <h3>{{ p.title }}</h3>
             <p>{{ p.text }}</p>
           </li>
@@ -57,52 +77,48 @@
     </div>
   </section>
 
-  <!-- Conditions -->
-  <section class="sf-section sf-section--soft">
-    <div class="container">
-      <header class="sf-head">
-        <h2>З чим ми допомагаємо</h2>
+  <!-- ── Conditions ──────────────────────────────────────────────────────── -->
+  <section class="ct-section ct-section--sand" aria-labelledby="ct-cond">
+    <div class="ct-frame">
+      <header class="ct-head">
+        <h2 class="ct-title" id="ct-cond">З чим ми допомагаємо</h2>
         <p>Оберіть стан, щоб дізнатися про симптоми, діагностику та лікування.</p>
       </header>
-
-      <ul class="sf-conditions">
+      <ul class="ct-conditions">
         @for (c of conditions; track c.slug) {
           <li>
             <a [routerLink]="'/' + c.slug">
               <h3>{{ c.label }}</h3>
               <p>{{ c.text }}</p>
-              <span class="sf-conditions__go" aria-hidden="true"><i class="pi pi-arrow-right"></i></span>
+              <span class="ct-go" aria-hidden="true">→</span>
             </a>
           </li>
         }
-        <li class="sf-conditions__other">
+        <li class="ct-conditions__other">
           <a [routerLink]="'/' + ROUTES.VISIT">
             <h3>Не знайшли свій стан?</h3>
-            <p>Розкажіть, що вас турбує, — ми підберемо фахівця і формат допомоги.</p>
-            <span class="sf-conditions__go" aria-hidden="true"><i class="pi pi-arrow-right"></i></span>
+            <p>Розкажіть, що вас турбує, і ми підберемо фахівця та формат допомоги.</p>
+            <span class="ct-go" aria-hidden="true">→</span>
           </a>
         </li>
       </ul>
     </div>
   </section>
 
-  <!-- Services -->
-  <section class="sf-section">
-    <div class="container">
-      <header class="sf-head">
-        <h2>Чим ми можемо бути корисні</h2>
+  <!-- ── Services as an index ────────────────────────────────────────────── -->
+  <section class="ct-section" aria-labelledby="ct-serv">
+    <div class="ct-frame">
+      <header class="ct-head">
+        <h2 class="ct-title" id="ct-serv">Чим ми можемо бути корисні</h2>
         <p>Від першої консультації до безкоштовних інструментів для самоперевірки.</p>
       </header>
-
-      <ul class="sf-services">
+      <ul class="ct-services">
         @for (s of services; track s.title) {
           <li>
             <a [routerLink]="s.link">
-              <span class="sf-icon sf-icon--sm"><i class="pi" [class]="s.icon" aria-hidden="true"></i></span>
-              <div>
-                <h3>{{ s.title }}</h3>
-                <p>{{ s.text }}</p>
-              </div>
+              <h3>{{ s.title }}</h3>
+              <p>{{ s.text }}</p>
+              <span class="ct-go" aria-hidden="true">→</span>
             </a>
           </li>
         }
@@ -110,21 +126,20 @@
     </div>
   </section>
 
-  <!-- How it works -->
-  <section class="sf-section sf-section--soft">
-    <div class="container">
-      <header class="sf-head">
-        <h2>Як проходить консультація</h2>
+  <!-- ── Process ─────────────────────────────────────────────────────────── -->
+  <section class="ct-section ct-section--sand" aria-labelledby="ct-steps">
+    <div class="ct-frame">
+      <header class="ct-head">
+        <h2 class="ct-title" id="ct-steps">Як проходить консультація</h2>
         <p>
-          Відеозустріч нічим не поступається очному прийому. Детальніше — у
-          <a class="sf-inline" [routerLink]="'/' + ROUTES.VISIT">правилах відвідування</a>.
+          Відеозустріч з лікарем у зручному для вас месенджері. Деталі формату, конфіденційності
+          й скасування запису — у <a class="ct-inline" [routerLink]="'/' + ROUTES.VISIT">правилах відвідування</a>.
         </p>
       </header>
-
-      <ol class="sf-steps">
+      <ol class="ct-steps">
         @for (s of steps; track s.title; let i = $index) {
           <li>
-            <span class="sf-steps__dot">{{ i + 1 }}</span>
+            <span class="ct-steps__num" aria-hidden="true">{{ i + 1 }}</span>
             <h3>{{ s.title }}</h3>
             <p>{{ s.text }}</p>
           </li>
@@ -133,46 +148,65 @@
     </div>
   </section>
 
-  <!-- Founder -->
-  <section class="sf-section">
-    <div class="container">
-      <div class="sf-founder">
-        <img src="assets/founder.jpg" alt="Євген Скрипник — засновник центру" width="600" height="815" loading="lazy" decoding="async" />
-        <div>
-          <span class="sf-pill">Засновник центру</span>
-          <h2 class="sf-founder__name">Євген Скрипник</h2>
-          <p class="sf-founder__role">Лікар-психіатр вищої категорії, понад 20 років практики</p>
-          <p class="sf-founder__text">
-            Починав дільничним лікарем Третьої обласної психіатричної лікарні в Глухові, сьогодні — лікар-експерт
-            Національного превентивного механізму, який перевіряє психіатричні заклади від Уповноваженого
-            Верховної Ради з прав людини. Номінант «Лікар року» 2021, засновник спільнот «Доказові психіатри,
-            психотерапевти та психологи» та «Доказові лікарі України».
-          </p>
-          <div class="sf-founder__links">
-            <a class="sf-btn" [routerLink]="'/' + ROUTES.ABOUT">Про засновника</a>
-            <!-- Team page hidden until specialists are added -->
-            <!-- <a class="sf-link" [routerLink]="'/' + ROUTES.TEAM">Уся команда</a> -->
-          </div>
-        </div>
+  <!-- ── Founder ─────────────────────────────────────────────────────────── -->
+  <section class="ct-section" aria-labelledby="ct-founder">
+    <div class="ct-founder">
+      <figure class="ct-founder__photo">
+        <img src="assets/founder.jpg" alt="Євген Скрипник — лікар-психіатр, засновник центру, у своєму кабінеті" width="600" height="815" loading="lazy" decoding="async" />
+      </figure>
+      <div class="ct-founder__text">
+        <span class="ct-kicker">Засновник центру</span>
+        <h2 class="ct-title" id="ct-founder">Євген Скрипник</h2>
+        <p class="ct-founder__lead">
+          Починав дільничним лікарем Третьої обласної психіатричної лікарні в Глухові.
+          Сьогодні веде пацієнтів онлайн по всій Україні й зібрав команду лікарів і психологів,
+          які працюють за тими самими принципами.
+        </p>
+        <ul class="ct-creds">
+          @for (c of credentials; track c) { <li>{{ c }}</li> }
+        </ul>
+        <a class="ct-btn ct-btn--ghost" [routerLink]="'/' + ROUTES.ABOUT">Більше про засновника</a>
       </div>
     </div>
   </section>
 
-  <!-- Documents & contacts -->
-  <section class="sf-section sf-section--soft">
-    <div class="container">
-      <header class="sf-head">
-        <h2>Документи та контакти</h2>
-        <p>Усе офіційне — відкрито. Маєте запитання? Напишіть або зателефонуйте.</p>
+  <!-- ── Patients ────────────────────────────────────────────────────────── -->
+  <section class="ct-section ct-section--sand" aria-labelledby="ct-pat">
+    <div class="ct-frame">
+      <header class="ct-head ct-head--row">
+        <h2 class="ct-title" id="ct-pat">Що пишуть пацієнти</h2>
+        <a class="ct-more" [routerLink]="'/' + ROUTES.REVIEWS">
+          @if (rating(); as r) { Усі {{ r.total }} {{ r.noun }} · {{ r.avg }} з 5 } @else { Усі відгуки }
+        </a>
+      </header>
+      <ul class="ct-quotes">
+        @for (q of quotes; track q.author) {
+          <li>
+            <figure>
+              <blockquote>«{{ q.text }}»</blockquote>
+              <figcaption>{{ q.author }}, пацієнтка центру</figcaption>
+            </figure>
+          </li>
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ── Documents & contacts ────────────────────────────────────────────── -->
+  <section class="ct-section" aria-labelledby="ct-docs">
+    <div class="ct-frame">
+      <header class="ct-head">
+        <h2 class="ct-title" id="ct-docs">Документи та контакти</h2>
+        <p>Усе офіційне відкрито. Маєте запитання? Напишіть або зателефонуйте.</p>
       </header>
 
-      <div class="sf-info">
-        <div class="sf-info__card">
-          <h3><i class="pi pi-file-pdf" aria-hidden="true"></i> Документи</h3>
+      <div class="ct-info">
+        <div>
+          <h3>Документи</h3>
           <ul>
             <li>
-              <a href="assets/docs/license-moz.pdf" target="_blank" rel="noopener">Ліцензія МОЗ України (PDF)</a>
-              <span>Рішення № 1285 від 17.07.2023</span>
+              <a href="assets/docs/license-moz.pdf" target="_blank" rel="noopener">Ліцензія МОЗ України</a>
+              <span>Рішення № 1285 від 17.07.2023 · PDF, 427 КБ</span>
             </li>
             <li>
               <a [routerLink]="'/' + ROUTES.VISIT">Правила відвідування</a>
@@ -181,8 +215,8 @@
           </ul>
         </div>
 
-        <div class="sf-info__card">
-          <h3><i class="pi pi-phone" aria-hidden="true"></i> Контакти</h3>
+        <div>
+          <h3>Контакти</h3>
           <ul>
             @for (p of phones; track p.phone) {
               <li>
@@ -197,26 +231,31 @@
           </ul>
         </div>
 
-        <div class="sf-info__card">
-          <h3><i class="pi pi-map-marker" aria-hidden="true"></i> Реквізити</h3>
+        <div>
+          <h3>Реквізити</h3>
           <address>
             ФОП Скрипник Є.В.<br />
             Сумська обл., м. Глухів,<br />
             вул. Терещенків, 56
           </address>
-          <p class="sf-info__hours"><i class="pi pi-clock" aria-hidden="true"></i> Пн–Сб, 8:00–22:00</p>
+          <p class="ct-info__hours">Запис: пн–сб, 8:00–22:00</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- CTA -->
-  <section class="sf-section">
-    <div class="container">
-      <div class="sf-cta">
-        <h2>Перший крок — найважчий. Ми поруч.</h2>
-        <p>Запишіться на консультацію — без черг, з будь-якого місця.</p>
-        <a class="sf-btn" [routerLink]="'/' + ROUTES.VISIT">Записатися</a>
+  <!-- ── Closing CTA ─────────────────────────────────────────────────────── -->
+  <section class="ct-cta" aria-labelledby="ct-cta">
+    <div class="ct-cta__inner">
+      <h2 class="ct-cta__title" id="ct-cta">Перший крок — найважчий. <em>Ми поруч.</em></h2>
+      <div class="ct-cta__side">
+        <p>Адміністратор підбере фахівця під ваш запит і зручний час консультації.</p>
+        <div class="ct-actions">
+          <a class="ct-btn" [routerLink]="'/' + ROUTES.VISIT">Записатися на консультацію</a>
+          <a class="ct-btn ct-btn--ghost" [href]="mainPhone.href">
+            <i class="pi pi-phone" aria-hidden="true"></i>{{ mainPhone.text }}
+          </a>
+        </div>
       </div>
     </div>
   </section>

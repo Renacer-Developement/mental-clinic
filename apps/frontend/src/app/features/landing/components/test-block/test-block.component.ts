@@ -84,17 +84,17 @@ export class TestBlockComponent extends AnimatedSection {
   protected setup({ animate, stagger, utils }: AnimeModule, root: HTMLElement): void {
     utils.set('.test-row__line', { scaleX: 0 });
     utils.set('.test-row__title-inner', { translateY: '105%' });
-    utils.set(['.test-row__num', '.test-row__desc', '.test-row__go'], { opacity: 0 });
+    utils.set(['.test-row__desc', '.test-row__go'], { opacity: 0 });
     utils.set('.cards-disclaimer', { opacity: 0 });
 
     this.whenVisible(root.querySelector('.test-index'), () => {
-      animate('.test-row__line', { scaleX: 1, duration: 1100, delay: stagger(110), ease: 'inOutQuart' });
-      animate('.test-row__title-inner', { translateY: '0%', duration: 1000, delay: stagger(110, { start: 250 }), ease: 'outExpo' });
-      animate(['.test-row__num', '.test-row__desc', '.test-row__go'], {
-        opacity: 1, duration: 800, ease: 'outQuad',
-        delay: stagger(40, { start: 450 }),
+      animate('.test-row__line', { scaleX: 1, duration: 280, delay: stagger(110), ease: 'inOutQuart' });
+      animate('.test-row__title-inner', { translateY: '0%', duration: 280, delay: stagger(110, { start: 83 }), ease: 'outExpo' });
+      animate(['.test-row__desc', '.test-row__go'], {
+        opacity: 1, duration: 280, ease: 'outQuad',
+        delay: stagger(40, { start: 150 }),
       });
-      animate('.cards-disclaimer', { opacity: 1, duration: 800, delay: 1200 });
+      animate('.cards-disclaimer', { opacity: 1, duration: 280, delay: 300 });
     }, 0.15);
   }
 }

@@ -142,104 +142,136 @@
   </a>
 
   <button type="button" class="mnav__toggle" [class.is-open]="isMenuOpen"
-          (click)="toggleMenu()" [attr.aria-expanded]="isMenuOpen"
+          (click)="toggleMenu()" [attr.aria-expanded]="isMenuOpen" aria-controls="mnav-drawer"
           [attr.aria-label]="isMenuOpen ? 'Закрити меню' : 'Відкрити меню'">
     <span></span><span></span><span></span>
   </button>
 </header>
 
-<!-- Second row (as on empatia.com.ua): messengers + phone on the left, booking on the right -->
+<!-- Slim second row: the phone number must always be visible (client requirement); messengers live in the menu -->
 <div class="mnav__strip">
-  <div class="mnav__strip-contacts">
-    <div class="mnav__strip-social">
-      <a href="https://t.me/skripnik_evgen" target="_blank" rel="noopener" aria-label="Telegram"><i class="pi pi-telegram"></i></a>
-      <a href="https://www.instagram.com/dr_skripnik_evgen_/" target="_blank" rel="noopener" aria-label="Instagram"><i class="pi pi-instagram"></i></a>
-      <a href="https://www.facebook.com/p/%D0%84%D0%B2%D0%B3%D0%B5%D0%BD-%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D0%BD%D0%B8%D0%BA-100005860367602" target="_blank" rel="noopener" aria-label="Facebook"><i class="pi pi-facebook"></i></a>
-    </div>
-    <a class="mnav__strip-phone" [href]="'tel:' + phone" (click)="trackPhone('navbar-mobile')"><i class="pi pi-phone" aria-hidden="true"></i>{{ phoneLabel }}</a>
-  </div>
-  <button type="button" class="mnav__strip-cta" (click)="openContacts()">Записатися</button>
+  <a class="mnav__strip-phone" [href]="'tel:' + phone" (click)="trackPhone('navbar-mobile')"><i class="pi pi-phone" aria-hidden="true"></i>{{ phoneLabel }}</a>
+  <button type="button" class="mnav__book" (click)="openContacts()">Записатися</button>
 </div>
 
-<nav class="mnav__panel" [class.is-open]="isMenuOpen" aria-label="Мобільна навігація">
-  <div class="mnav__scroll">
-    <ul class="mnav__list">
+<!-- Off-canvas drawer: slides in from the right over a dimmed page -->
+<div class="mnav__backdrop" [class.is-open]="isMenuOpen" (click)="closeMenu()" aria-hidden="true"></div>
 
-      <!-- Tests accordion -->
+<aside class="mnav__panel" id="mnav-drawer" [class.is-open]="isMenuOpen" [attr.aria-hidden]="!isMenuOpen"
+       [attr.inert]="isMenuOpen ? null : ''" role="dialog" aria-modal="true" aria-label="Меню сайту">
+
+  <div class="mnav__drawer-head">
+    <a class="mnav__drawer-home" routerLink="/" (click)="closeMenu()">
+      <img src="../../../assets/logo-icon.avif" alt="" class="mnav__logo mnav__logo--sm"/>
+      <span>Головна</span>
+    </a>
+    <button type="button" class="mnav__close" (click)="closeMenu()" aria-label="Закрити меню">
+      <i class="pi pi-times" aria-hidden="true"></i>
+    </button>
+  </div>
+
+  <nav class="mnav__scroll" aria-label="Мобільна навігація">
+
+    <p class="mnav__label" id="mnav-help">Допомога</p>
+    <ul class="mnav__list" aria-labelledby="mnav-help">
       <li class="mnav__group" [class.is-open]="mobileSection === 'tests'">
         <button type="button" class="mnav__row" (click)="toggleMobileSection('tests')"
-                [attr.aria-expanded]="mobileSection === 'tests'">
-          Психологічні тести <i class="pi pi-chevron-down"></i>
+                [attr.aria-expanded]="mobileSection === 'tests'" aria-controls="mnav-sub-tests">
+          <i class="pi pi-check-square mnav__icon" aria-hidden="true"></i>
+          <span>Психологічні тести</span>
+          <i class="pi pi-chevron-down mnav__chev" aria-hidden="true"></i>
         </button>
-        <div class="mnav__sub">
+        <div class="mnav__sub" id="mnav-sub-tests">
           <div class="mnav__sub-inner">
             @for (cat of testMenu; track cat.slug) {
-              <a [routerLink]="['/test/list', cat.slug]" (click)="closeMenu()">{{ cat.label }}</a>
+              <a [routerLink]="['/test/list', cat.slug]" routerLinkActive="is-active" (click)="closeMenu()">{{ cat.label }}</a>
             }
-            <a class="mnav__all" [routerLink]="'/' + TEST_ROUTES.LIST" (click)="closeMenu()">Усі тести →</a>
+            <a class="mnav__all" [routerLink]="'/' + TEST_ROUTES.LIST" (click)="closeMenu()">Усі тести</a>
           </div>
         </div>
       </li>
 
-      <!-- Conditions accordion -->
       <li class="mnav__group" [class.is-open]="mobileSection === 'conditions'">
         <button type="button" class="mnav__row" (click)="toggleMobileSection('conditions')"
-                [attr.aria-expanded]="mobileSection === 'conditions'">
-          Що лікуємо <i class="pi pi-chevron-down"></i>
+                [attr.aria-expanded]="mobileSection === 'conditions'" aria-controls="mnav-sub-conditions">
+          <i class="pi pi-heart mnav__icon" aria-hidden="true"></i>
+          <span>Що лікуємо</span>
+          <i class="pi pi-chevron-down mnav__chev" aria-hidden="true"></i>
         </button>
-        <div class="mnav__sub">
+        <div class="mnav__sub" id="mnav-sub-conditions">
           <div class="mnav__sub-inner">
             @for (c of conditionMenu; track c.slug) {
-              <a [routerLink]="'/' + c.slug" (click)="trackNav(c.slug, c.label); closeMenu()">{{ c.label }}</a>
+              <a [routerLink]="'/' + c.slug" routerLinkActive="is-active" (click)="trackNav(c.slug, c.label); closeMenu()">{{ c.label }}</a>
             }
           </div>
         </div>
       </li>
 
-      <!-- Articles accordion -->
       <li class="mnav__group" [class.is-open]="mobileSection === 'articles'">
         <button type="button" class="mnav__row" (click)="toggleMobileSection('articles')"
-                [attr.aria-expanded]="mobileSection === 'articles'">
-          Статті <i class="pi pi-chevron-down"></i>
+                [attr.aria-expanded]="mobileSection === 'articles'" aria-controls="mnav-sub-articles">
+          <i class="pi pi-book mnav__icon" aria-hidden="true"></i>
+          <span>Статті</span>
+          <i class="pi pi-chevron-down mnav__chev" aria-hidden="true"></i>
         </button>
-        <div class="mnav__sub">
+        <div class="mnav__sub" id="mnav-sub-articles">
           <div class="mnav__sub-inner">
             @for (cat of articleMenu; track cat.value) {
-              <a [routerLink]="['/articles/category', cat.value]" (click)="closeMenu()">{{ cat.name }}</a>
+              <a [routerLink]="['/articles/category', cat.value]" routerLinkActive="is-active" (click)="closeMenu()">{{ cat.name }}</a>
             }
-            <a class="mnav__all" [routerLink]="'/' + ROUTES.ARTICLES" (click)="closeMenu()">Усі статті →</a>
+            <a class="mnav__all" [routerLink]="'/' + ROUTES.ARTICLES" (click)="closeMenu()">Усі статті</a>
           </div>
         </div>
       </li>
+    </ul>
 
-      <li><a class="mnav__row" [routerLink]="'/' + ROUTES.REVIEWS" routerLinkActive="is-active" (click)="trackNav(ROUTES.REVIEWS, 'Відгуки'); closeMenu()">Відгуки</a></li>
-      <li><a class="mnav__row" [routerLink]="'/' + ROUTES.DRUGS" routerLinkActive="is-active" (click)="trackNav(ROUTES.DRUGS, 'Перевірка ліків'); closeMenu()">Перевірка ліків</a></li>
-      <li><a class="mnav__row" [routerLink]="'/' + ROUTES.VISIT" routerLinkActive="is-active" (click)="trackNav(ROUTES.VISIT, 'Правила відвідування'); closeMenu()">Правила відвідування</a></li>
-      <!-- About accordion -->
+    <p class="mnav__label" id="mnav-center">Центр</p>
+    <ul class="mnav__list" aria-labelledby="mnav-center">
+      <li>
+        <a class="mnav__row" [routerLink]="'/' + ROUTES.REVIEWS" routerLinkActive="is-active" (click)="trackNav(ROUTES.REVIEWS, 'Відгуки'); closeMenu()">
+          <i class="pi pi-comments mnav__icon" aria-hidden="true"></i><span>Відгуки</span>
+        </a>
+      </li>
+      <li>
+        <a class="mnav__row" [routerLink]="'/' + ROUTES.DRUGS" routerLinkActive="is-active" (click)="trackNav(ROUTES.DRUGS, 'Перевірка ліків'); closeMenu()">
+          <i class="pi pi-search mnav__icon" aria-hidden="true"></i><span>Перевірка ліків</span>
+        </a>
+      </li>
+      <li>
+        <a class="mnav__row" [routerLink]="'/' + ROUTES.VISIT" routerLinkActive="is-active" (click)="trackNav(ROUTES.VISIT, 'Правила відвідування'); closeMenu()">
+          <i class="pi pi-info-circle mnav__icon" aria-hidden="true"></i><span>Правила відвідування</span>
+        </a>
+      </li>
       <li class="mnav__group" [class.is-open]="mobileSection === 'about'">
         <button type="button" class="mnav__row" (click)="toggleMobileSection('about')"
-                [attr.aria-expanded]="mobileSection === 'about'">
-          Про нас <i class="pi pi-chevron-down"></i>
+                [attr.aria-expanded]="mobileSection === 'about'" aria-controls="mnav-sub-about">
+          <i class="pi pi-building mnav__icon" aria-hidden="true"></i>
+          <span>Про нас</span>
+          <i class="pi pi-chevron-down mnav__chev" aria-hidden="true"></i>
         </button>
-        <div class="mnav__sub">
+        <div class="mnav__sub" id="mnav-sub-about">
           <div class="mnav__sub-inner">
-            <a [routerLink]="'/' + ROUTES.CENTER" (click)="trackNav(ROUTES.CENTER, 'Про центр'); closeMenu()">Про центр</a>
-            <a [routerLink]="'/' + ROUTES.ABOUT" (click)="trackNav(ROUTES.ABOUT, 'Про засновника'); closeMenu()">Про засновника</a>
+            <a [routerLink]="'/' + ROUTES.CENTER" routerLinkActive="is-active" (click)="trackNav(ROUTES.CENTER, 'Про центр'); closeMenu()">Про центр</a>
+            <a [routerLink]="'/' + ROUTES.ABOUT" routerLinkActive="is-active" (click)="trackNav(ROUTES.ABOUT, 'Про засновника'); closeMenu()">Про засновника</a>
             <!-- Team page hidden until specialists are added -->
             <!-- <a [routerLink]="'/' + ROUTES.TEAM" (click)="trackNav(ROUTES.TEAM, 'Команда'); closeMenu()">Команда</a> -->
           </div>
         </div>
       </li>
     </ul>
-  </div>
+  </nav>
 
+  <!-- Contact card in the slot an app sidebar gives to the account -->
   <div class="mnav__footer">
-    <a class="mnav__phone" [href]="'tel:' + phone" (click)="trackPhone('navbar-mobile')"><i class="pi pi-phone"></i>{{ phoneLabel }}</a>
+    <p class="mnav__footer-label">Запис пн–сб, 8:00–22:00</p>
+    <a class="mnav__phone" [href]="'tel:' + phone" (click)="trackPhone('navbar-mobile')">
+      <i class="pi pi-phone" aria-hidden="true"></i>{{ phoneLabel }}
+    </a>
     <div class="mnav__social">
-      <a href="https://t.me/skripnik_evgen" target="_blank" rel="noopener" aria-label="Telegram"><i class="pi pi-telegram"></i></a>
-      <a href="https://www.instagram.com/dr_skripnik_evgen_/" target="_blank" rel="noopener" aria-label="Instagram"><i class="pi pi-instagram"></i></a>
-      <a href="https://www.facebook.com/p/%D0%84%D0%B2%D0%B3%D0%B5%D0%BD-%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D0%BD%D0%B8%D0%BA-100005860367602" target="_blank" rel="noopener" aria-label="Facebook"><i class="pi pi-facebook"></i></a>
+      <a href="https://t.me/skripnik_evgen" target="_blank" rel="noopener" aria-label="Telegram"><i class="pi pi-telegram" aria-hidden="true"></i></a>
+      <a href="https://www.instagram.com/dr_skripnik_evgen_/" target="_blank" rel="noopener" aria-label="Instagram"><i class="pi pi-instagram" aria-hidden="true"></i></a>
+      <a href="https://www.facebook.com/p/%D0%84%D0%B2%D0%B3%D0%B5%D0%BD-%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D0%BD%D0%B8%D0%BA-100005860367602" target="_blank" rel="noopener" aria-label="Facebook"><i class="pi pi-facebook" aria-hidden="true"></i></a>
     </div>
-    <button type="button" class="mnav__cta" (click)="openContacts()">Записатися</button>
+    <button type="button" class="mnav__cta" (click)="openContacts()">Записатися на консультацію</button>
   </div>
-</nav>
+</aside>

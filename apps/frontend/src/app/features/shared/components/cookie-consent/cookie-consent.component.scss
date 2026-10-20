@@ -84,10 +84,10 @@
 
   &--primary {
     background: $heading-color;
-    color: #fff;
+    color: $paper;
 
     &:hover {
-      background: color-mix(in srgb, $heading-color 85%, #fff);
+      background: color-mix(in srgb, $heading-color 85%, $paper);
     }
   }
 

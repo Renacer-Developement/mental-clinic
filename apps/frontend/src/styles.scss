@@ -22,7 +22,7 @@ html, body {
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: $font-body;
   font-optical-sizing: auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -30,6 +30,9 @@ body {
 }
 h1, h2, h3, h4, h5, h6 {
   color: $heading-color;
+}
+h1, h2 {
+  font-family: $font-display;
 }
 
 ::selection {
@@ -58,10 +61,10 @@ h1, h2, h3, h4, h5, h6 {
 // Uses animations (fill-mode: backwards) rather than transitions so components
 // keep their own hover transitions/transforms untouched once revealed.
 
-@keyframes reveal-up    { from { opacity: 0; transform: translateY(32px); } }
-@keyframes reveal-left  { from { opacity: 0; transform: translateX(-40px); } }
-@keyframes reveal-right { from { opacity: 0; transform: translateX(40px); } }
-@keyframes reveal-zoom  { from { opacity: 0; transform: scale(0.94); } }
+@keyframes reveal-up    { from { opacity: 0; transform: translateY(12px); } }
+@keyframes reveal-left  { from { opacity: 0; transform: translateX(-16px); } }
+@keyframes reveal-right { from { opacity: 0; transform: translateX(16px); } }
+@keyframes reveal-zoom  { from { opacity: 0; transform: scale(0.98); } }
 @keyframes reveal-fade  { from { opacity: 0; } }
 
 .reveal:not(.is-visible) {
@@ -69,7 +72,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .reveal.is-visible {
-  animation: 0.85s $ease-out-soft var(--reveal-delay, 0ms) backwards;
+  animation: 0.24s $ease-out-soft var(--reveal-delay, 0ms) backwards;
 
   &.reveal--up    { animation-name: reveal-up; }
   &.reveal--left  { animation-name: reveal-left; }
@@ -114,7 +117,7 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   &:hover::after {
-    animation: shine-sweep 0.9s $ease-out-soft;
+    animation: shine-sweep 0.24s $ease-out-soft;
   }
 }
 

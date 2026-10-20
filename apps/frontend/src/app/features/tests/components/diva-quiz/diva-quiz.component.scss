@@ -78,7 +78,7 @@
     margin-top: 1px;
     border-radius: 5px;
     border: 2px solid rgba($primary-color, 0.28);
-    background: #fff;
+    background: $paper;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -102,7 +102,7 @@
         content: '';
         width: 5px;
         height: 9px;
-        border: solid #fff;
+        border: solid $paper;
         border-width: 0 2px 2px 0;
         transform: translateY(-1px) rotate(45deg);
       }
@@ -128,7 +128,7 @@
   padding: 0.55rem 0.85rem;
   border: 1.5px solid rgba($primary-color, 0.15);
   border-radius: 10px;
-  background: #fff;
+  background: $paper;
   font-size: 0.88rem;
   color: #3f3b39;
   outline: none;
@@ -144,7 +144,7 @@
 
   &--3 { grid-template-columns: repeat(3, 1fr); }
 
-  .dp-option { background: #fff; }
+  .dp-option { background: $paper; }
 }
 
 .dv-block {

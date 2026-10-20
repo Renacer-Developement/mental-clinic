@@ -27,10 +27,9 @@
       </div>
 
       <ol class="strip-specs">
-        @for (item of specialties; track item.title; let i = $index) {
+        @for (item of specialties; track item.title) {
           <li class="spec">
             <span class="spec__line" aria-hidden="true"></span>
-            <span class="spec__num">{{ (i + 1).toString().padStart(2, '0') }}</span>
             <h3 class="spec__title">{{ item.title }}</h3>
             <p class="spec__text">{{ item.text }}</p>
           </li>

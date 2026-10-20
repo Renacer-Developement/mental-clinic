@@ -32,11 +32,11 @@ export class TelegramBannerComponent extends AnimatedSection {
     utils.set(['.tg-link__label', '.tg-link svg'], { opacity: 0, translateX: -20 });
 
     this.whenVisible(root.querySelector('.tg-container'), () => {
-      animate('.tg-eyebrow', { opacity: 1, translateY: 0, duration: 800, ease: 'outExpo' });
-      animate(heading.words, { translateY: '0%', duration: 1000, delay: stagger(50, { start: 100 }), ease: 'outExpo' });
-      animate('.tg-subheading', { opacity: 1, translateY: 0, duration: 900, delay: 500, ease: 'outExpo' });
-      animate('.tg-link__line', { scaleX: 1, duration: 1000, delay: stagger(150, { start: 300 }), ease: 'inOutQuart' });
-      animate(['.tg-link__label', '.tg-link svg'], { opacity: 1, translateX: 0, duration: 900, delay: stagger(80, { start: 600 }), ease: 'outExpo' });
+      animate('.tg-eyebrow', { opacity: 1, translateY: 0, duration: 280, ease: 'outExpo' });
+      animate(heading.words, { translateY: '0%', duration: 280, delay: stagger(50, { start: 33 }), ease: 'outExpo' });
+      animate('.tg-subheading', { opacity: 1, translateY: 0, duration: 280, delay: 166, ease: 'outExpo' });
+      animate('.tg-link__line', { scaleX: 1, duration: 280, delay: stagger(150, { start: 100 }), ease: 'inOutQuart' });
+      animate(['.tg-link__label', '.tg-link svg'], { opacity: 1, translateX: 0, duration: 280, delay: stagger(80, { start: 200 }), ease: 'outExpo' });
     }, 0.3);
   }
 }

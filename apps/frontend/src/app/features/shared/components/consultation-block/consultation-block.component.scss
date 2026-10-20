@@ -10,13 +10,7 @@
 }
 
 .consultation-inner {
-  max-width: 1450px;
-  margin: 0 auto;
-  padding: 0 6%;
-
-  @media (max-width: 768px) {
-    padding: 0 1.25rem;
-  }
+  @include page-frame;
 }
 
 // ── Header ────────────────────────────────────────────────────────────────────
@@ -34,26 +28,9 @@
   }
 }
 
-.consultation-eyebrow {
-  display: inline-block;
-  margin-bottom: 1.25rem;
-  padding: 0.35rem 1rem;
-  border: 1.5px solid $heading-color;
-  transform: skewX(-12deg);
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  color: $heading-color;
-}
-
 .consultation-title {
-  margin: 0;
+  @include section-title;
   max-width: 640px;
-  font-size: clamp(1.6rem, 2.6vw, 2.3rem);
-  font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  color: $heading-color;
 }
 
 .consultation-cta {
@@ -83,7 +60,7 @@
   svg {
     width: 18px;
     height: 18px;
-    transition: transform 0.45s $ease-out-soft;
+    transition: transform 0.24s $ease-out-soft;
   }
 
   &:hover {
@@ -143,10 +120,7 @@ $dot-size: 14px;
   padding-right: 1rem;
 
   &:hover {
-    .step__num {
-      color: $accent-color;
-      -webkit-text-stroke-color: $accent-color;
-    }
+    .step__num { color: $heading-color; }
 
     .step__dot {
       background: $accent-color;
@@ -169,13 +143,14 @@ $dot-size: 14px;
 .step__num {
   display: block;
   height: $num-height;
+  font-family: $font-display;
   font-size: $num-height;
-  font-weight: 800;
+  font-weight: 400;
+  font-style: italic;
   line-height: 1.15;
   letter-spacing: -0.02em;
-  color: transparent;
-  -webkit-text-stroke: 1.5px $heading-color;
-  transition: color 0.4s, -webkit-text-stroke-color 0.4s;
+  color: $primary-color;
+  transition: color 0.24s;
 
   @media (max-width: 768px) {
     height: auto;
@@ -191,7 +166,7 @@ $dot-size: 14px;
   margin: 1.5rem 0 1.75rem;
   border-radius: 50%;
   background: $heading-color;
-  transition: background 0.4s, box-shadow 0.4s;
+  transition: background 0.24s, box-shadow 0.24s;
 
   @media (max-width: 768px) {
     position: absolute;
@@ -203,10 +178,11 @@ $dot-size: 14px;
 
 .step__title {
   margin: 0 0 0.65rem;
-  font-size: clamp(1.1rem, 1.6vw, 1.35rem);
-  font-weight: 800;
+  font-family: $font-display;
+  font-size: clamp(1.3rem, 1.8vw, 1.55rem);
+  font-weight: 500;
   line-height: 1.25;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.01em;
   color: $heading-color;
 }
 
@@ -216,4 +192,22 @@ $dot-size: 14px;
   font-size: 0.95rem;
   line-height: 1.65;
   color: $body-text-color;
+}
+
+.consultation-foot {
+  @include mobile-more-button;
+
+  @media (max-width: 640px) {
+    margin-top: 2.5rem;
+    border-color: $heading-color;
+    background: $heading-color;
+    color: $paper;
+
+    &:active { background: $primary-ink; }
+  }
+}
+
+// phones: replaced by the full-width button under the content
+@media (max-width: 640px) {
+  .consultation-cta { display: none; }
 }

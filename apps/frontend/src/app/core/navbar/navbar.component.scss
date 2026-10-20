@@ -17,7 +17,7 @@ $dnav-top-h: 76px;
 // row slides away and only the menu bar stays pinned.
 @media screen and (min-width: 1025px) {
   :host { top: -$dnav-top-h; }
-  .mnav, .mnav__strip, .mnav__panel { display: none !important; }
+  .mnav, .mnav__strip, .mnav__panel, .mnav__backdrop { display: none !important; }
 }
 
 @media screen and (max-width: 1024px) {
@@ -29,9 +29,7 @@ $dnav-top-h: 76px;
 }
 
 .dnav__inner {
-  max-width: 1450px;
-  margin: 0 auto;
-  padding: 0 6%;
+  @include page-frame;
   display: flex;
   align-items: center;
   gap: 2rem;
@@ -63,7 +61,7 @@ $dnav-top-h: 76px;
   height: 48px;
   border-radius: 50%;
   object-fit: cover;
-  background: #fff;
+  background: $paper;
   box-shadow: 0 0 0 2px $primary-color;
 }
 
@@ -103,7 +101,7 @@ $dnav-top-h: 76px;
       background: $accent-color;
       transform: scaleX(0);
       transform-origin: left;
-      transition: transform 0.35s $ease-out-soft;
+      transition: transform 0.24s $ease-out-soft;
     }
 
     &:hover::after,
@@ -150,7 +148,7 @@ $dnav-top-h: 76px;
   padding: 0.5rem;
   border: 1px solid rgba($heading-color, 0.08);
   border-radius: 14px;
-  background: #fff;
+  background: $paper;
   box-shadow: 0 18px 36px rgba($heading-color, 0.12);
   opacity: 0;
   visibility: hidden;
@@ -212,7 +210,7 @@ $dnav-top-h: 76px;
 
     i { font-size: 0.72rem; }
 
-    &:hover { background: $heading-color; color: #fff; }
+    &:hover { background: $heading-color; color: $paper; }
   }
 }
 
@@ -234,23 +232,19 @@ $dnav-top-h: 76px;
 .dnav__cta {
   flex-shrink: 0;
   margin-left: auto;
-  padding: 0.7rem 1.5rem;
+  padding: 0.7rem 1.35rem;
   border: 0;
   border-radius: 999px;
-  background: $primary-color;
-  color: #fff;
+  background: $heading-color;
+  color: $paper;
   font: inherit;
-  font-size: 0.82rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 6px 16px rgba($primary-color, 0.25);
-  transition: background 0.25s, box-shadow 0.25s;
+  transition: background 0.25s;
 
   &:hover {
-    background: darken($primary-color, 8%);
-    box-shadow: 0 8px 20px rgba($primary-color, 0.35);
+    background: $primary-color;
   }
 }
 
@@ -259,7 +253,7 @@ $dnav-top-h: 76px;
 .dnav__bar {
   position: relative;
   z-index: 2;
-  background: #fff;
+  background: $paper;
   border-bottom: 1px solid rgba($heading-color, 0.08);
 }
 
@@ -306,7 +300,7 @@ $dnav-top-h: 76px;
     background: $accent-color;
     transform: scaleX(0);
     transform-origin: left;
-    transition: transform 0.35s $ease-out-soft;
+    transition: transform 0.24s $ease-out-soft;
   }
 
   &:hover::after,
@@ -435,7 +429,7 @@ $dnav-top-h: 76px;
 // Tablet / mobile (≤1024px): compact bar + full-screen menu
 // ═════════════════════════════════════════════════════════════════════════════
 
-$mnav-h: 64px;
+$mnav-h: 58px;
 
 .mnav {
   position: relative;
@@ -443,11 +437,10 @@ $mnav-h: 64px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 0.5rem;
   height: $mnav-h;
   padding: 0 1.25rem;
-  background: $accent-soft;
-  border-bottom: 1px solid rgba($heading-color, 0.08);
+  background: $paper;
 }
 
 .mnav__brand {
@@ -461,12 +454,10 @@ $mnav-h: 64px;
 
 .mnav__logo {
   flex-shrink: 0;
-  width: 42px;
-  height: 42px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   object-fit: cover;
-  background: #fff;
-  box-shadow: 0 0 0 2px $primary-color;
 }
 
 .mnav__brand-text {
@@ -476,283 +467,396 @@ $mnav-h: 64px;
   line-height: 1.2;
 
   strong {
-    font-size: 0.88rem;
-    font-weight: 800;
+    font-family: $font-display;
+    font-size: 1.02rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
-  span { font-size: 0.78rem; color: $body-text-color; }
+  span { font-size: 0.78rem; color: $muted-text-color; }
+
+  @media (max-width: 360px) {
+    strong { font-size: 0.95rem; }
+  }
 }
 
-// burger that morphs into a cross
+// two-line burger that folds into a cross; 44px target, no box
 .mnav__toggle {
   flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 5px;
+  position: relative;
   width: 44px;
   height: 44px;
-  padding: 0 10px;
-  border: 1.5px solid $heading-color;
+  margin-right: -10px;
+  padding: 0;
+  border: 0;
   background: transparent;
   cursor: pointer;
 
   span {
-    display: block;
-    height: 2px;
+    position: absolute;
+    left: 11px;
+    width: 22px;
+    height: 1.5px;
+    border-radius: 1px;
     background: $heading-color;
-    transition: transform 0.3s $ease-out-soft, opacity 0.2s;
+    transition: transform 0.2s $ease-out-soft, opacity 0.15s, width 0.2s $ease-out-soft;
+
+    &:nth-child(1) { top: 17px; }
+    &:nth-child(2) { display: none; }
+    &:nth-child(3) { top: 25px; width: 14px; }
+  }
+
+  &:active span { background: $primary-ink; }
+
+  &:focus-visible {
+    outline-offset: -4px;
+    border-radius: 10px;
   }
 
   &.is-open {
-    span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-    span:nth-child(2) { opacity: 0; }
-    span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    span:nth-child(1) { transform: translateY(4px) rotate(45deg); }
+    span:nth-child(3) { width: 22px; transform: translateY(-4px) rotate(-45deg); }
   }
 }
-
-// ── Contacts strip under the bar ─────────────────────────────────────────────
 
 .mnav__strip {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 0.6rem 1.25rem;
-  background: #fff;
-  border-bottom: 1px solid rgba($heading-color, 0.08);
-}
-
-.mnav__strip-contacts {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.35rem;
-  min-width: 0;
-}
-
-.mnav__strip-social {
-  display: flex;
-  gap: 0.45rem;
-
-  a {
-    display: grid;
-    place-items: center;
-    width: 28px;
-    height: 28px;
-    border: 1.5px solid $primary-color;
-    border-radius: 50%;
-    color: $heading-color;
-    font-size: 0.75rem;
-    text-decoration: none;
-    transition: background-color 0.2s, color 0.2s;
-
-    &:hover {
-      background: $primary-color;
-      color: #fff;
-    }
-  }
+  height: 48px;
+  padding: 0 1.25rem;
+  background: $paper;
+  border-bottom: 1px solid rgba($heading-color, 0.1);
 }
 
 .mnav__strip-phone {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: 0.5rem;
+  min-height: 44px;
   color: $heading-color;
-  font-size: 0.9rem;
-  font-weight: 700;
+  font-size: 0.95rem;
+  font-weight: 600;
   white-space: nowrap;
   text-decoration: none;
   font-variant-numeric: tabular-nums;
 
-  i { color: $primary-color; font-size: 0.85rem; }
+  i { color: $muted-text-color; font-size: 0.85rem; }
+
+  @media (max-width: 360px) { font-size: 0.88rem; }
 }
 
-.mnav__strip-cta {
+.mnav__book {
   flex-shrink: 0;
-  padding: 0.75rem 1.1rem;
-  border: 2px solid $primary-color;
-  background: transparent;
-  color: $heading-color;
+  height: 36px;
+  padding: 0 1.1rem;
+  border: 0;
+  border-radius: 999px;
+  background: $heading-color;
+  color: $paper;
   font: inherit;
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: 0.88rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
+  transition: background-color 0.15s;
 
-  &:hover {
-    background: $primary-color;
-    color: #fff;
-  }
+  &:active { background: $primary-ink; }
 
-  @media (max-width: 360px) {
-    padding: 0.6rem 0.7rem;
-    font-size: 0.72rem;
-    letter-spacing: 0.04em;
-  }
+  @media (max-width: 360px) { padding: 0 0.85rem; font-size: 0.82rem; }
 }
 
-@media (max-width: 360px) {
-  .mnav__strip { gap: 0.6rem; padding-inline: 1rem; }
-  .mnav__strip-phone { font-size: 0.8rem; gap: 0.35rem; }
-}
+// ── Off-canvas drawer ─────────────────────────────────────────────────────────
+// 8px spacing grid; slides in from the right in 240ms over a dimmed page.
 
-// full-screen panel under the bar
-.mnav__panel {
+$drawer-w: min(86vw, 340px);
+
+.mnav__backdrop {
   position: fixed;
-  top: var(--mnav-panel-top, #{$mnav-h});
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  background: #fff;
+  inset: 0;
+  z-index: 10;
+  background: rgba($heading-color, 0.4);
   opacity: 0;
   visibility: hidden;
-  transform: translateY(-8px);
-  transition: opacity 0.25s, transform 0.3s $ease-out-soft, visibility 0s 0.3s;
+  transition: opacity 0.24s $ease-out-soft, visibility 0s 0.24s;
 
   &.is-open {
     opacity: 1;
     visibility: visible;
-    transform: none;
-    transition: opacity 0.25s, transform 0.3s $ease-out-soft, visibility 0s;
+    transition: opacity 0.24s $ease-out-soft, visibility 0s;
   }
+}
+
+.mnav__panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 11;
+  display: flex;
+  flex-direction: column;
+  width: $drawer-w;
+  background: $paper;
+  box-shadow: -16px 0 40px rgba($heading-color, 0.12);
+  transform: translateX(100%);
+  visibility: hidden;
+  transition: transform 0.24s $ease-out-soft, visibility 0s 0.24s;
+
+  &.is-open {
+    transform: none;
+    visibility: visible;
+    transition: transform 0.24s $ease-out-soft, visibility 0s;
+  }
+}
+
+.mnav__drawer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  padding: 0 8px 0 16px;
+  padding-top: env(safe-area-inset-top);
+  border-bottom: 1px solid rgba($heading-color, 0.1);
+}
+
+// quick return to the root
+.mnav__drawer-home {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  color: $heading-color;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+}
+
+.mnav__logo--sm {
+  width: 32px;
+  height: 32px;
+}
+
+.mnav__close {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: $heading-color;
+  cursor: pointer;
+
+  i { font-size: 1rem; }
+
+  &:active { background: rgba($heading-color, 0.06); }
 }
 
 .mnav__scroll {
   flex: 1;
   overflow-y: auto;
-  padding: 0.5rem 1.25rem 1.5rem;
+  overscroll-behavior: contain;
+  padding: 8px;
+}
+
+// group heading, like a section in a printed index
+.mnav__label {
+  margin: 16px 8px 4px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: $muted-text-color;
 }
 
 .mnav__list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
   margin: 0;
   padding: 0;
   list-style: none;
-
-  > li { border-bottom: 1px solid rgba($heading-color, 0.1); }
 }
 
 .mnav__row {
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 12px;
   width: 100%;
-  padding: 1.15rem 0;
+  min-height: 48px;
+  padding: 8px 8px 8px 12px;
   border: 0;
+  border-radius: 8px;
   background: none;
   color: $heading-color;
   font: inherit;
-  font-size: 0.95rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-size: 1rem;
+  font-weight: 500;
   text-align: left;
   text-decoration: none;
   cursor: pointer;
+  transition: background-color 0.15s;
 
-  i {
-    font-size: 0.75rem;
-    transition: transform 0.3s $ease-out-soft;
+  > span { flex: 1; }
+
+  &:hover { background: rgba($heading-color, 0.04); }
+  &:active { background: rgba($heading-color, 0.07); }
+
+  &:focus-visible {
+    outline: 2px solid $primary-ink;
+    outline-offset: -2px;
   }
 
-  &.is-active { color: $primary-color; }
+  // current page: tinted surface, brown rule on the left, heavier label
+  &.is-active {
+    background: $accent-soft;
+    font-weight: 600;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 10px;
+      bottom: 10px;
+      width: 3px;
+      border-radius: 0 2px 2px 0;
+      background: $primary-ink;
+    }
+
+    .mnav__icon { color: $primary-ink; }
+  }
+}
+
+.mnav__icon {
+  width: 20px;
+  font-size: 1rem;
+  text-align: center;
+  color: $muted-text-color;
+}
+
+.mnav__chev {
+  font-size: 0.7rem;
+  color: $muted-text-color;
+  transition: transform 0.2s $ease-out-soft;
 }
 
 // accordion: animates height via grid rows
 .mnav__sub {
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows 0.35s $ease-out-soft;
+  transition: grid-template-rows 0.24s $ease-out-soft;
 }
 
+// nested links hang off a thin guide line under the parent's icon
 .mnav__sub-inner {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  margin-left: 21px;
+  padding-left: 12px;
+  border-left: 1px solid rgba($heading-color, 0.12);
 
   a {
-    padding: 0.6rem 0 0.6rem 1rem;
-    border-left: 2px solid $accent-color;
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 8px;
+    border-radius: 8px;
     color: $body-text-color;
-    font-size: 1rem;
+    font-size: 0.95rem;
     text-decoration: none;
 
-    &:active { color: $heading-color; }
+    &:active { background: rgba($heading-color, 0.06); }
+
+    &.is-active {
+      color: $heading-color;
+      font-weight: 600;
+    }
   }
 }
 
 .mnav__all {
-  margin-bottom: 1rem;
-  font-weight: 700;
+  font-weight: 600;
   color: $heading-color !important;
 }
 
 .mnav__group.is-open {
   .mnav__sub { grid-template-rows: 1fr; }
-  .mnav__row i { transform: rotate(180deg); }
+  .mnav__chev { transform: rotate(180deg); }
 }
 
+// ── Contact card (where an app sidebar puts the account) ──────────────────────
+
 .mnav__footer {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1.25rem;
-  padding-bottom: calc(1.25rem + env(safe-area-inset-bottom));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  margin: 8px;
+  padding: 16px;
+  padding-bottom: 16px;
+  border-radius: 12px;
   background: $accent-soft;
+  margin-bottom: calc(8px + env(safe-area-inset-bottom));
+}
+
+.mnav__footer-label {
+  margin: 0;
+  font-size: 0.78rem;
+  color: $muted-text-color;
 }
 
 .mnav__phone {
   display: flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: 8px;
+  min-height: 44px;
   color: $heading-color;
-  font-weight: 700;
+  font-size: 1rem;
+  font-weight: 600;
+  white-space: nowrap;
   text-decoration: none;
+  font-variant-numeric: tabular-nums;
 
-  i { color: $primary-color; font-size: 0.85rem; }
+  i { color: $muted-text-color; font-size: 0.85rem; }
 }
 
 .mnav__social {
   display: flex;
-  gap: 0.5rem;
+  margin-left: -12px;
 
   a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    border: 1.5px solid $heading-color;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
     color: $heading-color;
     text-decoration: none;
 
-    i { font-size: 0.85rem; }
+    i { font-size: 1rem; }
+
+    &:active { color: $primary-ink; }
   }
 }
 
 .mnav__cta {
-  width: 100%;
-  padding: 0.95rem;
-  border: 2px solid $primary-color;
-  background: transparent;
-  color: $heading-color;
+  height: 48px;
+  margin-top: 8px;
+  border: 0;
+  border-radius: 999px;
+  background: $heading-color;
+  color: $paper;
   font: inherit;
-  font-size: 0.88rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: 0.95rem;
+  font-weight: 600;
   cursor: pointer;
 
-  &:active { background: $primary-color; color: #fff; }
+  &:active { background: $primary-ink; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mnav__panel, .mnav__backdrop { transition: none; }
 }

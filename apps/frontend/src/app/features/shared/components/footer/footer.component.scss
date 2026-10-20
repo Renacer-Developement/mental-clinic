@@ -10,11 +10,10 @@ $footer-line: rgba(255, 255, 255, 0.12);
 }
 
 .footer__inner {
-  max-width: 1450px;
-  margin: 0 auto;
-  padding: 4rem 6% 0;
+  @include page-frame;
+  padding-top: 4rem;
 
-  @media (max-width: 768px) { padding: 3rem 1.25rem 0; }
+  @media (max-width: 768px) { padding-top: 3rem; }
 }
 
 // ── Top: brand + CTA ──────────────────────────────────────────────────────────
@@ -33,7 +32,7 @@ $footer-line: rgba(255, 255, 255, 0.12);
   display: inline-flex;
   align-items: center;
   gap: 0.85rem;
-  color: #fff;
+  color: $paper;
   text-decoration: none;
 }
 
@@ -43,7 +42,7 @@ $footer-line: rgba(255, 255, 255, 0.12);
   height: 52px;
   border-radius: 50%;
   object-fit: cover;
-  background: #fff;
+  background: $paper;
   box-shadow: 0 0 0 2px $accent-color;
 }
 
@@ -65,15 +64,14 @@ $footer-line: rgba(255, 255, 255, 0.12);
 
 .footer__cta {
   flex-shrink: 0;
-  padding: 0.95rem 1.75rem;
-  border: 2px solid $accent-color;
+  padding: 0.85rem 1.75rem;
+  border: 1px solid $accent-color;
+  border-radius: 999px;
   background: transparent;
-  color: #fff;
+  color: $paper;
   font: inherit;
-  font-size: 0.85rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: 0.92rem;
+  font-weight: 600;
   cursor: pointer;
   transition: background 0.25s, color 0.25s;
 
@@ -123,7 +121,7 @@ $footer-line: rgba(255, 255, 255, 0.12);
 
 .footer__col-title {
   margin: 0 0 1rem;
-  color: #fff;
+  color: $paper;
   font-size: 0.8rem;
   font-weight: 800;
   letter-spacing: 0.1em;
@@ -132,7 +130,7 @@ $footer-line: rgba(255, 255, 255, 0.12);
 
 .footer__more {
   font-weight: 700;
-  color: #fff !important;
+  color: $paper !important;
 }
 
 .footer__phone {
@@ -143,7 +141,7 @@ $footer-line: rgba(255, 255, 255, 0.12);
   span { font-size: 0.82rem; color: $footer-dim; }
 
   a {
-    color: #fff !important;
+    color: $paper !important;
     font-weight: 700;
     white-space: nowrap;
   }
@@ -162,7 +160,7 @@ $footer-line: rgba(255, 255, 255, 0.12);
     height: 36px;
     border-radius: 50%;
     border: 1.5px solid rgba(255, 255, 255, 0.35);
-    color: #fff !important;
+    color: $paper !important;
     transition: background 0.2s, border-color 0.2s;
 
     i { font-size: 0.9rem; }
@@ -235,7 +233,7 @@ $footer-line: rgba(255, 255, 255, 0.12);
   border: 1.5px solid rgba(255, 255, 255, 0.35);
   border-radius: 999px;
   background: transparent;
-  color: #fff;
+  color: $paper;
   font: inherit;
   font-size: 0.85rem;
   font-weight: 600;

@@ -10,7 +10,7 @@ $text-color: #555;
   margin: 0 auto;
   padding: 2rem;
   line-height: 1.8;
-  font-family: "Inter", sans-serif;
+  font-family: $font-body;
 }
 
 // ── Loading / error ───────────────────────────────────────────────────────────
@@ -79,7 +79,7 @@ $text-color: #555;
     gap: 6px;
     padding: 12px 28px;
     background: $primary-color;
-    color: #fff;
+    color: $paper;
     border-radius: 10px;
     font-size: 0.95rem;
     font-weight: 600;
