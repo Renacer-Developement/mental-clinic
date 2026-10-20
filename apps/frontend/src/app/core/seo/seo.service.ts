@@ -19,7 +19,7 @@ export interface PageSeoConfig {
 }
 
 const BASE_URL      = 'https://doctor-skripnik.com.ua';
-const OG_IMAGE      = `${BASE_URL}/assets/logo.avif`;
+const OG_IMAGE      = `${BASE_URL}/assets/og-image.jpg`;
 const OG_IMAGE_ALT  = 'Центр ментального здоров\'я Євгена Скрипника';
 const PAGE_SCRIPT_ID = 'json-ld-page';
 
@@ -55,8 +55,8 @@ export class SeoService {
       this.meta.removeTag('property="og:image:width"');
       this.meta.removeTag('property="og:image:height"');
     } else {
-      this.meta.updateTag({ property: 'og:image:width',  content: '512' });
-      this.meta.updateTag({ property: 'og:image:height', content: '512' });
+      this.meta.updateTag({ property: 'og:image:width',  content: '1200' });
+      this.meta.updateTag({ property: 'og:image:height', content: '630' });
     }
     this.meta.updateTag({ property: 'og:type',        content: ogType });
     this.meta.updateTag({ property: 'og:url',         content: config.canonical ? this.fullUrl(config.canonical) : BASE_URL });
