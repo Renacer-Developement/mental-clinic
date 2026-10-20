@@ -233,21 +233,24 @@ $dnav-top-h: 76px;
 
 .dnav__cta {
   flex-shrink: 0;
-  padding: 0.85rem 1.4rem;
-  border: 2px solid $primary-color;
-  background: transparent;
-  color: $heading-color;
+  margin-left: auto;
+  padding: 0.7rem 1.5rem;
+  border: 0;
+  border-radius: 999px;
+  background: $primary-color;
+  color: #fff;
   font: inherit;
   font-size: 0.82rem;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: background 0.25s, color 0.25s;
+  box-shadow: 0 6px 16px rgba($primary-color, 0.25);
+  transition: background 0.25s, box-shadow 0.25s;
 
   &:hover {
-    background: $primary-color;
-    color: #fff;
+    background: darken($primary-color, 8%);
+    box-shadow: 0 8px 20px rgba($primary-color, 0.35);
   }
 }
 

@@ -40,7 +40,6 @@
         </a>
       </div>
 
-      <button type="button" class="dnav__cta" (click)="openContactsDesktop()">Записатися</button>
     </div>
   </div>
 
@@ -50,10 +49,12 @@
 
         <!-- Conditions dropdown -->
         <li class="dnav__item" (mouseenter)="openMega('conditions')" (mouseleave)="closeMega()">
-          <button type="button" class="dnav__trigger" [class.is-open]="mega() === 'conditions'"
-                  [attr.aria-expanded]="mega() === 'conditions'" (click)="onTriggerClick('conditions')">
+          <!-- A link, like the other mega triggers: clicking scrolls to the home "Що лікуємо" block; hover opens the panel -->
+          <a class="dnav__trigger" href="/#conditions" [class.is-open]="mega() === 'conditions'"
+             aria-haspopup="true" [attr.aria-expanded]="mega() === 'conditions'"
+             (click)="goToConditions(); closeMega(true); $event.preventDefault()">
             Що лікуємо <i class="pi pi-chevron-down"></i>
-          </button>
+          </a>
           <div class="dnav__panel" [class.is-open]="mega() === 'conditions'">
             <div class="dnav__inner dnav__mega dnav__mega--narrow">
               <div class="dnav__col">
@@ -121,6 +122,9 @@
           <a class="dnav__trigger" [routerLink]="'/' + ROUTES.VISIT" routerLinkActive="is-active" (click)="trackNav(ROUTES.VISIT, 'Правила відвідування')">Правила відвідування</a>
         </li>
       </ul>
+
+      <!-- Booking lives in the pinned row so it stays on screen after the top row scrolls away -->
+      <button type="button" class="dnav__cta" (click)="openContactsDesktop()">Записатися на прийом</button>
     </div>
   </div>
 
@@ -161,21 +165,6 @@
   <div class="mnav__scroll">
     <ul class="mnav__list">
 
-      <!-- Conditions accordion -->
-      <li class="mnav__group" [class.is-open]="mobileSection === 'conditions'">
-        <button type="button" class="mnav__row" (click)="toggleMobileSection('conditions')"
-                [attr.aria-expanded]="mobileSection === 'conditions'">
-          Що лікуємо <i class="pi pi-chevron-down"></i>
-        </button>
-        <div class="mnav__sub">
-          <div class="mnav__sub-inner">
-            @for (c of conditionMenu; track c.slug) {
-              <a [routerLink]="'/' + c.slug" (click)="trackNav(c.slug, c.label); closeMenu()">{{ c.label }}</a>
-            }
-          </div>
-        </div>
-      </li>
-
       <!-- Tests accordion -->
       <li class="mnav__group" [class.is-open]="mobileSection === 'tests'">
         <button type="button" class="mnav__row" (click)="toggleMobileSection('tests')"
@@ -188,6 +177,21 @@
               <a [routerLink]="['/test/list', cat.slug]" (click)="closeMenu()">{{ cat.label }}</a>
             }
             <a class="mnav__all" [routerLink]="'/' + TEST_ROUTES.LIST" (click)="closeMenu()">Усі тести →</a>
+          </div>
+        </div>
+      </li>
+
+      <!-- Conditions accordion -->
+      <li class="mnav__group" [class.is-open]="mobileSection === 'conditions'">
+        <button type="button" class="mnav__row" (click)="toggleMobileSection('conditions')"
+                [attr.aria-expanded]="mobileSection === 'conditions'">
+          Що лікуємо <i class="pi pi-chevron-down"></i>
+        </button>
+        <div class="mnav__sub">
+          <div class="mnav__sub-inner">
+            @for (c of conditionMenu; track c.slug) {
+              <a [routerLink]="'/' + c.slug" (click)="trackNav(c.slug, c.label); closeMenu()">{{ c.label }}</a>
+            }
           </div>
         </div>
       </li>

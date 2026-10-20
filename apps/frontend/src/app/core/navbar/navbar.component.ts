@@ -13,8 +13,8 @@ import { TEST_CATEGORY_CONTENT } from '../../features/tests/constants/test-categ
 import { sectionAnchor } from '../../features/tests/constants/test-sections.constants';
 import { ARTICLE_CATEGORIES } from '../../features/articles/constants/article-categories.constants';
 import { CONDITIONS } from '../../features/conditions/conditions.data';
-import { NavigationStart } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { NavigationStart, Scroll } from '@angular/router';
+import { filter, take } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
@@ -141,6 +141,20 @@ export class NavbarComponent implements OnDestroy {
       const bar = this.host.nativeElement.querySelector('.mnav');
       if (open && bar) this.host.nativeElement.style.setProperty('--mnav-panel-top', `${bar.getBoundingClientRect().bottom}px`);
     }
+  }
+
+  /** There's no "conditions" hub page — the home page's conditions block plays that role. */
+  goToConditions(): void {
+    this.trackNav('/#conditions', 'Що лікуємо');
+    const scroll = (behavior: ScrollBehavior) => document.getElementById('conditions')?.scrollIntoView({ behavior });
+    if (this.router.url.split(/[?#]/)[0] === '/') {
+      scroll('smooth');
+      return;
+    }
+    // Wait out the router's own scroll-to-top (its Scroll event), then jump: a smooth scroll would
+    // stop short while the freshly rendered home page is still growing above the block
+    this.router.events.pipe(filter(e => e instanceof Scroll), take(1)).subscribe(() => setTimeout(() => scroll('auto')));
+    this.router.navigate(['/']);
   }
 
   /**
