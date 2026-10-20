@@ -148,3 +148,7 @@ h1, h2 {
 // The floating contact widget would sit on top of the open mobile menu's own CTA
 body.is-menu-open app-feedback-widget,
 body.is-contacts-open app-feedback-widget { display: none; }
+
+// Booking dialog open: the page behind it stays put (html too, for iOS Safari)
+html:has(body.is-contacts-open),
+body.is-contacts-open { overflow: hidden; }

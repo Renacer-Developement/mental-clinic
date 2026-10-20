@@ -5,6 +5,7 @@
 .cc-backdrop {
   position: fixed;
   inset: 0;
+  touch-action: none;
   z-index: 1000;
   background: rgba($heading-color, 0.55);
   backdrop-filter: blur(4px);
@@ -20,8 +21,10 @@
   left: 50%;
   z-index: 1001;
   width: min(480px, calc(100vw - 2rem));
-  max-height: calc(100vh - 2rem);
+  max-height: calc(100dvh - 2rem);
   overflow-y: auto;
+  // scrolling inside a tall sheet never chains to the page behind
+  overscroll-behavior: contain;
   transform: translate(-50%, -50%);
   background: $paper;
   border-radius: 16px;
