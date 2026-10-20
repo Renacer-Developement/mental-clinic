@@ -111,12 +111,14 @@
       <div class="rv-main">
         <!-- Toolbar -->
         <div class="rv-tools">
-          <div class="rv-search">
+          <!-- A real search form, so the phone keyboard's "Search" key closes the keyboard and shows results -->
+          <form class="rv-search" role="search" (ngSubmit)="submitSearch(searchInput)">
             <label class="visually-hidden" for="rv-search">Пошук у відгуках</label>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input id="rv-search" type="search" placeholder="Пошук у відгуках"
-                   autocomplete="off" [ngModel]="query()" (ngModelChange)="setQuery($event)" />
-          </div>
+            <input #searchInput id="rv-search" type="search" placeholder="Пошук у відгуках" enterkeyhint="search"
+                   autocomplete="off" [ngModel]="query()" (ngModelChange)="setQuery($event)"
+                   [ngModelOptions]="{ standalone: true }" />
+          </form>
           <div class="rv-sort">
             <label for="rv-sort">Сортування</label>
             <select id="rv-sort" [ngModel]="sort()" (ngModelChange)="setSort($event)">
@@ -128,7 +130,7 @@
         </div>
 
         <!-- Result line, announced to screen readers -->
-        <div class="rv-status" aria-live="polite">
+        <div class="rv-status" id="rv-results" aria-live="polite">
           @if (!loading() && !loadError()) {
             <span>
               @if (hasActiveFilters()) {

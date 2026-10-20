@@ -246,19 +246,28 @@ export class ReviewsComponent implements OnInit {
     this.visible.set(STEP);
   }
 
+  /** Keyboard "Search"/Enter: close the phone keyboard and bring the results into view. */
+  submitSearch(input: HTMLInputElement): void {
+    input.blur();
+    this.revealResults();
+  }
+
   setSort(value: SortKey): void {
     this.sort.set(value);
     this.visible.set(STEP);
+    this.revealResults();
   }
 
   toggleRating(stars: number): void {
     this.ratingFilter.update(cur => (cur === stars ? null : stars));
     this.visible.set(STEP);
+    this.revealResults();
   }
 
   toggleFacet(key: string): void {
     this.facetFilter.update(cur => (cur === key ? null : key));
     this.visible.set(STEP);
+    this.revealResults();
   }
 
   resetFilters(): void {
@@ -266,6 +275,26 @@ export class ReviewsComponent implements OnInit {
     this.ratingFilter.set(null);
     this.facetFilter.set(null);
     this.visible.set(STEP);
+    this.revealResults();
+  }
+
+  /**
+   * On phones the list sits far below the summary and filters, so a tap there
+   * changed nothing visible. After the list re-renders, scroll the result line
+   * under the sticky header — but only when it is off-screen, so desktop and
+   * nearby chips don't jump.
+   */
+  private revealResults(): void {
+    if (!this.isBrowser) return;
+    setTimeout(() => {
+      const target = document.getElementById('rv-results');
+      if (!target) return;
+      const header = document.querySelector('app-navbar')?.getBoundingClientRect().bottom ?? 0;
+      const top = target.getBoundingClientRect().top;
+      if (top >= header && top <= window.innerHeight * 0.6) return;
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({ top: window.scrollY + top - Math.max(header, 0) - 12, behavior: reduce ? 'auto' : 'smooth' });
+    });
   }
 
   showMore(): void {
