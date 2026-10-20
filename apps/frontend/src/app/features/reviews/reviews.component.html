@@ -1,216 +1,324 @@
-<div class="reviews-page">
+<div class="rv">
 
-  <!-- ── Hero ─────────────────────────────────────────────────────────────── -->
-  <section class="reviews-hero">
-    <div class="container">
-      <nav class="reviews-hero__breadcrumb">
+  <!-- ── Hero: what the page is + the honest summary ─────────────────────── -->
+  <section class="rv-hero">
+    <div class="rv-hero__inner">
+      <nav class="rv-crumbs" aria-label="Навігаційний ланцюжок">
         <a routerLink="/">Головна</a>
-        <span>/</span>
+        <span aria-hidden="true">/</span>
         <a routerLink="/about">Про засновника</a>
-        <span>/</span>
-        <span>Відгуки</span>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Відгуки</span>
       </nav>
 
-      <div class="reviews-hero__grid">
-        <div>
-          <h1 class="reviews-hero__title">Відгуки про Євгена Скрипника та лікарів-психіатрів центру</h1>
-          <p class="reviews-hero__sub">Реальні враження людей, які звернулись по допомогу до <a class="doctor-link" routerLink="/about">Євгена Скрипника</a> та лікарів-психіатрів Центру ментального здоров'я Євгена Скрипника</p>
-        </div>
+      <div class="rv-hero__text">
+        <span class="rv-kicker">Відгуки пацієнтів</span>
+        <h1 class="rv-hero__title">Відгуки про Євгена Скрипника та лікарів-психіатрів центру</h1>
+        <p class="rv-hero__sub">
+          Що пишуть люди, які звернулися до <a class="doctor-link" routerLink="/about">Євгена Скрипника</a>
+          та лікарів Центру ментального здоров'я.
+        </p>
+      </div>
 
-        @if (totalCount()) {
-          <div class="reviews-hero__stats">
-            <span class="reviews-hero__score">{{ avgRating() }}</span>
+      <aside class="rv-summary" aria-label="Оцінка центру">
+        @if (loading()) {
+          <div class="skel rv-summary__skel" aria-hidden="true"></div>
+        } @else if (totalCount()) {
+          <div class="rv-summary__head">
+            <span class="rv-summary__score">{{ avgLabel() }}</span>
             <div>
-              <div class="reviews-hero__stars" [attr.aria-label]="'Середня оцінка ' + avgRating() + ' з 5'">
-                @for (s of starsArray(avgRating()); track s) {
-                  <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <div class="rv-stars rv-stars--lg" role="img" [attr.aria-label]="'Середня оцінка ' + avgLabel() + ' з 5'">
+                @for (on of starsFor(avgRating()); track $index) {
+                  <svg viewBox="0 0 24 24" [class.is-off]="!on" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
                 }
               </div>
-              <span class="reviews-hero__count">{{ totalCount() }} відгуків</span>
+              <p class="rv-summary__count">{{ totalCount() }} {{ reviewsNoun(totalCount()) }}</p>
             </div>
-            <button type="button" class="reviews-hero__cta" (click)="scrollToForm()">Залишити відгук</button>
           </div>
+
+          <!-- Distribution doubles as a rating filter -->
+          <ul class="rv-dist">
+            @for (row of distribution(); track row.stars) {
+              <li>
+                <button type="button" class="rv-dist__row"
+                        [class.is-active]="ratingFilter() === row.stars"
+                        [attr.aria-pressed]="ratingFilter() === row.stars"
+                        [disabled]="!row.count"
+                        (click)="toggleRating(row.stars)">
+                  <span class="rv-dist__label">{{ row.stars }}★</span>
+                  <span class="rv-dist__bar" aria-hidden="true"><span [style.width.%]="row.share * 100"></span></span>
+                  <span class="rv-dist__count">{{ row.count }}</span>
+                  <span class="visually-hidden">{{ reviewsNoun(row.count) }} з оцінкою {{ row.stars }}</span>
+                </button>
+              </li>
+            }
+          </ul>
+          @if (!complete()) {
+            <p class="rv-summary__note">Рахуємо всі відгуки…</p>
+          }
+
+          <button type="button" class="rv-summary__write" (click)="scrollToForm()">Залишити свій відгук</button>
         }
-      </div>
+      </aside>
     </div>
   </section>
 
-  <!-- ── Reviews grid ───────────────────────────────────────────────────── -->
-  <section class="reviews-list">
-    <div class="container">
+  <!-- ── Body: themes + list ─────────────────────────────────────────────── -->
+  <section class="rv-body" aria-label="Відгуки">
+    <div class="rv-body__inner">
 
-    @if (loading()) {
-      <div class="reviews-skeleton">
-        @for (i of [1,2,3,4,5,6]; track i) {
-          <div class="review-skeleton-card">
-            <div class="skel skel--avatar"></div>
-            <div class="skel-body">
-              <div class="skel skel--name"></div>
-              <div class="skel skel--stars"></div>
-              <div class="skel skel--line"></div>
-              <div class="skel skel--line skel--short"></div>
-            </div>
+      <aside class="rv-side">
+        <div class="rv-side__sticky">
+          <h2 class="rv-side__title">Що найчастіше відзначають</h2>
+          <ul class="rv-themes">
+            @for (t of themes; track t.key) {
+              <li>
+                <button type="button" class="rv-theme"
+                        [class.is-active]="facetFilter() === t.key"
+                        [attr.aria-pressed]="facetFilter() === t.key"
+                        (click)="toggleFacet(t.key)">
+                  <span class="rv-theme__label">{{ t.label }}</span>
+                  <span class="rv-theme__count">{{ facetCounts()[t.key] }}</span>
+                </button>
+              </li>
+            }
+          </ul>
+
+          <h2 class="rv-side__title rv-side__title--topics">Теми відгуків</h2>
+          <ul class="rv-chips">
+            @for (t of topics; track t.key) {
+              @if (facetCounts()[t.key]) {
+                <li>
+                  <button type="button" class="rv-chip"
+                          [class.is-active]="facetFilter() === t.key"
+                          [attr.aria-pressed]="facetFilter() === t.key"
+                          (click)="toggleFacet(t.key)">
+                    {{ t.label }} <span class="rv-chip__count">{{ facetCounts()[t.key] }}</span>
+                  </button>
+                </li>
+              }
+            }
+          </ul>
+
+          <div class="rv-book">
+            <p class="rv-book__title">Готові поговорити з лікарем?</p>
+            <p class="rv-book__text">Адміністратор допоможе обрати фахівця під ваш запит.</p>
+            <button type="button" class="rv-book__cta" (click)="openContacts()">Записатися на консультацію</button>
           </div>
-        }
-      </div>
-    }
+        </div>
+      </aside>
 
-    @if (!loading() && reviews().length) {
-      <div class="reviews-list-items">
-        @for (review of reviews(); track review._id; let i = $index) {
-          <article class="review-card">
-            <header class="review-card__head">
-              <div class="review-card__avatar">
-                @if (review.photo) {
-                  <img [src]="review.photo" [alt]="review.name" />
-                } @else {
-                  <span class="review-card__initials">{{ review.name.charAt(0) }}</span>
-                }
-              </div>
-              <div class="review-card__meta">
-                <p class="review-card__name">{{ review.name }}</p>
-                @if (review.role) {
-                  <p class="review-card__role">{{ review.role }}</p>
-                }
-              </div>
-              <div class="review-card__stars" [attr.aria-label]="'Оцінка ' + review.rating + ' з 5'">
-                @for (s of starsArray(review.rating); track s) {
-                  <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                }
-              </div>
-            </header>
-            <p class="review-card__text">{{ review.text }}</p>
-          </article>
-        }
-      </div>
-    }
-
-    @if (!loading() && !reviews().length) {
-      <p class="reviews-empty">Відгуків поки що немає. Станьте першим!</p>
-    }
-
-    @if (loadingMore()) {
-      <div class="reviews-load-more">
-        <span class="reviews-load-more__spinner"></span>
-      </div>
-    }
-
-    @if (hasMore() && !loadingMore()) {
-      <div class="reviews-load-more-btn-row">
-        <button class="reviews-load-more-btn" (click)="loadMore()">
-          Показати більше відгуків
-        </button>
-      </div>
-    }
-
-    </div>
-  </section>
-
-  <!-- ── Submit form ────────────────────────────────────────────────────── -->
-  <section class="reviews-submit" id="leave-review">
-    <div class="container">
-      <div class="reviews-submit__inner">
-
-        <div class="reviews-submit__info">
-          <h2 class="reviews-submit__title">Залишити відгук</h2>
-          <p class="reviews-submit__desc">Ваш досвід допомагає іншим людям зробити правильний вибір. Відгуки модеруються перед публікацією.</p>
-          <button class="reviews-submit__book" type="button" (click)="openContacts()">
-            Записатись на консультацію
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </button>
+      <div class="rv-main">
+        <!-- Toolbar -->
+        <div class="rv-tools">
+          <div class="rv-search">
+            <label class="visually-hidden" for="rv-search">Пошук у відгуках</label>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input id="rv-search" type="search" placeholder="Пошук у відгуках"
+                   autocomplete="off" [ngModel]="query()" (ngModelChange)="setQuery($event)" />
+          </div>
+          <div class="rv-sort">
+            <label for="rv-sort">Сортування</label>
+            <select id="rv-sort" [ngModel]="sort()" (ngModelChange)="setSort($event)">
+              @for (o of sortOptions; track o.key) {
+                <option [value]="o.key">{{ o.label }}</option>
+              }
+            </select>
+          </div>
         </div>
 
-        <div class="reviews-submit__form-wrap">
-          @if (submitDone()) {
-            <div class="reviews-submit__success">
-              <svg class="reviews-submit__success-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-              <h3>Дякуємо за відгук!</h3>
-              <p>Він буде опублікований після модерації.</p>
-              <button class="reviews-submit__retry" type="button" (click)="submitDone.set(false)">Написати ще один</button>
-            </div>
-          } @else {
-            <form class="reviews-submit__form" (ngSubmit)="onSubmit()" novalidate>
-
-              <!-- Rating -->
-              <div class="rform__field">
-                <label class="rform__label">Ваша оцінка <span class="rform__req">*</span></label>
-                <div class="rform__stars">
-                  @for (s of stars; track s) {
-                    <button
-                      type="button"
-                      class="rform__star-btn"
-                      [class.rform__star-btn--active]="formRating >= s"
-                      (click)="setRating(s)"
-                      [attr.aria-label]="s + ' зірок'"
-                    >
-                      <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                    </button>
-                  }
-                  <span class="rform__rating-label">
-                    {{ formRating === 1 ? 'Погано' : formRating === 2 ? 'Задовільно' : formRating === 3 ? 'Нормально' : formRating === 4 ? 'Добре' : 'Відмінно' }}
-                  </span>
-                </div>
-              </div>
-
-              <!-- Name -->
-              <div class="rform__field" [class.rform__field--error]="nameTouched && formName.trim().length < 2">
-                <label class="rform__label" for="rv-name">Ваше ім'я <span class="rform__req">*</span></label>
-                <input
-                  id="rv-name"
-                  class="rform__input"
-                  type="text"
-                  placeholder="Ім'я або псевдонім"
-                  [(ngModel)]="formName"
-                  name="rvName"
-                  (blur)="nameTouched = true"
-                  maxlength="60"
-                />
-                @if (nameTouched && formName.trim().length < 2) {
-                  <p class="rform__error">Введіть ваше ім'я (мінімум 2 символи)</p>
-                }
-              </div>
-
-              <!-- Text -->
-              <div class="rform__field" [class.rform__field--error]="textTouched && formText.trim().length < 10">
-                <label class="rform__label" for="rv-text">Ваш відгук <span class="rform__req">*</span></label>
-                <textarea
-                  id="rv-text"
-                  class="rform__textarea"
-                  placeholder="Розкажіть про ваш досвід консультації. Можете вказати, у якого лікаря ви були..."
-                  [(ngModel)]="formText"
-                  name="rvText"
-                  (blur)="textTouched = true"
-                  rows="5"
-                  maxlength="1200"
-                ></textarea>
-                <div class="rform__char-count">{{ formText.length }}/1200</div>
-                @if (textTouched && formText.trim().length < 10) {
-                  <p class="rform__error">Напишіть відгук (мінімум 10 символів)</p>
-                }
-              </div>
-
-              @if (submitError()) {
-                <p class="rform__submit-error">{{ submitError() }}</p>
+        <!-- Result line, announced to screen readers -->
+        <div class="rv-status" aria-live="polite">
+          @if (!loading() && !loadError()) {
+            <span>
+              @if (hasActiveFilters()) {
+                Знайдено {{ filtered().length }} {{ reviewsNoun(filtered().length) }}
+              } @else {
+                Усі відгуки
               }
-
-              <button
-                class="rform__submit"
-                type="submit"
-                [disabled]="submitLoading()"
-              >
-                @if (submitLoading()) {
-                  <span class="rform__spinner"></span> Надсилаємо...
-                } @else {
-                  Надіслати відгук
-                }
-              </button>
-
-              <p class="rform__note">Відгук з'явиться після перевірки модератором.</p>
-            </form>
+            </span>
+            @if (activeFacetLabel(); as label) {
+              <button type="button" class="rv-pill" (click)="toggleFacet(facetFilter()!)" [attr.aria-label]="'Прибрати фільтр ' + label">{{ label }} <span aria-hidden="true">×</span></button>
+            }
+            @if (ratingFilter(); as r) {
+              <button type="button" class="rv-pill" (click)="toggleRating(r)" [attr.aria-label]="'Прибрати фільтр за оцінкою ' + r">{{ r }}★ <span aria-hidden="true">×</span></button>
+            }
+            @if (hasActiveFilters()) {
+              <button type="button" class="rv-reset" (click)="resetFilters()">Скинути все</button>
+            }
           }
         </div>
 
+        @if (loading()) {
+          <ul class="rv-list" aria-hidden="true">
+            @for (i of [1, 2, 3, 4]; track i) {
+              <li class="rv-card rv-card--skel">
+                <span class="skel skel--meta"></span>
+                <span class="skel skel--line"></span>
+                <span class="skel skel--line"></span>
+                <span class="skel skel--line skel--short"></span>
+              </li>
+            }
+          </ul>
+        } @else if (loadError()) {
+          <div class="rv-empty">
+            <p>Не вдалося завантажити відгуки.</p>
+            <button type="button" class="rv-ghost" (click)="retry()">Спробувати ще раз</button>
+          </div>
+        } @else if (!filtered().length) {
+          <div class="rv-empty">
+            <p>За цими умовами відгуків немає.</p>
+            <button type="button" class="rv-ghost" (click)="resetFilters()">Показати всі відгуки</button>
+          </div>
+        } @else {
+          <ul class="rv-list">
+            @for (r of shown(); track r.key; let i = $index) {
+              <li>
+                <article class="rv-card" [attr.aria-labelledby]="'rv-a-' + r.key">
+                  <header class="rv-card__meta">
+                    <span class="rv-stars" role="img" [attr.aria-label]="'Оцінка ' + r.rating + ' з 5'">
+                      @for (on of starsFor(r.rating); track $index) {
+                        <svg viewBox="0 0 24 24" [class.is-off]="!on" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                      }
+                    </span>
+                    @if (r.date) {
+                      <time [attr.datetime]="r.createdAt?.slice(0, 10)">{{ r.date }}</time>
+                    }
+                  </header>
+
+                  <blockquote class="rv-card__text" [id]="'rv-t-' + r.key"
+                              [class.is-clamped]="r.long && !expanded().has(r.key) && query().trim().length < 2">
+                    @for (p of parts(r.body); track $index) {
+                      @if (p.hit) { <mark>{{ p.text }}</mark> } @else { {{ p.text }} }
+                    }
+                  </blockquote>
+
+                  @if (r.long && query().trim().length < 2) {
+                    <button type="button" class="rv-card__more"
+                            [attr.aria-expanded]="expanded().has(r.key)"
+                            [attr.aria-controls]="'rv-t-' + r.key"
+                            (click)="toggleExpanded(r.key)">
+                      {{ expanded().has(r.key) ? 'Згорнути' : 'Читати повністю' }}
+                    </button>
+                  }
+
+                  <footer class="rv-card__foot">
+                    <span class="rv-card__name" [id]="'rv-a-' + r.key">{{ r.displayName }}</span>
+                    @if (r.source) { <span class="rv-card__src">{{ r.source }}</span> }
+                    @if (r.doctors.length) {
+                      <span class="rv-card__doc">про лікаря: {{ r.doctors.join(', ') }}</span>
+                    }
+                  </footer>
+                </article>
+              </li>
+
+              <!-- One quiet booking prompt inside the list, after the sixth review -->
+              @if (i === 5) {
+                <li class="rv-inline-cta">
+                  <p>Впізнаєте себе в цих історіях? Перший крок — консультація.</p>
+                  <button type="button" class="rv-inline-cta__btn" (click)="openContacts()">Записатися</button>
+                </li>
+              }
+            }
+          </ul>
+
+          @if (filtered().length > shown().length) {
+            <div class="rv-more">
+              <button type="button" class="rv-ghost" (click)="showMore()">
+                Показати ще {{ Math.min(10, filtered().length - shown().length) }}
+              </button>
+              <span class="rv-more__count">Показано {{ shown().length }} з {{ filtered().length }}</span>
+            </div>
+          }
+        }
       </div>
+    </div>
+  </section>
+
+  <!-- ── Leave a review ──────────────────────────────────────────────────── -->
+  <section class="rv-form-section" id="leave-review" aria-labelledby="rv-form-title">
+    <div class="rv-form-section__inner">
+
+      <div class="rv-form-intro">
+        <span class="rv-kicker">Ваш досвід</span>
+        <h2 class="rv-form-intro__title" id="rv-form-title">Залишити відгук</h2>
+        <p>Ваша історія може допомогти комусь наважитися на перший крок.</p>
+        <ul class="rv-form-intro__notes">
+          <li>Можна підписатися псевдонімом.</li>
+          <li>Не обов'язково вказувати діагноз чи інші медичні подробиці.</li>
+          <li>Відгук з'явиться на сайті після перевірки модератором.</li>
+        </ul>
+      </div>
+
+      <div class="rv-form-wrap">
+        @if (submitDone()) {
+          <div class="rv-success" role="status">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <h3>Дякуємо за відгук</h3>
+            <p>Він з'явиться на сайті після перевірки.</p>
+            <button type="button" class="rv-ghost" (click)="submitDone.set(false)">Написати ще один</button>
+          </div>
+        } @else {
+          <form class="rv-form" (ngSubmit)="onSubmit()" novalidate>
+
+            <fieldset class="rv-field rv-rating">
+              <legend class="rv-label">Ваша оцінка</legend>
+              <div class="rv-rating__stars">
+                @for (s of stars; track s) {
+                  <input class="visually-hidden" type="radio" name="rvRating" [id]="'rv-r' + s"
+                         [value]="s" [(ngModel)]="formRating" />
+                  <label [for]="'rv-r' + s" [class.is-on]="formRating >= s" [attr.title]="ratingWords[s]">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <span class="visually-hidden">{{ s }} з 5 — {{ ratingWords[s] }}</span>
+                  </label>
+                }
+                <span class="rv-rating__word" aria-hidden="true">{{ ratingWords[formRating] }}</span>
+              </div>
+            </fieldset>
+
+            <div class="rv-field" [class.has-error]="nameTouched && formName.trim().length < 2">
+              <label class="rv-label" for="rv-name">Ім'я або псевдонім</label>
+              <input id="rv-name" class="rv-input" type="text" name="rvName" autocomplete="given-name"
+                     [(ngModel)]="formName" (blur)="nameTouched = true" maxlength="60"
+                     [attr.aria-invalid]="nameTouched && formName.trim().length < 2"
+                     aria-describedby="rv-name-err" />
+              @if (nameTouched && formName.trim().length < 2) {
+                <p class="rv-error" id="rv-name-err">Вкажіть хоча б 2 символи.</p>
+              }
+            </div>
+
+            <div class="rv-field" [class.has-error]="textTouched && formText.trim().length < 10">
+              <label class="rv-label" for="rv-text">Ваш відгук</label>
+              <textarea id="rv-text" class="rv-input rv-input--area" name="rvText" rows="6" maxlength="1200"
+                        placeholder="Що вас привело, як пройшла консультація, що змінилося. Можна вказати ім'я лікаря."
+                        [(ngModel)]="formText" (blur)="textTouched = true"
+                        [attr.aria-invalid]="textTouched && formText.trim().length < 10"
+                        aria-describedby="rv-text-hint rv-text-err"></textarea>
+              <div class="rv-field__row">
+                @if (textTouched && formText.trim().length < 10) {
+                  <p class="rv-error" id="rv-text-err">Напишіть хоча б кілька слів (від 10 символів).</p>
+                } @else {
+                  <span></span>
+                }
+                <span class="rv-hint" id="rv-text-hint">{{ formText.length }}/1200</span>
+              </div>
+            </div>
+
+            @if (submitError()) {
+              <p class="rv-error rv-error--form" role="alert">{{ submitError() }}</p>
+            }
+
+            <button class="rv-submit" type="submit" [disabled]="submitLoading()">
+              @if (submitLoading()) {
+                <span class="rv-spinner" aria-hidden="true"></span> Надсилаємо…
+              } @else {
+                Надіслати відгук
+              }
+            </button>
+          </form>
+        }
+      </div>
+
     </div>
   </section>
 
