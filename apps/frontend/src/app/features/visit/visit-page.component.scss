@@ -1,698 +1,514 @@
 @use "../../../assets/css/coloristics" as *;
 
-// Same rhythm as the landing sections (consultation-block): 1450px, 6% gutters.
-.v-wrap {
-  max-width: 1450px;
-  margin: 0 auto;
-  padding: 0 6%;
+// Booking page: contact lines in the hero (no extra step),
+// what happens next, what to prepare, privacy, reasons, FAQ, final CTA.
 
-  @media (max-width: 768px) {
-    padding: 0 1.25rem;
+$rule: 1px solid rgba($heading-color, 0.14);
+
+.vp { background: $paper; }
+
+.vp-kicker { @include kicker; }
+.vp-title  { @include section-title; }
+.vp-frame  { @include page-frame; }
+
+.vp-section {
+  padding-block: 5rem;
+
+  @media (max-width: 768px) { padding-block: 3.5rem; }
+
+  &--sand { background: $section-bg; }
+}
+
+.vp-head {
+  max-width: 40rem;
+  margin-bottom: 2.5rem;
+
+  p {
+    margin: 1rem 0 0;
+    line-height: 1.65;
+    color: $body-text-color;
   }
-}
-
-.v-section {
-  padding: 6rem 0;
-  background: $section-bg;
-
-  &--white { background: $section-seconder-bg; }
-
-  @media (max-width: 768px) {
-    padding: 4.5rem 0;
-  }
-}
-
-// ── Shared type ───────────────────────────────────────────────────────────────
-
-.v-eyebrow {
-  display: inline-block;
-  margin-bottom: 1.25rem;
-  padding: 0.35rem 1rem;
-  border: 1.5px solid $heading-color;
-  transform: skewX(-12deg);
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  color: $heading-color;
-
-  &--light {
-    border-color: $accent-color;
-    color: $accent-color;
-  }
-}
-
-.v-title {
-  margin: 0;
-  font-size: clamp(1.6rem, 2.6vw, 2.3rem);
-  font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  color: $heading-color;
-
-  &--light { color: $paper; }
-}
-
-.v-text {
-  margin: 1.25rem 0 0;
-  font-size: 1rem;
-  line-height: 1.7;
-  color: $body-text-color;
 }
 
 // ── Buttons ───────────────────────────────────────────────────────────────────
 
-.v-cta {
-  position: relative;
-  overflow: hidden;
+.vp-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.7rem;
-  padding: 0.85rem 0.85rem 0.85rem 2rem;
-  border: 0;
-  border-radius: 100px;
-  background: $heading-color;
-  color: $paper;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 48px;
+  padding: 0 1.25rem;
+  border: 1px solid rgba($heading-color, 0.3);
+  border-radius: 999px;
+  background: $paper;
+  color: $heading-color;
   font: inherit;
   font-size: 0.95rem;
   font-weight: 600;
-  cursor: pointer;
-  isolation: isolate;
-  box-shadow: 0 14px 30px rgba($heading-color, 0.22);
-  transition: transform 0.24s $ease-spring, box-shadow 0.24s;
-
-  // brown fill that rises from the bottom on hover
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: $primary-color;
-    border-radius: inherit;
-    transform: translateY(101%);
-    transition: transform 0.24s $ease-out-soft;
-  }
-
-  svg {
-    width: 34px;
-    height: 34px;
-    padding: 9px;
-    border-radius: 50%;
-    background: $accent-color;
-    color: $heading-color;
-    transition: transform 0.24s $ease-spring;
-  }
-
-  &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 18px 38px rgba($primary-color, 0.35);
-
-    &::before { transform: translateY(0); }
-    svg { transform: rotate(-45deg); }
-  }
-
-  &:focus-visible {
-    outline: 2px solid $primary-color;
-    outline-offset: 3px;
-  }
-
-  &--light {
-    background: $paper;
-    color: $heading-color;
-    box-shadow: none;
-
-    &::before { background: $accent-color; }
-
-    &:hover { box-shadow: 0 18px 38px rgba(0, 0, 0, 0.25); }
-  }
-}
-
-.v-link {
-  position: relative;
-  padding-bottom: 4px;
-  color: $heading-color;
-  font-size: 0.95rem;
-  font-weight: 600;
   text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  font-variant-numeric: tabular-nums;
+  transition: background-color 0.15s, border-color 0.15s;
 
-  &::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 2px;
-    background: $accent-color;
-    transform-origin: right;
-    transition: transform 0.24s $ease-out-soft;
+  &:hover { border-color: $heading-color; }
+
+  i { font-size: 0.9rem; }
+
+  &--solid {
+    border-color: $heading-color;
+    background: $heading-color;
+    color: $paper;
+
+    &:hover { background: $primary-ink; border-color: $primary-ink; }
   }
 
-  &:hover::after { transform: scaleX(0); }
+  &--lg { height: 52px; padding: 0 1.6rem; }
 }
 
 // ── Hero ──────────────────────────────────────────────────────────────────────
 
-.v-hero {
-  position: relative;
-  overflow: hidden;
-  padding: 3rem 0 5rem;
-  background: $section-bg;
+.vp-hero { background: $section-bg; }
 
-  // soft peach glow behind the booking card
-  &::before {
-    content: '';
-    position: absolute;
-    top: -20%;
-    right: -10%;
-    width: 55%;
-    aspect-ratio: 1;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba($accent-color, 0.35), transparent 65%);
-    pointer-events: none;
-  }
+.vp-hero__inner {
+  @include grid-12;
+  row-gap: 2.5rem;
+  align-items: start;
+  padding-block: 2rem 4rem;
 
-  &__grid {
-    position: relative;
-    display: grid;
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
-    align-items: center;
-    gap: 3rem 5rem;
-
-    @media (max-width: 960px) {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  &__title {
-    margin: 0 0 1.25rem;
-    max-width: 640px;
-    font-size: clamp(2rem, 3.4vw, 3.1rem);
-    font-weight: 800;
-    line-height: 1.12;
-    letter-spacing: -0.02em;
-    color: $heading-color;
-  }
-
-  &__lead {
-    margin: 0 0 2rem;
-    max-width: 520px;
-    font-size: clamp(0.95rem, 1.25vw, 1.08rem);
-    line-height: 1.7;
-    color: $body-text-color;
-  }
-
-  &__actions {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem 1.75rem;
-  }
-
-  @media (max-width: 768px) {
-    padding: 2rem 0 3.5rem;
-  }
+  @media (max-width: 768px) { padding-block: 1.5rem 3rem; }
 }
 
-.v-crumbs {
+.vp-crumbs {
+  grid-column: 1 / -1;
   display: flex;
   gap: 0.5rem;
-  margin-bottom: 2rem;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: $muted-text-color;
 
-  a {
-    color: $muted-text-color;
-    text-decoration: none;
-    &:hover { color: $primary-color; }
-  }
-
+  a { color: inherit; text-decoration: none; }
+  a:hover { color: $heading-color; text-decoration: underline; }
   [aria-current] { color: $heading-color; }
 }
 
-// ── Booking card ──────────────────────────────────────────────────────────────
+.vp-hero__text {
+  grid-column: 1 / span 6;
+  grid-row: 2;
+  padding-top: 1rem;
 
-.v-card {
-  padding: 2rem;
-  border-radius: 24px;
-  background: $section-seconder-bg;
-  box-shadow: 0 24px 60px rgba($heading-color, 0.1);
+  @media (max-width: 960px) { grid-column: 1 / -1; grid-row: auto; padding-top: 0; }
+}
 
-  &__title {
-    margin: 0 0 1.5rem;
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: $heading-color;
-  }
+.vp-hero__title {
+  @include section-title;
+  font-size: clamp(2.4rem, 4.8vw, 4.1rem);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+}
 
-  &__phones {
-    margin: 0;
-    padding: 0;
-    list-style: none;
+.vp-hero__lead {
+  max-width: 34rem;
+  margin: 1.5rem 0 0;
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: $body-text-color;
+}
 
-    li {
-      display: flex;
-      flex-direction: column;
-      gap: 0.2rem;
-      padding: 1rem 0;
-      border-top: 1px solid rgba($heading-color, 0.1);
-    }
-  }
+.vp-facts {
+  grid-column: 1 / span 6;
+  grid-row: 3;
+  margin: 0;
 
-  &__label {
-    font-size: 0.8rem;
-    color: $muted-text-color;
-  }
+  @media (max-width: 960px) { grid-column: 1 / -1; grid-row: auto; }
 
-  &__phone {
-    font-size: clamp(1.2rem, 1.8vw, 1.45rem);
-    font-weight: 800;
-    letter-spacing: -0.01em;
-    color: $heading-color;
-    text-decoration: none;
-    font-variant-numeric: tabular-nums;
-    transition: color 0.2s;
-
-    &:hover { color: $primary-color; }
-  }
-
-  &__meta {
+  > div {
     display: grid;
-    gap: 0.9rem;
-    margin: 0 0 1.75rem;
-    padding: 1.25rem 0 0;
-    border-top: 1px solid rgba($heading-color, 0.1);
+    grid-template-columns: 11rem minmax(0, 1fr);
+    gap: 0.25rem 1rem;
+    padding: 0.85rem 0;
+    border-top: $rule;
 
-    div {
-      display: grid;
-      grid-template-columns: 5.5rem 1fr;
-      gap: 1rem;
-    }
-
-    dt {
-      font-size: 0.8rem;
-      color: $muted-text-color;
-    }
-
-    dd {
-      margin: 0;
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: $heading-color;
-    }
+    @media (max-width: 520px) { grid-template-columns: 1fr; }
   }
 
-  &__btn {
-    width: 100%;
-    padding: 0.95rem 1rem;
-    border: 1.5px solid $heading-color;
-    border-radius: 100px;
-    background: transparent;
+  dt {
+    font-family: $font-display;
+    font-size: 1.05rem;
     color: $heading-color;
-    font: inherit;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.25s, color 0.25s;
-
-    &:hover {
-      background: $heading-color;
-      color: $paper;
-    }
-
-    &:focus-visible {
-      outline: 2px solid $primary-color;
-      outline-offset: 3px;
-    }
   }
 
-  @media (max-width: 768px) {
-    padding: 1.5rem;
+  dd {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: $body-text-color;
   }
 }
 
-// ── Facts strip ───────────────────────────────────────────────────────────────
+// booking panel
+.vp-book {
+  grid-column: 8 / -1;
+  grid-row: 2 / span 2;
+  padding: 1.75rem;
+  border-radius: 16px;
+  background: $paper;
+  box-shadow: 0 0 0 1px rgba($heading-color, 0.08), 0 20px 50px rgba($heading-color, 0.08);
 
-.v-facts {
-  background: $dark-bg;
-  color: $paper;
-
-  &__list {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    margin: 0;
-    padding: 0;
-    list-style: none;
-
-    @media (max-width: 768px) {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  &__item {
-    padding: 2.25rem 2rem 2.25rem 0;
-
-    & + & {
-      padding-left: 2rem;
-      border-left: 1px solid rgba(255, 255, 255, 0.12);
-    }
-
-    h3 {
-      margin: 0 0 0.4rem;
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: $accent-color;
-    }
-
-    p {
-      margin: 0;
-      font-size: 0.9rem;
-      line-height: 1.6;
-      color: rgba(255, 255, 255, 0.72);
-    }
-
-    @media (max-width: 768px) {
-      padding: 1.5rem 0;
-
-      & + & {
-        padding-left: 0;
-        border-left: 0;
-        border-top: 1px solid rgba(255, 255, 255, 0.12);
-      }
-    }
-  }
+  @media (max-width: 960px) { grid-column: 1 / -1; grid-row: auto; }
+  @media (max-width: 520px) { padding: 1.25rem; }
 }
 
-// ── Split layout: heading column + content column ─────────────────────────────
+.vp-book__title {
+  margin: 0 0 0.5rem;
+  font-family: $font-display;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: $heading-color;
+}
 
-.v-split {
+.vp-line {
+  padding: 1.25rem 0;
+  border-bottom: $rule;
+}
+
+.vp-line__title {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: $muted-text-color;
+}
+
+.vp-line__text {
+  margin: 0.35rem 0 0.25rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: $body-text-color;
+}
+
+.vp-call {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 52px;
+  color: $heading-color;
+  text-decoration: none;
+
+  &:hover .vp-call__num { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 5px; }
+}
+
+.vp-call__num {
+  font-family: $font-display;
+  font-size: 1.55rem;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+
+  @media (max-width: 360px) { font-size: 1.3rem; }
+}
+
+.vp-call__go {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: $primary-ink;
+
+  i { font-size: 0.85rem; }
+
+  @media (max-width: 380px) { font-size: 0; gap: 0; i { font-size: 1.1rem; } }
+}
+
+.vp-line__btns {
   display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-  gap: 3rem 6rem;
-  align-items: start;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
 
-  &__head {
-    position: sticky;
-    top: 6rem;
+.vp-book__hint {
+  margin: 1.25rem 0 0;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: $muted-text-color;
 
-    @media (max-width: 960px) {
-      position: static;
-    }
-  }
-
-  @media (max-width: 960px) {
-    grid-template-columns: 1fr;
-  }
+  a { color: $heading-color; text-underline-offset: 3px; }
 }
 
 // ── Steps ─────────────────────────────────────────────────────────────────────
 
-.v-steps {
+.vp-steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2rem $grid-gutter;
   margin: 0;
   padding: 0;
   list-style: none;
-}
 
-.v-step {
-  display: grid;
-  grid-template-columns: 4.5rem 1fr;
-  gap: 1.5rem;
-  padding: 2rem 0;
-  border-top: 1px solid rgba($heading-color, 0.12);
+  @media (max-width: 900px) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 520px) { grid-template-columns: 1fr; }
 
-  &:last-child { border-bottom: 1px solid rgba($heading-color, 0.12); }
-
-  &__num {
-    font-size: clamp(2rem, 3.2vw, 2.8rem);
-    font-weight: 800;
-    line-height: 1;
-    letter-spacing: -0.03em;
-    color: $accent-color;
-    font-variant-numeric: tabular-nums;
+  li {
+    padding-top: 1rem;
+    border-top: 1px solid $heading-color;
   }
 
-  &__title {
+  h3 {
     margin: 0 0 0.5rem;
-    font-size: 1.15rem;
-    font-weight: 700;
+    font-family: $font-display;
+    font-size: 1.35rem;
+    font-weight: 500;
     color: $heading-color;
   }
 
-  &__text {
+  p {
     margin: 0;
     font-size: 0.95rem;
-    line-height: 1.65;
+    line-height: 1.6;
     color: $body-text-color;
   }
+}
 
-  @media (max-width: 768px) {
-    grid-template-columns: 3.25rem 1fr;
-    gap: 1rem;
-    padding: 1.5rem 0;
+.vp-steps__num {
+  display: block;
+  margin-bottom: 1rem;
+  font-family: $font-display;
+  font-size: 2.6rem;
+  font-style: italic;
+  line-height: 1;
+  color: $primary-color;
+}
+
+// ── Prepare + privacy ─────────────────────────────────────────────────────────
+
+.vp-two {
+  @include grid-12;
+  row-gap: 3rem;
+
+  > div { grid-column: span 6; }
+  > div + div { grid-column: 8 / -1; }
+
+  @media (max-width: 900px) { > div, > div + div { grid-column: 1 / -1; } }
+}
+
+.vp-two__lead {
+  max-width: 32rem;
+  margin: 1rem 0 1.5rem;
+  line-height: 1.65;
+  color: $body-text-color;
+}
+
+.vp-check {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    position: relative;
+    padding: 0.8rem 0 0.8rem 1.75rem;
+    border-top: $rule;
+    font-size: 0.98rem;
+    line-height: 1.5;
+    color: $heading-color;
+
+    // drawn tick, no icon font
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0.15rem;
+      top: 1.15rem;
+      width: 0.7rem;
+      height: 0.38rem;
+      border-left: 2px solid $primary-color;
+      border-bottom: 2px solid $primary-color;
+      transform: rotate(-45deg);
+    }
   }
 }
 
 // ── Reasons ───────────────────────────────────────────────────────────────────
 
-.v-head {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1rem 3rem;
-  margin-bottom: 3.5rem;
-
-  &__aside {
-    max-width: 360px;
-    margin: 0;
-  }
-}
-
-.v-reasons {
+.vp-reasons {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: $grid-gutter;
   margin: 0;
   padding: 0;
   list-style: none;
 
-  @media (max-width: 960px) {
-    grid-template-columns: repeat(2, 1fr);
+  @media (max-width: 900px) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 560px) { grid-template-columns: 1fr; }
+
+  a, > li > div {
+    position: relative;
+    display: block;
+    height: 100%;
+    padding: 1.4rem 2rem 2rem 0;
+    border-top: $rule;
+    color: inherit;
+    text-decoration: none;
   }
 
-  @media (max-width: 600px) {
-    grid-template-columns: 1fr;
-  }
-}
+  a:hover {
+    border-top-color: $heading-color;
 
-.v-reason {
-  position: relative;
-  padding: 1.75rem 1.75rem 1.75rem 2rem;
-  border-radius: 18px;
-  background: $section-seconder-bg;
-  transition: transform 0.24s $ease-out-soft, box-shadow 0.24s;
-
-  // peach marker on the left edge
-  &::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 1.9rem;
-    width: 4px;
-    height: 1.3rem;
-    border-radius: 0 4px 4px 0;
-    background: $accent-color;
+    h3 { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 5px; }
+    .vp-go { opacity: 1; transform: none; }
   }
 
   h3 {
     margin: 0 0 0.5rem;
-    font-size: 1.05rem;
-    font-weight: 700;
+    font-family: $font-display;
+    font-size: 1.3rem;
+    font-weight: 500;
     color: $heading-color;
-  }
-
-  // whole card is clickable when it links to a condition page
-  &__link {
-    color: inherit;
-    text-decoration: none;
-
-    &::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-    }
-
-    &:hover { color: $primary-color; }
-
-    &:focus-visible {
-      outline: none;
-      &::after { outline: 2px solid $primary-color; outline-offset: 3px; }
-    }
   }
 
   p {
     margin: 0;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     line-height: 1.6;
     color: $body-text-color;
   }
-
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 18px 40px rgba($heading-color, 0.08);
-  }
 }
 
-// ── Privacy band ──────────────────────────────────────────────────────────────
-
-.v-privacy {
-  padding: 6rem 0;
-  background: $dark-bg;
-  color: $paper;
-
-  &__grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 2rem 6rem;
-    align-items: start;
-
-    @media (max-width: 960px) {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  &__body p {
-    margin: 0 0 1.75rem;
-    font-size: 1rem;
-    line-height: 1.75;
-    color: rgba(255, 255, 255, 0.75);
-  }
-
-  &__list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-
-    li {
-      position: relative;
-      padding: 0.9rem 0 0.9rem 1.75rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.12);
-      font-size: 0.95rem;
-      font-weight: 600;
-
-      &::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 1.3rem;
-        width: 0.6rem;
-        height: 0.6rem;
-        border-radius: 50%;
-        background: $accent-color;
-      }
-    }
-  }
-
-  @media (max-width: 768px) {
-    padding: 4.5rem 0;
-  }
+.vp-go {
+  position: absolute;
+  top: 1.4rem;
+  right: 0;
+  font-size: 1.1rem;
+  color: $primary-ink;
+  opacity: 0.5;
+  transform: translateX(-4px);
+  transition: opacity 0.2s, transform 0.2s $ease-out-soft;
 }
 
 // ── FAQ ───────────────────────────────────────────────────────────────────────
 
-.v-faq__item {
-  border-top: 1px solid rgba($heading-color, 0.12);
+.vp-split {
+  @include grid-12;
+  row-gap: 2rem;
+}
 
-  &:last-child { border-bottom: 1px solid rgba($heading-color, 0.12); }
+.vp-split__head {
+  grid-column: 1 / span 4;
+
+  p {
+    margin: 1rem 0 0;
+    line-height: 1.65;
+    color: $body-text-color;
+  }
+
+  @media (max-width: 900px) { grid-column: 1 / -1; }
+}
+
+.vp-faq {
+  grid-column: 6 / -1;
+  border-bottom: $rule;
+
+  @media (max-width: 900px) { grid-column: 1 / -1; }
+
+  details { border-top: $rule; }
 
   summary {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1.5rem;
-    padding: 1.5rem 0;
-    list-style: none;
-    font-size: 1.05rem;
-    font-weight: 700;
+    gap: 1rem;
+    min-height: 56px;
+    padding: 1rem 0;
+    font-family: $font-display;
+    font-size: 1.2rem;
+    line-height: 1.35;
     color: $heading-color;
     cursor: pointer;
-    transition: color 0.2s;
+    list-style: none;
 
     &::-webkit-details-marker { display: none; }
-
-    &:hover { color: $primary-color; }
-
-    &:focus-visible {
-      outline: 2px solid $primary-color;
-      outline-offset: 4px;
-      border-radius: 4px;
-    }
+    &:hover { color: $primary-ink; }
   }
 
   p {
-    margin: 0;
-    padding: 0 3rem 1.5rem 0;
-    font-size: 0.95rem;
-    line-height: 1.75;
+    max-width: 40rem;
+    margin: 0 0 1.25rem;
+    font-size: 0.98rem;
+    line-height: 1.7;
     color: $body-text-color;
   }
-
-  &[open] .v-faq__icon::after { transform: rotate(0deg); }
 }
 
-// plus that turns into a minus when open
-.v-faq__icon {
+// plus that turns into a minus
+.vp-faq__icon {
   position: relative;
   flex-shrink: 0;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  background: $accent-soft;
+  width: 14px;
+  height: 14px;
 
   &::before,
   &::after {
     content: '';
     position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 0.8rem;
+    left: 0;
+    top: 6px;
+    width: 14px;
     height: 2px;
-    margin: -1px 0 0 -0.4rem;
-    background: $heading-color;
-    transition: transform 0.3s $ease-out-soft;
+    background: currentColor;
+    transition: transform 0.2s $ease-out-soft;
   }
 
   &::after { transform: rotate(90deg); }
+
+  details[open] &::after { transform: rotate(0deg); }
 }
 
 // ── Final CTA ─────────────────────────────────────────────────────────────────
 
-.v-final {
-  padding: 5.5rem 0;
-  background: $primary-color;
-  color: $paper;
-  text-align: center;
+.vp-final { background: $accent-soft; }
 
-  &__inner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.vp-final__inner {
+  @include grid-12;
+  row-gap: 1.5rem;
+  align-items: end;
+  padding-block: 4.5rem;
+
+  @media (max-width: 768px) { padding-block: 3.25rem; }
+}
+
+.vp-final__title {
+  @include section-title;
+  grid-column: 1 / span 7;
+  font-size: clamp(2rem, 4vw, 3.3rem);
+
+  em {
+    display: block;
+    font-style: italic;
+    font-weight: 400;
+    color: $primary-color;
   }
 
-  &__title {
-    margin: 0 0 0.75rem;
-    font-size: clamp(1.7rem, 3vw, 2.5rem);
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    color: $paper;
+  @media (max-width: 900px) { grid-column: 1 / -1; }
+}
+
+.vp-final__side {
+  grid-column: 8 / -1;
+
+  p {
+    margin: 0 0 1.25rem;
+    line-height: 1.65;
+    color: $body-text-color;
   }
 
-  &__text {
-    margin: 0 0 2rem;
-    font-size: 1rem;
-    color: rgba(255, 255, 255, 0.85);
-  }
+  @media (max-width: 900px) { grid-column: 1 / -1; }
+}
 
-  @media (max-width: 768px) {
-    padding: 4rem 0;
-  }
+.vp-final__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+
+  @media (max-width: 520px) { .vp-btn { width: 100%; } }
 }

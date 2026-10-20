@@ -1,141 +1,97 @@
-<div class="visit-page">
+<div class="vp">
 
-  <!-- Hero: pitch on the left, everything needed to book on the right -->
-  <section class="v-hero">
-    <div class="v-wrap v-hero__grid">
-      <div class="v-hero__text">
-        <nav class="v-crumbs" aria-label="Навігація">
-          <a routerLink="/">Головна</a>
-          <span aria-hidden="true">/</span>
-          <span aria-current="page">Онлайн запис</span>
-        </nav>
+  <!-- ── Hero: everything needed to book, no extra step ──────────────────── -->
+  <section class="vp-hero">
+    <div class="vp-hero__inner">
+      <nav class="vp-crumbs" aria-label="Навігаційний ланцюжок">
+        <a routerLink="/">Головна</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Онлайн запис</span>
+      </nav>
 
-        <span class="v-eyebrow">Онлайн запис</span>
-        <h1 class="v-hero__title">Запис на консультацію до психіатра</h1>
-        <p class="v-hero__lead">
-          Відеоконсультація з лікарем-психіатром <a class="doctor-link" routerLink="/about">Євгеном Скрипником</a> — щодня, окрім неділі, з 8:00 до 22:00.
+      <div class="vp-hero__text">
+        <span class="vp-kicker">Онлайн запис</span>
+        <h1 class="vp-hero__title">Запис на консультацію до психіатра</h1>
+        <p class="vp-hero__lead">
+          Відеоконсультація з лікарем-психіатром <a class="doctor-link" routerLink="/about">Євгеном Скрипником</a> або іншими лікарями центру — щодня, окрім неділі, з 8:00 до 22:00.
           Перший крок до психічного здоров'я — просто звернутися по допомогу.
         </p>
 
-        <div class="v-hero__actions">
-          <button type="button" class="v-cta" (click)="openContacts()">
-            <span>Записатися на консультацію</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-            </svg>
-          </button>
-          <a class="v-link" [routerLink]="'/' + TEST_ROUTES.LIST">Спершу пройти тест</a>
-        </div>
       </div>
 
-      <aside class="v-card" aria-labelledby="v-card-title" appReveal="zoom" [revealDelay]="150">
-        <h2 id="v-card-title" class="v-card__title">Як з нами зв'язатися</h2>
+      <!-- Two lines, each with what that specialist does -->
+      <div class="vp-book" aria-labelledby="vp-book-title">
+        <h2 class="vp-book__title" id="vp-book-title">До кого записатися?</h2>
+        @for (c of channels; track c.key) {
+          <section class="vp-line" [attr.aria-label]="c.title">
+            <h3 class="vp-line__title">{{ c.title }}</h3>
+            <p class="vp-line__text">{{ c.text }}</p>
+            <a class="vp-call" [href]="'tel:' + c.phone" (click)="trackPhone()">
+              <span class="vp-call__num">{{ c.label }}</span>
+              <span class="vp-call__go"><i class="pi pi-phone" aria-hidden="true"></i>Подзвонити</span>
+            </a>
+            <div class="vp-line__btns">
+              <button type="button" class="vp-btn vp-btn--solid" (click)="openTelegram(c.phone)"><i class="pi pi-telegram" aria-hidden="true"></i>Telegram</button>
+              <button type="button" class="vp-btn" (click)="openViber(c.phone)">Viber</button>
+            </div>
+          </section>
+        }
+        <p class="vp-book__hint">
+          Не впевнені? Почніть із психіатра: він порадить, чи потрібна психотерапія. Або
+          <a [routerLink]="'/' + TEST_ROUTES.LIST">пройдіть тест</a> перед записом.
+        </p>
+      </div>
 
-        <ul class="v-card__phones">
-          @for (p of phones; track p.phone) {
-            <li>
-              <span class="v-card__label">Запис до {{ p.name }}</span>
-              <a class="v-card__phone" [href]="'tel:' + p.phone" (click)="trackPhone()">{{ p.label }}</a>
-            </li>
+      <!-- Terms: after the booking panel on phones, under the heading on desktop -->
+      <dl class="vp-facts">
+          @for (f of facts; track f.title) {
+            <div>
+              <dt>{{ f.title }}</dt>
+              <dd>{{ f.text }}</dd>
+            </div>
           }
-        </ul>
-
-        <dl class="v-card__meta">
           <div>
-            <dt>Години</dt>
-            <dd>Пн–Сб, 8:00–22:00</dd>
-          </div>
-          <div>
-            <dt>Формат</dt>
-            <dd>Відеозв'язок онлайн</dd>
+            <dt>Вартість</dt>
+            <dd>Адміністратор назве актуальну ціну ще до запису й оплати</dd>
           </div>
         </dl>
-
-        <button type="button" class="v-card__btn" (click)="openContacts()">Написати в Telegram або Viber</button>
-      </aside>
     </div>
   </section>
 
-  <!-- Key facts -->
-  <section class="v-facts" aria-label="Умови прийому">
-    <div class="v-wrap">
-      <ul class="v-facts__list">
-        @for (f of facts; track f.title; let i = $index) {
-          <li class="v-facts__item" appReveal [revealDelay]="i * 90">
-            <h3>{{ f.title }}</h3>
-            <p>{{ f.text }}</p>
-          </li>
-        }
-      </ul>
-    </div>
-  </section>
-
-  <!-- How the consultation goes -->
-  <section class="v-section v-section--white">
-    <div class="v-wrap v-split">
-      <header class="v-split__head" appReveal="left">
-        <span class="v-eyebrow">Як це працює</span>
-        <h2 class="v-title">Консультація онлайн — як особистий прийом</h2>
-        <p class="v-text">
-          Відеозустріч нічим не поступається очному прийому: повноцінна психіатрична
-          консультація, призначення та план лікування — прямо з дому, з будь-якого місця
-          в Україні чи за кордоном.
-        </p>
+  <!-- ── What happens after you get in touch ─────────────────────────────── -->
+  <section class="vp-section" aria-labelledby="vp-steps">
+    <div class="vp-frame">
+      <header class="vp-head">
+        <span class="vp-kicker">Як це працює</span>
+        <h2 class="vp-title" id="vp-steps">Що буде після звернення</h2>
+        <p>Повноцінна психіатрична консультація, призначення та план лікування з дому, з будь-якого місця в Україні чи за кордоном.</p>
       </header>
-
-      <ol class="v-steps">
+      <ol class="vp-steps">
         @for (s of steps; track s.title; let i = $index) {
-          <li class="v-step" appReveal [revealDelay]="i * 90">
-            <span class="v-step__num" aria-hidden="true">{{ (i + 1).toString().padStart(2, '0') }}</span>
-            <div>
-              <h3 class="v-step__title">{{ s.title }}</h3>
-              <p class="v-step__text">{{ s.text }}</p>
-            </div>
+          <li>
+            <span class="vp-steps__num" aria-hidden="true">{{ i + 1 }}</span>
+            <h3>{{ s.title }}</h3>
+            <p>{{ s.text }}</p>
           </li>
         }
       </ol>
     </div>
   </section>
 
-  <!-- When to seek help -->
-  <section class="v-section">
-    <div class="v-wrap">
-      <header class="v-head" appReveal>
-        <div>
-          <span class="v-eyebrow">Показання</span>
-          <h2 class="v-title">Коли варто звернутися?</h2>
-        </div>
-        <p class="v-text v-head__aside">Не чекайте погіршення — рання консультація дає кращі результати.</p>
-      </header>
-
-      <ul class="v-reasons">
-        @for (r of reasons; track r.title; let i = $index) {
-          <li class="v-reason" appReveal [revealDelay]="(i % 3) * 90">
-            @if (r.slug) {
-              <h3><a class="v-reason__link" [routerLink]="'/' + r.slug">{{ r.title }}</a></h3>
-            } @else {
-              <h3>{{ r.title }}</h3>
-            }
-            <p>{{ r.text }}</p>
-          </li>
-        }
-      </ul>
-    </div>
-  </section>
-
-  <!-- Privacy -->
-  <section class="v-privacy">
-    <div class="v-wrap v-privacy__grid">
-      <div appReveal="left">
-        <span class="v-eyebrow v-eyebrow--light">Конфіденційність</span>
-        <h2 class="v-title v-title--light">Ваша розповідь залишається між вами та лікарем</h2>
+  <!-- ── Prepare + privacy ───────────────────────────────────────────────── -->
+  <section class="vp-section vp-section--sand">
+    <div class="vp-two">
+      <div aria-labelledby="vp-prep">
+        <h2 class="vp-title" id="vp-prep">Що підготувати</h2>
+        <p class="vp-two__lead">Не обов'язково, але так консультація пройде легше й повніше.</p>
+        <ul class="vp-check">
+          @for (p of prepare; track p) { <li>{{ p }}</li> }
+        </ul>
       </div>
-      <div class="v-privacy__body" appReveal="right" [revealDelay]="120">
-        <p>
-          Конфіденційність — основа довіри між лікарем і пацієнтом. Жодна інформація з консультації
-          не передається третім особам без вашої згоди.
-        </p>
-        <ul class="v-privacy__list">
+      <div aria-labelledby="vp-priv">
+        <h2 class="vp-title" id="vp-priv">Конфіденційність</h2>
+        <p class="vp-two__lead">Ваша розповідь залишається між вами та лікарем. Жодна інформація з консультації не передається третім особам без вашої згоди.</p>
+        <ul class="vp-check">
           <li>Лікарська таємниця суворо дотримується</li>
           <li>Захищений канал зв'язку</li>
           <li>Безкоштовна підтримка в чатах: пн–сб, 10:00–12:00 та 19:00–21:00</li>
@@ -144,22 +100,45 @@
     </div>
   </section>
 
-  <!-- FAQ -->
-  <section class="v-section v-section--white">
-    <div class="v-wrap v-split">
-      <header class="v-split__head" appReveal="left">
-        <span class="v-eyebrow">FAQ</span>
-        <h2 class="v-title">Часті питання</h2>
-        <p class="v-text">Не знайшли відповідь? Адміністратор охоче допоможе.</p>
+  <!-- ── When to seek help ───────────────────────────────────────────────── -->
+  <section class="vp-section" aria-labelledby="vp-when">
+    <div class="vp-frame">
+      <header class="vp-head">
+        <h2 class="vp-title" id="vp-when">Коли варто звернутися?</h2>
+        <p>Не чекайте погіршення: рання консультація дає кращі результати.</p>
       </header>
+      <ul class="vp-reasons">
+        @for (r of reasons; track r.title) {
+          <li>
+            @if (r.slug) {
+              <a [routerLink]="'/' + r.slug">
+                <h3>{{ r.title }}</h3>
+                <p>{{ r.text }}</p>
+                <span class="vp-go" aria-hidden="true">→</span>
+              </a>
+            } @else {
+              <div>
+                <h3>{{ r.title }}</h3>
+                <p>{{ r.text }}</p>
+              </div>
+            }
+          </li>
+        }
+      </ul>
+    </div>
+  </section>
 
-      <div class="v-faq">
+  <!-- ── FAQ ─────────────────────────────────────────────────────────────── -->
+  <section class="vp-section vp-section--sand" aria-labelledby="vp-faq">
+    <div class="vp-split">
+      <header class="vp-split__head">
+        <h2 class="vp-title" id="vp-faq">Часті питання</h2>
+        <p>Не знайшли відповідь? Адміністратор охоче допоможе.</p>
+      </header>
+      <div class="vp-faq">
         @for (f of faqs; track f.q) {
-          <details class="v-faq__item">
-            <summary>
-              {{ f.q }}
-              <span class="v-faq__icon" aria-hidden="true"></span>
-            </summary>
+          <details>
+            <summary>{{ f.q }}<span class="vp-faq__icon" aria-hidden="true"></span></summary>
             <p>{{ f.a }}</p>
           </details>
         }
@@ -167,17 +146,17 @@
     </div>
   </section>
 
-  <!-- Final CTA -->
-  <section class="v-final">
-    <div class="v-wrap v-final__inner" appReveal>
-      <h2 class="v-final__title">Готові зробити перший крок?</h2>
-      <p class="v-final__text">Запишіться на консультацію — без черг, з будь-якого місця.</p>
-      <button type="button" class="v-cta v-cta--light" (click)="openContacts()">
-        <span>Записатися на консультацію</span>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-        </svg>
-      </button>
+  <!-- ── Final CTA ───────────────────────────────────────────────────────── -->
+  <section class="vp-final" aria-labelledby="vp-final">
+    <div class="vp-final__inner">
+      <h2 class="vp-final__title" id="vp-final">Готові зробити <em>перший крок?</em></h2>
+      <div class="vp-final__side">
+        <p>Напишіть або зателефонуйте, адміністратор підбере фахівця і зручний час.</p>
+        <div class="vp-final__actions">
+          <button type="button" class="vp-btn vp-btn--solid vp-btn--lg" (click)="openContacts()">Записатися на консультацію</button>
+          <a class="vp-btn vp-btn--lg" [href]="'tel:' + channels[0].phone" (click)="trackPhone()"><i class="pi pi-phone" aria-hidden="true"></i>{{ channels[0].label }}</a>
+        </div>
+      </div>
     </div>
   </section>
 

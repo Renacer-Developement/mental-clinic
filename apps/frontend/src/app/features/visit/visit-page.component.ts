@@ -4,7 +4,6 @@ import { ClinicContactsService } from '../shared/components/clinic-contacts-dial
 import { clinicContacts } from '../shared/constants/contacts.constants';
 import { SeoService } from '../../core/seo/seo.service';
 import { GoogleAnalyticsService } from '../../analytics/google-analytics.service';
-import { RevealDirective } from '../../shared/directives/reveal.directive';
 import { TEST_ROUTES } from '../../shared/constants/routes.constants';
 
 /** +380665691677 → +38 (066) 569-16-77 */
@@ -13,7 +12,7 @@ const formatPhone = (phone: string) =>
 
 @Component({
   standalone: true,
-  imports: [RouterLink, RevealDirective],
+  imports: [RouterLink],
   selector: 'app-visit-page',
   templateUrl: './visit-page.component.html',
   styleUrl: './visit-page.component.scss',
@@ -25,10 +24,35 @@ export class VisitPageComponent implements OnInit {
 
   protected readonly TEST_ROUTES = TEST_ROUTES;
 
-  readonly phones = Object.values(clinicContacts).map(c => ({ ...c, label: formatPhone(c.phone) }));
+  // The two booking lines, with what each specialist does, so people pick the right one
+  readonly channels = [
+    {
+      key: 'doctors',
+      title: 'Лікар-психіатр',
+      text: 'Встановлює діагноз, виключає соматичні причини, за потреби призначає ліки та веде лікування.',
+      phone: clinicContacts.doctors.phone,
+      label: formatPhone(clinicContacts.doctors.phone),
+    },
+    {
+      key: 'psychologists',
+      title: 'Психолог',
+      text: 'Психологічне консультування та психотерапія розмовними методами, без медикаментів.',
+      phone: clinicContacts.psychologists.phone,
+      label: formatPhone(clinicContacts.psychologists.phone),
+    },
+  ];
+
+  // Optional, but it makes the first consultation easier
+  readonly prepare = [
+    'Смартфон або комп’ютер з камерою і стабільним інтернетом',
+    'Тихе місце, де вас ніхто не почує',
+    'Перелік ліків, які ви зараз приймаєте, з дозуваннями',
+    'Попередні висновки лікарів чи аналізи, якщо вони є',
+    'Кілька нотаток: що турбує, відколи, що вже пробували',
+  ];
 
   readonly facts = [
-    { title: 'Пн–Сб 8:00–22:00', text: 'Запис у зручний час без черг, зокрема в суботу' },
+    { title: 'Пн–Сб 8:00–22:00', text: 'Запис у зручний час, зокрема в суботу' },
     { title: 'Відеоконсультація', text: 'Telegram, Viber, Google Meet або Zoom — як вам зручніше' },
     { title: 'Скасування без втрат', text: 'Перенесемо запис або повернемо кошти — на ваш вибір, якщо попередите не пізніше ніж за 2 години до сесії' },
   ];
@@ -147,6 +171,16 @@ export class VisitPageComponent implements OnInit {
 
   trackPhone(): void {
     this.analytics.trackLead('phone', 'visit');
+  }
+
+  openTelegram(phone: string): void {
+    this.analytics.trackLead('telegram', 'visit');
+    window.open(`https://t.me/${phone}`, '_blank', 'noopener');
+  }
+
+  openViber(phone: string): void {
+    this.analytics.trackLead('viber', 'visit');
+    window.open(`viber://chat?number=${phone}`, '_blank');
   }
 
   openContacts() {
