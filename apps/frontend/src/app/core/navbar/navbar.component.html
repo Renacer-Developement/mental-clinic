@@ -162,7 +162,8 @@
 
   <div class="mnav__drawer-head">
     <a class="mnav__drawer-home" routerLink="/" (click)="closeMenu()">
-      <img src="../../../assets/logo-icon.avif" alt="" class="mnav__logo mnav__logo--sm"/>
+      <!-- the header logo already shows beside the drawer, so no second one here -->
+      <i class="pi pi-home mnav__icon" aria-hidden="true"></i>
       <span>Головна</span>
     </a>
     <button type="button" class="mnav__close" (click)="closeMenu()" aria-label="Закрити меню">

@@ -626,17 +626,13 @@ $drawer-w: min(86vw, 340px);
 .mnav__drawer-home {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+  padding: 0 4px;
   min-height: 44px;
   color: $heading-color;
   font-weight: 600;
   font-size: 0.95rem;
   text-decoration: none;
-}
-
-.mnav__logo--sm {
-  width: 32px;
-  height: 32px;
 }
 
 .mnav__close {
