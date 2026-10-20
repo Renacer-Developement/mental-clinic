@@ -1,14 +1,4 @@
-<section id="hero-banner" class="hero" [class.hero--autumn]="autumn">
-
-  <!-- background decor -->
-  <div class="hero-bg" aria-hidden="true">
-    <span class="hero-orb hero-orb--a"></span>
-    <span class="hero-orb hero-orb--b"></span>
-    <svg class="hero-lines" viewBox="0 0 1440 640" preserveAspectRatio="none" fill="none">
-      <path class="hero-line" d="M-20 520 C 240 420, 420 620, 700 500 S 1180 300, 1460 380"/>
-      <path class="hero-line hero-line--thin" d="M-20 580 C 300 480, 520 660, 820 540 S 1240 360, 1460 450"/>
-    </svg>
-  </div>
+<section id="hero-banner" class="hero">
 
   <div class="hero-inner">
 
@@ -16,63 +6,74 @@
       <span class="hero-tag" data-hero>Онлайн-консультації</span>
 
       <h1 class="hero-title">
-        <span class="hero-title-main" data-hero-title>Центр ментального <span class="nowrap">здоров'я</span></span>
+        <span class="hero-title-main" data-hero-title>Центр ментального <em class="nowrap">здоров'я</em></span>
         <span class="visually-hidden"> Євгена Скрипника — психіатр онлайн</span>
       </h1>
 
-      <p class="hero-lead hero-lead--accent" data-hero>
+      <p class="hero-lead" data-hero>
         Доказові психіатри, психотерапевти та&nbsp;психологи
       </p>
 
       <div class="hero-actions" data-hero>
-        <a class="hero-cta" href="/visit">
-          <span>Записатися на прийом</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <line x1="5" y1="12" x2="19" y2="12"/>
-            <polyline points="12 5 19 12 12 19"/>
-          </svg>
-        </a>
-        <a class="hero-link" [routerLink]="'/' + TEST_ROUTES.LIST">Пройти тест</a>
+        <div class="hero-primary">
+          <a class="hero-cta" href="/visit">
+            <span>Записатися на консультацію</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </a>
+          <p class="hero-micro">Конфіденційно · запис пн–сб, 8:00–22:00</p>
+        </div>
+        <a class="hero-ghost" [routerLink]="'/' + TEST_ROUTES.LIST">Пройти тест</a>
       </div>
 
-      <dl class="hero-stats">
-        <div class="hero-stat" data-hero-stat>
-          <dt><span data-count="20">20</span>+</dt>
-          <dd>років практики</dd>
-        </div>
-        <div class="hero-stat" data-hero-stat>
-          <dt><span data-count="3">3</span></dt>
-          <dd>спеціалізації</dd>
-        </div>
-        <div class="hero-stat" data-hero-stat>
-          <dt>8–22</dt>
-          <dd>запис пн–сб</dd>
-        </div>
-      </dl>
+      <!-- Proof: live review stats, the founder's experience, the MOH licence -->
+      <ul class="hero-proof" data-hero>
+        <li class="proof">
+          <a class="proof__link" [routerLink]="'/' + ROUTES.REVIEWS">
+            @if (rating(); as r) {
+              <span class="proof__value">
+                {{ r.avg }}
+                <svg class="proof__star" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+              </span>
+              <span class="proof__label">{{ r.total }} {{ r.noun }} пацієнтів</span>
+            } @else {
+              <span class="proof__value">Відгуки</span>
+              <span class="proof__label">пацієнтів центру</span>
+            }
+          </a>
+        </li>
+        <li class="proof">
+          <span class="proof__value">20+</span>
+          <span class="proof__label">років практики засновника</span>
+        </li>
+        <li class="proof">
+          <span class="proof__value">МОЗ</span>
+          <span class="proof__label">ліцензія № 1285 від 17.07.2023</span>
+        </li>
+      </ul>
     </div>
 
-    <div class="hero-visual">
-      <span class="hero-dots" aria-hidden="true"></span>
-
-      <div class="hero-frame">
-        <span class="hero-ring" aria-hidden="true"></span>
-        <div class="hero-circle">
-          <picture class="hero-photo">
-            <source srcset="assets/owner.webp" type="image/webp">
-            <img
-              alt="Євген Скрипник — лікар-психіатр, засновник центру ментального здоров'я"
-              class="hero-img"
-              decoding="sync"
-              fetchpriority="high"
-              height="460"
-              loading="eager"
-              src="assets/owner.webp"
-              width="400"
-            />
-          </picture>
-        </div>
-      </div>
-    </div>
+    <!-- A real photograph from his office, shown as a print photo with a caption -->
+    <figure class="hero-visual">
+      <img
+        alt="Євген Скрипник — лікар-психіатр, засновник центру ментального здоров'я, у своєму кабінеті"
+        class="hero-img"
+        decoding="sync"
+        fetchpriority="high"
+        height="815"
+        loading="eager"
+        src="assets/founder.jpg"
+        width="600"
+      />
+      <figcaption class="hero-caption">
+        <span class="hero-caption__name">Євген Скрипник</span>
+        лікар-психіатр, засновник центру
+      </figcaption>
+    </figure>
 
   </div>
 </section>

@@ -3,7 +3,7 @@
 .drugs-page {
   display: flex;
   flex-direction: column;
-  background: #fff;
+  background: $paper;
 }
 
 // ── Hero ──────────────────────────────────────────────────────────────────────
@@ -101,7 +101,7 @@
   flex-direction: column;
   padding: 1.75rem;
   border-radius: 16px;
-  background: #fff;
+  background: $paper;
   border: 1px solid rgba($heading-color, 0.08);
   color: $heading-color;
   text-decoration: none;
@@ -120,7 +120,7 @@
     padding: 0.25rem 0.75rem;
     border-radius: 999px;
     background: $heading-color;
-    color: #fff;
+    color: $paper;
     font-size: 0.78rem;
     font-weight: 600;
 
@@ -271,7 +271,7 @@
   padding: 2.5rem;
   border-radius: 24px;
   background: $heading-color;
-  color: #fff;
+  color: $paper;
 
   @media (max-width: 640px) { padding: 1.75rem 1.5rem; }
 
@@ -282,7 +282,7 @@
     font-size: clamp(1.3rem, 2.2vw, 1.7rem);
     font-weight: 800;
     line-height: 1.25;
-    color: #fff;
+    color: $paper;
   }
 
   &__text {
@@ -290,7 +290,7 @@
     max-width: 640px;
     font-size: 0.98rem;
     line-height: 1.7;
-    color: rgba(#fff, 0.75);
+    color: rgba($paper, 0.75);
   }
 
   &__btn {
@@ -306,6 +306,6 @@
     text-decoration: none;
     transition: background 0.25s;
 
-    &:hover { background: #fff; }
+    &:hover { background: $paper; }
   }
 }

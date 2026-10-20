@@ -106,8 +106,8 @@ export class TestsGridComponent extends AnimatedSection implements OnInit {
       utils.set(cards, { opacity: 0, translateY: 30 });
 
       this.whenVisible(section, () => {
-        animate(title!, { opacity: 1, translateY: 0, duration: 900, ease: 'outExpo' });
-        animate(cards, { opacity: 1, translateY: 0, duration: 900, delay: stagger(70, { start: 150 }), ease: 'outExpo' });
+        animate(title!, { opacity: 1, translateY: 0, duration: 280, ease: 'outExpo' });
+        animate(cards, { opacity: 1, translateY: 0, duration: 280, delay: stagger(70, { start: 50 }), ease: 'outExpo' });
       }, 0.05);
     });
   }

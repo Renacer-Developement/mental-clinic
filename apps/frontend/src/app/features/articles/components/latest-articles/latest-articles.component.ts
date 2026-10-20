@@ -45,7 +45,7 @@ export class LatestArticlesComponent extends AnimatedSection implements OnInit {
     utils.set(['.la-head__eyebrow', '.la-head__title', '.la-head__all'], { opacity: 0, translateY: 30 });
     this.whenVisible(root.querySelector('.la-head'), () => {
       animate(['.la-head__eyebrow', '.la-head__title', '.la-head__all'], {
-        opacity: 1, translateY: 0, duration: 1000, delay: stagger(120), ease: 'outExpo',
+        opacity: 1, translateY: 0, duration: 280, delay: stagger(120), ease: 'outExpo',
       });
     });
     // articles may already be on the page if the request beat anime.js loading
@@ -66,11 +66,11 @@ export class LatestArticlesComponent extends AnimatedSection implements OnInit {
     utils.set('.la-item__line', { scaleX: 0 });
 
     this.whenVisible(grid, () => {
-      animate('.la-grid .art__img-wrap', { clipPath: 'inset(0% 0% 0% 0%)', duration: 1300, delay: stagger(180), ease: 'inOutQuart' });
-      animate('.la-grid .art__img', { scale: 1, duration: 1800, delay: stagger(180), ease: 'outExpo' });
-      animate('.la-item__line', { scaleX: 1, duration: 1000, delay: stagger(180, { start: 300 }), ease: 'inOutQuart' });
+      animate('.la-grid .art__img-wrap', { clipPath: 'inset(0% 0% 0% 0%)', duration: 280, delay: stagger(180), ease: 'inOutQuart' });
+      animate('.la-grid .art__img', { scale: 1, duration: 280, delay: stagger(180), ease: 'outExpo' });
+      animate('.la-item__line', { scaleX: 1, duration: 280, delay: stagger(180, { start: 100 }), ease: 'inOutQuart' });
       animate(['.la-grid .art__meta', '.la-grid .art__title', '.la-grid .art__excerpt'], {
-        opacity: 1, translateY: 0, duration: 900, delay: stagger(70, { start: 500 }), ease: 'outExpo',
+        opacity: 1, translateY: 0, duration: 280, delay: stagger(70, { start: 166 }), ease: 'outExpo',
       });
     }, 0.15);
   }

@@ -23,7 +23,7 @@
   max-height: calc(100vh - 2rem);
   overflow-y: auto;
   transform: translate(-50%, -50%);
-  background: #fff;
+  background: $paper;
   border-radius: 20px;
   box-shadow: 0 30px 80px rgba($heading-color, 0.3);
   animation: ccPopIn 0.3s $ease-out-soft;
@@ -36,7 +36,7 @@
     transform: none;
     border-radius: 22px 22px 0 0;
     padding-bottom: env(safe-area-inset-bottom);
-    animation: ccSheetIn 0.35s $ease-out-soft;
+    animation: ccSheetIn 0.24s $ease-out-soft;
   }
 }
 
@@ -83,7 +83,7 @@
 
   &:hover {
     background: $heading-color;
-    color: #fff;
+    color: $paper;
   }
 }
 
@@ -139,7 +139,7 @@
   padding: 0.75rem 0.5rem;
   border: 1.5px solid rgba($heading-color, 0.2);
   border-radius: 12px;
-  background: #fff;
+  background: $paper;
   color: $heading-color;
   font: inherit;
   font-size: 0.9rem;
@@ -156,7 +156,7 @@
   &--primary {
     border-color: $heading-color;
     background: $heading-color;
-    color: #fff;
+    color: $paper;
 
     &:hover {
       border-color: $primary-color;

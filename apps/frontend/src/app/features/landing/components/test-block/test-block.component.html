@@ -1,6 +1,6 @@
 <div class="test-block">
   <ol class="test-index">
-    @for (card of mentalCards; track card.link; let i = $index) {
+    @for (card of mentalCards; track card.link) {
       <li class="test-row">
         <a
           class="test-row__link"
@@ -8,7 +8,6 @@
           (click)="googleAnalyticsTracker(EVENT_TRACK.CARD_CLICK, card.title, ROUTES.MAIN_PAGE)"
         >
           <span class="test-row__line" aria-hidden="true"></span>
-          <span class="test-row__num">{{ (i + 1).toString().padStart(2, '0') }}</span>
           <h3 class="test-row__title"><span class="test-row__title-inner">{{ card.title }}</span></h3>
           <p class="test-row__desc">{{ card.description }}</p>
           <span class="test-row__go">

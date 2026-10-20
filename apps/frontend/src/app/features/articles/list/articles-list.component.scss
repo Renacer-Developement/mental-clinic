@@ -3,7 +3,7 @@
 .articles-page {
   display: flex;
   flex-direction: column;
-  background: #fff;
+  background: $paper;
 }
 
 // ── Hero ──────────────────────────────────────────────────────────────────────
@@ -83,7 +83,7 @@
     padding: 0.85rem 2.75rem;
     border: 1.5px solid rgba($heading-color, 0.15);
     border-radius: 999px;
-    background: #fff;
+    background: $paper;
     color: $heading-color;
     font: inherit;
     font-size: 1rem;
@@ -130,7 +130,7 @@
     padding: 0.55rem 1.05rem;
     border: 1px solid rgba($heading-color, 0.18);
     border-radius: 999px;
-    background: #fff;
+    background: $paper;
     color: $heading-color;
     font: inherit;
     font-size: 0.92rem;
@@ -145,7 +145,7 @@
     &--active:hover {
       background: $heading-color;
       border-color: $heading-color;
-      color: #fff;
+      color: $paper;
     }
   }
 
@@ -188,7 +188,7 @@
 
     &:hover {
       background: $heading-color;
-      color: #fff;
+      color: $paper;
     }
   }
 
@@ -210,7 +210,7 @@
     padding: 0 0.5rem;
     border: 1px solid rgba($heading-color, 0.15);
     border-radius: 999px;
-    background: #fff;
+    background: $paper;
     color: $heading-color;
     font: inherit;
     font-weight: 600;
@@ -223,7 +223,7 @@
     &--active:hover {
       background: $heading-color;
       border-color: $heading-color;
-      color: #fff;
+      color: $paper;
     }
 
     &:disabled { opacity: 0.35; cursor: default; }
@@ -237,7 +237,7 @@
   flex-direction: column;
   border-radius: 18px;
   overflow: hidden;
-  background: #fff;
+  background: $paper;
 
   &__thumb { aspect-ratio: 16 / 10; }
 

@@ -1,7 +1,9 @@
 // Warm palette inspired by empatia.com.ua: charcoal ink, peach accent, cream surfaces.
 
 $primary-color: #8f6b59;        // warm brown — buttons, links, icons (white text passes AA)
-$secondary-color: #ffffff;
+$primary-ink: #7a5a4a;          // same brown, deep enough for small text on cream (5.7:1)
+$paper: #fdfbf8;               // warm paper instead of pure white (≈ oklch(99% 0.004 75))
+$secondary-color: $paper;
 $accent-color: #e7bfa3;         // peach — highlights, badges, decorative shapes
 $accent-soft: #f4eae2;          // light sand — tinted surfaces
 $logo-subtext-color: #a67c67;
@@ -9,9 +11,91 @@ $heading-color: #2d2e2e;        // charcoal
 $body-text-color: #4a4542;      // warm grey for paragraphs (≈8:1 on cream)
 $muted-text-color: #6f6762;     // captions, hints (≥4.5:1 on cream)
 $section-bg: #fcf5ee;           // cream
-$section-seconder-bg: #fff;
+$section-seconder-bg: $paper;
 $dark-bg: #2d2e2e;              // dark bands / footer
 
 // Motion
 $ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 $ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+// Type
+$font-body: 'Onest', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+$font-display: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+
+// Section heading: serif at a book weight, so the page reads as typeset
+// rather than as a stack of bold UI headings.
+@mixin section-title {
+  margin: 0;
+  font-family: $font-display;
+  font-size: clamp(1.9rem, 3.1vw, 2.8rem);
+  font-weight: 500;
+  font-optical-sizing: auto;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  color: $heading-color;
+}
+
+// Small kicker above a heading: plain text with a short rule, no box.
+@mixin kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: fit-content;
+  margin-bottom: 1.1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: $primary-ink;
+
+  &::before {
+    content: '';
+    width: 28px;
+    height: 1px;
+    background: currentColor;
+  }
+}
+
+// Grid: 12 columns, 24px gutters, 1320px measure, fluid outer margin.
+$grid-max: 1320px;
+$grid-gutter: 24px;
+$grid-margin: clamp(20px, 5vw, 64px);
+
+// Centred page measure without columns (for sections that only need the frame)
+@mixin page-frame {
+  width: 100%;
+  max-width: calc(#{$grid-max} + 2 * #{$grid-margin});
+  margin: 0 auto;
+  padding-inline: $grid-margin;
+}
+
+@mixin grid-12 {
+  @include page-frame;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: $grid-gutter;
+}
+
+// Phones: a section's "see all" link moves from beside the heading to a
+// full-width outline button under the content. Pair with display:none on
+// the header link at the same breakpoint.
+@mixin mobile-more-button {
+  display: none;
+
+  @media (max-width: 640px) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    height: 52px;
+    margin-top: 2rem;
+    border: 1px solid rgba($heading-color, 0.35);
+    border-radius: 999px;
+    color: $heading-color;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+
+    &:active { background: rgba($heading-color, 0.05); }
+  }
+}

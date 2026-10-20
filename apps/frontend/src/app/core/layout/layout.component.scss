@@ -15,16 +15,14 @@
 // Thin licence band above the header; scrolls away with the page.
 .license-strip {
   background: $dark-bg;
-  color: rgba(#fff, 0.7);
+  color: rgba($paper, 0.7);
   font-size: 0.78rem;
   letter-spacing: 0.02em;
 }
 
 .license-strip__inner {
-  max-width: 1450px;
+  @include page-frame;
   height: 32px;
-  margin: 0 auto;
-  padding: 0 6%;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -45,7 +43,7 @@
 
 .license-strip__link {
   flex-shrink: 0;
-  color: #fff;
+  color: $paper;
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 3px;

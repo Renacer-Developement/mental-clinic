@@ -5,7 +5,7 @@ $line: rgba($heading-color, 0.1);
 .team-page {
   display: flex;
   flex-direction: column;
-  background: #fff;
+  background: $paper;
 }
 
 // ── Hero ──────────────────────────────────────────────────────────────────────
@@ -86,7 +86,7 @@ $line: rgba($heading-color, 0.1);
       text-decoration: none;
       transition: background 0.2s, border-color 0.2s;
 
-      &:hover { background: #fff; border-color: $heading-color; }
+      &:hover { background: $paper; border-color: $heading-color; }
     }
   }
 }
@@ -212,7 +212,7 @@ $line: rgba($heading-color, 0.1);
     gap: 0.75rem;
     padding: 0.9rem 1.2rem;
     border-radius: 16px;
-    background: #fff;
+    background: $paper;
     box-shadow: 0 16px 36px rgba($heading-color, 0.12);
 
     @media (max-width: 560px) { right: 0.75rem; bottom: 1rem; }
@@ -317,7 +317,7 @@ $line: rgba($heading-color, 0.1);
     padding: 0.85rem 1.5rem;
     border-radius: 999px;
     background: $heading-color;
-    color: #fff;
+    color: $paper;
     font-weight: 700;
     text-decoration: none;
     transition: background 0.25s;
@@ -355,7 +355,7 @@ $line: rgba($heading-color, 0.1);
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transition: transform 0.6s $ease-out-soft;
+      transition: transform 0.24s $ease-out-soft;
     }
   }
 
@@ -523,7 +523,7 @@ $line: rgba($heading-color, 0.1);
 .tm-cta {
   padding: 3.5rem 0;
   background: $dark-bg;
-  color: #fff;
+  color: $paper;
 
   &__inner {
     display: flex;
@@ -538,12 +538,12 @@ $line: rgba($heading-color, 0.1);
     font-size: clamp(1.35rem, 2.2vw, 1.75rem);
     font-weight: 800;
     letter-spacing: -0.02em;
-    color: #fff;
+    color: $paper;
   }
 
   &__lead {
     margin: 0;
-    color: rgba(#fff, 0.72);
+    color: rgba($paper, 0.72);
   }
 
   &__btn {
@@ -559,6 +559,6 @@ $line: rgba($heading-color, 0.1);
     white-space: nowrap;
     transition: background 0.25s;
 
-    &:hover { background: #fff; }
+    &:hover { background: $paper; }
   }
 }

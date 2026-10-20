@@ -1,4 +1,3 @@
-@use "sass:color";
 @use "../../../../../assets/css/coloristics" as *;
 
 // ── Shell ─────────────────────────────────────────────────────────────────────
@@ -15,8 +14,7 @@
 // has flagged the page as animated; a fail-safe reveals them if JS never runs.
 :host-context(html.anim) {
   [data-hero],
-  [data-hero-title],
-  [data-hero-stat] {
+  [data-hero-title] {
     opacity: 0;
     animation: hero-failsafe 0s 3s forwards;
   }
@@ -26,108 +24,40 @@
   to { opacity: 1; }
 }
 
-// ── Background decor ──────────────────────────────────────────────────────────
-
-.hero-bg {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.hero-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(60px);
-
-  &--a {
-    width: 520px;
-    height: 520px;
-    right: -120px;
-    top: -140px;
-    background: rgba($accent-color, 0.55);
-  }
-
-  &--b {
-    width: 360px;
-    height: 360px;
-    left: -140px;
-    bottom: -160px;
-    background: rgba($accent-color, 0.35);
-  }
-}
-
-.hero-lines {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.hero-line {
-  stroke: rgba($primary-color, 0.28);
-  stroke-width: 1.5;
-
-  &--thin {
-    stroke: rgba($primary-color, 0.16);
-    stroke-width: 1;
-    stroke-dasharray: 6 8;
-  }
-}
-
-// Seasonal: amber and rust light instead of peach (see IS_AUTUMN)
-.hero--autumn {
-  .hero-orb--a { background: rgba(#e8a35c, 0.6); }
-  .hero-orb--b { background: rgba(#c9713d, 0.4); }
-  .hero-line   { stroke: rgba(#b5643a, 0.3); }
-  .hero-line--thin { stroke: rgba(#b5643a, 0.18); }
-}
-
 // ── Layout ────────────────────────────────────────────────────────────────────
 
 .hero-inner {
+  @include grid-12;
   position: relative;
   z-index: 1;
-  width: 100%;
-  max-width: 1450px;
-  margin: 0 auto;
-  padding: 2.5rem 6% 2.5rem;
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-  align-items: center;
-  gap: 2rem;
+  align-items: end;
+  padding-top: clamp(2.5rem, 4.5vw, 4rem);
 
   @media (max-width: 900px) {
-    grid-template-columns: 1fr;
-    padding: 2.5rem 1.25rem 0;
-    gap: 1rem;
+    padding-top: 2.5rem;
   }
 }
 
 // ── Text column ───────────────────────────────────────────────────────────────
 
 .hero-text {
-  padding-bottom: 0;
+  grid-column: 1 / span 7;
+  align-self: center;
+  padding-bottom: clamp(2.5rem, 4vw, 3.5rem);
 
   @media (max-width: 900px) {
+    grid-column: 1 / -1;
     padding-bottom: 0;
   }
 }
 
 .hero-tag {
-  display: inline-block;
+  @include kicker;
   margin-bottom: 1.5rem;
-  padding: 0.45rem 1.2rem;
-  border: 1.5px solid $heading-color;
-  background: rgba(#fff, 0.6);
-  color: $heading-color;
-  font-size: 0.82rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  transform: skewX(-12deg);
 }
 
 .hero-title {
-  margin: 0 0 1.25rem;
+  margin: 0 0 1.5rem;
   color: $heading-color;
 }
 
@@ -138,10 +68,20 @@
 
 .hero-title-main {
   display: block;
-  font-size: clamp(2rem, 3.4vw, 3.1rem);
-  font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
+  font-family: $font-display;
+  font-size: clamp(3rem, 6.4vw, 5.75rem);
+  font-weight: 500;
+  font-optical-sizing: auto;
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+
+  // the promise always starts its own line
+  em {
+    display: block;
+    font-style: italic;
+    font-weight: 400;
+    color: $primary-color;
+  }
 
   // splitText wraps each word in an overflow:clip span for the reveal; with the
   // negative tracking that box is narrower than the glyphs, so the dots of a
@@ -153,211 +93,200 @@
 }
 
 .hero-lead {
-  font-size: clamp(0.95rem, 1.25vw, 1.08rem);
-  color: $body-text-color;
-  line-height: 1.7;
+  max-width: 34rem;
   margin: 0 0 2rem;
-  max-width: 470px;
-}
-
-.hero-lead--accent {
-  font-size: clamp(1.05rem, 1.6vw, 1.3rem);
-  font-weight: 500;
-  line-height: 1.5;
-  color: $primary-color;
+  font-size: clamp(1.02rem, 1.35vw, 1.18rem);
+  line-height: 1.6;
+  color: $body-text-color;
 }
 
 // ── Actions ───────────────────────────────────────────────────────────────────
 
 .hero-actions {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   flex-wrap: wrap;
-  gap: 1rem 1.75rem;
+  gap: 1rem;
 }
 
+.hero-primary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+// Solid, dominant
 .hero-cta {
-  position: relative;
-  overflow: hidden;
   display: inline-flex;
   align-items: center;
-  gap: 0.7rem;
-  padding: 1rem 1.6rem 1rem 2rem;
-  border-radius: 100px;
+  gap: 0.75rem;
+  height: 56px;
+  padding: 0 0.6rem 0 1.75rem;
+  border-radius: 999px;
   background: $heading-color;
-  color: #fff;
-  font-size: 0.95rem;
+  color: $paper;
+  font-size: 0.98rem;
   font-weight: 600;
   text-decoration: none;
-  isolation: isolate;
-  box-shadow: 0 14px 30px rgba($heading-color, 0.22);
-  transition: transform 0.4s $ease-spring, box-shadow 0.4s;
-
-  // peach fill that rises from the bottom on hover
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: $primary-color;
-    border-radius: inherit;
-    transform: translateY(101%);
-    transition: transform 0.5s $ease-out-soft;
-  }
+  transition: background 0.2s $ease-out-soft;
 
   svg {
-    width: 34px;
-    height: 34px;
-    padding: 9px;
+    width: 40px;
+    height: 40px;
+    padding: 11px;
     border-radius: 50%;
     background: $accent-color;
     color: $heading-color;
-    transition: transform 0.45s $ease-spring;
+    transition: transform 0.24s $ease-out-soft;
   }
 
   &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 18px 38px rgba($primary-color, 0.35);
+    background: $primary-ink;
 
-    &::before { transform: translateY(0); }
-    svg { transform: rotate(-45deg); }
+    svg { transform: translateX(3px); }
   }
 }
 
-.hero-link {
-  position: relative;
+.hero-micro {
+  margin: 0;
+  padding-left: 1.75rem;
+  font-size: 0.82rem;
+  color: $muted-text-color;
+
+  // phones: the stacked buttons read better without the extra line between them
+  @media (max-width: 640px) { display: none; }
+}
+
+// Ghost, subordinate: same height so the pair sits on one line
+.hero-ghost {
+  display: inline-flex;
+  align-items: center;
+  height: 56px;
+  padding: 0 1.6rem;
+  border: 1px solid rgba($heading-color, 0.35);
+  border-radius: 999px;
   color: $heading-color;
+  font-size: 0.98rem;
   font-weight: 600;
-  font-size: 0.95rem;
   text-decoration: none;
-  padding-bottom: 4px;
+  transition: border-color 0.2s, background 0.2s;
 
-  &::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 2px;
-    background: $accent-color;
-    transform-origin: right;
-    transition: transform 0.45s $ease-out-soft;
-  }
-
-  &:hover::after {
-    transform: scaleX(0);
+  &:hover {
+    border-color: $heading-color;
+    background: rgba($heading-color, 0.04);
   }
 }
 
-// ── Stats ─────────────────────────────────────────────────────────────────────
+// ── Proof row ─────────────────────────────────────────────────────────────────
 
-.hero-stats {
+.hero-proof {
   display: flex;
-  gap: 2.25rem;
-  margin: 2.75rem 0 0;
-  padding-top: 1.75rem;
-  border-top: 1px solid rgba($heading-color, 0.12);
+  flex-wrap: wrap;
+  gap: 1.25rem 2.75rem;
+  margin: 2.25rem 0 0;
+  padding: 1.5rem 0 0;
+  border-top: 1px solid rgba($heading-color, 0.14);
+  list-style: none;
 
   @media (max-width: 520px) {
-    gap: 1.25rem;
-    justify-content: space-between;
+    gap: 1.25rem 1.75rem;
   }
 }
 
-.hero-stat {
-  dt {
-    font-size: clamp(1.6rem, 2.4vw, 2.2rem);
-    font-weight: 800;
+.proof {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.proof__link {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  color: inherit;
+  text-decoration: none;
+
+  &:hover .proof__label {
     color: $heading-color;
-    letter-spacing: -0.03em;
-    line-height: 1;
-    font-variant-numeric: tabular-nums;
-  }
-
-  dd {
-    margin: 0.4rem 0 0;
-    font-size: 0.82rem;
-    color: $muted-text-color;
-    letter-spacing: 0.08em;
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 }
 
-// ── Visual column (static composition, no animation) ──────────────────────────
+.proof__value {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: $font-display;
+  font-size: clamp(1.6rem, 2.2vw, 2.1rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: $heading-color;
+  font-variant-numeric: tabular-nums;
+}
+
+.proof__star {
+  width: 0.62em;
+  height: 0.62em;
+  fill: $primary-color;
+}
+
+.proof__label {
+  max-width: 13rem;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: $muted-text-color;
+  transition: color 0.2s;
+}
+
+// ── Visual column (static, no animation) ──────────────────────────────────────
 
 .hero-visual {
-  position: relative;
+  grid-column: 9 / -1;
   align-self: center;
-  display: flex;
-  justify-content: center;
-  padding: 1.5rem 2.5rem 0 1.5rem;
+  margin: 0;
+  padding-bottom: clamp(2.5rem, 4vw, 3.5rem);
 
   @media (max-width: 900px) {
-    padding: 1.5rem 1rem 0;
-    margin-top: 1rem;
+    grid-column: 1 / -1;
+    max-width: 480px;
+    margin-top: 2rem;
   }
-}
-
-// dotted pattern peeking out behind the frame
-.hero-dots {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 180px;
-  height: 180px;
-  background-image: radial-gradient(rgba($primary-color, 0.45) 1.6px, transparent 1.6px);
-  background-size: 16px 16px;
-  pointer-events: none;
-
-  @media (max-width: 900px) {
-    width: 120px;
-    height: 120px;
-  }
-}
-
-.hero-frame {
-  position: relative;
-  width: min(100%, 440px);
-  margin-bottom: 0;
-
-  @media (max-width: 900px) {
-    width: min(100%, 340px);
-    margin-bottom: 2.5rem;
-  }
-}
-
-// peach disc; the photo is clipped to it so nothing spills outside
-.hero-circle {
-  position: relative;
-  overflow: hidden;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  background:
-    radial-gradient(circle at 35% 30%, rgba(#fff, 0.5), transparent 55%),
-    linear-gradient(160deg, $accent-color 0%, color.adjust($accent-color, $lightness: -10%) 100%);
-}
-
-// thin outline circle, offset for depth
-.hero-ring {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  border: 1.5px solid rgba($heading-color, 0.55);
-  transform: translate(22px, -18px);
-  pointer-events: none;
-}
-
-.hero-photo {
-  display: block;
-  width: 112%;
-  flex-shrink: 0;
-  margin-bottom: -6%;
 }
 
 .hero-img {
   display: block;
   width: 100%;
   height: auto;
+  aspect-ratio: 600 / 815;
+  max-height: min(60vh, 560px);
+  object-fit: cover;
+  object-position: 50% 20%;
+  border-radius: 4px;
+
+  // phones: a short landscape crop around the face instead of the full portrait
+  @media (max-width: 900px) {
+    aspect-ratio: 16 / 10;
+    max-height: 240px;
+    object-position: 50% 30%;
+  }
+}
+
+.hero-caption {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 0.5rem;
+  margin-top: 0.85rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba($heading-color, 0.14);
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: $muted-text-color;
+}
+
+.hero-caption__name {
+  font-weight: 600;
+  color: $heading-color;
 }

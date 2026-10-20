@@ -33,7 +33,7 @@ export class ConsultationBlockComponent extends AnimatedSection {
 
     this.whenVisible(root.querySelector('.consultation-header'), () => {
       animate(['.consultation-eyebrow', '.consultation-title', '.consultation-cta'], {
-        opacity: 1, translateY: 0, duration: 1000, delay: stagger(120), ease: 'outExpo',
+        opacity: 1, translateY: 0, duration: 280, delay: stagger(120), ease: 'outExpo',
       });
     });
 
@@ -41,14 +41,14 @@ export class ConsultationBlockComponent extends AnimatedSection {
     this.whenVisible(root.querySelector('.timeline'), () => {
       const steps = Array.from(root.querySelectorAll<HTMLElement>('.step'));
       const tl = createTimeline({ defaults: { ease: 'outExpo' } })
-        .add('.timeline__progress', { scaleX: 1, duration: 2200, ease: 'inOutSine' }, 0);
+        .add('.timeline__progress', { scaleX: 1, duration: 280, ease: 'inOutSine' }, 0);
 
       steps.forEach((step, i) => {
         const at = i * 700;
-        tl.add(step.querySelector('.step__dot')!, { scale: [0, 1.4, 1], duration: 700, ease: 'outBack(2)' }, at)
-          .add(step.querySelector('.step__num')!, { opacity: 1, translateY: 0, duration: 1000 }, at)
+        tl.add(step.querySelector('.step__dot')!, { scale: [0, 1.4, 1], duration: 280, ease: 'outBack(2)' }, at)
+          .add(step.querySelector('.step__num')!, { opacity: 1, translateY: 0, duration: 280 }, at)
           .add([step.querySelector('.step__title')!, step.querySelector('.step__desc')!], {
-            opacity: 1, translateY: 0, duration: 900, delay: stagger(90),
+            opacity: 1, translateY: 0, duration: 280, delay: stagger(90),
           }, at + 150);
       });
     }, 0.3);

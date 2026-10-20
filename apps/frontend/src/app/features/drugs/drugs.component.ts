@@ -72,7 +72,7 @@ export class DrugsComponent extends AnimatedSection implements OnInit {
   protected setup({ animate, utils }: AnimeModule, root: HTMLElement): void {
     root.querySelectorAll<HTMLElement>('[data-reveal]').forEach(el => {
       utils.set(el, { opacity: 0, translateY: 20 });
-      this.whenVisible(el, () => animate(el, { opacity: 1, translateY: 0, duration: 700, ease: 'outQuad' }), 0.15);
+      this.whenVisible(el, () => animate(el, { opacity: 1, translateY: 0, duration: 280, ease: 'outQuad' }), 0.15);
     });
   }
 }

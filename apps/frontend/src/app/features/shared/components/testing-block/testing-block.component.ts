@@ -22,9 +22,9 @@ export class TestingBlockComponent extends AnimatedSection {
     utils.set(['.section-eyebrow', '.section-desc', '.all-tests-link'], { opacity: 0, translateY: 24 });
 
     this.whenVisible(root.querySelector('.testing-section__header'), () => {
-      animate('.section-eyebrow', { opacity: 1, translateY: 0, duration: 800, ease: 'outExpo' });
-      animate(title.words, { translateY: '0%', duration: 1000, delay: stagger(45, { start: 100 }), ease: 'outExpo' });
-      animate(['.section-desc', '.all-tests-link'], { opacity: 1, translateY: 0, duration: 900, delay: stagger(120, { start: 500 }), ease: 'outExpo' });
+      animate('.section-eyebrow', { opacity: 1, translateY: 0, duration: 280, ease: 'outExpo' });
+      animate(title.words, { translateY: '0%', duration: 280, delay: stagger(45, { start: 33 }), ease: 'outExpo' });
+      animate(['.section-desc', '.all-tests-link'], { opacity: 1, translateY: 0, duration: 280, delay: stagger(120, { start: 166 }), ease: 'outExpo' });
     });
   }
 }

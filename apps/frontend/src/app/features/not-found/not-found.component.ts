@@ -27,7 +27,7 @@ import { SeoService } from '../../core/seo/seo.service';
       flex: 1;
       padding: 24px;
       text-align: center;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Onest', sans-serif;
     }
     .nf__code {
       font-size: clamp(72px, 20vw, 140px);

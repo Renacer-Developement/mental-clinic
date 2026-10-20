@@ -83,9 +83,9 @@ export class ListComponent extends AnimatedSection implements OnInit {
     utils.set(['.tests-hero__breadcrumb', '.tests-hero__lead'], { opacity: 0, translateY: 20 });
     utils.set('.tests-cats__item', { opacity: 0, translateY: 12 });
 
-    animate('.tests-hero__breadcrumb', { opacity: 1, translateY: 0, duration: 800, ease: 'outExpo' });
-    animate('.tests-hero__title-inner', { translateY: '0%', duration: 1200, delay: 150, ease: 'outExpo' });
-    animate('.tests-hero__lead', { opacity: 1, translateY: 0, duration: 900, delay: 400, ease: 'outExpo' });
-    animate('.tests-cats__item', { opacity: 1, translateY: 0, duration: 700, delay: stagger(50, { start: 700 }), ease: 'outExpo' });
+    animate('.tests-hero__breadcrumb', { opacity: 1, translateY: 0, duration: 280, ease: 'outExpo' });
+    animate('.tests-hero__title-inner', { translateY: '0%', duration: 280, delay: 50, ease: 'outExpo' });
+    animate('.tests-hero__lead', { opacity: 1, translateY: 0, duration: 280, delay: 133, ease: 'outExpo' });
+    animate('.tests-cats__item', { opacity: 1, translateY: 0, duration: 280, delay: stagger(50, { start: 233 }), ease: 'outExpo' });
   }
 }

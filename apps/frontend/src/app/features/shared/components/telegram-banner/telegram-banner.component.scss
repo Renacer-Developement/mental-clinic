@@ -10,40 +10,32 @@
 }
 
 .tg-container {
-  max-width: 1450px;
-  margin: 0 auto;
-  padding: 0 6%;
-  display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  @include grid-12;
   align-items: end;
-  gap: 2.5rem 5rem;
+  row-gap: 2.5rem;
+}
 
-  @media (max-width: 900px) {
-    grid-template-columns: 1fr;
-    padding: 0 1.25rem;
-  }
+.tg-content {
+  grid-column: 1 / span 6;
+
+  @media (max-width: 900px) { grid-column: 1 / -1; }
+}
+
+.tg-actions {
+  grid-column: 8 / -1;
+
+  @media (max-width: 900px) { grid-column: 1 / -1; }
 }
 
 .tg-eyebrow {
-  display: inline-block;
-  margin-bottom: 1.25rem;
-  padding: 0.35rem 1rem;
-  border: 1.5px solid $heading-color;
-  transform: skewX(-12deg);
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
+  @include kicker;
   color: $heading-color;
 }
 
 .tg-heading {
-  margin: 0 0 1.25rem;
+  @include section-title;
+  margin-bottom: 1.25rem;
   max-width: 640px;
-  font-size: clamp(1.6rem, 2.6vw, 2.3rem);
-  font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  color: $heading-color;
 }
 
 .tg-subheading {
@@ -76,7 +68,7 @@
   font: inherit;
   text-align: left;
   cursor: pointer;
-  transition: padding 0.5s $ease-out-soft, color 0.4s;
+  transition: padding 0.24s $ease-out-soft, color 0.24s;
 
   // charcoal fill rising from the bottom
   &::before {
@@ -84,24 +76,23 @@
     position: absolute;
     inset: 0;
     z-index: -1;
-    background: $heading-color;
+    background: rgba($paper, 0.35);
     transform: scaleY(0);
     transform-origin: bottom;
-    transition: transform 0.5s $ease-out-soft;
+    transition: transform 0.24s $ease-out-soft;
   }
 
   svg {
     flex-shrink: 0;
     width: 30px;
     height: 30px;
-    transition: transform 0.5s $ease-out-soft;
+    transition: transform 0.24s $ease-out-soft;
   }
 
   &:hover,
   &:focus-visible {
     padding-left: 1.25rem;
     padding-right: 1.25rem;
-    color: $accent-color;
 
     &::before { transform: scaleY(1); }
     svg { transform: rotate(45deg); }
@@ -119,7 +110,8 @@
 }
 
 .tg-link__label {
-  font-size: clamp(1.1rem, 1.6vw, 1.35rem);
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  font-family: $font-display;
+  font-size: clamp(1.3rem, 1.8vw, 1.6rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
 }

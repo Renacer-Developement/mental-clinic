@@ -49,7 +49,7 @@
   letter-spacing: -0.02em;
   color: $heading-color;
 
-  &--light { color: #fff; }
+  &--light { color: $paper; }
 }
 
 .v-text {
@@ -71,14 +71,14 @@
   border: 0;
   border-radius: 100px;
   background: $heading-color;
-  color: #fff;
+  color: $paper;
   font: inherit;
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   isolation: isolate;
   box-shadow: 0 14px 30px rgba($heading-color, 0.22);
-  transition: transform 0.4s $ease-spring, box-shadow 0.4s;
+  transition: transform 0.24s $ease-spring, box-shadow 0.24s;
 
   // brown fill that rises from the bottom on hover
   &::before {
@@ -89,7 +89,7 @@
     background: $primary-color;
     border-radius: inherit;
     transform: translateY(101%);
-    transition: transform 0.5s $ease-out-soft;
+    transition: transform 0.24s $ease-out-soft;
   }
 
   svg {
@@ -99,7 +99,7 @@
     border-radius: 50%;
     background: $accent-color;
     color: $heading-color;
-    transition: transform 0.45s $ease-spring;
+    transition: transform 0.24s $ease-spring;
   }
 
   &:hover {
@@ -116,7 +116,7 @@
   }
 
   &--light {
-    background: #fff;
+    background: $paper;
     color: $heading-color;
     box-shadow: none;
 
@@ -143,7 +143,7 @@
     height: 2px;
     background: $accent-color;
     transform-origin: right;
-    transition: transform 0.45s $ease-out-soft;
+    transition: transform 0.24s $ease-out-soft;
   }
 
   &:hover::after { transform: scaleX(0); }
@@ -315,7 +315,7 @@
 
     &:hover {
       background: $heading-color;
-      color: #fff;
+      color: $paper;
     }
 
     &:focus-visible {
@@ -333,7 +333,7 @@
 
 .v-facts {
   background: $dark-bg;
-  color: #fff;
+  color: $paper;
 
   &__list {
     display: grid;
@@ -488,7 +488,7 @@
   padding: 1.75rem 1.75rem 1.75rem 2rem;
   border-radius: 18px;
   background: $section-seconder-bg;
-  transition: transform 0.4s $ease-out-soft, box-shadow 0.4s;
+  transition: transform 0.24s $ease-out-soft, box-shadow 0.24s;
 
   // peach marker on the left edge
   &::before {
@@ -547,7 +547,7 @@
 .v-privacy {
   padding: 6rem 0;
   background: $dark-bg;
-  color: #fff;
+  color: $paper;
 
   &__grid {
     display: grid;
@@ -669,7 +669,7 @@
 .v-final {
   padding: 5.5rem 0;
   background: $primary-color;
-  color: #fff;
+  color: $paper;
   text-align: center;
 
   &__inner {
@@ -683,7 +683,7 @@
     font-size: clamp(1.7rem, 3vw, 2.5rem);
     font-weight: 800;
     letter-spacing: -0.02em;
-    color: #fff;
+    color: $paper;
   }
 
   &__text {

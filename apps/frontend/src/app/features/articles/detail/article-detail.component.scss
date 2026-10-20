@@ -10,7 +10,7 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  background: #fff;
+  background: $paper;
 }
 
 // ── Reading progress bar ──────────────────────────────────────────────────────
@@ -153,7 +153,7 @@
     // ── Telegram — solid primary ─────────────────────────────────────────────
     &--tg {
       background: $heading-color;
-      color: #fff;
+      color: $paper;
       border-color: $heading-color;
 
       &:hover {
@@ -173,7 +173,7 @@
 
       &:hover {
         background: $heading-color;
-        color: #fff;
+        color: $paper;
         border-color: $heading-color;
         transform: translateY(-2px);
         svg { transform: scale(1.1); }
@@ -441,12 +441,12 @@
       svg { flex-shrink: 0; }
 
       &--fb {
-        color: #fff;
+        color: $paper;
         background: $primary-color;
         box-shadow: 0 2px 8px rgba($primary-color, 0.3);
       }
       &--inst {
-        color: #fff;
+        color: $paper;
         background: $heading-color;
         box-shadow: 0 2px 8px rgba($heading-color, 0.25);
       }
@@ -520,7 +520,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
+    color: $paper;
     padding-left: 5px;
     box-shadow:
       0 0 0 7px rgba($primary-color, 0.22),
@@ -724,7 +724,7 @@
     font-weight: 800;
     line-height: 1.2;
     letter-spacing: -0.02em;
-    color: #fff;
+    color: $paper;
   }
 
   // treatment page on the article's topic (/likuvannya-*)
@@ -736,7 +736,7 @@
     text-decoration: underline;
     text-underline-offset: 4px;
 
-    &:hover { color: #fff; }
+    &:hover { color: $paper; }
   }
 
   &__sub {
@@ -744,7 +744,7 @@
     margin: 0;
     font-size: 0.96rem;
     line-height: 1.65;
-    color: rgba(#fff, 0.75);
+    color: rgba($paper, 0.75);
   }
 
   &__btn {
@@ -763,7 +763,7 @@
     cursor: pointer;
     transition: background 0.25s;
 
-    &:hover { background: #fff; }
+    &:hover { background: $paper; }
 
     @media (max-width: 640px) { width: 100%; justify-content: center; }
   }
@@ -802,7 +802,7 @@
   height: 46px;
   border-radius: 50%;
   background: $heading-color;
-  color: #fff;
+  color: $paper;
   border: none;
   cursor: pointer;
   display: flex;
