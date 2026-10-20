@@ -1,640 +1,616 @@
 @use "../../../assets/css/coloristics" as *;
 
-// Soft, low-contrast surfaces and rounded shapes — this page is meant to feel calm,
-// so it avoids hard rules, uppercase labels and dark bands.
-$soft-bg: #fbf7f3;
-$tint-peach: #f8ece3;
-$tint-sage: #eef2ea;
-$tint-sand: #f3eee6;
-$tint-mist: #edf1f3;
-$radius-lg: 28px;
-$radius-md: 20px;
+// "About the centre": editorial layout on the shared 12-column grid —
+// credentials up top, a real voice, principles, offer, process, founder, proof, contacts.
 
-.center-page {
-  display: flex;
-  flex-direction: column;
-  background: #fff;
-  color: $body-text-color;
+$rule: 1px solid rgba($heading-color, 0.14);
+
+.ct {
+  background: $paper;
 }
 
-.sf-tint-0 { background: $tint-peach; }
-.sf-tint-1 { background: $tint-sage; }
-.sf-tint-2 { background: $tint-sand; }
-.sf-tint-3 { background: $tint-mist; }
+.ct-kicker { @include kicker; }
 
-// ── Shared bits ───────────────────────────────────────────────────────────────
+.ct-title { @include section-title; }
 
-.sf-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 48px;
-  padding: 0.8rem 1.6rem;
-  border-radius: 999px;
-  background: $primary-color;
-  color: #fff;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background 0.25s, transform 0.25s $ease-out-soft;
+.ct-frame { @include page-frame; }
 
-  &:hover { background: #7d5c4c; transform: translateY(-1px); }
+.ct-section {
+  padding-block: 5.5rem;
+
+  @media (max-width: 768px) { padding-block: 3.75rem; }
+
+  &--sand { background: $section-bg; }
 }
 
-.sf-link {
-  color: $heading-color;
-  font-weight: 600;
-  text-decoration: underline;
-  text-decoration-color: $accent-color;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 5px;
-
-  &:hover { color: $primary-color; }
-}
-
-.sf-inline {
-  color: $primary-color;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-.sf-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.4rem 0.9rem;
-  border-radius: 999px;
-  background: #fff;
-  color: $primary-color;
-  font-size: 0.85rem;
-  font-weight: 600;
-
-  .pi { font-size: 0.85rem; }
-}
-
-.sf-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  background: rgba(#fff, 0.85);
-  color: $primary-color;
-
-  .pi { font-size: 1.25rem; }
-
-  &--sm {
-    flex-shrink: 0;
-    width: 44px;
-    height: 44px;
-    background: $accent-soft;
-
-    .pi { font-size: 1.05rem; }
-  }
-}
-
-// ── Sections ──────────────────────────────────────────────────────────────────
-
-.sf-section {
-  padding: 4.5rem 0;
-
-  &--soft { background: $soft-bg; }
-
-  @media (max-width: 768px) { padding: 3.25rem 0; }
-}
-
-.sf-head {
-  max-width: 640px;
-  margin: 0 0 2.5rem;
-
-  @media (max-width: 768px) { margin-bottom: 2rem; }
-
-  h2 {
-    margin: 0 0 0.65rem;
-    font-size: clamp(1.45rem, 2.4vw, 2rem);
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    color: $heading-color;
-  }
+.ct-head {
+  max-width: 40rem;
+  margin-bottom: 2.75rem;
 
   p {
-    margin: 0;
+    margin: 1rem 0 0;
     font-size: 1rem;
-    line-height: 1.7;
+    line-height: 1.65;
+    color: $body-text-color;
+  }
+
+  &--row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    max-width: none;
   }
 }
 
-.sf-crumbs {
+.ct-inline,
+.ct-more {
+  color: $heading-color;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+
+  &:hover { color: $primary-ink; }
+}
+
+.ct-more {
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+// ── Buttons ───────────────────────────────────────────────────────────────────
+
+.ct-actions {
   display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.ct-btn {
+  display: inline-flex;
   align-items: center;
+  gap: 0.55rem;
+  height: 52px;
+  padding: 0 1.6rem;
+  border: 1px solid $heading-color;
+  border-radius: 999px;
+  background: $heading-color;
+  color: $paper;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+
+  &:hover { background: $primary-ink; border-color: $primary-ink; }
+
+  i { font-size: 0.85rem; }
+
+  &--ghost {
+    background: none;
+    border-color: rgba($heading-color, 0.35);
+    color: $heading-color;
+    font-variant-numeric: tabular-nums;
+
+    &:hover { background: rgba($heading-color, 0.04); border-color: $heading-color; }
+  }
+
+  @media (max-width: 520px) {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+// ── Hero ──────────────────────────────────────────────────────────────────────
+
+.ct-hero {
+  background: $section-bg;
+  border-bottom: $rule;
+}
+
+.ct-hero__inner {
+  @include grid-12;
+  row-gap: 2.5rem;
+  align-items: end;
+  padding-block: 2rem 4rem;
+
+  @media (max-width: 768px) { padding-block: 1.5rem 3rem; }
+}
+
+.ct-crumbs {
+  grid-column: 1 / -1;
+  display: flex;
   gap: 0.5rem;
-  margin-bottom: 1.75rem;
   font-size: 0.85rem;
   color: $muted-text-color;
 
-  a {
-    color: $muted-text-color;
-    text-decoration: none;
-    &:hover { color: $heading-color; }
-  }
+  a { color: inherit; text-decoration: none; }
+  a:hover { color: $heading-color; text-decoration: underline; }
+  [aria-current] { color: $heading-color; }
 }
 
-// ── Hero: centred statement on soft blurred colour ─────────────────────────
+.ct-hero__text {
+  grid-column: 1 / span 8;
 
-.sf-hero {
-  position: relative;
-  overflow: hidden;
-  padding: 1.75rem 0 4.5rem;
-  background: $soft-bg;
-
-  @media (max-width: 768px) { padding-bottom: 3rem; }
-
-  &__blob {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(60px);
-    opacity: 0.85;
-    pointer-events: none;
-
-    &--a {
-      top: -120px;
-      left: -80px;
-      width: 420px;
-      height: 420px;
-      background: $tint-peach;
-    }
-
-    &--b {
-      right: -100px;
-      bottom: -140px;
-      width: 460px;
-      height: 460px;
-      background: $tint-sage;
-    }
-  }
-
-  &__inner {
-    position: relative;
-
-    .sf-crumbs { margin-bottom: 2.5rem; }
-  }
-
-  &__title {
-    max-width: 880px;
-    margin: 0 0 1.25rem;
-    font-size: clamp(2rem, 4.4vw, 3.4rem);
-    font-weight: 700;
-    line-height: 1.12;
-    letter-spacing: -0.025em;
-    color: $heading-color;
-
-    // soft highlighter stroke under the key phrase
-    mark {
-      padding: 0 0.1em;
-      background: linear-gradient(transparent 62%, rgba($accent-color, 0.55) 62%);
-      color: inherit;
-    }
-  }
-
-  &__lead {
-    max-width: 640px;
-    margin: 0 0 2.25rem;
-    font-size: 1.05rem;
-    line-height: 1.8;
-  }
-
-  &__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem 1rem;
-    margin-bottom: 3rem;
-  }
+  @media (max-width: 960px) { grid-column: 1 / -1; }
 }
 
-.sf-btn--ghost {
-  background: #fff;
-  color: $heading-color;
-  box-shadow: inset 0 0 0 1px rgba($heading-color, 0.12);
+.ct-hero__title {
+  @include section-title;
+  font-size: clamp(2.4rem, 5.4vw, 4.75rem);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
 
-  &:hover { background: #fff; color: $primary-color; }
-}
-
-// one soft white bar with the four facts
-.sf-trust {
-  display: inline-grid;
-  grid-template-columns: repeat(4, auto);
-  align-items: center;
-  margin: 0;
-  padding: 0.5rem;
-  border-radius: 999px;
-  background: rgba(#fff, 0.8);
-  box-shadow: 0 10px 34px rgba($heading-color, 0.06);
-  list-style: none;
-  backdrop-filter: blur(6px);
-
-  @media (max-width: 900px) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    width: 100%;
-    border-radius: 24px;
-  }
-
-  li {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    padding: 0.7rem 1.25rem;
-    font-size: 0.88rem;
-    color: $muted-text-color;
-    text-align: left;
-
-    & + li { border-left: 1px solid rgba($heading-color, 0.08); }
-
-    @media (max-width: 900px) {
-      padding: 0.85rem 1rem;
-      & + li { border-left: 0; }
-    }
-  }
-
-  .pi {
-    flex-shrink: 0;
-    font-size: 1rem;
+  em {
+    display: block;
+    font-style: italic;
+    font-weight: 400;
     color: $primary-color;
   }
+}
 
-  strong {
-    font-weight: 700;
+.ct-hero__lead {
+  max-width: 36rem;
+  margin: 1.5rem 0 2rem;
+  font-size: 1.08rem;
+  line-height: 1.65;
+  color: $body-text-color;
+}
+
+// credentials as a definition list under hairlines
+.ct-proof {
+  grid-column: 10 / -1;
+  margin: 0;
+
+  @media (max-width: 960px) {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: $grid-gutter;
+  }
+
+  @media (max-width: 520px) { grid-template-columns: 1fr; }
+
+  > div {
+    padding: 0.85rem 0;
+    border-top: $rule;
+  }
+
+  dt {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: $muted-text-color;
+  }
+
+  dd {
+    margin: 0.3rem 0 0;
+    font-family: $font-display;
+    font-size: 1.1rem;
+    line-height: 1.35;
     color: $heading-color;
+  }
 
-    @media (max-width: 900px) { display: block; }
+  a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+
+    &:hover { color: $primary-ink; }
   }
 }
 
-// ── Principles ────────────────────────────────────────────────────────────────
+.ct-file {
+  font-family: $font-body;
+  font-size: 0.8rem;
+  color: $muted-text-color;
+  white-space: nowrap;
+}
 
-.sf-principles {
+// ── Voice ─────────────────────────────────────────────────────────────────────
+
+.ct-voice {
+  padding-block: 5rem;
+  border-bottom: $rule;
+
+  @media (max-width: 768px) { padding-block: 3.5rem; }
+}
+
+.ct-voice__inner {
+  @include grid-12;
+  margin-block: 0;
+
+  blockquote {
+    grid-column: 2 / span 9;
+    margin: 0;
+    font-family: $font-display;
+    font-size: clamp(1.9rem, 3.8vw, 3.3rem);
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    color: $heading-color;
+  }
+
+  figcaption {
+    grid-column: 2 / span 6;
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: $muted-text-color;
+
+    a { color: $heading-color; text-underline-offset: 3px; }
+  }
+
+  @media (max-width: 768px) {
+    blockquote, figcaption { grid-column: 1 / -1; }
+  }
+}
+
+// ── Principles: heading left, 2×2 text grid right ─────────────────────────────
+
+.ct-split {
+  @include grid-12;
+  row-gap: 2.5rem;
+}
+
+.ct-split__head {
+  grid-column: 1 / span 4;
+
+  p {
+    margin: 1rem 0 0;
+    line-height: 1.65;
+    color: $body-text-color;
+  }
+
+  @media (max-width: 900px) { grid-column: 1 / -1; }
+}
+
+.ct-principles {
+  grid-column: 6 / -1;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2.75rem 3rem;
   margin: 0;
   padding: 0;
   list-style: none;
 
-  @media (max-width: 1024px) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  @media (max-width: 560px) { grid-template-columns: 1fr; }
+  @media (max-width: 900px) { grid-column: 1 / -1; }
+  @media (max-width: 600px) { grid-template-columns: 1fr; gap: 2rem; }
 
   li {
-    padding: 1.75rem 1.5rem;
-    border-radius: $radius-lg;
-  }
-
-  .sf-icon { margin-bottom: 1.25rem; }
-
-  h3 {
-    margin: 0 0 0.5rem;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: $heading-color;
-  }
-
-  p {
-    margin: 0;
-    font-size: 0.95rem;
-    line-height: 1.7;
+    padding-top: 1.25rem;
+    border-top: $rule;
   }
 }
 
-// ── Conditions ────────────────────────────────────────────────────────────────
+.ct-principles h3,
+.ct-conditions h3,
+.ct-services h3,
+.ct-steps h3 {
+  margin: 0 0 0.6rem;
+  font-family: $font-display;
+  font-size: 1.4rem;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: $heading-color;
+}
 
-.sf-conditions {
+.ct-principles p,
+.ct-conditions p,
+.ct-services p,
+.ct-steps p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: $body-text-color;
+}
+
+// ── Conditions: typeset grid ──────────────────────────────────────────────────
+
+.ct-conditions {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1rem;
+  column-gap: $grid-gutter;
   margin: 0;
   padding: 0;
   list-style: none;
 
   @media (max-width: 1100px) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  @media (max-width: 760px) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  @media (max-width: 520px) { grid-template-columns: 1fr; gap: 0.75rem; }
+  @media (max-width: 700px)  { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 480px)  { grid-template-columns: 1fr; }
 
   a {
     position: relative;
-    display: flex;
-    flex-direction: column;
+    display: block;
     height: 100%;
-    padding: 1.5rem 1.5rem 3.75rem;
-    border-radius: $radius-md;
-    background: #fff;
-    box-shadow: 0 4px 18px rgba($heading-color, 0.04);
+    padding: 1.4rem 2rem 2rem 0;
+    border-top: $rule;
     color: inherit;
     text-decoration: none;
-    transition: box-shadow 0.3s, transform 0.35s $ease-out-soft;
-
-    @media (max-width: 520px) { padding: 1.1rem 3.5rem 1.1rem 1.25rem; }
 
     &:hover {
-      box-shadow: 0 12px 30px rgba($heading-color, 0.08);
-      transform: translateY(-2px);
+      border-top-color: $heading-color;
+
+      h3 { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 5px; }
+      .ct-go { opacity: 1; transform: none; }
     }
-  }
-
-  h3 {
-    margin: 0 0 0.45rem;
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: $heading-color;
-  }
-
-  p {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    margin: 0;
-    font-size: 0.9rem;
-    line-height: 1.65;
-
-    @media (max-width: 520px) { -webkit-line-clamp: 2; }
-  }
-
-  &__go {
-    position: absolute;
-    left: 1.5rem;
-    bottom: 1.25rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    background: $accent-soft;
-    color: $primary-color;
-    transition: background 0.25s, color 0.25s;
-
-    .pi { font-size: 0.8rem; }
-
-    @media (max-width: 520px) { left: auto; right: 1rem; top: 50%; bottom: auto; transform: translateY(-50%); }
-  }
-
-  a:hover &__go { background: $primary-color; color: #fff; }
-
-  &__other a {
-    background: $accent-soft;
-    box-shadow: none;
-
-    .sf-conditions__go { background: #fff; }
   }
 }
 
-// ── Services ──────────────────────────────────────────────────────────────────
+.ct-conditions__other h3 { font-style: italic; }
 
-.sf-services {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
+.ct-go {
+  position: absolute;
+  top: 1.4rem;
+  right: 0;
+  font-size: 1.1rem;
+  color: $primary-ink;
+  opacity: 0.5;
+  transform: translateX(-4px);
+  transition: opacity 0.2s, transform 0.2s $ease-out-soft;
+}
+
+// ── Services: index rows ──────────────────────────────────────────────────────
+
+.ct-services {
   margin: 0;
   padding: 0;
   list-style: none;
-
-  @media (max-width: 900px) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  @media (max-width: 560px) { grid-template-columns: 1fr; }
+  border-bottom: $rule;
 
   a {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    height: 100%;
-    padding: 1.4rem;
-    border-radius: $radius-md;
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: $grid-gutter;
+    align-items: baseline;
+    padding: 1.6rem 2.5rem 1.6rem 0;
+    border-top: $rule;
     color: inherit;
     text-decoration: none;
-    transition: background 0.25s;
 
-    &:hover { background: $soft-bg; }
-  }
+    h3 { grid-column: 1 / span 5; margin: 0; }
+    p  { grid-column: 6 / -1; }
 
-  h3 {
-    margin: 0.15rem 0 0.35rem;
-    font-size: 1.02rem;
-    font-weight: 700;
-    color: $heading-color;
-  }
+    .ct-go { top: 1.75rem; }
 
-  p {
-    margin: 0;
-    font-size: 0.92rem;
-    line-height: 1.65;
+    &:hover {
+      h3 { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 5px; }
+      .ct-go { opacity: 1; transform: none; }
+    }
+
+    @media (max-width: 768px) {
+      h3, p { grid-column: 1 / -1; }
+      p { margin-top: 0.4rem; }
+    }
   }
 }
 
 // ── Steps ─────────────────────────────────────────────────────────────────────
 
-.sf-steps {
-  position: relative;
+.ct-steps {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 2rem 1.5rem;
+  column-gap: $grid-gutter;
+  row-gap: 2rem;
   margin: 0;
   padding: 0;
   list-style: none;
 
-  // soft dotted path joining the step circles (first to last circle centre)
-  &::before {
-    content: '';
-    position: absolute;
-    top: 26px;
-    left: 26px;
-    right: calc((100% - 4.5rem) / 4 - 26px);
-    border-top: 2px dotted rgba($primary-color, 0.3);
-
-    @media (max-width: 900px) { display: none; }
-  }
-
   @media (max-width: 900px) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  @media (max-width: 480px) { grid-template-columns: 1fr; }
+  @media (max-width: 520px) { grid-template-columns: 1fr; }
 
-  li { position: relative; }
-
-  &__dot {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 52px;
-    height: 52px;
-    margin-bottom: 1rem;
-    border-radius: 50%;
-    background: #fff;
-    box-shadow: 0 6px 20px rgba($heading-color, 0.07);
-    color: $primary-color;
-    font-size: 1.1rem;
-    font-weight: 700;
+  li {
+    padding-top: 1rem;
+    border-top: 1px solid $heading-color;
   }
+}
 
-  h3 {
-    margin: 0 0 0.4rem;
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: $heading-color;
-  }
-
-  p {
-    max-width: 260px;
-    margin: 0;
-    font-size: 0.93rem;
-    line-height: 1.65;
-  }
+.ct-steps__num {
+  display: block;
+  margin-bottom: 1rem;
+  font-family: $font-display;
+  font-size: 2.6rem;
+  font-style: italic;
+  line-height: 1;
+  color: $primary-color;
 }
 
 // ── Founder ───────────────────────────────────────────────────────────────────
 
-.sf-founder {
-  display: grid;
-  grid-template-columns: 300px minmax(0, 1fr);
+.ct-founder {
+  @include grid-12;
+  row-gap: 2.5rem;
   align-items: center;
-  gap: 2rem 3.5rem;
-  padding: clamp(1.5rem, 4vw, 2.75rem);
-  border-radius: 36px;
-  background: $tint-sage;
+}
 
-  @media (max-width: 760px) { grid-template-columns: 1fr; }
+.ct-founder__photo {
+  grid-column: 1 / span 5;
+  margin: 0;
 
   img {
+    display: block;
     width: 100%;
-    max-width: 300px;
     height: auto;
-    aspect-ratio: 4 / 5;
-    object-fit: cover;
-    object-position: center 30%;
-    border-radius: $radius-lg;
-
-    @media (max-width: 760px) { max-width: 240px; }
+    border-radius: 4px;
   }
 
-  .sf-pill { margin-bottom: 1rem; }
+  @media (max-width: 900px) { grid-column: 1 / -1; max-width: 420px; }
+}
 
-  &__name {
-    margin: 0 0 0.35rem;
-    font-size: clamp(1.5rem, 2.6vw, 2rem);
-    font-weight: 700;
+.ct-founder__text {
+  grid-column: 7 / -1;
+
+  @media (max-width: 900px) { grid-column: 1 / -1; }
+}
+
+.ct-founder__lead {
+  margin: 1.25rem 0 1.5rem;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: $body-text-color;
+}
+
+.ct-creds {
+  margin: 0 0 2rem;
+  padding: 0;
+  list-style: none;
+
+  li {
+    padding: 0.75rem 0;
+    border-top: $rule;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: $heading-color;
+
+    &:last-child { border-bottom: $rule; }
+  }
+}
+
+// ── Patient quotes ────────────────────────────────────────────────────────────
+
+.ct-quotes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: $grid-gutter;
+  row-gap: 2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @media (max-width: 900px) { grid-template-columns: 1fr; }
+
+  figure {
+    margin: 0;
+    padding-top: 1.25rem;
+    border-top: $rule;
+  }
+
+  blockquote {
+    margin: 0;
+    font-family: $font-display;
+    font-size: 1.15rem;
+    line-height: 1.55;
     color: $heading-color;
   }
 
-  &__role {
-    margin: 0 0 1.1rem;
-    color: $primary-color;
-    font-weight: 600;
-  }
-
-  &__text {
-    max-width: 680px;
-    margin: 0 0 1.75rem;
-    line-height: 1.8;
-  }
-
-  &__links {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 1rem 1.75rem;
+  figcaption {
+    margin-top: 1rem;
+    font-size: 0.88rem;
+    color: $muted-text-color;
   }
 }
 
 // ── Documents & contacts ──────────────────────────────────────────────────────
 
-.sf-info {
+.ct-info {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.25rem;
+  column-gap: $grid-gutter;
+  row-gap: 2.5rem;
 
   @media (max-width: 900px) { grid-template-columns: 1fr; }
 
-  &__card {
-    padding: 1.75rem;
-    border-radius: $radius-lg;
-    background: #fff;
-    box-shadow: 0 4px 18px rgba($heading-color, 0.04);
+  > div {
+    padding-top: 1.25rem;
+    border-top: 1px solid $heading-color;
   }
 
   h3 {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    margin: 0 0 1.25rem;
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: $heading-color;
-
-    .pi { color: $primary-color; }
+    margin: 0 0 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: $muted-text-color;
   }
 
   ul {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
     margin: 0;
     padding: 0;
     list-style: none;
   }
 
-  li {
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-  }
+  li + li { margin-top: 1rem; }
 
   a {
+    display: inline-block;
+    font-family: $font-display;
+    font-size: 1.2rem;
     color: $heading-color;
-    font-weight: 600;
     text-decoration: underline;
-    text-decoration-color: $accent-color;
-    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+    font-variant-numeric: tabular-nums;
 
-    &:hover { color: $primary-color; }
+    &:hover { color: $primary-ink; }
   }
 
-  li span {
-    font-size: 0.88rem;
+  span {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.85rem;
     color: $muted-text-color;
   }
 
   address {
     font-style: normal;
-    line-height: 1.75;
+    font-size: 1rem;
+    line-height: 1.6;
     color: $heading-color;
-  }
-
-  &__hours {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin: 1rem 0 0;
-    padding: 0.4rem 0.85rem;
-    border-radius: 999px;
-    background: $soft-bg;
-    font-size: 0.88rem;
-
-    .pi { color: $primary-color; font-size: 0.85rem; }
   }
 }
 
-// ── CTA ───────────────────────────────────────────────────────────────────────
+.ct-info__hours {
+  margin: 1rem 0 0;
+  font-size: 0.9rem;
+  color: $body-text-color;
+}
 
-.sf-cta {
-  padding: clamp(2rem, 5vw, 3.5rem);
-  border-radius: 36px;
+// ── Closing CTA ───────────────────────────────────────────────────────────────
+
+// sand, not charcoal: the footer below is already dark
+.ct-cta {
   background: $accent-soft;
-
-  h2 {
-    margin: 0 0 0.6rem;
-    font-size: clamp(1.4rem, 2.4vw, 1.9rem);
-    font-weight: 700;
-    color: $heading-color;
-  }
-
-  p { margin: 0 0 1.75rem; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .sf-btn, .sf-conditions a { transition: none; }
-  .sf-btn:hover, .sf-conditions a:hover { transform: none; }
+.ct-cta__inner {
+  @include grid-12;
+  row-gap: 2rem;
+  align-items: end;
+  padding-block: 5rem;
+
+  @media (max-width: 768px) { padding-block: 3.5rem; }
+}
+
+.ct-cta__title {
+  @include section-title;
+  grid-column: 1 / span 7;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+
+  em {
+    display: block;
+    font-style: italic;
+    font-weight: 400;
+    color: $primary-color;
+  }
+
+  @media (max-width: 900px) { grid-column: 1 / -1; }
+}
+
+.ct-cta__side {
+  grid-column: 8 / -1;
+
+  p {
+    margin: 0 0 1.5rem;
+    line-height: 1.65;
+    color: $body-text-color;
+  }
+
+  @media (max-width: 900px) { grid-column: 1 / -1; }
 }
