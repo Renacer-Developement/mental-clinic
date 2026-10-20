@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import type { Scope } from 'animejs';
 import { AnimeService } from '../../../../shared/animation/anime.service';
 import { TEST_ROUTES } from '../../../../shared/constants/routes.constants';
+import { IS_AUTUMN } from '../../../../shared/constants/season.constants';
 
 @Component({
   standalone: true,
@@ -18,6 +19,7 @@ export class HeroBannerComponent implements AfterViewInit, OnDestroy {
   private destroyed = false;
 
   protected readonly TEST_ROUTES = TEST_ROUTES;
+  protected readonly autumn = IS_AUTUMN;
 
   async ngAfterViewInit(): Promise<void> {
     if (!this.animeService.enabled) return;

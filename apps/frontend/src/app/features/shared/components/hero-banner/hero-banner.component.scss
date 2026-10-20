@@ -74,6 +74,14 @@
   }
 }
 
+// Seasonal: amber and rust light instead of peach (see IS_AUTUMN)
+.hero--autumn {
+  .hero-orb--a { background: rgba(#e8a35c, 0.6); }
+  .hero-orb--b { background: rgba(#c9713d, 0.4); }
+  .hero-line   { stroke: rgba(#b5643a, 0.3); }
+  .hero-line--thin { stroke: rgba(#b5643a, 0.18); }
+}
+
 // ── Layout ────────────────────────────────────────────────────────────────────
 
 .hero-inner {
