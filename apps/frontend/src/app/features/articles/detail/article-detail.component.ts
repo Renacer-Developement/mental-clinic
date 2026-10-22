@@ -23,6 +23,7 @@ import { ClinicContactsService } from '../../shared/components/clinic-contacts-d
 import { clinicContacts } from '../../shared/constants/contacts.constants';
 import { NotFoundComponent } from '../../not-found/not-found.component';
 import { conditionForArticleCategories } from '../../conditions/conditions.data';
+import { sanitizeHtml } from '../../../core/security/sanitize-html';
 
 const BASE_URL = 'https://doctor-skripnik.com.ua';
 
@@ -181,7 +182,7 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
 
     // ── Step 0: Replace &nbsp; with regular spaces so words wrap normally ────
     // Quill often inserts &nbsp; between words which creates unbreakable runs.
-    let processed = html
+    let processed = sanitizeHtml(html, this.document, this.sanitizer)
       .replace(/&nbsp;/gi, ' ')        // named entity
       .replace(/&#160;/g, ' ')         // decimal entity
       .replace(/&#xA0;/gi, ' ')        // hex entity

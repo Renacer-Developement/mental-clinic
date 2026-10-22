@@ -39,9 +39,6 @@
                 "*.vercel.app"
               ]
             },
-            "allowedCommonJsDependencies": [
-              "quill"
-            ],
             "polyfills": [
               "zone.js"
             ],

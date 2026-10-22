@@ -1,8 +1,9 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { Component, inject, OnInit, RESPONSE_INIT, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { SeoService } from '../../core/seo/seo.service';
+import { sanitizeHtml } from '../../core/security/sanitize-html';
 import { ContractApiService } from './contract.service';
 
 @Component({
@@ -16,6 +17,7 @@ export class ContractComponent implements OnInit {
   private readonly seo       = inject(SeoService);
   private readonly api       = inject(ContractApiService);
   private readonly sanitizer = inject(DomSanitizer);
+  private readonly document  = inject(DOCUMENT);
   private readonly responseInit = inject(RESPONSE_INIT, { optional: true });
 
   safeContent = signal<SafeHtml>('');
@@ -24,7 +26,7 @@ export class ContractComponent implements OnInit {
   notFound    = signal(false);
 
   private processContent(html: string): string {
-    return html
+    return sanitizeHtml(html, this.document, this.sanitizer)
       // Quill inserts &nbsp; between words — replace with regular spaces so text wraps normally
       .replace(/&nbsp;/gi, ' ')
       .replace(/&#160;/g, ' ')
