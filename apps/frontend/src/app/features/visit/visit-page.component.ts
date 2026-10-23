@@ -74,6 +74,10 @@ export class VisitPageComponent implements OnInit {
       title: 'План лікування',
       text: 'Ви отримуєте призначення, розгорнуті рекомендації та план подальшої роботи.',
     },
+    {
+      title: 'Супровід у листуванні',
+      text: 'Ще три місяці після консультації лікар на звʼязку: відповість на запитання та скоригує лікування.',
+    },
   ];
 
   // `slug` links the card to its /likuvannya-* page (see conditions.data.ts); empty = no page yet.
