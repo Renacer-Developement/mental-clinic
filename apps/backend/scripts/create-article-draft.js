@@ -63,6 +63,10 @@ async function main() {
     for (const key of ['title', 'excerpt', 'content']) {
         if (!data[key]?.trim()) fail(`"${key}" is empty`);
     }
+    // Articles send readers to the clinic, not to a named doctor, and end with the disclaimer
+    if (/Скрипник/i.test(data.content)) fail('content names the doctor — point booking to the clinic instead');
+    if (!data.content.includes('суто інформаційний характер')) fail('content lacks the "суто інформаційний характер" disclaimer');
+
     const categories = data.categories ?? [];
     const unknown = categories.filter(c => !CATEGORIES.includes(c));
     if (unknown.length) fail(`unknown categories: ${unknown.join(', ')} (allowed: ${CATEGORIES.join(', ')})`);
