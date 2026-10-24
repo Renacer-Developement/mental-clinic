@@ -40,13 +40,20 @@
           <li><i class="pi pi-check-circle" aria-hidden="true"></i>Безкоштовно, без реєстрації</li>
         </ul>
 
+        <p class="dp-header__review">
+          <i class="pi pi-verified" aria-hidden="true"></i>
+          Перевірив: <a [routerLink]="MEDICAL_REVIEW.profile">{{ MEDICAL_REVIEW.name }}</a>, {{ MEDICAL_REVIEW.role }}
+          <span aria-hidden="true">·</span>
+          <time [attr.datetime]="MEDICAL_REVIEW.date">{{ MEDICAL_REVIEW.date | date: 'dd.MM.yyyy' }}</time>
+        </p>
+
         <div class="dp-header__actions">
           <!-- Mobile: the instructions push the first question below the fold, so offer a jump straight to it -->
           <button class="dp-btn dp-btn--primary dp-header__start" type="button" (click)="scrollToQuiz()">
             Почати тест <span aria-hidden="true">↓</span>
           </button>
           <button *ngIf="data?.pdfLink !== 'null' && data?.pdfLink" class="dp-header__pdf" type="button" (click)="openPdf(data?.pdfLink)">
-            Офіційний PDF ↗
+            Джерело методики ↗
           </button>
         </div>
 
@@ -223,13 +230,6 @@
               <p>{{ f.a }}</p>
             </details>
           </div>
-        </div>
-
-        <div *ngIf="searchKeywords.length" class="dp-about__block">
-          <h2 class="dp-about__title">Як люди шукають цей тест</h2>
-          <ul class="dp-about__searches">
-            <li *ngFor="let k of searchKeywords">{{ k }}</li>
-          </ul>
         </div>
 
 

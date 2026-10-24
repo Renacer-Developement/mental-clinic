@@ -107,6 +107,27 @@
     }
   }
 
+  // Medical review line (E-E-A-T): who checked the page and when
+  &__review {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
+    margin: 0.85rem 0 0;
+    font-size: 0.88rem;
+    color: $body-text-color;
+
+    i { font-size: 0.85rem; color: $primary-color; }
+
+    a {
+      font-weight: 600;
+      color: $heading-color;
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+  }
+
   &__actions {
     display: flex;
     flex-wrap: wrap;

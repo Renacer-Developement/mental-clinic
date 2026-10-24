@@ -44,7 +44,7 @@ export const TEST_CATEGORY_CONTENT: Record<string, TestCategoryContent> = {
       title: 'Який тест на депресію обрати',
       compare: [
         { name: 'PHQ-9', slug: 'opytuvalnyk-z-depresiyi-phq-9', questions: 9, time: '2–3 хв', bestFor: 'Швидкий скринінг і контроль динаміки під час лікування' },
-        { name: 'Шкала депресії Бека (BDI)', slug: 'shkala-depresiyi-beka', questions: 21, time: '10 хв', bestFor: 'Детальна оцінка тяжкості, думок про себе й почуття провини' },
+        { name: 'Шкала депресії Бека-II (BDI-II)', slug: 'shkala-depresiyi-beka', questions: 21, time: '10 хв', bestFor: 'Детальна оцінка вираженості симптомів, думок про себе й почуття провини' },
         { name: 'HADS', slug: 'hospitalna-shkala-tryvohy-i-depresiyi-hads', questions: 14, time: '5 хв', bestFor: 'Тривога й депресія разом, люди з хронічними хворобами' },
         { name: 'Шкала Гамільтона (HAM-D)', slug: 'shkala-depresiyi-hamiltona', questions: 21, time: '20 хв', bestFor: 'Оцінка тяжкості за симптомами, зокрема тілесними' },
         { name: 'Единбурзька шкала (EPDS)', slug: 'edynburzka-shkala-pislyapolohovoyi-depresiyi-eshpd', questions: 10, time: '5 хв', bestFor: 'Вагітність і перший рік після пологів' },

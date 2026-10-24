@@ -17,6 +17,7 @@ import { ConditionContent, conditionForTestSection } from '../../conditions/cond
 import { codeInName, methodCodeOf, withMethodCode } from '../constants/test-method-codes.constants';
 import { TEST_KEYWORDS } from '../constants/test-keywords.constants';
 import { TEST_ABOUT, TestAbout } from '../constants/test-about.constants';
+import { MEDICAL_REVIEW } from '../constants/medical-review.constants';
 import { clinicContacts } from '../../shared/constants/contacts.constants';
 import { ClinicContactsService } from '../../shared/components/clinic-contacts-dialog/clinic-contacts.service';
 import { GoogleAnalyticsService } from '../../../analytics/google-analytics.service';
@@ -45,6 +46,7 @@ export class DetailPageComponent implements OnInit {
   private readonly testService = inject(TestService);
   private readonly router = inject(Router);
   private readonly seo = inject(SeoService);
+  protected readonly MEDICAL_REVIEW = MEDICAL_REVIEW;
   private readonly contactsService = inject(ClinicContactsService);
   private readonly analytics = inject(GoogleAnalyticsService);
   private readonly destroyRef = inject(DestroyRef);
@@ -895,7 +897,11 @@ export class DetailPageComponent implements OnInit {
         inLanguage: 'uk',
         isPartOf: { '@id': `${BASE_URL}/#website` },
         audience: { '@type': 'MedicalAudience', audienceType: 'Patient' },
-        reviewedBy: { '@id': `${BASE_URL}/#organization` },
+        reviewedBy: {
+          '@type': 'Person', '@id': `${BASE_URL}/#physician`, name: MEDICAL_REVIEW.name,
+          jobTitle: 'Лікар-психіатр', url: `${BASE_URL}${MEDICAL_REVIEW.profile}`,
+        },
+        lastReviewed: MEDICAL_REVIEW.date,
         isAccessibleForFree: true,
         breadcrumb: {
           '@type': 'BreadcrumbList',
