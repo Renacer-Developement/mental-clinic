@@ -363,7 +363,7 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
   private updateSeo(a: Article): void {
     const canonical = `/articles/${a.slug ?? a._id}`;
     // Our own covers have a 1200×630 JPEG twin for share previews (some networks reject WebP)
-    const ownCover = /\/assets\/articles\/[\w-]+\.webp$/.test(a.coverImage ?? '');
+    const ownCover = /\/(assets\/articles|api\/covers)\/[\w-]+\.webp$/.test(a.coverImage ?? '');
     const shareImage = ownCover ? a.coverImage!.replace(/\.webp$/, '.jpg') : a.coverImage;
     this.seo.updatePage({
       title: fitTitle(a.title, ' | Психіатр Євген Скрипник', ' | Д-р Скрипник'),

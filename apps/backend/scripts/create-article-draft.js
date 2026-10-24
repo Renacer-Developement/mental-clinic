@@ -67,9 +67,9 @@ async function main() {
     if (/Скрипник/i.test(data.content)) fail('content names the doctor — point booking to the clinic instead');
     if (!data.content.includes('суто інформаційний характер')) fail('content lacks the "суто інформаційний характер" disclaimer');
 
-    // Covers are our own banners served by the site (apps/frontend/scripts/make-article-cover.py)
-    if (data.coverImage && !/^https:\/\/doctor-skripnik\.com\.ua\/assets\/articles\/[a-z0-9-]+\.webp$/.test(data.coverImage)) {
-        fail('coverImage must be https://doctor-skripnik.com.ua/assets/articles/<slug>.webp');
+    // Covers are our own banners, uploaded with scripts/upload-cover.js and served by the API
+    if (data.coverImage && !/^https:\/\/mental-clinic-be\.onrender\.com\/api\/covers\/[a-z0-9-]+\.webp$/.test(data.coverImage)) {
+        fail('coverImage must be https://mental-clinic-be.onrender.com/api/covers/<slug>.webp (upload it with scripts/upload-cover.js)');
     }
 
     const categories = data.categories ?? [];

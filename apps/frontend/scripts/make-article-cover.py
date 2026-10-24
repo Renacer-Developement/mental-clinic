@@ -1,13 +1,15 @@
 """Branded article cover (1200×630 layout, saved at 2× — 2400×1260), each one different from the last.
 
-    python3 apps/frontend/scripts/make-article-cover.py --title "Симптоми РДУГ у дорослих" --kicker "РДУГ" --out apps/frontend/src/assets/articles/<slug>.webp
+    python3 apps/frontend/scripts/make-article-cover.py --title "Симптоми РДУГ у дорослих" --kicker "РДУГ" --out article-drafts/covers/<slug>.webp
+    node apps/backend/scripts/upload-cover.js article-drafts/covers/<slug>.webp
 
+Covers live in article-drafts/covers/ and are served from the database by the API
+(https://mental-clinic-be.onrender.com/api/covers/<slug>.webp), so a new one is live without a
+frontend deploy. A 1200×630 <slug>.jpg is saved next to each for share previews (og:image).
 The palette is the one least used by the covers already in the output folder (read from
-their background colour; ties go to the one used longest ago), so colours repeat as rarely as possible; the composition and the shapes' size and
-position come from the file name, so each article keeps its own look when regenerated.
-The cover is served from https://doctor-skripnik.com.ua/assets/articles/<slug>.webp once
-the frontend is deployed; set that URL as the article's coverImage. A 1200×630 <slug>.jpg is
-saved next to it for share previews (og:image) — commit both. Needs Pillow and macOS's Arial.
+their background colour; ties go to the one used longest ago), so colours repeat as rarely as possible;
+the composition and the shapes' size and position come from the file name, so each article
+keeps its own look when regenerated. Needs Pillow and macOS's Arial.
 """
 import argparse
 import hashlib
