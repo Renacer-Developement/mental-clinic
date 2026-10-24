@@ -67,9 +67,9 @@ async function main() {
     if (/Скрипник/i.test(data.content)) fail('content names the doctor — point booking to the clinic instead');
     if (!data.content.includes('суто інформаційний характер')) fail('content lacks the "суто інформаційний характер" disclaimer');
 
-    // Covers are our own banners, uploaded with scripts/upload-cover.js and served by the API
-    if (data.coverImage && !/^https:\/\/mental-clinic-be\.onrender\.com\/api\/covers\/[a-z0-9-]+\.webp$/.test(data.coverImage)) {
-        fail('coverImage must be https://mental-clinic-be.onrender.com/api/covers/<slug>.webp (upload it with scripts/upload-cover.js)');
+    // Covers are our own banners: use the URL scripts/upload-cover.js prints (S3 or /api/covers)
+    if (data.coverImage && !/^https:\/\/[a-z0-9.-]+\/(api\/)?covers\/[a-z0-9-]+\.webp$/.test(data.coverImage)) {
+        fail('coverImage must be the URL printed by scripts/upload-cover.js (…/covers/<slug>.webp)');
     }
 
     const categories = data.categories ?? [];

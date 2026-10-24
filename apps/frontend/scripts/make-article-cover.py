@@ -197,10 +197,12 @@ def main():
     d.text((TEXT_X, 562), FOOTER, font=font(FONT_BOLD, 24), fill=TEXT, anchor='lm')
     d.text((TEXT_X, 597), SITE, font=font(FONT, 22), fill=palette['accent'], anchor='lm')
 
-    im.resize((W * OUTPUT_SCALE, H * OUTPUT_SCALE), Image.LANCZOS).save(args.out, 'WEBP', quality=90, method=6)
+    # Covers are stored in the database, so keep them small: flat colours and large text look the
+    # same at these qualities as at 90, at about half the size (~28 KB WebP + ~30 KB JPEG)
+    im.resize((W * OUTPUT_SCALE, H * OUTPUT_SCALE), Image.LANCZOS).save(args.out, 'WEBP', quality=65, method=6)
     # Share previews (og:image): JPEG at the 1200×630 size every network accepts — some don't take WebP
     share = os.path.splitext(args.out)[0] + '.jpg'
-    im.resize((W, H), Image.LANCZOS).save(share, 'JPEG', quality=88, optimize=True, progressive=True)
+    im.resize((W, H), Image.LANCZOS).save(share, 'JPEG', quality=72, optimize=True, progressive=True)
     print(f'Cover saved: {args.out} + {os.path.basename(share)} (palette {PALETTES.index(palette)}, {layout.__name__})')
 
 
