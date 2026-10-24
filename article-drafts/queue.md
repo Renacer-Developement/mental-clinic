@@ -9,7 +9,7 @@
 ## Уже написані чернетки (перенести в адмінку)
 
 - [x] з файлу 01-symptomy-rduh-u-doroslykh.html — 2026-10-24, draft 6adca1d1e2d343969a33312d
-- [ ] з файлу 02-shkala-beka-interpretatsiya.html
+- [x] з файлу 02-shkala-beka-interpretatsiya.html — 2026-10-24 15:32, draft 6adca53d693e438bca904bd6
 - [ ] з файлу 03-gad-7-rezultat.html
 - [ ] з файлу 04-phq-9-rezultat.html
 - [ ] з файлу 05-pislyapolohova-depresiya.html
