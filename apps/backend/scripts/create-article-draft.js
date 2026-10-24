@@ -5,7 +5,7 @@
 //   node scripts/create-article-draft.js <article.json> [--dry-run]
 //   node scripts/create-article-draft.js --notify <article id>   (re-send a draft to Telegram)
 //
-// article.json: { title, excerpt, content (HTML), categories: [], tags: [], relatedTests: [test slugs] }
+// article.json: { title, excerpt, content (HTML), categories: [], tags: [], relatedTests: [test slugs], coverImage? }
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
 const fs = require('fs');
 const mongoose = require('mongoose');
@@ -67,6 +67,11 @@ async function main() {
     if (/Скрипник/i.test(data.content)) fail('content names the doctor — point booking to the clinic instead');
     if (!data.content.includes('суто інформаційний характер')) fail('content lacks the "суто інформаційний характер" disclaimer');
 
+    // Covers are our own banners served by the site (apps/frontend/scripts/make-article-cover.py)
+    if (data.coverImage && !/^https:\/\/doctor-skripnik\.com\.ua\/assets\/articles\/[a-z0-9-]+\.webp$/.test(data.coverImage)) {
+        fail('coverImage must be https://doctor-skripnik.com.ua/assets/articles/<slug>.webp');
+    }
+
     const categories = data.categories ?? [];
     const unknown = categories.filter(c => !CATEGORIES.includes(c));
     if (unknown.length) fail(`unknown categories: ${unknown.join(', ')} (allowed: ${CATEGORIES.join(', ')})`);
@@ -88,6 +93,7 @@ async function main() {
             content: data.content,
             categories,
             tags: data.tags ?? [],
+            ...(data.coverImage ? { coverImage: data.coverImage } : {}),
             relatedTests: tests.map(t => t._id),
             status: 'draft',
             author: AUTHOR_ID,
