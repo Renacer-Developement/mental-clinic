@@ -4,6 +4,13 @@ const notFound = () => Object.assign(new Error('Article not found'), { statusCod
 
 const escapeRegex = s => String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
+// ?sort= on the public list; anything else falls back to newest first
+const SORTS = {
+    newest:  { publishedAt: -1, createdAt: -1 },
+    popular: { views: -1, publishedAt: -1 },
+    short:   { readTime: 1, publishedAt: -1 },
+};
+
 const buildFilter = ({ status, category, tag, search } = {}) => {
     const filter = {};
     if (status)   filter.status = status;
@@ -23,15 +30,24 @@ class ArticleService {
     }
 
     getAll(query) {
-        const { page, limit = '10', ...filterQuery } = query;
+        const { page, offset, limit = '10', sort, ...filterQuery } = query;
         const filter = buildFilter(filterQuery);
-        if (page) {
+        const order = SORTS[sort];
+        if (page || offset !== undefined) {
             return articleRepository.findAll(filter, {
-                page:  parseInt(page,  10),
-                limit: parseInt(limit, 10),
+                page:   parseInt(page, 10) || 1,
+                // ?offset= lets "show more" continue after an uneven first batch (featured + grid)
+                offset: offset !== undefined ? Math.max(parseInt(offset, 10) || 0, 0) : undefined,
+                limit:  Math.min(parseInt(limit, 10) || 10, 50),
+                sort:   order,
             });
         }
-        return articleRepository.findAll(filter);
+        return articleRepository.findAll(filter, { sort: order });
+    }
+
+    /** Published-article counts per category, for the topic filters on the site. */
+    getFacets() {
+        return articleRepository.categoryCounts({ status: 'published' });
     }
 
     async getById(idOrSlug) {

@@ -10,20 +10,35 @@ class ArticleRepository {
         return new Article(data).save();
     }
 
-    async findAll(filter, { page, limit, sort } = {}) {
+    async findAll(filter, { page, offset, limit, sort } = {}) {
         const q = Article.find(filter)
             .select(LIST_FIELDS)
             .populate('author', 'name')
             .sort(sort || { publishedAt: -1, createdAt: -1 });
 
         if (page && limit) {
-            const skip  = (page - 1) * limit;
+            const skip  = offset ?? (page - 1) * limit;
             const total = await Article.countDocuments(filter);
             const articles = await q.skip(skip).limit(limit);
             return { articles, total, page, pages: Math.ceil(total / limit) };
         }
 
         return q;
+    }
+
+    /** { total, categories: [{ name, count }] } — most used first. */
+    async categoryCounts(filter) {
+        const [total, categories] = await Promise.all([
+            Article.countDocuments(filter),
+            Article.aggregate([
+                { $match: filter },
+                { $unwind: '$categories' },
+                { $group: { _id: '$categories', count: { $sum: 1 } } },
+                { $sort: { count: -1, _id: 1 } },
+                { $project: { _id: 0, name: '$_id', count: 1 } },
+            ]),
+        ]);
+        return { total, categories };
     }
 
     /** Lookup by MongoDB _id OR slug (for public-facing routes) */

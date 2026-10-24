@@ -10,8 +10,17 @@ class ArticleController {
 
     async getAll(req, res, next) {
         try {
-            const result = await articleService.getAll(req.query);
+            // Drafts open by direct link for review, but never appear in public lists
+            const query = req.user?.role === 'admin' ? req.query : { ...req.query, status: 'published' };
+            const result = await articleService.getAll(query);
             res.status(200).json(result);
+        } catch (err) { next(err); }
+    }
+
+    async getFacets(req, res, next) {
+        try {
+            res.set('Cache-Control', 'public, max-age=300');
+            res.status(200).json(await articleService.getFacets());
         } catch (err) { next(err); }
     }
 

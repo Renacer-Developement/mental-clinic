@@ -32,9 +32,16 @@ const authenticate = async (req, res, next) => {
     }
 };
 
+/**
+ * Sets req.user when the request carries a valid session, and otherwise lets it through
+ * anonymously — for public routes that show more to a signed-in admin (e.g. drafts).
+ */
+const optionalAuthenticate = (req, res, next) =>
+    authenticate(req, res, () => next()).catch(() => next());
+
 const requireAdmin = (req, res, next) => {
     if (req.user?.role !== 'admin') return next(makeError('Admin access required', 403));
     next();
 };
 
-module.exports = { authenticate, requireAdmin };
+module.exports = { authenticate, optionalAuthenticate, requireAdmin };
