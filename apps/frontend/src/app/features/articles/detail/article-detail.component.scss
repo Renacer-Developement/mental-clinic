@@ -209,7 +209,10 @@
   &__img {
     display: block;
     width: 100%;
-    height: clamp(260px, 42vw, 560px);
+    // The covers' own 1200×630 shape, so a banner is never cropped; capped so it
+    // doesn't fill the whole screen on very wide layouts
+    aspect-ratio: 1200 / 630;
+    max-height: 560px;
     object-fit: cover;
   }
 }

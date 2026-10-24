@@ -99,7 +99,8 @@
 
 .art__img-wrap {
   overflow: hidden;
-  aspect-ratio: 16 / 10;
+  // The covers' own 1200×630 shape, so the featured article's banner shows whole
+  aspect-ratio: 1200 / 630;
   margin-bottom: 1.5rem;
   border-radius: 4px;
   background: $accent-soft;
