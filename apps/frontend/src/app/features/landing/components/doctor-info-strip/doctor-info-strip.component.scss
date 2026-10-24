@@ -210,3 +210,33 @@ em.strip-title__line {
   line-height: 1.6;
   color: rgba($paper, 0.6);
 }
+
+// ── Phones: same content, tighter rhythm ──────────────────────────────────────
+@media (max-width: 640px) {
+  .info-strip__inner { padding-block: 3rem; }
+
+  .strip-head { row-gap: 1.25rem; }
+
+  .strip-desc {
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+
+  .strip-rule { margin: 1.75rem 0; }
+
+  .strip-body { row-gap: 1.25rem; }
+
+  .strip-years__num { font-size: 3rem; }
+
+  .strip-specs { gap: 0; }
+
+  .spec { padding: 0.85rem 0; }
+
+  .spec__title {
+    margin-bottom: 0.15rem;
+    font-size: 1.15rem;
+  }
+
+  .spec__text { font-size: 0.85rem; }
+}

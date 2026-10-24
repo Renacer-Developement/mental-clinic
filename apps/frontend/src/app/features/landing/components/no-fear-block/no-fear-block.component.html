@@ -10,10 +10,17 @@
     </div>
 
     <ul class="fact-list">
-      @for (fact of facts; track fact.title) {
-        <li class="fact-card">
-          <h3 class="fact-title">{{ fact.title }}</h3>
-          <p class="fact-text">{{ fact.text }}</p>
+      @for (fact of facts; track fact.title; let i = $index) {
+        <!-- Phones: an accordion (one fact open at a time); wider screens show every text -->
+        <li class="fact-card" [class.is-open]="openFact() === i">
+          <h3 class="fact-title">
+            <button class="fact-toggle" type="button" (click)="toggle(i)"
+                    [attr.aria-expanded]="openFact() === i" [attr.aria-controls]="'fact-text-' + i">
+              {{ fact.title }}
+              <span class="fact-chevron" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <p class="fact-text" [id]="'fact-text-' + i">{{ fact.text }}</p>
         </li>
       }
     </ul>

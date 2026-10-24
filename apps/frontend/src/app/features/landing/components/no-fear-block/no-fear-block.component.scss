@@ -59,7 +59,7 @@
 
   @media (max-width: 640px) {
     grid-template-columns: 1fr;
-    gap: 2.25rem;
+    gap: 0;
   }
 }
 
@@ -83,4 +83,72 @@
   font-size: 0.95rem;
   line-height: 1.7;
   color: $body-text-color;
+}
+
+// The title is a button so phones can fold the facts; on wider screens it reads as plain text
+.fact-toggle {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: left;
+  color: inherit;
+  cursor: default;
+}
+
+.fact-chevron { display: none; }
+
+// ── Phones: accordion ─────────────────────────────────────────────────────────
+
+@media (max-width: 640px) {
+  .no-fear-section { padding: 3.5rem 0 3rem; }
+
+  .no-fear-inner { row-gap: 1.25rem; }
+
+  .fact-card { padding-top: 0; }
+
+  .fact-title { margin: 0; }
+
+  .fact-toggle {
+    align-items: center;
+    padding-block: 1rem;
+    cursor: pointer;
+  }
+
+  .fact-chevron {
+    position: relative;
+    display: block;
+    flex-shrink: 0;
+    width: 12px;
+    height: 12px;
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      top: 5px;
+      left: 0;
+      width: 12px;
+      height: 2px;
+      background: currentColor;
+      transition: transform 0.2s $ease-out-soft;
+    }
+
+    &::after { transform: rotate(90deg); }
+  }
+
+  .fact-card.is-open .fact-chevron::after { transform: rotate(0deg); }
+
+  .fact-text {
+    display: none;
+    padding-bottom: 1.1rem;
+  }
+
+  .fact-card.is-open .fact-text { display: block; }
 }

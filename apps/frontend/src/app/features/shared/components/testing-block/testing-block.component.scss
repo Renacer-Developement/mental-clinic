@@ -89,3 +89,9 @@
 @media (max-width: 640px) {
   .all-tests-link { display: none; }
 }
+
+// Phones: the rows below are one line each, so the section spacing shrinks to match
+@media (max-width: 480px) {
+  .testing-section { padding-block: 3rem; }
+  .testing-section__header { margin-bottom: 1.25rem; }
+}

@@ -104,3 +104,25 @@
     .cond-card__more { opacity: 1; transform: none; }
   }
 }
+
+// ── Phones: a compact list of links ───────────────────────────────────────────
+// The block moves up to just under the reviews on phones; one line per condition
+// (name + arrow) keeps it to about one screen. The teasers stay on wider screens.
+@media (max-width: 480px) {
+  .cond-section { padding: 3rem 0; }
+
+  .cond-head { margin-bottom: 1.25rem; }
+
+  .cond-card {
+    padding: 0.95rem 2rem 0.95rem 0;
+
+    h3 { margin: 0; font-size: 1.15rem; }
+    p { display: none; }
+  }
+
+  .cond-card__more {
+    top: 50%;
+    opacity: 1;
+    transform: translateY(-50%);
+  }
+}

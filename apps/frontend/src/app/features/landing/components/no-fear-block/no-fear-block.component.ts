@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { AnimatedSection } from '../../../../shared/animation/animated-section';
 import { AnimeModule } from '../../../../shared/animation/anime.service';
 
@@ -32,6 +32,13 @@ export class NoFearBlockComponent extends AnimatedSection {
       text: 'Що раніше звернутися по допомогу, то коротший і легший шлях до одужання. Не чекайте, поки стан погіршиться — психічне здоров\'я заслуговує уваги зараз.'
     }
   ];
+
+  /** Phones only: which fact is expanded (the first one by default). */
+  readonly openFact = signal<number | null>(0);
+
+  toggle(i: number): void {
+    this.openFact.update(open => (open === i ? null : i));
+  }
 
   protected setup({ animate, stagger, utils }: AnimeModule, root: HTMLElement): void {
     utils.set(['.no-fear-eyebrow', '.no-fear-heading', '.no-fear-lead'], { opacity: 0, translateY: 24 });

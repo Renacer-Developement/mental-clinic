@@ -158,3 +158,24 @@
     opacity: 0.65;
   }
 }
+
+// ── Phones: what we treat and the tests come right after the reviews ──────────
+// Most phone visitors scroll through about a third of the page, so the entry points
+// to the condition and test pages move up; the doctor and "no fear" blocks follow.
+@media (max-width: 768px) {
+  .landing-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
+  app-hero-banner       { order: 1; }
+  app-reviews-block     { order: 2; }
+  app-conditions-block  { order: 3; }
+  app-testing-block     { order: 4; }
+  app-doctor-info-strip { order: 5; }
+  app-no-fear-block     { order: 6; }
+  app-consultation-block { order: 7; }
+  app-latest-articles   { order: 8; }
+  .contract-section     { order: 9; }
+  app-telegram-banner   { order: 10; }
+}
