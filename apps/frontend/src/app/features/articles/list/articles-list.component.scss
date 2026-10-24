@@ -239,7 +239,7 @@
   overflow: hidden;
   background: $paper;
 
-  &__thumb { aspect-ratio: 16 / 10; }
+  &__thumb { aspect-ratio: 1200 / 630; } // the covers' own shape
 
   &__body {
     display: flex;

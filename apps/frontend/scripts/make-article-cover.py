@@ -2,8 +2,8 @@
 
     python3 apps/frontend/scripts/make-article-cover.py --title "Симптоми РДУГ у дорослих" --kicker "РДУГ" --out apps/frontend/src/assets/articles/<slug>.webp
 
-The palette rotates with the number of covers already in the output folder, so two
-consecutive articles never share colours; the composition and the shapes' size and
+The palette is the one least used by the covers already in the output folder (read from
+their background colour; ties go to the one used longest ago), so colours repeat as rarely as possible; the composition and the shapes' size and
 position come from the file name, so each article keeps its own look when regenerated.
 The cover is served from https://doctor-skripnik.com.ua/assets/articles/<slug>.webp once
 the frontend is deployed; set that URL as the article's coverImage. A 1200×630 <slug>.jpg is
@@ -36,6 +36,12 @@ PALETTES = [
     {'bg': '#5e4820', 'shape': '#8f7238', 'accent': '#eed9a8'},  # ochre / sand
     {'bg': '#5f3431', 'shape': '#8c5550', 'accent': '#ebc1bc'},  # oxblood / rose clay
     {'bg': '#1f4645', 'shape': '#3f6e6c', 'accent': '#bcdcda'},  # deep teal / mist
+    {'bg': '#36356b', 'shape': '#5a5a97', 'accent': '#cfcff0'},  # indigo / periwinkle
+    {'bg': '#474c26', 'shape': '#727843', 'accent': '#dfe2b8'},  # olive / moss
+    {'bg': '#6b2f4a', 'shape': '#985070', 'accent': '#f0c6d8'},  # berry / pink
+    {'bg': '#7a4426', 'shape': '#a96a43', 'accent': '#f3cfa9'},  # rust / apricot
+    {'bg': '#33414a', 'shape': '#566874', 'accent': '#cbd8e0'},  # slate / blue-grey
+    {'bg': '#283a2a', 'shape': '#486a4b', 'accent': '#cde3c4'},  # pine / mint
 ]
 
 
@@ -139,19 +145,36 @@ def title_layout(draw, text):
     return f, size, lines[:3]
 
 
+def pick_palette(folder, name):
+    """Least-used palette among existing covers; among equals, the one whose last use is oldest."""
+    uses = {i: (0, 0.0) for i in range(len(PALETTES))}
+    rgb = [tuple(int(p['bg'][k:k + 2], 16) for k in (1, 3, 5)) for p in PALETTES]
+    if os.path.isdir(folder):
+        for f in os.listdir(folder):
+            if not f.endswith('.webp') or f == name:
+                continue
+            path = os.path.join(folder, f)
+            px = Image.open(path).convert('RGB').getpixel((4, 4))
+            # WebP compression shifts colours slightly, so match the nearest background
+            dist, i = min((sum((a - b) ** 2 for a, b in zip(px, c)), i) for i, c in enumerate(rgb))
+            if dist <= 300:
+                count, last = uses[i]
+                uses[i] = (count + 1, max(last, os.path.getmtime(path)))
+    return min(uses, key=lambda i: (uses[i][0], uses[i][1], i))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--title', required=True, help='short banner title, ~2–6 words')
     ap.add_argument('--kicker', required=True, help='topic chip, e.g. "РДУГ", "Депресія"')
     ap.add_argument('--out', required=True)
-    ap.add_argument('--palette', type=int, help='palette index 0–6, to override the rotation when redrawing several covers at once')
+    ap.add_argument('--palette', type=int, help='palette index 0–12, instead of the least-used one')
     args = ap.parse_args()
 
     name = os.path.basename(args.out)
     folder = os.path.dirname(args.out) or '.'
-    existing = sorted(f for f in os.listdir(folder) if f.endswith('.webp') and f != name) if os.path.isdir(folder) else []
     seed = hashlib.md5(name.encode()).digest()
-    palette = PALETTES[(args.palette if args.palette is not None else len(existing)) % len(PALETTES)]
+    palette = PALETTES[(args.palette if args.palette is not None else pick_palette(folder, name)) % len(PALETTES)]
     layout = LAYOUTS[seed[0] % len(LAYOUTS)]
 
     im = Image.new('RGB', (W * SUPERSAMPLE, H * SUPERSAMPLE), palette['bg'])
