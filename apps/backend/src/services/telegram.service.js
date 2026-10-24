@@ -39,6 +39,14 @@ const sendTelegramMessage = async (
     });
 };
 
+/** Sends a photo by URL (Telegram downloads it) with an optional HTML caption. */
+const sendTelegramPhoto = (token, chatId, photoUrl, caption) =>
+    callTelegram(token, 'sendPhoto', {
+        chat_id: chatId,
+        photo: photoUrl,
+        ...(caption ? { caption, parse_mode: 'HTML' } : {}),
+    });
+
 /** Replaces the text and buttons of a message the bot sent earlier. */
 const editTelegramMessage = (token, chatId, messageId, text, replyMarkup) =>
     callTelegram(token, 'editMessageText', {
@@ -54,4 +62,4 @@ const editTelegramMessage = (token, chatId, messageId, text, replyMarkup) =>
 const answerCallbackQuery = (token, callbackQueryId, text) =>
     callTelegram(token, 'answerCallbackQuery', { callback_query_id: callbackQueryId, ...(text ? { text } : {}) });
 
-module.exports = { escapeHtml, sendTelegramMessage, editTelegramMessage, answerCallbackQuery };
+module.exports = { escapeHtml, sendTelegramMessage, sendTelegramPhoto, editTelegramMessage, answerCallbackQuery };

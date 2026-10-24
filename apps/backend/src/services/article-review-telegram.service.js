@@ -1,4 +1,4 @@
-const { escapeHtml, sendTelegramMessage, editTelegramMessage } = require('./telegram.service');
+const { escapeHtml, sendTelegramMessage, sendTelegramPhoto, editTelegramMessage } = require('./telegram.service');
 
 // Review of auto-written article drafts in the support bot (TELEGRAM_BOT_TOKEN): the article
 // text, then a summary message whose buttons publish or reject the draft.
@@ -86,7 +86,9 @@ const renderSummary = (a) => {
         '',
         statusLine(a),
         '',
-        `<a href="${ADMIN_URL}/articles/${a._id}/edit">Редагувати в адмінці</a>`,
+        // Drafts open by direct link (noindex), so the doctor can see the page before publishing
+        ...(a.status === 'published' ? [] : [`👁 <a href="${SITE_URL}/articles/${a.slug}">Переглянути на сайті</a>`]),
+        `✏️ <a href="${ADMIN_URL}/articles/${a._id}/edit">Редагувати в адмінці</a>`,
     ].join('\n');
 };
 
@@ -99,8 +101,8 @@ const reviewKeyboard = (a) => {
 };
 
 /**
- * Sends the draft for review to every staff chat: the article text (split into parts),
- * then the summary with buttons. Stores the summary messages on `article.tgReview` (saved by the caller).
+ * Sends the draft for review to every staff chat: the cover, the article text (split into
+ * parts), then the summary with buttons and preview/admin links. Stores the summary messages on `article.tgReview` (saved by the caller).
  */
 const notifyDraftForReview = async (article) => {
     const bot = reviewBot();
@@ -108,6 +110,11 @@ const notifyDraftForReview = async (article) => {
 
     const parts = chunk(`<b>${escapeHtml(article.title)}</b>\n\n${toTelegramHtml(article.content)}`);
     const results = await Promise.allSettled(bot.chatIds.map(async (chatId) => {
+        // The banner first; a missing image (not deployed yet) shouldn't stop the review
+        if (article.coverImage) {
+            await sendTelegramPhoto(bot.token, chatId, article.coverImage)
+                .catch(err => console.log(`Telegram: cover not sent — ${err.message}`));
+        }
         for (const [i, part] of parts.entries()) {
             const header = parts.length > 1 ? `<i>Нова стаття на перевірку (${i + 1}/${parts.length})</i>\n\n` : '';
             await sendTelegramMessage(header + part, { token: bot.token, chatId });

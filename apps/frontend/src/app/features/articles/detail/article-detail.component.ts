@@ -366,6 +366,8 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
       title: fitTitle(a.title, ' | Психіатр Євген Скрипник', ' | Д-р Скрипник'),
       description: fitDescription(a.excerpt ?? a.title),
       canonical,
+      // Drafts open by direct link as a preview for the doctor; keep them out of search
+      ...(a.status === 'draft' ? { robots: 'noindex, nofollow' } : {}),
       ogType: 'article',
       schema: {
         '@context': 'https://schema.org',
