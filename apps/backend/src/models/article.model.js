@@ -20,6 +20,11 @@ const articleSchema = new mongoose.Schema(
         views:      { type: Number, default: 0 },
         isFeatured: { type: Boolean, default: false },
         readTime:   { type: Number },
+        // Review of auto-written drafts in the support bot: the summary message with the
+        // Опублікувати / Відхилити buttons in each staff chat, and who rejected the draft
+        tgReview:       [{ _id: false, chatId: String, messageId: Number }],
+        rejectedAt:     { type: Date },
+        rejectedByName: { type: String },
     },
     { timestamps: true }
 );

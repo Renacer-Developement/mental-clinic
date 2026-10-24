@@ -1,7 +1,9 @@
-// Saves an article as a draft (status: 'draft') so it shows up in the admin for a doctor
-// to review and publish. Used by the scheduled article-writing task.
+// Saves an article as a draft (status: 'draft') so it shows up in the admin, and sends it to
+// the support bot where a doctor publishes or rejects it. Used by the scheduled article task.
+// Telegram needs TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID in apps/backend/.env.
 //
 //   node scripts/create-article-draft.js <article.json> [--dry-run]
+//   node scripts/create-article-draft.js --notify <article id>   (re-send a draft to Telegram)
 //
 // article.json: { title, excerpt, content (HTML), categories: [], tags: [], relatedTests: [test slugs] }
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
@@ -10,6 +12,7 @@ const mongoose = require('mongoose');
 const Article = require('../src/models/article.model');
 const Test = require('../src/models/test.model');
 const { ukrainianToSlug } = require('../src/utils/slug');
+const { notifyDraftForReview } = require('../src/services/article-review-telegram.service');
 
 // Same list as the admin's article form, so the admin can still edit the draft's categories
 const CATEGORIES = [
@@ -23,9 +26,37 @@ const AUTHOR_NAME = 'Євген Скрипник';
 
 const fail = (msg) => { console.error(`Error: ${msg}`); process.exit(1); };
 
+/**
+ * Sends the draft to the support bot with Опублікувати / Відхилити buttons. A Telegram
+ * failure doesn't undo the draft: it stays in the admin and can be resent with --notify.
+ */
+async function sendForReview(article) {
+    try {
+        await notifyDraftForReview(article);
+        console.log(`Telegram: sent for review to ${article.tgReview.length} chat(s)`);
+    } catch (err) {
+        console.log(`Telegram: NOT sent — ${err.message}. Resend with: node scripts/create-article-draft.js --notify ${article._id}`);
+    }
+    if (article.tgReview?.length) await article.save();
+}
+
 async function main() {
     const [file, flag] = process.argv.slice(2);
-    if (!file) fail('usage: node scripts/create-article-draft.js <article.json> [--dry-run]');
+    if (!file) fail('usage: node scripts/create-article-draft.js <article.json> [--dry-run] | --notify <article id>');
+
+    // Re-send an existing draft for review (after a Telegram failure)
+    if (file === '--notify') {
+        await mongoose.connect(process.env.MONGODB_URI);
+        try {
+            const article = /^[0-9a-f]{24}$/i.test(flag ?? '') ? await Article.findById(flag) : null;
+            if (!article) fail(`no article with id ${flag}`);
+            if (article.status !== 'draft') fail(`article ${flag} is ${article.status}, not a draft`);
+            await sendForReview(article);
+        } finally {
+            await mongoose.disconnect();
+        }
+        return;
+    }
     const dryRun = flag === '--dry-run';
 
     const data = JSON.parse(fs.readFileSync(file, 'utf8'));
@@ -66,6 +97,7 @@ async function main() {
         }
         const saved = await Article.create(doc);
         console.log(`Draft saved: ${saved._id} "${saved.title}" (slug ${saved.slug})`);
+        await sendForReview(saved);
     } finally {
         await mongoose.disconnect();
     }
