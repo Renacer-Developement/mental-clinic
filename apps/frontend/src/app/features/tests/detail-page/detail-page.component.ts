@@ -9,12 +9,12 @@ import { throwError } from 'rxjs';
 import { SeoService } from '../../../core/seo/seo.service';
 import { fitDescription, fitTitle } from '../../../core/seo/seo-text.utils';
 import { TestService } from '../services/test.service';
-import { Test, testKey } from '../models/test.model';
+import { pluralQuestions, Test, testKey } from '../models/test.model';
 import { specializedTests } from '../constants/specialized-test-types.enum';
 import { CATEGORY_SECTIONS, searchPhraseOf, sectionOf } from '../constants/test-sections.constants';
 import { TEST_CATEGORY_CONTENT } from '../constants/test-category-content.constants';
 import { ConditionContent, conditionForTestSection } from '../../conditions/conditions.data';
-import { methodCodeOf } from '../constants/test-method-codes.constants';
+import { codeInName, methodCodeOf, withMethodCode } from '../constants/test-method-codes.constants';
 import { TEST_KEYWORDS } from '../constants/test-keywords.constants';
 import { TEST_ABOUT, TestAbout } from '../constants/test-about.constants';
 import { clinicContacts } from '../../shared/constants/contacts.constants';
@@ -817,7 +817,7 @@ export class DetailPageComponent implements OnInit {
 
   /** Answers to what people ask about a test; rendered on the page and mirrored as FAQPage schema. */
   private buildFaq(test: Test, code: string | null): { q: string; a: string }[] {
-    const subject = code ? `${test.name} (${code})` : test.name;
+    const subject = withMethodCode(test.name, code);
     const n = test.questions?.length ?? 0;
     const faq: { q: string; a: string }[] = [];
 
@@ -865,15 +865,21 @@ export class DetailPageComponent implements OnInit {
       'Консультація психіатра онлайн.',
     );
 
-    const subject = code ? `${name} (${code})` : name;
+    const subject = withMethodCode(name, code);
     const phrase = this.searchPhrase;
     // "Тест на РДУГ: …" is never cut: the search phrase leads, and cutting would drop
     // the scale code (GAD-7, ASRS-v1.1) or leave a dangling word — Google shows "…" itself.
-    const searchTitle = `${phrase}: ${subject}`;
+    // A long scale name with a code gives way to the code alone ("Тест на … (EPDS)"),
+    // so the title still fits; the full name stays in the H1.
+    const shortCode = code ?? codeInName(name);
+    const searchTitles = [`${phrase}: ${subject}`, ...(shortCode ? [`${phrase} (${shortCode})`] : [])];
+    const searchTitle = searchTitles
+      .flatMap(t => [t + ' — онлайн безкоштовно', t + ' — онлайн'])
+      .find(t => t.length <= 60) ?? searchTitles[0];
 
     this.seo.updatePage({
       title: phrase
-        ? [' — онлайн безкоштовно', ' — онлайн'].map(s => searchTitle + s).find(t => t.length <= 60) ?? searchTitle
+        ? searchTitle
         : fitTitle(subject, ' — тест онлайн безкоштовно', ' — пройти тест онлайн', ' — тест онлайн'),
       description: seoDescription,
       keywords: this.searchKeywords,
@@ -921,10 +927,6 @@ const bandFor = <T extends { range: [number, number | null] }>(bands: T[], score
   bands
     .filter(b => b.range?.length === 2 && score >= b.range[0])
     .sort((a, b) => b.range[0] - a.range[0])[0];
-
-/** 1 питання, 2–4 питання, 5+ питань (11–14 питань). */
-const pluralQuestions = (n: number): string =>
-  n % 10 >= 1 && n % 10 <= 4 && !(n % 100 >= 11 && n % 100 <= 14) ? 'питання' : 'питань';
 
 /** "Норма" → "норма", but keeps abbreviations like "ПТСР" intact. */
 const lowerFirst = (s: string): string =>

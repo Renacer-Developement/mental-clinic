@@ -283,6 +283,109 @@ $rule: 1px solid rgba($heading-color, 0.14);
   &:hover { background: $primary-ink; }
 }
 
+// ── Which test to choose ──────────────────────────────────────────────────────
+
+.tl-guide {
+  border-top: $rule;
+  padding-block: 4.5rem;
+
+  @media (max-width: 768px) { padding-block: 3.25rem; }
+}
+
+.tl-guide__inner {
+  @include grid-12;
+  row-gap: 2rem;
+
+  > .tl-title { grid-column: 1 / -1; margin: 0; }
+}
+
+.tl-compare {
+  grid-column: 1 / -1;
+  overflow-x: auto;
+
+  table {
+    width: 100%;
+    min-width: 560px;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  th, td {
+    padding: 0.85rem 1rem 0.85rem 0;
+    border-bottom: $rule;
+    text-align: left;
+    vertical-align: top;
+    color: $body-text-color;
+  }
+
+  thead th {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: $primary-ink;
+  }
+
+  tbody th { font-weight: 600; white-space: nowrap; }
+  .tl-compare__unit { display: none; }
+  td:nth-child(2), td:nth-child(3) { white-space: nowrap; }
+
+  // Phones: each row becomes a card (name / "9 питань · 2–3 хв" / purpose) instead of
+  // a sideways-scrolling table that hides the "for what" column
+  @media (max-width: 640px) {
+    table { min-width: 0; }
+    thead { display: none; }
+
+    tr {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      column-gap: 0.75rem;
+      row-gap: 0.25rem;
+      padding-block: 0.9rem;
+      border-bottom: $rule;
+    }
+
+    th, td { padding: 0; border: 0; }
+    tbody th, td:nth-child(4) { grid-column: 1 / -1; }
+    td:nth-child(2), td:nth-child(3) { font-size: 0.85rem; }
+    .tl-compare__unit { display: inline; }
+  }
+
+  a {
+    color: $heading-color;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+
+    &:hover { color: $primary-ink; }
+  }
+}
+
+.tl-guide__text {
+  grid-column: 1 / span 8;
+
+  @media (max-width: 960px) { grid-column: 1 / -1; }
+
+  h3 {
+    margin: 2rem 0 0.75rem;
+    font-family: $font-display;
+    font-size: 1.35rem;
+    font-weight: 400;
+    line-height: 1.3;
+    color: $heading-color;
+
+    &:first-child { margin-top: 0; }
+  }
+
+  p {
+    margin: 0 0 1rem;
+    font-size: 0.98rem;
+    line-height: 1.7;
+    color: $body-text-color;
+  }
+}
+
 // ── About + FAQ ───────────────────────────────────────────────────────────────
 
 .tl-about {

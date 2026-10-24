@@ -72,6 +72,44 @@
     </div>
   </section>
 
+  <!-- ── Which test to choose ────────────────────────────────────────────── -->
+  @if (content.guide; as guide) {
+    <section class="tl-guide" aria-labelledby="tl-guide-title">
+      <div class="tl-guide__inner">
+        <h2 class="tl-title" id="tl-guide-title">{{ guide.title }}</h2>
+
+        @if (guide.compare?.length) {
+          <div class="tl-compare">
+            <table>
+              <thead>
+                <tr><th scope="col">Тест</th><th scope="col">Питань</th><th scope="col">Час</th><th scope="col">Для чого</th></tr>
+              </thead>
+              <tbody>
+                @for (row of guide.compare; track row.slug) {
+                  <tr>
+                    <th scope="row"><a [routerLink]="['/test/detail', row.slug]">{{ row.name }}</a></th>
+                    <td>{{ row.questions }}<span class="tl-compare__unit"> {{ pluralQuestions(row.questions) }} ·</span></td>
+                    <td>{{ row.time }}</td>
+                    <td>{{ row.bestFor }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+
+        <div class="tl-guide__text">
+          @for (s of guide.sections; track s.h) {
+            <h3>{{ s.h }}</h3>
+            @for (p of s.p; track $index) {
+              <p>{{ p }}</p>
+            }
+          }
+        </div>
+      </div>
+    </section>
+  }
+
   <!-- ── About + FAQ ─────────────────────────────────────────────────────── -->
   @if (content.intro.length > 1 || content.faq?.length) {
     <section class="tl-about" aria-labelledby="tl-about-title">

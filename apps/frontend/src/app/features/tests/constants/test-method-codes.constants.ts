@@ -15,6 +15,17 @@ export const TEST_METHOD_CODES: Record<string, string> = {
   '67ec1d76af2388823db375ab': 'HCL-32',  // Опитувальник симптомів гіпоманії (32 питання)
 };
 
+/**
+ * "Name (CODE)"; a name that already ends in a local abbreviation gets the code added
+ * inside the same brackets — "…депресії (ЕШПД, EPDS)", not "(ЕШПД) (EPDS)".
+ */
+export const withMethodCode = (name: string, code: string | null): string =>
+  !code ? name : /\)\s*$/.test(name) ? name.replace(/\)\s*$/, `, ${code})`) : `${name} (${code})`;
+
+/** A Latin scale code the test name itself ends with: "…(HADS)", "… - GAD-7", "…(ASRS-v1.1)". */
+export const codeInName = (name: string): string | null =>
+  name.match(/(?:\(|\s-\s)([A-Z][A-Za-z0-9.-]*[A-Z0-9])\)?\s*$/)?.[1] ?? null;
+
 /** The scale abbreviation for a test, unless its name already contains it. */
 export const methodCodeOf = (id: string, name: string): string | null => {
   const code = TEST_METHOD_CODES[id];

@@ -51,3 +51,6 @@ export interface Test {
 /** URL key for /test/detail/:id — the slug once the API has one, else the Mongo id. */
 export const testKey = (t?: Pick<Test, '_id' | 'slug'> | null): string => t?.slug || t?._id || '';
 
+/** 1 питання, 2–4 питання, 5+ питань (11–14 питань). */
+export const pluralQuestions = (n: number): string =>
+  n % 10 >= 1 && n % 10 <= 4 && !(n % 100 >= 11 && n % 100 <= 14) ? 'питання' : 'питань';

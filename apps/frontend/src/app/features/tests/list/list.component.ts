@@ -5,6 +5,7 @@ import { TestsGridComponent } from '../components/tests-grid/tests-grid.componen
 import { afterNextRender, Component, DestroyRef, inject, Injector, OnInit, PLATFORM_ID } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ALL_TESTS_CONTENT, TEST_CATEGORY_CONTENT, TestCategoryContent } from '../constants/test-category-content.constants';
+import { pluralQuestions } from '../models/test.model';
 import { ConditionContent, conditionForTestCategory } from '../../conditions/conditions.data';
 import { SECTION } from '../../../shared/constants/section-ids.constants';
 import { SeoService } from '../../../core/seo/seo.service';
@@ -29,6 +30,7 @@ export class ListComponent extends AnimatedSection implements OnInit {
   private readonly injector = inject(Injector);
 
   protected readonly SECTION = SECTION;
+  protected readonly pluralQuestions = pluralQuestions;
   protected readonly CATEGORY_LINKS = Object.entries(TEST_CATEGORY_CONTENT).map(([slug, c]) => ({ slug, label: c.label }));
 
   type = '';

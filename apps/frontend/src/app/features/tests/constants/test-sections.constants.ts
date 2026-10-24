@@ -59,6 +59,19 @@ const SECTION_SEARCH_PHRASES: Record<string, string> = {
   'Харчова поведінка':   'Тест на розлад харчової поведінки',
 };
 
+// Tests whose own search differs from their section's. Without these, every depression
+// scale's title opened with "Тест на депресію" and they competed with /test/list/depression
+// (and each other) for that query. Keyed by test id.
+const TEST_SEARCH_PHRASES: Record<string, string> = {
+  '67a29865256728f75cf501b1': 'Тест на післяпологову депресію',  // EPDS
+  '67a39e28588254b696a81c77': 'Тест на депресію у літніх людей', // GDS-15
+  '67bdaed1af2388823d9f3400': 'Тест на тривогу і депресію',      // HADS
+  '67a3acda588254b696a82bae': 'Тест на соціофобію',              // SPIN
+  '67a3b288588254b696a8314b': 'Тест на іпохондрію',              // Тривога за здоров'я
+  '67ec1d76af2388823db375ab': 'Тест на гіпоманію',               // HCL-32
+  '69afc9ffaf120328b6db872a': 'Тест на РДУГ у дорослих',         // ASRS-v1.1
+};
+
 // Scales people search by author: "тест Бека", "тести Гамільтона".
 const EPONYM = /Бека|Гамільтона|Йеля-Брауна/;
 
@@ -68,7 +81,10 @@ const EPONYM = /Бека|Гамільтона|Йеля-Брауна/;
  */
 export const searchPhraseOf = (test: Test): string | null => {
   const name = test.name ?? '';
-  const phrase = /^\s*тест/i.test(name) ? null : SECTION_SEARCH_PHRASES[sectionOf(test)] ?? null;
+  if (/^\s*тест/i.test(name)) return null;
+  const own = TEST_SEARCH_PHRASES[test._id ?? ''];
+  if (own) return own;
+  const phrase = SECTION_SEARCH_PHRASES[sectionOf(test)] ?? null;
   const author = name.match(EPONYM)?.[0];
   return phrase && author ? phrase.replace(/^Тест/, `Тест ${author}`) : phrase;
 };
