@@ -1,4 +1,4 @@
-"""Branded 1200×630 article cover, each one different from the last.
+"""Branded article cover (1200×630 layout, saved at 2× — 2400×1260), each one different from the last.
 
     python3 apps/frontend/scripts/make-article-cover.py --title "Симптоми РДУГ у дорослих" --kicker "РДУГ" --out apps/frontend/src/assets/articles/<slug>.webp
 
@@ -13,7 +13,10 @@ import hashlib
 import os
 from PIL import Image, ImageDraw, ImageFont
 
+# Layout units are a 1200×630 canvas. It is drawn SUPERSAMPLE times larger and scaled down
+# to OUTPUT_SCALE× so edges are smooth and text stays sharp on wide and retina screens.
 W, H = 1200, 630
+SUPERSAMPLE, OUTPUT_SCALE = 4, 2
 # Cards crop the cover to 16:10 and 4:3 (up to 180px off each side), so text starts at 200
 TEXT_X, TITLE_MAX_W = 200, 600
 FONT_BOLD = '/System/Library/Fonts/Supplemental/Arial Bold.ttf'
@@ -33,6 +36,37 @@ PALETTES = [
     {'bg': '#5f3431', 'shape': '#8c5550', 'accent': '#ebc1bc'},  # oxblood / rose clay
     {'bg': '#1f4645', 'shape': '#3f6e6c', 'accent': '#bcdcda'},  # deep teal / mist
 ]
+
+
+class ScaledDraw:
+    """ImageDraw in layout units: coordinates, widths and radii are multiplied by SUPERSAMPLE."""
+
+    def __init__(self, im):
+        self.d = ImageDraw.Draw(im)
+
+    @staticmethod
+    def _box(box):
+        return tuple(v * SUPERSAMPLE for v in box)
+
+    def ellipse(self, box, width=1, **kw):
+        self.d.ellipse(self._box(box), width=width * SUPERSAMPLE, **kw)
+
+    def rounded_rectangle(self, box, radius, width=1, **kw):
+        self.d.rounded_rectangle(self._box(box), radius=radius * SUPERSAMPLE, width=width * SUPERSAMPLE, **kw)
+
+    def rectangle(self, box, **kw):
+        self.d.rectangle(self._box(box), **kw)
+
+    def text(self, xy, text, **kw):
+        self.d.text(self._box(xy), text, **kw)
+
+    def textlength(self, text, font):
+        return self.d.textlength(text, font=font) / SUPERSAMPLE
+
+
+def font(path, size):
+    """A font whose size is given in layout units."""
+    return ImageFont.truetype(path, size * SUPERSAMPLE)
 
 
 def rnd(seed, i, lo, hi):
@@ -97,11 +131,11 @@ def wrap(draw, text, font, max_w):
 def title_layout(draw, text):
     """Largest size (60 → 40px) at which the title fits in three lines."""
     for size in range(60, 38, -2):
-        font = ImageFont.truetype(FONT_BOLD, size)
-        lines = wrap(draw, text, font, TITLE_MAX_W)
+        f = font(FONT_BOLD, size)
+        lines = wrap(draw, text, f, TITLE_MAX_W)
         if len(lines) <= 3:
-            return font, lines
-    return font, lines[:3]
+            return f, size, lines
+    return f, size, lines[:3]
 
 
 def main():
@@ -119,25 +153,26 @@ def main():
     palette = PALETTES[(args.palette if args.palette is not None else len(existing)) % len(PALETTES)]
     layout = LAYOUTS[seed[0] % len(LAYOUTS)]
 
-    im = Image.new('RGB', (W, H), palette['bg'])
-    d = ImageDraw.Draw(im)
+    im = Image.new('RGB', (W * SUPERSAMPLE, H * SUPERSAMPLE), palette['bg'])
+    d = ScaledDraw(im)
     layout(d, palette, seed)
 
-    chip_font = ImageFont.truetype(FONT_BOLD, 22)
+    chip_font = font(FONT_BOLD, 22)
     chip_w = d.textlength(args.kicker, font=chip_font) + 48
     d.rounded_rectangle((TEXT_X, 80, TEXT_X + chip_w, 136), radius=28, fill=palette['accent'])
     d.text((TEXT_X + 24, 108), args.kicker, font=chip_font, fill=palette['bg'], anchor='lm')
 
-    font, lines = title_layout(d, args.title)
-    line_h = int(font.size * 1.22)
+    title_font, size, lines = title_layout(d, args.title)
+    line_h = int(size * 1.22)
     for i, line in enumerate(lines):
-        d.text((TEXT_X, 196 + i * line_h), line, font=font, fill=TEXT)
+        d.text((TEXT_X, 196 + i * line_h), line, font=title_font, fill=TEXT)
 
     d.rectangle((TEXT_X, 518, TEXT_X + 120, 522), fill=palette['accent'])
-    d.text((TEXT_X, 562), FOOTER, font=ImageFont.truetype(FONT_BOLD, 24), fill=TEXT, anchor='lm')
-    d.text((TEXT_X, 597), SITE, font=ImageFont.truetype(FONT, 22), fill=palette['accent'], anchor='lm')
+    d.text((TEXT_X, 562), FOOTER, font=font(FONT_BOLD, 24), fill=TEXT, anchor='lm')
+    d.text((TEXT_X, 597), SITE, font=font(FONT, 22), fill=palette['accent'], anchor='lm')
 
-    im.save(args.out, 'WEBP', quality=88, method=6)
+    im = im.resize((W * OUTPUT_SCALE, H * OUTPUT_SCALE), Image.LANCZOS)
+    im.save(args.out, 'WEBP', quality=90, method=6)
     print(f'Cover saved: {args.out} (palette {PALETTES.index(palette)}, {layout.__name__})')
 
 
