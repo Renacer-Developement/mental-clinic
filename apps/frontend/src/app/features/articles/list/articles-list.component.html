@@ -1,139 +1,181 @@
-<div class="articles-page">
+<div class="al">
 
-  <!-- Hero -->
-  <section class="articles-hero">
-    <div class="container">
-      <nav class="articles-hero__breadcrumb">
+  <!-- ── Hero ─────────────────────────────────────────────────────────────── -->
+  <section class="al-hero">
+    <div class="al-hero__inner">
+      <nav class="al-crumbs" aria-label="Навігаційний ланцюжок">
         <a routerLink="/">Головна</a>
-        <span>/</span>
-        <span>Статті</span>
+        <span aria-hidden="true">/</span>
+        @if (categoryName()) {
+          <a routerLink="/articles">Статті</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">{{ categoryName() }}</span>
+        } @else {
+          <span aria-current="page">Статті</span>
+        }
       </nav>
-      <h1 class="articles-hero__title">Ресурси про ментальне здоров'я</h1>
-      <p class="articles-hero__lead">
-        Читайте актуальні матеріали про психічне здоров'я, сучасні підходи до лікування
-        та поради психіатра Євгена Скрипника.
-      </p>
+
+      <div class="al-hero__text">
+        <span class="al-kicker">Бібліотека</span>
+        <h1 class="al-hero__title">
+          @if (categoryName()) { Статті: {{ categoryName() }} } @else { Статті про ментальне здоров'я }
+        </h1>
+        <p class="al-hero__lead">{{ lead() }}</p>
+      </div>
+
+      @if (facets(); as f) {
+        <ul class="al-facts">
+          <li><strong>{{ f.total }}</strong><span>{{ articlesWord(f.total) }} у бібліотеці</span></li>
+          @if (topics().length) {
+            <li><strong>{{ topics().length }}</strong><span>{{ topicNames() }}</span></li>
+          }
+          <li><strong>Простою мовою</strong><span>для пацієнтів і близьких</span></li>
+        </ul>
+      }
     </div>
   </section>
 
-  <!-- Content -->
-  <section class="articles-content">
-    <div class="container">
-      <div class="agrid" [formGroup]="searchForm">
-
-        <!-- Toolbar -->
-        <div class="agrid__toolbar">
-          <div class="agrid__search">
-            <svg class="agrid__search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
-              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-            </svg>
-            <input class="agrid__search-input" formControlName="text"
-                   placeholder="Пошук статей..." type="text" autocomplete="off"/>
-            @if (searchForm.get('text')?.value) {
-              <button class="agrid__search-clear"
-                      (click)="searchForm.patchValue({ text: '' })" type="button">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                     stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
-                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-                </svg>
-              </button>
-            }
-          </div>
-
-          <div class="agrid__chips">
-            @for (cat of categories; track cat.value) {
-              <button
-                class="agrid__chip"
-                [class.agrid__chip--active]="isActiveCategory(cat)"
-                (click)="selectCategory(cat)"
-                type="button">
-                {{ cat.name }}
-              </button>
-            }
-          </div>
-        </div>
-
-        <!-- Skeleton (shown while loading) -->
-        @if (loading()) {
-          <div class="agrid__list">
-            @for (item of skeletonItems; track $index) {
-              <div class="acard-skeleton">
-                <div class="acard-skeleton__thumb">
-                  <p-skeleton width="100%" height="100%" borderRadius="0"/>
-                </div>
-                <div class="acard-skeleton__body">
-                  <p-skeleton width="90px" height="20px" borderRadius="999px"/>
-                  <p-skeleton width="65%" height="20px" borderRadius="6px"/>
-                  <p-skeleton width="100%" height="13px" borderRadius="4px"/>
-                  <p-skeleton width="85%"  height="13px" borderRadius="4px"/>
-                  <div class="acard-skeleton__footer">
-                    <p-skeleton width="110px" height="13px" borderRadius="4px"/>
-                    <p-skeleton width="80px"  height="13px" borderRadius="4px"/>
-                  </div>
-                </div>
-              </div>
-            }
-          </div>
+  <!-- ── Filters (sticky) ────────────────────────────────────────────────── -->
+  <section class="al-filters" aria-label="Фільтри статей">
+    <div class="al-filters__inner">
+      <div class="al-search">
+        <i class="pi pi-search" aria-hidden="true"></i>
+        <label class="visually-hidden" for="al-search-input">Пошук статей</label>
+        <input id="al-search-input" class="al-search__input" type="search" [formControl]="searchControl"
+               placeholder="Пошук статей…" autocomplete="off" enterkeyhint="search"/>
+        @if (searchControl.value) {
+          <button class="al-search__clear" type="button" (click)="clearSearch()" aria-label="Очистити пошук">
+            <i class="pi pi-times" aria-hidden="true"></i>
+          </button>
         }
+      </div>
 
-        <!-- Results (shown once loaded) -->
-        @if (!loading() && articlesResult()) {
-          @if (articlesResult()!.articles.length) {
-            <div class="agrid__list">
-              @for (article of articlesResult()!.articles; track article._id) {
-                <app-article-card [article]="article"/>
-              }
-            </div>
+      <label class="al-sort">
+        <span class="visually-hidden">Сортування</span>
+        <i class="pi pi-sort-alt" aria-hidden="true"></i>
+        <select class="al-sort__select" [formControl]="sortControl">
+          @for (o of SORT_OPTIONS; track o.value) {
+            <option [value]="o.value">{{ o.label }}</option>
+          }
+        </select>
+      </label>
 
-            <!-- Pagination -->
-            @if (articlesResult()!.pages > 1) {
-              <nav class="agrid__pagination" aria-label="Сторінки">
-                <button class="agrid__page agrid__page--prev"
-                        [disabled]="articlesResult()!.page <= 1"
-                        (click)="goToPage(articlesResult()!.page - 1)"
-                        type="button">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                       stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
-                    <polyline points="15 18 9 12 15 6"/>
-                  </svg>
-                </button>
+      <!-- Topics are real links (/articles/category/…), so every category page is crawlable -->
+      <nav class="al-topics" aria-label="Теми">
+        <a class="al-topic" routerLink="/articles" queryParamsHandling="preserve"
+           [class.is-active]="!category()" [attr.aria-current]="!category() ? 'page' : null">
+          Усі теми
+          @if (facets(); as f) { <span class="al-topic__count">{{ f.total }}</span> }
+        </a>
+        @for (t of topics(); track t.slug) {
+          <a class="al-topic" [routerLink]="['/articles/category', t.slug]" queryParamsHandling="preserve"
+             [class.is-active]="category() === t.slug" [attr.aria-current]="category() === t.slug ? 'page' : null">
+            {{ t.name }} <span class="al-topic__count">{{ t.count }}</span>
+          </a>
+        }
+      </nav>
+    </div>
+  </section>
 
-                @for (page of pagesArray(articlesResult()!.pages); track page) {
-                  <button class="agrid__page"
-                          [class.agrid__page--active]="page === articlesResult()!.page"
-                          (click)="goToPage(page)"
-                          type="button">
-                    {{ page }}
-                  </button>
-                }
+  <!-- ── Results ─────────────────────────────────────────────────────────── -->
+  <section class="al-body">
+    <div class="al-body__inner">
 
-                <button class="agrid__page agrid__page--next"
-                        [disabled]="articlesResult()!.page >= articlesResult()!.pages"
-                        (click)="goToPage(articlesResult()!.page + 1)"
-                        type="button">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                       stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
-                    <polyline points="9 18 15 12 9 6"/>
-                  </svg>
-                </button>
-              </nav>
-            }
-          } @else {
-            <div class="agrid__empty">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                   stroke-linecap="round" stroke-linejoin="round" width="40" height="40">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                <polyline points="14 2 14 8 20 8"/>
-              </svg>
-              <p>Статей не знайдено</p>
-              <button class="agrid__reset" (click)="resetSearch()" type="button">
-                Скинути пошук
-              </button>
+      <div class="al-status" aria-live="polite">
+        @if (!loading()) {
+          <p class="al-status__count">
+            <strong>{{ total() }}</strong> {{ articlesWord(total()) }}
+            @if (query()) { за запитом «{{ query() }}» }
+            @if (categoryName()) { у темі «{{ categoryName() }}» }
+          </p>
+        }
+        @if (hasFilters()) {
+          <button class="al-status__reset" type="button" (click)="resetFilters()">
+            <i class="pi pi-times" aria-hidden="true"></i> Скинути фільтри
+          </button>
+        }
+      </div>
+
+      @if (loading()) {
+        <div class="al-grid" aria-hidden="true">
+          @for (item of skeletonItems; track $index) {
+            <div class="al-skeleton">
+              <p-skeleton width="100%" height="100%" styleClass="al-skeleton__thumb" borderRadius="0"/>
+              <div class="al-skeleton__body">
+                <p-skeleton width="90px" height="20px" borderRadius="999px"/>
+                <p-skeleton width="80%" height="20px" borderRadius="6px"/>
+                <p-skeleton width="100%" height="13px" borderRadius="4px"/>
+                <p-skeleton width="60%" height="13px" borderRadius="4px"/>
+              </div>
             </div>
           }
+        </div>
+      } @else if (articles().length) {
+
+        @if (featured(); as f) {
+          <a class="al-featured" [routerLink]="['/articles', f.slug ?? f._id]">
+            <div class="al-featured__media">
+              @if (f.coverImage) {
+                <img [src]="f.coverImage" [alt]="f.title" width="1200" height="630" fetchpriority="high"/>
+              }
+            </div>
+            <div class="al-featured__body">
+              <span class="al-featured__label">Нове</span>
+              <h2 class="al-featured__title"><span>{{ f.title }}</span></h2>
+              @if (f.excerpt) { <p class="al-featured__excerpt">{{ f.excerpt }}</p> }
+              <p class="al-featured__meta">
+                {{ formatDate(f.publishedAt ?? f.createdAt) }}
+                @if (f.readTime) { <span aria-hidden="true">·</span> {{ f.readTime }} хв читання }
+              </p>
+              <span class="al-featured__go">Читати статтю <span aria-hidden="true">→</span></span>
+            </div>
+          </a>
         }
 
+        @if (gridArticles().length) {
+          <div class="al-grid">
+            @for (article of gridArticles(); track article._id) {
+              <app-article-card [article]="article"/>
+            }
+          </div>
+        }
+
+        @if (canLoadMore()) {
+          <div class="al-more">
+            <p class="al-more__progress">Показано {{ articles().length }} з {{ total() }}</p>
+            <button class="al-more__btn" type="button" (click)="loadMore()" [disabled]="loadingMore()">
+              @if (loadingMore()) { Завантаження… } @else { Показати ще }
+            </button>
+          </div>
+        }
+
+      } @else {
+        <div class="al-empty">
+          <i class="pi pi-search" aria-hidden="true"></i>
+          <h2>Нічого не знайшли</h2>
+          <p>
+            @if (query()) { Спробуйте інше слово або коротший запит. } @else { У цій темі ще немає статей. }
+            Можливо, відповідь допоможе знайти тест або консультація.
+          </p>
+          <div class="al-empty__actions">
+            <button class="al-btn al-btn--ghost" type="button" (click)="resetFilters()">Усі статті</button>
+            <a class="al-btn" routerLink="/test/list">Пройти тест</a>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- ── Next step ───────────────────────────────────────────────────────── -->
+  <section class="al-cta">
+    <div class="al-cta__inner">
+      <div>
+        <h2 class="al-cta__title">Не знайшли відповіді на своє питання?</h2>
+        <p class="al-cta__text">Пройдіть безкоштовний тест або обговоріть свій стан з лікарем-психіатром онлайн.</p>
+      </div>
+      <div class="al-cta__actions">
+        <a class="al-btn al-btn--light" routerLink="/test/list">Психологічні тести</a>
+        <a class="al-btn al-btn--outline" routerLink="/visit">Записатися на консультацію</a>
       </div>
     </div>
   </section>

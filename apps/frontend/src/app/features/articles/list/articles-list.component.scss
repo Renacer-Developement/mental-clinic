@@ -1,256 +1,578 @@
 @use "../../../../assets/css/coloristics" as *;
 
-.articles-page {
-  display: flex;
-  flex-direction: column;
-  background: $paper;
-}
+// Articles library (/articles and /articles/category/:cat): hero with facts, a sticky
+// filter bar (search, sort, topic links with counts), the newest article as a large
+// card, a grid with "show more", and a next-step band. Filters live in the URL.
+
+$rule: 1px solid rgba($heading-color, 0.14);
+// Height of the pinned part of the desktop header, so the filter bar sticks right below it
+$header-pinned-desktop: 48px;
+
+.al { background: $paper; }
+
+.al-kicker { @include kicker; }
 
 // ── Hero ──────────────────────────────────────────────────────────────────────
 
-.articles-hero {
-  padding: 2.5rem 0 2.75rem;
-  border-bottom: 1px solid rgba($heading-color, 0.08);
+.al-hero { background: $section-bg; }
 
-  &__breadcrumb {
+.al-hero__inner {
+  @include grid-12;
+  row-gap: 1.5rem;
+  padding-block: 2rem 2.5rem;
+
+  @media (max-width: 768px) { padding-block: 1.5rem 2rem; }
+}
+
+.al-crumbs {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: $muted-text-color;
+
+  a { color: inherit; text-decoration: none; }
+  a:hover { color: $heading-color; text-decoration: underline; }
+  [aria-current] { color: $heading-color; }
+}
+
+.al-hero__text {
+  grid-column: 1 / span 8;
+
+  @media (max-width: 960px) { grid-column: 1 / -1; }
+}
+
+.al-hero__title {
+  @include section-title;
+  margin: 0.5rem 0 0;
+  font-size: clamp(2.2rem, 4.6vw, 3.8rem);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+.al-hero__lead {
+  max-width: 40rem;
+  margin: 1.1rem 0 0;
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: $body-text-color;
+}
+
+.al-facts {
+  grid-column: 1 / span 8;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: $grid-gutter;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @media (max-width: 960px) { grid-column: 1 / -1; }
+  @media (max-width: 520px) { grid-template-columns: 1fr; }
+
+  li {
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 1.75rem;
-    font-size: 0.85rem;
-    color: $muted-text-color;
-
-    a {
-      color: $muted-text-color;
-      text-decoration: none;
-      &:hover { color: $heading-color; }
-    }
-
-    span:last-child { color: $heading-color; }
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 0.85rem 0;
+    border-top: $rule;
   }
 
-  &__title {
-    margin: 0 0 1rem;
-    font-size: clamp(1.9rem, 3.4vw, 2.8rem);
-    font-weight: 800;
-    line-height: 1.15;
-    letter-spacing: -0.025em;
+  strong {
+    font-family: $font-display;
+    font-size: 1.15rem;
+    font-weight: 500;
     color: $heading-color;
   }
 
-  &__lead {
-    max-width: 620px;
-    margin: 0;
-    font-size: 1.05rem;
-    line-height: 1.75;
-    color: $body-text-color;
+  span { font-size: 0.88rem; color: $muted-text-color; }
+}
+
+// ── Filters ───────────────────────────────────────────────────────────────────
+
+.al-filters {
+  position: sticky;
+  top: $header-pinned-desktop;
+  z-index: 20;
+  border-block: $rule;
+  background: rgba($paper, 0.94);
+  backdrop-filter: saturate(1.4) blur(10px);
+
+  // Below 1025px the site header is two pinned rows (~106px); a sticky bar under it
+  // would cover a quarter of a phone screen, so there the filters scroll away
+  @media (max-width: 1024px) { position: static; }
+}
+
+.al-filters__inner {
+  @include page-frame;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "search sort" "topics topics";
+  gap: 0.75rem 1rem;
+  padding-block: 0.85rem;
+
+  // Phones: search and sort share a row, so the sticky bar stays two rows tall
+  @media (max-width: 640px) {
+    gap: 0.55rem 0.5rem;
+    padding-block: 0.6rem;
   }
 }
 
-// ── Content ───────────────────────────────────────────────────────────────────
+.al-search {
+  grid-area: search;
+  position: relative;
+  display: flex;
+  align-items: center;
+  max-width: 34rem;
 
-.articles-content {
-  flex: 1;
-  padding: 2rem 0 5rem;
-  background: $section-bg;
-}
-
-.agrid {
-  &__toolbar {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    margin-bottom: 2rem;
-  }
-
-  // search
-  &__search {
-    position: relative;
-    max-width: 480px;
-  }
-
-  &__search-icon {
+  > .pi-search {
     position: absolute;
     left: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
+    font-size: 0.9rem;
     color: $muted-text-color;
     pointer-events: none;
   }
+}
 
-  &__search-input {
-    width: 100%;
-    padding: 0.85rem 2.75rem;
-    border: 1.5px solid rgba($heading-color, 0.15);
-    border-radius: 999px;
-    background: $paper;
-    color: $heading-color;
-    font: inherit;
-    font-size: 1rem;
-    transition: border-color 0.2s;
+.al-search__input {
+  width: 100%;
+  height: 46px;
+  padding: 0 2.75rem 0 2.6rem;
+  border: 1px solid rgba($heading-color, 0.18);
+  border-radius: 999px;
+  background: #fff;
+  font: inherit;
+  font-size: 0.95rem;
+  color: $heading-color;
+  transition: border-color 0.15s, box-shadow 0.15s;
 
-    &::placeholder { color: $muted-text-color; }
+  &::placeholder { color: $muted-text-color; }
+  &::-webkit-search-cancel-button { display: none; }
 
-    &:focus {
-      outline: none;
-      border-color: $heading-color;
-    }
-  }
+  @media (max-width: 640px) { height: 42px; padding-right: 2.1rem; font-size: 0.9rem; }
 
-  &__search-clear {
-    position: absolute;
-    right: 0.75rem;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px;
-    height: 28px;
-    border: 0;
-    border-radius: 50%;
-    background: $accent-soft;
-    color: $heading-color;
-    cursor: pointer;
-  }
-
-  // category chips (same as the tests page)
-  &__chips {
-    display: flex;
-    gap: 0.5rem;
-    overflow-x: auto;
-    scrollbar-width: none;
-    padding-bottom: 0.25rem;
-
-    &::-webkit-scrollbar { display: none; }
-  }
-
-  &__chip {
-    flex-shrink: 0;
-    padding: 0.55rem 1.05rem;
-    border: 1px solid rgba($heading-color, 0.18);
-    border-radius: 999px;
-    background: $paper;
-    color: $heading-color;
-    font: inherit;
-    font-size: 0.92rem;
-    font-weight: 600;
-    white-space: nowrap;
-    cursor: pointer;
-    transition: background 0.25s, color 0.25s, border-color 0.25s;
-
-    &:hover { border-color: $heading-color; }
-
-    &--active,
-    &--active:hover {
-      background: $heading-color;
-      border-color: $heading-color;
-      color: $paper;
-    }
-  }
-
-  // article grid
-  &__list {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1.5rem;
-
-    @media (max-width: 1000px) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    @media (max-width: 600px) { grid-template-columns: 1fr; }
-  }
-
-  // empty state
-  &__empty {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 4rem 1rem;
-    color: $muted-text-color;
-    text-align: center;
-
-    p {
-      margin: 0;
-      font-size: 1.05rem;
-      color: $body-text-color;
-    }
-  }
-
-  &__reset {
-    padding: 0.7rem 1.3rem;
-    border: 1.5px solid $heading-color;
-    border-radius: 999px;
-    background: transparent;
-    color: $heading-color;
-    font: inherit;
-    font-weight: 700;
-    cursor: pointer;
-
-    &:hover {
-      background: $heading-color;
-      color: $paper;
-    }
-  }
-
-  // pagination
-  &__pagination {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.4rem;
-    margin-top: 3rem;
-  }
-
-  &__page {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 42px;
-    height: 42px;
-    padding: 0 0.5rem;
-    border: 1px solid rgba($heading-color, 0.15);
-    border-radius: 999px;
-    background: $paper;
-    color: $heading-color;
-    font: inherit;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s, border-color 0.2s;
-
-    &:hover:not(:disabled) { border-color: $heading-color; }
-
-    &--active,
-    &--active:hover {
-      background: $heading-color;
-      border-color: $heading-color;
-      color: $paper;
-    }
-
-    &:disabled { opacity: 0.35; cursor: default; }
+  &:focus {
+    outline: none;
+    border-color: $primary-color;
+    box-shadow: 0 0 0 3px rgba($primary-color, 0.18);
   }
 }
 
-// ── Skeleton ──────────────────────────────────────────────────────────────────
+.al-search__clear {
+  position: absolute;
+  right: 0.4rem;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: $muted-text-color;
+  cursor: pointer;
 
-.acard-skeleton {
+  &:hover { background: $accent-soft; color: $heading-color; }
+  i { font-size: 0.8rem; }
+}
+
+.al-sort {
+  grid-area: sort;
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  > .pi {
+    position: absolute;
+    left: 0.9rem;
+    font-size: 0.85rem;
+    color: $muted-text-color;
+    pointer-events: none;
+  }
+}
+
+.al-sort__select {
+  height: 46px;
+  padding: 0 2.25rem 0 2.5rem;
+  border: 1px solid rgba($heading-color, 0.18);
+  border-radius: 999px;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236f6762' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 1rem center;
+  appearance: none;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: $heading-color;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: none;
+    border-color: $primary-color;
+    box-shadow: 0 0 0 3px rgba($primary-color, 0.18);
+  }
+
+  @media (max-width: 640px) {
+    max-width: 8.75rem;
+    height: 42px;
+    padding: 0 1.9rem 0 2.2rem;
+    font-size: 0.85rem;
+    background-position: right 0.75rem center;
+  }
+}
+
+// Horizontal scroll on phones instead of wrapping into several rows
+.al-topics {
+  grid-area: topics;
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  margin-inline: -0.25rem;
+  padding: 0.1rem 0.25rem;
+
+  &::-webkit-scrollbar { display: none; }
+}
+
+.al-topic {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.45rem;
+  height: 38px;
+  padding: 0 0.95rem;
+  border: 1px solid rgba($heading-color, 0.16);
+  border-radius: 999px;
+  background: #fff;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: $heading-color;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+
+  &:hover { border-color: $heading-color; }
+
+  &.is-active {
+    border-color: $heading-color;
+    background: $heading-color;
+    color: $paper;
+
+    .al-topic__count { background: rgba($paper, 0.18); color: $paper; }
+  }
+}
+
+.al-topic__count {
+  min-width: 1.5rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  background: $accent-soft;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-align: center;
+  color: $primary-ink;
+}
+
+// ── Results ───────────────────────────────────────────────────────────────────
+
+.al-body__inner {
+  @include page-frame;
+  padding-block: 2rem 4.5rem;
+
+  @media (max-width: 768px) { padding-block: 1.5rem 3.5rem; }
+}
+
+.al-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  min-height: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.al-status__count {
+  margin: 0;
+  font-size: 0.95rem;
+  color: $body-text-color;
+
+  strong { color: $heading-color; }
+}
+
+.al-status__reset {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.8rem;
+  border: 0;
+  border-radius: 999px;
+  background: $accent-soft;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: $primary-ink;
+  cursor: pointer;
+
+  &:hover { background: darken($accent-soft, 4%); }
+  i { font-size: 0.7rem; }
+}
+
+// Featured: cover beside the text on wide screens, stacked on phones
+.al-featured {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  margin-bottom: 2rem;
+  overflow: hidden;
+  border-radius: 22px;
+  background: $section-bg;
+  color: $heading-color;
+  text-decoration: none;
+  transition: box-shadow 0.3s;
+
+  &:hover {
+    box-shadow: 0 18px 40px rgba($heading-color, 0.1);
+
+    .al-featured__media img { transform: scale(1.02); }
+    .al-featured__title span { background-size: 100% 2px; }
+    .al-featured__go { gap: 0.7rem; }
+  }
+
+  @media (max-width: 860px) { grid-template-columns: 1fr; }
+}
+
+.al-featured__media {
+  overflow: hidden;
+  aspect-ratio: 1200 / 630;
+  align-self: center;
+  background: $accent-soft;
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s $ease-out-soft;
+  }
+}
+
+.al-featured__body {
   display: flex;
   flex-direction: column;
-  border-radius: 18px;
+  justify-content: center;
+  gap: 0.85rem;
+  padding: clamp(1.5rem, 3vw, 2.75rem);
+}
+
+.al-featured__label {
+  align-self: flex-start;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  background: $heading-color;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: $paper;
+}
+
+.al-featured__title {
+  margin: 0;
+  font-family: $font-display;
+  font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+  font-weight: 500;
+  line-height: 1.2;
+
+  span {
+    background: linear-gradient(currentColor, currentColor) 0 100% / 0 2px no-repeat;
+    transition: background-size 0.3s $ease-out-soft;
+  }
+}
+
+.al-featured__excerpt {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: $body-text-color;
+}
+
+.al-featured__meta {
+  display: flex;
+  gap: 0.4rem;
+  margin: 0;
+  font-size: 0.85rem;
+  color: $muted-text-color;
+}
+
+.al-featured__go {
+  display: inline-flex;
+  gap: 0.45rem;
+  margin-top: 0.25rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: $primary-ink;
+  transition: gap 0.2s;
+}
+
+.al-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+
+  @media (max-width: 1024px) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 640px)  { grid-template-columns: 1fr; gap: 1.25rem; }
+}
+
+.al-skeleton {
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
-  background: $paper;
+  border-radius: 18px;
+  background: #fff;
 
-  &__thumb { aspect-ratio: 1200 / 630; } // the covers' own shape
+  :deep(.al-skeleton__thumb) { aspect-ratio: 1200 / 630; height: auto !important; }
+}
 
-  &__body {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    padding: 1.25rem 1.4rem 1.4rem;
+.al-skeleton__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1.25rem;
+}
+
+.al-more {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 2.5rem;
+}
+
+.al-more__progress {
+  margin: 0;
+  font-size: 0.85rem;
+  color: $muted-text-color;
+}
+
+.al-more__btn {
+  min-width: 13rem;
+  height: 48px;
+  padding: 0 1.5rem;
+  border: 1px solid $heading-color;
+  border-radius: 999px;
+  background: transparent;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: $heading-color;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+
+  &:hover:not(:disabled) { background: $heading-color; color: $paper; }
+  &:disabled { opacity: 0.6; cursor: progress; }
+}
+
+.al-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 30rem;
+  margin: 2rem auto;
+  text-align: center;
+
+  > .pi { font-size: 1.75rem; color: $primary-color; }
+
+  h2 {
+    margin: 1rem 0 0.5rem;
+    font-family: $font-display;
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: $heading-color;
   }
 
-  &__footer {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 0.5rem;
+  p { margin: 0; line-height: 1.6; color: $body-text-color; }
+}
+
+.al-empty__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+// ── Buttons and the next-step band ────────────────────────────────────────────
+
+.al-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  padding: 0 1.4rem;
+  border: 1px solid $heading-color;
+  border-radius: 999px;
+  background: $heading-color;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: $paper;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+
+  &:hover { background: $primary-ink; border-color: $primary-ink; }
+
+  &--ghost {
+    background: transparent;
+    color: $heading-color;
+
+    &:hover { background: $accent-soft; border-color: $heading-color; }
   }
+
+  &--light {
+    border-color: $paper;
+    background: $paper;
+    color: $heading-color;
+
+    &:hover { background: $accent-color; border-color: $accent-color; }
+  }
+
+  &--outline {
+    border-color: rgba($paper, 0.5);
+    background: transparent;
+    color: $paper;
+
+    &:hover { border-color: $paper; background: rgba($paper, 0.08); }
+  }
+}
+
+.al-cta { background: $dark-bg; }
+
+.al-cta__inner {
+  @include page-frame;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem 2rem;
+  padding-block: 3rem;
+}
+
+.al-cta__title {
+  margin: 0;
+  font-family: $font-display;
+  font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+  font-weight: 500;
+  color: $paper;
+}
+
+.al-cta__text {
+  margin: 0.6rem 0 0;
+  max-width: 34rem;
+  line-height: 1.6;
+  color: rgba($paper, 0.75);
+}
+
+.al-cta__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
 }

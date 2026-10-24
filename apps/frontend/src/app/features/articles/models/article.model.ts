@@ -35,3 +35,11 @@ export interface PaginatedArticlesResponse {
   page: number;
   pages: number;
 }
+
+/** ?sort= on the public list: newest first, most viewed, or shortest read. */
+export type ArticleSort = 'newest' | 'popular' | 'short';
+
+export interface ArticleFacets {
+  total: number;
+  categories: { name: string; count: number }[];
+}
