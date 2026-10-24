@@ -362,6 +362,9 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
 
   private updateSeo(a: Article): void {
     const canonical = `/articles/${a.slug ?? a._id}`;
+    // Our own covers have a 1200×630 JPEG twin for share previews (some networks reject WebP)
+    const ownCover = /\/assets\/articles\/[\w-]+\.webp$/.test(a.coverImage ?? '');
+    const shareImage = ownCover ? a.coverImage!.replace(/\.webp$/, '.jpg') : a.coverImage;
     this.seo.updatePage({
       title: fitTitle(a.title, ' | Психіатр Євген Скрипник', ' | Д-р Скрипник'),
       description: fitDescription(a.excerpt ?? a.title),
@@ -369,6 +372,8 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
       // Drafts open by direct link as a preview for the doctor; keep them out of search
       ...(a.status === 'draft' ? { robots: 'noindex, nofollow' } : {}),
       ogType: 'article',
+      ...(shareImage ? { ogImage: shareImage, ogImageAlt: a.title } : {}),
+      ...(ownCover ? { ogImageSize: [1200, 630] as [number, number] } : {}),
       schema: {
         '@context': 'https://schema.org',
         '@type': 'Article',

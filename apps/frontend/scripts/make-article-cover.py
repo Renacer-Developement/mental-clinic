@@ -6,7 +6,8 @@ The palette rotates with the number of covers already in the output folder, so t
 consecutive articles never share colours; the composition and the shapes' size and
 position come from the file name, so each article keeps its own look when regenerated.
 The cover is served from https://doctor-skripnik.com.ua/assets/articles/<slug>.webp once
-the frontend is deployed; set that URL as the article's coverImage. Needs Pillow and macOS's Arial.
+the frontend is deployed; set that URL as the article's coverImage. A 1200×630 <slug>.jpg is
+saved next to it for share previews (og:image) — commit both. Needs Pillow and macOS's Arial.
 """
 import argparse
 import hashlib
@@ -171,9 +172,11 @@ def main():
     d.text((TEXT_X, 562), FOOTER, font=font(FONT_BOLD, 24), fill=TEXT, anchor='lm')
     d.text((TEXT_X, 597), SITE, font=font(FONT, 22), fill=palette['accent'], anchor='lm')
 
-    im = im.resize((W * OUTPUT_SCALE, H * OUTPUT_SCALE), Image.LANCZOS)
-    im.save(args.out, 'WEBP', quality=90, method=6)
-    print(f'Cover saved: {args.out} (palette {PALETTES.index(palette)}, {layout.__name__})')
+    im.resize((W * OUTPUT_SCALE, H * OUTPUT_SCALE), Image.LANCZOS).save(args.out, 'WEBP', quality=90, method=6)
+    # Share previews (og:image): JPEG at the 1200×630 size every network accepts — some don't take WebP
+    share = os.path.splitext(args.out)[0] + '.jpg'
+    im.resize((W, H), Image.LANCZOS).save(share, 'JPEG', quality=88, optimize=True, progressive=True)
+    print(f'Cover saved: {args.out} + {os.path.basename(share)} (palette {PALETTES.index(palette)}, {layout.__name__})')
 
 
 if __name__ == '__main__':

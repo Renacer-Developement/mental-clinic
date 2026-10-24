@@ -15,6 +15,8 @@ export interface PageSeoConfig {
   /** Absolute URL or site path of the share image; defaults to the logo. */
   ogImage?: string;
   ogImageAlt?: string;
+  /** Pixel size of ogImage, when known, so networks can lay out the preview before fetching it. */
+  ogImageSize?: [number, number];
   robots?: string;
 }
 
@@ -50,13 +52,14 @@ export class SeoService {
     this.meta.updateTag({ property: 'og:description', content: ogDesc });
     this.meta.updateTag({ property: 'og:image',       content: ogImage });
     this.meta.updateTag({ property: 'og:image:alt',   content: ogAlt });
-    // the size is only known for the default logo
-    if (config.ogImage) {
+    // the size is known for the default logo and for images that pass ogImageSize
+    const ogSize = config.ogImage ? config.ogImageSize : [1200, 630];
+    if (ogSize) {
+      this.meta.updateTag({ property: 'og:image:width',  content: String(ogSize[0]) });
+      this.meta.updateTag({ property: 'og:image:height', content: String(ogSize[1]) });
+    } else {
       this.meta.removeTag('property="og:image:width"');
       this.meta.removeTag('property="og:image:height"');
-    } else {
-      this.meta.updateTag({ property: 'og:image:width',  content: '1200' });
-      this.meta.updateTag({ property: 'og:image:height', content: '630' });
     }
     this.meta.updateTag({ property: 'og:type',        content: ogType });
     this.meta.updateTag({ property: 'og:url',         content: config.canonical ? this.fullUrl(config.canonical) : BASE_URL });
