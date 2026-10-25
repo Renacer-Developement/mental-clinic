@@ -2,13 +2,14 @@ import { API_ARTICLES, API_TESTS } from './app/app.constants';
 import { CONDITIONS } from './app/features/conditions/conditions.data';
 import { TEST_CATEGORY_CONTENT } from './app/features/tests/constants/test-category-content.constants';
 import { ARTICLE_CATEGORIES } from './app/features/articles/constants/article-categories.constants';
+import { PAGE_DATES } from './page-dates.generated';
 
 // /sitemap.xml, built on request from the live API (like llms.txt), so a test or
 // article published in the admin is listed without a script run or redeploy.
 
 const SITE = 'https://doctor-skripnik.com.ua';
 const TTL_MS = 60 * 60 * 1000;
-// Render's free backend can take 30–60 s to wake up; Vercel caps the function at 30 s.
+// Vercel caps the function at 30 s; give up a little before that.
 const API_TIMEOUT_MS = 25_000;
 
 interface Entry {
@@ -19,7 +20,7 @@ interface Entry {
   image?: { loc: string; title: string };
 }
 
-interface ApiTest { _id: string; slug?: string; updatedAt?: string }
+interface ApiTest { _id: string; slug?: string; type?: string; updatedAt?: string; createdAt?: string }
 interface ApiArticle {
   _id: string;
   slug?: string;
@@ -32,12 +33,15 @@ interface ApiArticle {
   createdAt?: string;
 }
 
-/** Pages that exist regardless of API content. */
-const STATIC_ENTRIES: Entry[] = [
+/**
+ * Pages that exist regardless of API content. Code-only pages are dated by their last
+ * commit (PAGE_DATES); listing pages get the date of their newest article or test in build().
+ */
+const STATIC_ENTRIES: Entry[] = ([
   { path: '/',         changefreq: 'daily',   priority: '1.0' },
   { path: '/about',    changefreq: 'monthly', priority: '0.9' },
   { path: '/visit',    changefreq: 'monthly', priority: '0.9' },
-  ...CONDITIONS.map(c => ({ path: `/${c.slug}`, changefreq: 'monthly' as const, priority: '0.9' })),
+  ...CONDITIONS.map(c => ({ path: `/${c.slug}`, changefreq: 'monthly' as const, priority: '0.9', lastmod: PAGE_DATES['conditions'] })),
   { path: '/articles', changefreq: 'daily',   priority: '0.9' },
   { path: '/test/list', changefreq: 'weekly', priority: '0.8' },
   ...Object.keys(TEST_CATEGORY_CONTENT).map(slug => ({ path: `/test/list/${slug}`, changefreq: 'weekly' as const, priority: '0.7' })),
@@ -46,13 +50,20 @@ const STATIC_ENTRIES: Entry[] = [
   // { path: '/team',     changefreq: 'monthly', priority: '0.7' },
   { path: '/pro-tsentr', changefreq: 'monthly', priority: '0.8' },
   { path: '/drugs',    changefreq: 'monthly', priority: '0.7' },
-];
+] satisfies Entry[]).map(e => ({ lastmod: PAGE_DATES[e.path], ...e }));
 
 const getJson = async <T>(url: string): Promise<T> => {
   const res = await fetch(url, { signal: AbortSignal.timeout(API_TIMEOUT_MS) });
   if (!res.ok) throw new Error(`GET ${url} → ${res.status}`);
   return (await res.json()) as T;
 };
+
+/** A Mongo ObjectId starts with its creation time in seconds. */
+const idDate = (id: string) => new Date(parseInt(id.slice(0, 8), 16) * 1000).toISOString();
+const testDate = (t: ApiTest) => t.updatedAt ?? t.createdAt ?? idDate(t._id);
+const articleDate = (a: ApiArticle) => a.updatedAt ?? a.publishedAt ?? a.createdAt ?? idDate(a._id);
+/** Latest of the given ISO dates. */
+const newest = (dates: string[]) => dates.reduce<string | undefined>((max, d) => (!max || d > max ? d : max), undefined);
 
 const escapeXml = (s: string) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -92,17 +103,32 @@ async function build(): Promise<string> {
   const articles = allArticles.filter(a => a.status === 'published' && (a.slug || a._id));
   // Empty category pages are noindex, so only list categories that have articles.
   const used = new Set(articles.flatMap(a => a.categories ?? []).map(c => c.toLowerCase()));
+  const inCategory = (cat: string) => articles.filter(a => a.categories?.some(c => c.toLowerCase() === cat));
+
+  // Listing pages change when something new appears on them.
+  const listDates: Record<string, string | undefined> = {
+    '/': newest([...articles.map(articleDate), ...tests.map(testDate)]),
+    '/articles': newest(articles.map(articleDate)),
+    '/test/list': newest(tests.map(testDate)),
+    ...Object.fromEntries(Object.keys(TEST_CATEGORY_CONTENT).map(slug =>
+      [`/test/list/${slug}`, newest(tests.filter(t => t.type === slug).map(testDate))])),
+  };
 
   return toXml([
-    ...STATIC_ENTRIES,
+    ...STATIC_ENTRIES.map(e => ({ ...e, lastmod: listDates[e.path] ?? e.lastmod })),
     ...ARTICLE_CATEGORIES
       .filter(c => c.value && used.has(c.value))
-      .map(c => ({ path: `/articles/category/${encodeURIComponent(c.value)}`, changefreq: 'weekly' as const, priority: '0.7' })),
+      .map(c => ({
+        path: `/articles/category/${encodeURIComponent(c.value)}`,
+        changefreq: 'weekly' as const,
+        priority: '0.7',
+        lastmod: newest(inCategory(c.value).map(articleDate)),
+      })),
     ...articles.map(a => ({
       path: `/articles/${encodeURIComponent(a.slug ?? a._id)}`,
       changefreq: 'monthly' as const,
       priority: '0.8',
-      lastmod: a.updatedAt ?? a.publishedAt ?? a.createdAt,
+      lastmod: articleDate(a),
       // Covers live on the API host; Google accepts image URLs on another domain.
       ...(a.coverImage?.startsWith('http') && { image: { loc: a.coverImage, title: a.title ?? '' } }),
     })),
@@ -110,7 +136,7 @@ async function build(): Promise<string> {
       path: `/test/detail/${encodeURIComponent(t.slug ?? t._id)}`,
       changefreq: 'monthly' as const,
       priority: '0.7',
-      lastmod: t.updatedAt,
+      lastmod: testDate(t),
     })),
   ]);
 }

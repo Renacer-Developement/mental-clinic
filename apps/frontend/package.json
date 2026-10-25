@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "start": "node scripts/page-dates.mjs && ng serve",
+    "build": "node scripts/page-dates.mjs && ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:mentalClinicFe": "node dist/mental-clinic-fe/server/server.mjs"
