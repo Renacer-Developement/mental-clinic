@@ -16,12 +16,15 @@ interface Entry {
   changefreq: 'daily' | 'weekly' | 'monthly';
   priority: string;
   lastmod?: string;
+  image?: { loc: string; title: string };
 }
 
 interface ApiTest { _id: string; slug?: string; updatedAt?: string }
 interface ApiArticle {
   _id: string;
   slug?: string;
+  title?: string;
+  coverImage?: string;
   status?: string;
   categories?: string[];
   updatedAt?: string;
@@ -51,17 +54,26 @@ const getJson = async <T>(url: string): Promise<T> => {
   return (await res.json()) as T;
 };
 
-const escapeXml = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const escapeXml = (s: string) =>
+  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 const toXml = (entries: Entry[]) => [
   '<?xml version="1.0" encoding="UTF-8"?>',
-  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+  // Browsers render the sitemap as a readable table; crawlers ignore the stylesheet.
+  '<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>',
+  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">',
   ...entries.map(e => [
     '  <url>',
     `    <loc>${escapeXml(SITE + e.path)}</loc>`,
     ...(e.lastmod ? [`    <lastmod>${e.lastmod.slice(0, 10)}</lastmod>`] : []),
     `    <changefreq>${e.changefreq}</changefreq>`,
     `    <priority>${e.priority}</priority>`,
+    ...(e.image ? [
+      '    <image:image>',
+      `      <image:loc>${escapeXml(e.image.loc)}</image:loc>`,
+      `      <image:title>${escapeXml(e.image.title)}</image:title>`,
+      '    </image:image>',
+    ] : []),
     '  </url>',
   ].join('\n')),
   '</urlset>',
@@ -91,6 +103,8 @@ async function build(): Promise<string> {
       changefreq: 'monthly' as const,
       priority: '0.8',
       lastmod: a.updatedAt ?? a.publishedAt ?? a.createdAt,
+      // Covers live on the API host; Google accepts image URLs on another domain.
+      ...(a.coverImage?.startsWith('http') && { image: { loc: a.coverImage, title: a.title ?? '' } }),
     })),
     ...tests.filter(t => t._id).map(t => ({
       path: `/test/detail/${encodeURIComponent(t.slug ?? t._id)}`,

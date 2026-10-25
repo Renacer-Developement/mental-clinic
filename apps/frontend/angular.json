@@ -59,6 +59,11 @@
                 "glob": "robots.txt",
                 "input": "src",
                 "output": "/"
+              },
+              {
+                "glob": "sitemap.xsl",
+                "input": "src",
+                "output": "/"
               }
             ],
             "styles": [
