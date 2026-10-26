@@ -49,7 +49,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
       error: ()    => this.contractVisible.set(false),
     });
     this.seo.updatePage({
-      title: "Ментальне здоров'я Євгена Скрипника — психіатр онлайн",
+      title: "Клініка ментального здоров'я Євгена Скрипника — психіатр онлайн",
       description: "Центр ментального здоров'я Євгена Скрипника — доказові психіатри, психотерапевти та психологи онлайн. Депресія, тривога, ПТСР, ОКР, залежності. Запис пн–сб 8:00–22:00.",
       canonical: '/',
       schema: [
@@ -58,7 +58,7 @@ export class LandingComponent implements OnInit, AfterViewInit {
           '@type': 'WebPage',
           '@id': 'https://doctor-skripnik.com.ua/#webpage',
           url: 'https://doctor-skripnik.com.ua/',
-          name: "Онлайн центр ментального здоров'я Євгена Скрипника",
+          name: "Клініка ментального здоров'я Євгена Скрипника",
           description: "Онлайн центр ментального здоров'я Євгена Скрипника: доказові психіатри, психотерапевти та психологи. Лікування депресії, тривоги, ПТСР та залежностей.",
           inLanguage: 'uk',
           isPartOf: { '@id': 'https://doctor-skripnik.com.ua/#website' },
