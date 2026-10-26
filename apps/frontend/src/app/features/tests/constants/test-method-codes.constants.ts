@@ -15,6 +15,9 @@ export const TEST_METHOD_CODES: Record<string, string> = {
   '67ec1d76af2388823db375ab': 'HCL-32',  // Опитувальник симптомів гіпоманії (32 питання)
 };
 
+/** Scales that rate how severe known symptoms are rather than screen for a disorder. */
+export const SEVERITY_SCALES = new Set(['Y-BOCS', 'HAM-A', 'HAM-D']);
+
 /**
  * "Name (CODE)"; a name that already ends in a local abbreviation gets the code added
  * inside the same brackets — "…депресії (ЕШПД, EPDS)", not "(ЕШПД) (EPDS)".

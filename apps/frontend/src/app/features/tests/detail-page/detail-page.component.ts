@@ -14,7 +14,7 @@ import { specializedTests } from '../constants/specialized-test-types.enum';
 import { CATEGORY_SECTIONS, searchPhraseOf, sectionOf } from '../constants/test-sections.constants';
 import { TEST_CATEGORY_CONTENT } from '../constants/test-category-content.constants';
 import { ConditionContent, conditionForTestSection } from '../../conditions/conditions.data';
-import { codeInName, methodCodeOf, withMethodCode } from '../constants/test-method-codes.constants';
+import { codeInName, methodCodeOf, SEVERITY_SCALES, withMethodCode } from '../constants/test-method-codes.constants';
 import { TEST_KEYWORDS } from '../constants/test-keywords.constants';
 import { TEST_ABOUT, TestAbout } from '../constants/test-about.constants';
 import { MEDICAL_REVIEW } from '../constants/medical-review.constants';
@@ -781,7 +781,7 @@ export class DetailPageComponent implements OnInit {
     const bands = (test.resultInterpretation ?? [])
       .filter(r => r.range?.length === 2 && r.result && !r.type && !r.name);
     return bands.length < 2 ? [] : bands.map(r => ({
-      range: r.range[1] == null ? `${r.range[0]}+` : `${r.range[0]}–${r.range[1]}`,
+      range: r.range[1] == null ? `${r.range[0]}+` : r.range[0] === r.range[1] ? `${r.range[0]}` : `${r.range[0]}–${r.range[1]}`,
       result: r.result.trim().replace(/:$/, ''),
       min: Number(r.range[0]),
       max: r.range[1] == null ? null : Number(r.range[1]),
@@ -843,7 +843,9 @@ export class DetailPageComponent implements OnInit {
     faq.push(
       {
         q: 'Чи можна поставити діагноз за результатом тесту?',
-        a: `Ні. ${code ?? 'Цей тест'} — скринінговий інструмент: він показує, чи є ознаки, які варто обговорити з лікарем. `
+        a: (code && SEVERITY_SCALES.has(code)
+          ? `Ні. ${code} — шкала оцінки тяжкості симптомів, а не тест на наявність розладу: вона показує, наскільки виражені симптоми. `
+          : `Ні. ${code ?? 'Цей тест'} — скринінговий інструмент: він показує, чи є ознаки, які варто обговорити з лікарем. `)
           + 'Діагноз ставить психіатр після клінічної бесіди.',
       },
       {

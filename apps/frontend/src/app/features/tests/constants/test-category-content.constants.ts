@@ -155,7 +155,7 @@ export const ALL_TESTS_CONTENT: TestCategoryContent = {
       { name: 'PHQ-9', slug: 'opytuvalnyk-z-depresiyi-phq-9', questions: 9, time: '2–3 хв', bestFor: 'Пригнічений настрій, втрата інтересу, втома' },
       { name: 'GAD-7', slug: 'opytuvalnyk-z-heneralizovanoyi-tryvohy-gad-7', questions: 7, time: '2 хв', bestFor: 'Постійне хвилювання, напруга, неможливість розслабитися' },
       { name: 'Панічні атаки', slug: 'opytuvalnyk-dlya-vyyavlennya-panichnykh-atak', questions: 15, time: '5 хв', bestFor: 'Раптові напади страху із серцебиттям і задишкою' },
-      { name: 'Y-BOCS', slug: 'shkala-yelya-brauna-dlya-otsinky-symptomiv-okr', questions: 9, time: '10 хв', bestFor: 'Нав’язливі думки й ритуали (ОКР)' },
+      { name: 'Y-BOCS', slug: 'shkala-yelya-brauna-dlya-otsinky-symptomiv-okr', questions: 10, time: '10 хв', bestFor: 'Нав’язливі думки й ритуали (ОКР)' },
       { name: 'Скринінг ПТСР', slug: 'opytuvalnyk-dlya-skryninhu-ptsr', questions: 7, time: '3 хв', bestFor: 'Флешбеки, кошмари, уникання після травматичних подій' },
       { name: 'ASRS-v1.1', slug: 'opytuvalnyk-symptomiv-rduh-dlya-doroslykh-asrs-v1-1', questions: 18, time: '5 хв', bestFor: 'Неуважність, імпульсивність, неорганізованість у дорослих' },
       { name: 'RAADS-R', slug: 'test-raads-r-na-autyzm-shkala-ritvo-dlya-doroslykh', questions: 80, time: '30–45 хв', bestFor: 'Підозра на аутизм у дорослому віці' },
