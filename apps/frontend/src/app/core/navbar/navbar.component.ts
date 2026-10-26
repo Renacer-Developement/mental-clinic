@@ -124,8 +124,8 @@ export class NavbarComponent implements OnDestroy {
     if (this.isMenuOpen) this.setMenu(false);
   }
 
-  /** The search box at the top of the mobile menu hands off to the search page. */
-  searchFromMenu(query: string): void {
+  /** The search boxes in the menu bar and the mobile menu hand off to the search page. */
+  searchSite(query: string): void {
     const q = query.trim();
     this.trackNav(ROUTES.SEARCH, 'Пошук');
     this.router.navigate(['/' + ROUTES.SEARCH], { queryParams: q ? { q } : {} });

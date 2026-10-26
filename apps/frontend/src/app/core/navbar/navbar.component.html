@@ -137,11 +137,17 @@
         </li>
       </ul>
 
-      <a class="dnav__search" [routerLink]="'/' + ROUTES.SEARCH" routerLinkActive="is-active" (click)="trackNav(ROUTES.SEARCH, 'Пошук')">
-        <i class="pi pi-search" aria-hidden="true"></i>Пошук
-      </a>
-      <!-- Booking lives in the pinned row so it stays on screen after the top row scrolls away -->
-      <button type="button" class="dnav__cta" (click)="openContactsDesktop()">Записатися на прийом</button>
+      <!-- Search + booking share one pill, pinned so both stay on screen after the top row scrolls away -->
+      <div class="dnav__actions">
+        <form class="dnav__find" role="search" (submit)="$event.preventDefault(); searchSite(barQuery.value); barQuery.value = ''; barQuery.blur()">
+          <i class="pi pi-search" aria-hidden="true"></i>
+          <input #barQuery type="search" name="q" placeholder="Пошук по сайту" aria-label="Пошук по сайту"
+                 autocomplete="off" enterkeyhint="search">
+        </form>
+        <button type="button" class="dnav__cta" (click)="openContactsDesktop()">
+          <i class="pi pi-calendar" aria-hidden="true"></i>Записатися на прийом
+        </button>
+      </div>
     </div>
   </div>
 
@@ -192,7 +198,7 @@
     </button>
   </div>
 
-  <form class="mnav__find" role="search" (submit)="$event.preventDefault(); searchFromMenu(menuQuery.value); menuQuery.value = ''">
+  <form class="mnav__find" role="search" (submit)="$event.preventDefault(); searchSite(menuQuery.value); menuQuery.value = ''">
     <i class="pi pi-search" aria-hidden="true"></i>
     <input #menuQuery type="search" name="q" placeholder="Пошук по сайту" aria-label="Пошук по сайту"
            autocomplete="off" enterkeyhint="search">

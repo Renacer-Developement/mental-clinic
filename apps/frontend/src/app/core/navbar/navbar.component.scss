@@ -229,49 +229,74 @@ $dnav-top-h: 76px;
   &:hover { color: $primary-color; }
 }
 
-.dnav__search {
+.dnav__actions {
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: 4px;
   margin-left: auto;
-  padding: 0.6rem 0.9rem;
+  padding: 4px;
+  border: 1px solid rgba($heading-color, 0.14);
   border-radius: 999px;
-  color: $heading-color;
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  text-decoration: none;
-  white-space: nowrap;
-  transition: background 0.2s;
+  background: $section-bg;
+  box-shadow: 0 8px 22px -14px rgba($primary-ink, 0.55);
+  transition: border-color 0.2s, box-shadow 0.2s;
 
-  i { font-size: 0.9rem; }
+  &:focus-within {
+    border-color: $primary-color;
+    box-shadow: 0 0 0 3px rgba($primary-color, 0.16), 0 8px 22px -14px rgba($primary-ink, 0.55);
+  }
+}
 
-  &:hover, &.is-active { background: rgba($heading-color, 0.06); }
+.dnav__find {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 0.5rem 0 0.9rem;
 
-  @media (max-width: 1199px) { font-size: 0.8rem; letter-spacing: 0.04em; }
+  i { color: $muted-text-color; font-size: 0.9rem; }
 
-  + .dnav__cta { margin-left: 0.75rem; }
+  input {
+    width: 10.5rem;
+    height: 40px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: $heading-color;
+    font: inherit;
+    font-size: 0.9rem;
+    appearance: none;
+    transition: width 0.25s $ease-out-soft;
+
+    &::placeholder { color: $muted-text-color; }
+    &::-webkit-search-cancel-button { display: none; }
+    &:focus { outline: none; width: 14rem; }
+
+    @media (max-width: 1199px) { width: 8.5rem; &:focus { width: 11rem; } }
+  }
 }
 
 .dnav__cta {
-  flex-shrink: 0;
-  margin-left: auto;
-  padding: 0.7rem 1.35rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 40px;
+  padding: 0 1.25rem;
   border: 0;
   border-radius: 999px;
-  background: $heading-color;
+  background: linear-gradient(135deg, $primary-color, $primary-ink);
   color: $paper;
   font: inherit;
   font-size: 0.9rem;
   font-weight: 600;
+  white-space: nowrap;
   cursor: pointer;
-  transition: background 0.25s;
+  transition: background 0.25s, transform 0.2s $ease-out-soft;
 
-  &:hover {
-    background: $primary-color;
-  }
+  i { font-size: 0.85rem; }
+
+  &:hover { background: $heading-color; }
+  &:active { transform: scale(0.98); }
 }
 
 // ── Menu bar (stays pinned) ───────────────────────────────────────────────────
