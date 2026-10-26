@@ -63,7 +63,6 @@
                   @for (c of conditionMenu; track c.slug) {
                     <li><a [routerLink]="'/' + c.slug" (click)="trackNav(c.slug, c.label); closeMega(true)">{{ c.label }}</a></li>
                   }
-                  <li><a [routerLink]="'/' + ROUTES.ONLINE_CONSULTATION" (click)="trackNav(ROUTES.ONLINE_CONSULTATION, 'Психіатр онлайн'); closeMega(true)">Психіатр онлайн</a></li>
                 </ul>
               </div>
               <a class="dnav__all" [routerLink]="'/' + ROUTES.VISIT" (click)="closeMega(true)">Записатися на консультацію →</a>
@@ -117,6 +116,10 @@
               <a class="dnav__all" [routerLink]="'/' + ROUTES.ARTICLES" (click)="closeMega(true)">Усі статті →</a>
             </div>
           </div>
+        </li>
+
+        <li class="dnav__item">
+          <a class="dnav__trigger" [routerLink]="'/' + ROUTES.ONLINE_CONSULTATION" routerLinkActive="is-active" (click)="trackNav(ROUTES.ONLINE_CONSULTATION, 'Психіатр онлайн')">Психіатр онлайн</a>
         </li>
 
         <li class="dnav__item">
@@ -205,7 +208,6 @@
             @for (c of conditionMenu; track c.slug) {
               <a [routerLink]="'/' + c.slug" routerLinkActive="is-active" (click)="trackNav(c.slug, c.label); closeMenu()">{{ c.label }}</a>
             }
-            <a [routerLink]="'/' + ROUTES.ONLINE_CONSULTATION" routerLinkActive="is-active" (click)="trackNav(ROUTES.ONLINE_CONSULTATION, 'Психіатр онлайн'); closeMenu()">Психіатр онлайн</a>
           </div>
         </div>
       </li>
@@ -230,6 +232,11 @@
 
     <p class="mnav__label" id="mnav-center">Центр</p>
     <ul class="mnav__list" aria-labelledby="mnav-center">
+      <li>
+        <a class="mnav__row" [routerLink]="'/' + ROUTES.ONLINE_CONSULTATION" routerLinkActive="is-active" (click)="trackNav(ROUTES.ONLINE_CONSULTATION, 'Психіатр онлайн'); closeMenu()">
+          <i class="pi pi-video mnav__icon" aria-hidden="true"></i><span>Психіатр онлайн</span>
+        </a>
+      </li>
       <li>
         <a class="mnav__row" [routerLink]="'/' + ROUTES.REVIEWS" routerLinkActive="is-active" (click)="trackNav(ROUTES.REVIEWS, 'Відгуки'); closeMenu()">
           <i class="pi pi-comments mnav__icon" aria-hidden="true"></i><span>Відгуки</span>

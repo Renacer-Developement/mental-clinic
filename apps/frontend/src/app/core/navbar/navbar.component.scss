@@ -260,7 +260,8 @@ $dnav-top-h: 76px;
 .dnav__menu {
   display: flex;
   align-items: stretch;
-  gap: 2.75rem;
+  // five items: tighten the gaps on narrow laptops instead of wrapping the labels
+  gap: clamp(0.75rem, 4vw - 1.6rem, 2.75rem);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -282,7 +283,13 @@ $dnav-top-h: 76px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   text-decoration: none;
+  white-space: nowrap;
   cursor: pointer;
+
+  @media (max-width: 1199px) {
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+  }
 
   i {
     font-size: 0.65rem;
