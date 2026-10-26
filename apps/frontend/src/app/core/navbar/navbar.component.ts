@@ -33,10 +33,10 @@ export class NavbarComponent implements OnDestroy {
 
   isMenuOpen = false;
   /** Which accordion is expanded in the mobile menu. */
-  mobileSection: 'conditions' | 'tests' | 'articles' | 'about' | null = null;
+  mobileSection: 'conditions' | 'tests' | 'articles' | 'other' | 'about' | null = null;
   /** Which desktop dropdown is open. A signal, because it is also changed from a
    *  timer (delayed close) and the app runs without zone.js change detection. */
-  readonly mega = signal<'conditions' | 'tests' | 'articles' | 'about' | null>(null);
+  readonly mega = signal<'conditions' | 'tests' | 'articles' | 'other' | 'about' | null>(null);
   private megaCloseTimer?: ReturnType<typeof setTimeout>;
 
   /** Test categories with their sections, for the tests mega menu. */
@@ -63,7 +63,7 @@ export class NavbarComponent implements OnDestroy {
     });
   }
 
-  openMega(which: 'conditions' | 'tests' | 'articles' | 'about'): void {
+  openMega(which: 'conditions' | 'tests' | 'articles' | 'other' | 'about'): void {
     clearTimeout(this.megaCloseTimer);
     this.mega.set(which);
   }
@@ -73,7 +73,7 @@ export class NavbarComponent implements OnDestroy {
    * already opened it via mouseenter, so a toggle would immediately close it again.
    * Closing happens on mouseleave, Escape, backdrop click or navigation.
    */
-  onTriggerClick(which: 'conditions' | 'tests' | 'articles' | 'about'): void {
+  onTriggerClick(which: 'conditions' | 'tests' | 'articles' | 'other' | 'about'): void {
     clearTimeout(this.megaCloseTimer);
     this.mega.set(which);
   }
@@ -124,7 +124,7 @@ export class NavbarComponent implements OnDestroy {
     if (this.isMenuOpen) this.setMenu(false);
   }
 
-  toggleMobileSection(which: 'conditions' | 'tests' | 'articles' | 'about'): void {
+  toggleMobileSection(which: 'conditions' | 'tests' | 'articles' | 'other' | 'about'): void {
     this.mobileSection = this.mobileSection === which ? null : which;
   }
 

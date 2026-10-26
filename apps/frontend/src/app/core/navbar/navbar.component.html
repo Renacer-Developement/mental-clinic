@@ -118,8 +118,21 @@
           </div>
         </li>
 
-        <li class="dnav__item">
-          <a class="dnav__trigger" [routerLink]="'/' + ROUTES.ONLINE_CONSULTATION" routerLinkActive="is-active" (click)="trackNav(ROUTES.ONLINE_CONSULTATION, 'Психіатр онлайн')">Психіатр онлайн</a>
+        <!-- "Інше" dropdown — no page of its own, so the trigger is a button -->
+        <li class="dnav__item" (mouseenter)="openMega('other')" (mouseleave)="closeMega()">
+          <button type="button" class="dnav__trigger" [class.is-open]="mega() === 'other'"
+                  aria-haspopup="true" [attr.aria-expanded]="mega() === 'other'" (click)="onTriggerClick('other')">
+            Інше <i class="pi pi-chevron-down"></i>
+          </button>
+          <div class="dnav__panel" [class.is-open]="mega() === 'other'">
+            <div class="dnav__inner dnav__mega dnav__mega--narrow">
+              <div class="dnav__col">
+                <ul>
+                  <li><a [routerLink]="'/' + ROUTES.ONLINE_CONSULTATION" (click)="trackNav(ROUTES.ONLINE_CONSULTATION, 'Психіатр онлайн'); closeMega(true)">Психіатр онлайн</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </li>
 
         <li class="dnav__item">
@@ -228,15 +241,24 @@
           </div>
         </div>
       </li>
+
+      <li class="mnav__group" [class.is-open]="mobileSection === 'other'">
+        <button type="button" class="mnav__row" (click)="toggleMobileSection('other')"
+                [attr.aria-expanded]="mobileSection === 'other'" aria-controls="mnav-sub-other">
+          <i class="pi pi-ellipsis-h mnav__icon" aria-hidden="true"></i>
+          <span>Інше</span>
+          <i class="pi pi-chevron-down mnav__chev" aria-hidden="true"></i>
+        </button>
+        <div class="mnav__sub" id="mnav-sub-other">
+          <div class="mnav__sub-inner">
+            <a [routerLink]="'/' + ROUTES.ONLINE_CONSULTATION" routerLinkActive="is-active" (click)="trackNav(ROUTES.ONLINE_CONSULTATION, 'Психіатр онлайн'); closeMenu()">Психіатр онлайн</a>
+          </div>
+        </div>
+      </li>
     </ul>
 
     <p class="mnav__label" id="mnav-center">Центр</p>
     <ul class="mnav__list" aria-labelledby="mnav-center">
-      <li>
-        <a class="mnav__row" [routerLink]="'/' + ROUTES.ONLINE_CONSULTATION" routerLinkActive="is-active" (click)="trackNav(ROUTES.ONLINE_CONSULTATION, 'Психіатр онлайн'); closeMenu()">
-          <i class="pi pi-video mnav__icon" aria-hidden="true"></i><span>Психіатр онлайн</span>
-        </a>
-      </li>
       <li>
         <a class="mnav__row" [routerLink]="'/' + ROUTES.REVIEWS" routerLinkActive="is-active" (click)="trackNav(ROUTES.REVIEWS, 'Відгуки'); closeMenu()">
           <i class="pi pi-comments mnav__icon" aria-hidden="true"></i><span>Відгуки</span>
