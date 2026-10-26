@@ -129,14 +129,11 @@
               <div class="dnav__col">
                 <ul>
                   <li><a [routerLink]="'/' + ROUTES.ONLINE_CONSULTATION" (click)="trackNav(ROUTES.ONLINE_CONSULTATION, 'Психіатр онлайн'); closeMega(true)">Психіатр онлайн</a></li>
+                  <li><a [routerLink]="'/' + ROUTES.VISIT" (click)="trackNav(ROUTES.VISIT, 'Правила відвідування'); closeMega(true)">Правила відвідування</a></li>
                 </ul>
               </div>
             </div>
           </div>
-        </li>
-
-        <li class="dnav__item">
-          <a class="dnav__trigger" [routerLink]="'/' + ROUTES.VISIT" routerLinkActive="is-active" (click)="trackNav(ROUTES.VISIT, 'Правила відвідування')">Правила відвідування</a>
         </li>
       </ul>
 
@@ -252,6 +249,7 @@
         <div class="mnav__sub" id="mnav-sub-other">
           <div class="mnav__sub-inner">
             <a [routerLink]="'/' + ROUTES.ONLINE_CONSULTATION" routerLinkActive="is-active" (click)="trackNav(ROUTES.ONLINE_CONSULTATION, 'Психіатр онлайн'); closeMenu()">Психіатр онлайн</a>
+            <a [routerLink]="'/' + ROUTES.VISIT" routerLinkActive="is-active" (click)="trackNav(ROUTES.VISIT, 'Правила відвідування'); closeMenu()">Правила відвідування</a>
           </div>
         </div>
       </li>
@@ -267,11 +265,6 @@
       <li>
         <a class="mnav__row" [routerLink]="'/' + ROUTES.DRUGS" routerLinkActive="is-active" (click)="trackNav(ROUTES.DRUGS, 'Перевірка ліків'); closeMenu()">
           <i class="pi pi-search mnav__icon" aria-hidden="true"></i><span>Перевірка ліків</span>
-        </a>
-      </li>
-      <li>
-        <a class="mnav__row" [routerLink]="'/' + ROUTES.VISIT" routerLinkActive="is-active" (click)="trackNav(ROUTES.VISIT, 'Правила відвідування'); closeMenu()">
-          <i class="pi pi-info-circle mnav__icon" aria-hidden="true"></i><span>Правила відвідування</span>
         </a>
       </li>
       <li class="mnav__group" [class.is-open]="mobileSection === 'about'">
