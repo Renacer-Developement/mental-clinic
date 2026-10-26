@@ -52,6 +52,10 @@ export const APP_ROUTES: Routes = [
         ],
       },
       {
+        path: ROUTES.SEARCH,
+        loadComponent: () => import('./features/search/search.component').then(m => m.SearchComponent),
+      },
+      {
         path: ROUTES.TEAM,
         loadComponent: () => import('./features/team/team.component').then(m => m.TeamComponent),
       },

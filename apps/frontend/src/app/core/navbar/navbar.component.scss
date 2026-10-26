@@ -229,6 +229,32 @@ $dnav-top-h: 76px;
   &:hover { color: $primary-color; }
 }
 
+.dnav__search {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-left: auto;
+  padding: 0.6rem 0.9rem;
+  border-radius: 999px;
+  color: $heading-color;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.2s;
+
+  i { font-size: 0.9rem; }
+
+  &:hover, &.is-active { background: rgba($heading-color, 0.06); }
+
+  @media (max-width: 1199px) { font-size: 0.8rem; letter-spacing: 0.04em; }
+
+  + .dnav__cta { margin-left: 0.75rem; }
+}
+
 .dnav__cta {
   flex-shrink: 0;
   margin-left: auto;
@@ -491,6 +517,21 @@ $mnav-h: 58px;
 }
 
 // two-line burger that folds into a cross; 44px target, no box
+.mnav__search {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-left: auto;
+  color: $heading-color;
+  font-size: 1.15rem;
+  text-decoration: none;
+
+  // Narrow phones need the room for the clinic name; search is first in the menu there
+  @media (max-width: 429px) { display: none; }
+}
+
 .mnav__toggle {
   flex-shrink: 0;
   position: relative;

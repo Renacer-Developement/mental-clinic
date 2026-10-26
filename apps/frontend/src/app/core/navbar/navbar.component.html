@@ -137,6 +137,9 @@
         </li>
       </ul>
 
+      <a class="dnav__search" [routerLink]="'/' + ROUTES.SEARCH" routerLinkActive="is-active" (click)="trackNav(ROUTES.SEARCH, 'Пошук')">
+        <i class="pi pi-search" aria-hidden="true"></i>Пошук
+      </a>
       <!-- Booking lives in the pinned row so it stays on screen after the top row scrolls away -->
       <button type="button" class="dnav__cta" (click)="openContactsDesktop()">Записатися на прийом</button>
     </div>
@@ -153,6 +156,10 @@
       <strong>Центр ментального здоров'я</strong>
       <span>Євгена Скрипника</span>
     </span>
+  </a>
+
+  <a class="mnav__search" [routerLink]="'/' + ROUTES.SEARCH" (click)="closeMenu()" aria-label="Пошук по сайту">
+    <i class="pi pi-search" aria-hidden="true"></i>
   </a>
 
   <button type="button" class="mnav__toggle" [class.is-open]="isMenuOpen"
@@ -257,6 +264,11 @@
 
     <p class="mnav__label" id="mnav-center">Центр</p>
     <ul class="mnav__list" aria-labelledby="mnav-center">
+      <li>
+        <a class="mnav__row" [routerLink]="'/' + ROUTES.SEARCH" routerLinkActive="is-active" (click)="trackNav(ROUTES.SEARCH, 'Пошук'); closeMenu()">
+          <i class="pi pi-search mnav__icon" aria-hidden="true"></i><span>Пошук</span>
+        </a>
+      </li>
       <li>
         <a class="mnav__row" [routerLink]="'/' + ROUTES.REVIEWS" routerLinkActive="is-active" (click)="trackNav(ROUTES.REVIEWS, 'Відгуки'); closeMenu()">
           <i class="pi pi-comments mnav__icon" aria-hidden="true"></i><span>Відгуки</span>

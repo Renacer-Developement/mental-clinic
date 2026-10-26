@@ -15,6 +15,8 @@ export const serverRoutes: ServerRoute[] = [
   // Dynamic content backed by the API — render per-request so bots/crawlers
   // always see the current tests, articles and contract text, not a stale build-time snapshot
   { path: 'team', renderMode: RenderMode.Server },
+  // Results load in the browser; the server sends the empty search box (noindex)
+  { path: 'search', renderMode: RenderMode.Server },
   { path: 'contract', renderMode: RenderMode.Server },
   { path: 'test', renderMode: RenderMode.Server, status: 301 },
   { path: 'test/list', renderMode: RenderMode.Server },

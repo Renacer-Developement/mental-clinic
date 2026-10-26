@@ -1,0 +1,58 @@
+<div class="sp">
+  <section class="sp-hero">
+    <div class="sp-frame">
+      <span class="sp-kicker">Пошук</span>
+      <h1 class="sp-title">Пошук по сайту</h1>
+
+      <form class="sp-box" role="search" (submit)="$event.preventDefault()">
+        <i class="pi pi-search sp-box__icon" aria-hidden="true"></i>
+        <input #box type="search" class="sp-box__input" name="q"
+               placeholder="Наприклад: безсоння"
+               aria-label="Пошук по сайту" autocomplete="off" enterkeyhint="search"
+               [value]="query()" (input)="onInput($any($event.target).value)">
+        @if (query()) {
+          <button type="button" class="sp-box__clear" (click)="clear()" aria-label="Очистити пошук">
+            <i class="pi pi-times" aria-hidden="true"></i>
+          </button>
+        }
+      </form>
+
+      @if (!query()) {
+        <div class="sp-suggest">
+          <span>Часто шукають:</span>
+          @for (s of suggestions; track s) {
+            <button type="button" class="sp-chip" (click)="pick(s)">{{ s }}</button>
+          }
+        </div>
+      }
+    </div>
+  </section>
+
+  @if (query()) {
+    <section class="sp-frame sp-body" aria-live="polite">
+      @if (loading()) {
+        <p class="sp-status">Шукаємо…</p>
+      } @else if (error()) {
+        <p class="sp-status">Пошук тимчасово недоступний. Спробуйте ще раз за хвилину.</p>
+      } @else if (searched() && !results().length) {
+        <div class="sp-empty">
+          <p class="sp-status">За запитом «{{ searched() }}» нічого не знайдено.</p>
+          <p>Спробуйте інше слово або перегляньте <a routerLink="/test/list">усі тести</a> та <a routerLink="/articles">статті</a>.</p>
+        </div>
+      } @else if (results().length) {
+        <p class="sp-count">Знайдено: {{ results().length }}</p>
+        <ol class="sp-results">
+          @for (r of results(); track r.url) {
+            <li>
+              <a [routerLink]="r.url" class="sp-result">
+                <span class="sp-result__kind" [attr.data-kind]="r.kind">{{ KIND_LABEL[r.kind] }}</span>
+                <h2 class="sp-result__title">{{ r.title }}</h2>
+                @if (r.snippet) { <p class="sp-result__snippet">{{ r.snippet }}</p> }
+              </a>
+            </li>
+          }
+        </ol>
+      }
+    </section>
+  }
+</div>

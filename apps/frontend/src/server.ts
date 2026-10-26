@@ -7,6 +7,7 @@ import {
 import express from 'express';
 import { API_ARTICLES, API_TESTS } from './app/app.constants';
 import { getSitemap } from './sitemap';
+import { SEARCH_PAGES } from './search-pages';
 import { CONDITIONS } from './app/features/conditions/conditions.data';
 import { TEST_KEYWORDS } from './app/features/tests/constants/test-keywords.constants';
 
@@ -111,6 +112,12 @@ app.get('/llms.txt', async (_req, res) => {
 
   res.set('Cache-Control', 'public, max-age=0, s-maxage=3600, stale-while-revalidate=86400');
   res.type('text/plain; charset=utf-8').send(body);
+});
+
+// Static page text for the backend's site search index (see search-pages.ts)
+app.get('/search-pages.json', (_req, res) => {
+  res.set('Cache-Control', 'public, max-age=0, s-maxage=3600');
+  res.json(SEARCH_PAGES);
 });
 
 app.get('/sitemap.xml', async (_req, res) => {
