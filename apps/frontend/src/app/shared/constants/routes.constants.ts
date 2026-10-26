@@ -9,6 +9,7 @@ export const ROUTES = {
   REVIEWS: 'reviews',
   TEAM: 'team',
   CENTER: 'pro-tsentr',
+  ONLINE_CONSULTATION: 'konsultatsiya-psykhiatra-onlain',
 } as const;
 
 export const TEST_ROUTES = {

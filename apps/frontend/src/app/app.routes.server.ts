@@ -9,6 +9,7 @@ export const serverRoutes: ServerRoute[] = [
   { path: 'visit', renderMode: RenderMode.Prerender },
   { path: 'reviews', renderMode: RenderMode.Prerender },
   { path: 'pro-tsentr', renderMode: RenderMode.Prerender },
+  { path: 'konsultatsiya-psykhiatra-onlain', renderMode: RenderMode.Prerender },
   ...CONDITIONS.map(c => ({ path: c.slug, renderMode: RenderMode.Prerender as const })),
 
   // Dynamic content backed by the API — render per-request so bots/crawlers

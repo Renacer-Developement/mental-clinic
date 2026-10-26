@@ -9,6 +9,7 @@ import { ReviewsComponent } from './features/reviews/reviews.component';
 import { CenterComponent } from './features/center/center.component';
 import { ConditionPageComponent } from './features/conditions/condition-page.component';
 import { CONDITIONS } from './features/conditions/conditions.data';
+import { OnlineConsultationComponent } from './features/online-consultation/online-consultation.component';
 
 export const APP_ROUTES: Routes = [
   {
@@ -25,6 +26,7 @@ export const APP_ROUTES: Routes = [
       { path: ROUTES.VISIT, component: VisitPageComponent },
       { path: ROUTES.REVIEWS, component: ReviewsComponent },
       { path: ROUTES.CENTER, component: CenterComponent },
+      { path: ROUTES.ONLINE_CONSULTATION, component: OnlineConsultationComponent },
       ...CONDITIONS.map(c => ({ path: c.slug, component: ConditionPageComponent, data: { slug: c.slug } })),
 
       // Everything below is RenderMode.Server (rendered per-request, not at

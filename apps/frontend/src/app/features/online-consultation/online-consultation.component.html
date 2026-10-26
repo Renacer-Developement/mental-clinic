@@ -1,0 +1,171 @@
+<div class="cp">
+
+  <!-- ── Hero ────────────────────────────────────────────────────────────── -->
+  <section class="cp-hero">
+    <div class="cp-hero__inner">
+      <nav class="cp-crumbs" aria-label="Навігаційний ланцюжок">
+        <a routerLink="/">Головна</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Психіатр онлайн</span>
+      </nav>
+
+      <div class="cp-hero__text">
+        <span class="cp-kicker">Психіатр онлайн</span>
+        <h1 class="cp-hero__title">{{ h1 }}</h1>
+        <p class="cp-hero__lead">
+          Повноцінний прийом лікаря-психіатра по відеозв’язку — з дому, з будь-якого міста України чи з-за кордону.
+          Діагностика, план лікування і три місяці супроводу після консультації. Пн–Сб, 8:00–22:00.
+        </p>
+
+        <div class="cp-actions">
+          <button type="button" class="cp-btn cp-btn--solid" (click)="openContacts()">Записатися на консультацію</button>
+          <a class="cp-btn" [routerLink]="'/' + ROUTES.VISIT">Як записатися</a>
+        </div>
+      </div>
+    </div>
+
+    <nav class="cp-toc" aria-label="Розділи сторінки">
+      <ul class="cp-toc__list">
+        <li><a [href]="'/' + slug + '#what'" (click)="$event.preventDefault(); jump('what')">Що робить психіатр</a></li>
+        <li><a [href]="'/' + slug + '#first'" (click)="$event.preventDefault(); jump('first')">Перша консультація</a></li>
+        <li><a [href]="'/' + slug + '#not-online'" (click)="$event.preventDefault(); jump('not-online')">Коли не онлайн</a></li>
+        @if (reviews().length) {
+          <li><a [href]="'/' + slug + '#patients'" (click)="$event.preventDefault(); jump('patients')">Відгуки</a></li>
+        }
+        <li><a [href]="'/' + slug + '#faq'" (click)="$event.preventDefault(); jump('faq')">Часті питання</a></li>
+      </ul>
+    </nav>
+  </section>
+
+  <!-- ── Body: content column + sticky booking card ──────────────────────── -->
+  <div class="cp-body">
+    <div class="cp-main">
+
+      <section class="cp-block" id="what" aria-labelledby="oc-what">
+        <h2 class="cp-title" id="oc-what">Що робить психіатр на онлайн-консультації</h2>
+        <p class="cp-intro">
+          Психіатр працює насамперед через розмову, тому онлайн-прийом майже не відрізняється від очного.
+          Консультують <a [routerLink]="'/' + ROUTES.ABOUT">Євген Скрипник</a> — психіатр, психотерапевт, нарколог і невролог
+          з понад 20-річним досвідом, — та лікарі <a [routerLink]="'/' + ROUTES.CENTER">центру</a> (ліцензія МОЗ № 1285).
+        </p>
+        <ul class="cp-symptoms">
+          @for (s of whatDoctorDoes; track s) { <li>{{ s }}</li> }
+        </ul>
+
+        <div class="cp-test">
+          <p>Хочете зрозуміти свій стан перед консультацією? Безкоштовний тест займе кілька хвилин.</p>
+          <a class="cp-btn" routerLink="/test/list">Пройти тест</a>
+        </div>
+      </section>
+
+      <section class="cp-block" id="first" aria-labelledby="oc-first">
+        <h2 class="cp-title" id="oc-first">Як проходить перша консультація</h2>
+        <p class="cp-intro">
+          Ознайомча консультація — це знайомство з лікарем і повна оцінка стану.
+          Що підготувати, щоб вона пройшла легше, — на сторінці <a [routerLink]="'/' + ROUTES.VISIT">запису</a>.
+        </p>
+        <ol class="cp-steps">
+          @for (s of steps; track s.title; let i = $index) {
+            <li>
+              <span class="cp-steps__num" aria-hidden="true">{{ i + 1 }}</span>
+              <div>
+                <h3>{{ s.title }}</h3>
+                <p>{{ s.text }}</p>
+              </div>
+            </li>
+          }
+        </ol>
+      </section>
+
+      <section class="cp-block" id="not-online" aria-labelledby="oc-not">
+        <h2 class="cp-title" id="oc-not">Коли онлайн-формат не підходить</h2>
+        <p class="cp-intro">
+          Онлайн-консультація підходить для більшості станів, але не для невідкладних. У цих випадках потрібна
+          очна допомога зараз — телефонуйте <a href="tel:112">112</a> або на гарячу лінію Lifeline Ukraine
+          <a href="tel:7333">7333</a> (цілодобово, безкоштовно):
+        </p>
+        <ul class="cp-symptoms">
+          @for (s of notOnline; track s) { <li>{{ s }}</li> }
+        </ul>
+      </section>
+
+      @if (reviews().length) {
+        <section class="cp-block" id="patients" aria-labelledby="oc-pat">
+          <div class="cp-block__row">
+            <h2 class="cp-title" id="oc-pat">Що пишуть пацієнти</h2>
+            <a class="cp-more" [routerLink]="'/' + ROUTES.REVIEWS">Усі відгуки</a>
+          </div>
+          <ul class="cp-quotes">
+            @for (r of reviews(); track r._id ?? r.text) {
+              <li>
+                <figure>
+                  <blockquote>«{{ r.text }}»</blockquote>
+                  <figcaption>{{ r.name }}</figcaption>
+                </figure>
+              </li>
+            }
+          </ul>
+        </section>
+      }
+
+      <section class="cp-block" id="faq" aria-labelledby="oc-faq">
+        <h2 class="cp-title" id="oc-faq">Часті питання</h2>
+        <div class="cp-faq">
+          @for (f of faqs; track f.q) {
+            <details>
+              <summary>{{ f.q }}<span class="cp-faq__icon" aria-hidden="true"></span></summary>
+              <p>{{ f.a }}</p>
+            </details>
+          }
+        </div>
+      </section>
+    </div>
+
+    <aside class="cp-aside" aria-label="Запис на консультацію">
+      <div class="cp-card">
+        <p class="cp-card__title">Консультація психіатра</p>
+        <dl class="cp-card__meta">
+          <div><dt>Лікарі</dt><dd><a [routerLink]="'/' + ROUTES.ABOUT">Євген Скрипник</a> та лікарі центру</dd></div>
+          <div><dt>Години</dt><dd>Пн–Сб, 8:00–22:00</dd></div>
+          <div><dt>Формат</dt><dd>Telegram, Viber, Google Meet або Zoom</dd></div>
+          <div><dt>Вартість</dt><dd>Назве адміністратор до запису</dd></div>
+        </dl>
+        <button type="button" class="cp-btn cp-btn--solid cp-btn--block" (click)="openContacts()">Записатися</button>
+        <a class="cp-card__phone" [href]="phone.href"><i class="pi pi-phone" aria-hidden="true"></i>{{ phone.text }}</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- ── What people come with ───────────────────────────────────────────── -->
+  <section class="cp-related" aria-labelledby="oc-rel">
+    <div class="cp-frame">
+      <h2 class="cp-title" id="oc-rel">З чим звертаються до психіатра онлайн</h2>
+      <ul class="cp-related__list">
+        @for (c of conditions; track c.slug) {
+          <li>
+            <a [routerLink]="'/' + c.slug">
+              <h3>{{ c.label }}</h3>
+              <p>{{ c.teaser }}</p>
+              <span class="cp-go" aria-hidden="true">→</span>
+            </a>
+          </li>
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ── Final CTA ───────────────────────────────────────────────────────── -->
+  <section class="cp-final" aria-labelledby="oc-final">
+    <div class="cp-final__inner">
+      <h2 class="cp-final__title" id="oc-final">Готові зробити <em>перший крок?</em></h2>
+      <div class="cp-final__side">
+        <p>Напишіть або зателефонуйте, адміністратор підбере лікаря і зручний час.</p>
+        <div class="cp-actions">
+          <button type="button" class="cp-btn cp-btn--solid" (click)="openContacts()">Записатися на консультацію</button>
+          <a class="cp-btn" [href]="phone.href"><i class="pi pi-phone" aria-hidden="true"></i>{{ phone.text }}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>

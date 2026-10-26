@@ -41,6 +41,7 @@ const STATIC_ENTRIES: Entry[] = ([
   { path: '/',         changefreq: 'daily',   priority: '1.0' },
   { path: '/about',    changefreq: 'monthly', priority: '0.9' },
   { path: '/visit',    changefreq: 'monthly', priority: '0.9' },
+  { path: '/konsultatsiya-psykhiatra-onlain', changefreq: 'monthly', priority: '0.9' },
   ...CONDITIONS.map(c => ({ path: `/${c.slug}`, changefreq: 'monthly' as const, priority: '0.9', lastmod: PAGE_DATES['conditions'] })),
   { path: '/articles', changefreq: 'daily',   priority: '0.9' },
   { path: '/test/list', changefreq: 'weekly', priority: '0.8' },

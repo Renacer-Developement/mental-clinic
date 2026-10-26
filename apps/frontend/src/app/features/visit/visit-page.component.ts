@@ -4,7 +4,7 @@ import { ClinicContactsService } from '../shared/components/clinic-contacts-dial
 import { clinicContacts } from '../shared/constants/contacts.constants';
 import { SeoService } from '../../core/seo/seo.service';
 import { GoogleAnalyticsService } from '../../analytics/google-analytics.service';
-import { TEST_ROUTES } from '../../shared/constants/routes.constants';
+import { ROUTES, TEST_ROUTES } from '../../shared/constants/routes.constants';
 
 /** +380665691677 → +38 (066) 569-16-77 */
 const formatPhone = (phone: string) =>
@@ -22,6 +22,7 @@ export class VisitPageComponent implements OnInit {
   private readonly seo = inject(SeoService);
   private readonly analytics = inject(GoogleAnalyticsService);
 
+  protected readonly ROUTES = ROUTES;
   protected readonly TEST_ROUTES = TEST_ROUTES;
 
   // The two booking lines, with what each specialist does, so people pick the right one

@@ -18,6 +18,7 @@ const features = 'src/app/features';
 const PAGES = {
   '/about':      [`${features}/about`],
   '/visit':      [`${features}/visit`],
+  '/konsultatsiya-psykhiatra-onlain': [`${features}/online-consultation`],
   '/reviews':    [`${features}/reviews`],
   '/pro-tsentr': [`${features}/center`],
   '/drugs':      [`${features}/drugs`],
