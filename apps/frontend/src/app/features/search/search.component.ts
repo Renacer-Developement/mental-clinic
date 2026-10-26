@@ -35,6 +35,8 @@ export class SearchComponent implements OnInit {
 
   private readonly input = viewChild<ElementRef<HTMLInputElement>>('box');
   private readonly queries = new Subject<string>();
+  /** Last ?q= this page wrote itself, so the echo from the router is ignored */
+  private written = '';
 
   protected readonly KIND_LABEL = KIND_LABEL;
   protected readonly suggestions = ['Депресія', 'Тривога', 'Панічні атаки', 'РДУГ у дорослих', 'Безсоння', 'Психіатр онлайн'];
@@ -61,6 +63,7 @@ export class SearchComponent implements OnInit {
       debounceTime(250),
       distinctUntilChanged(),
       tap(q => {
+        this.written = q;
         this.router.navigate([], { queryParams: { q: q || null }, replaceUrl: true });
         this.error.set(false);
         this.loading.set(q.length >= 2);
@@ -79,9 +82,14 @@ export class SearchComponent implements OnInit {
       this.loading.set(false);
     });
 
-    const initial = this.route.snapshot.queryParamMap.get('q') ?? '';
-    this.query.set(initial);
-    if (initial) this.queries.next(initial.trim());
+    // ?q= on arrival, and again when the menu's search box sends a new query to this
+    // already open page; the page's own replaceUrl updates are skipped
+    this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
+      const q = (params.get('q') ?? '').trim();
+      if (q === this.written || q === this.query().trim()) return;
+      this.query.set(q);
+      this.queries.next(q.trim());
+    });
     setTimeout(() => this.input()?.nativeElement.focus());
   }
 

@@ -192,6 +192,12 @@
     </button>
   </div>
 
+  <form class="mnav__find" role="search" (submit)="$event.preventDefault(); searchFromMenu(menuQuery.value); menuQuery.value = ''">
+    <i class="pi pi-search" aria-hidden="true"></i>
+    <input #menuQuery type="search" name="q" placeholder="Пошук по сайту" aria-label="Пошук по сайту"
+           autocomplete="off" enterkeyhint="search">
+  </form>
+
   <nav class="mnav__scroll" aria-label="Мобільна навігація">
 
     <p class="mnav__label" id="mnav-help">Допомога</p>
@@ -264,11 +270,6 @@
 
     <p class="mnav__label" id="mnav-center">Центр</p>
     <ul class="mnav__list" aria-labelledby="mnav-center">
-      <li>
-        <a class="mnav__row" [routerLink]="'/' + ROUTES.SEARCH" routerLinkActive="is-active" (click)="trackNav(ROUTES.SEARCH, 'Пошук'); closeMenu()">
-          <i class="pi pi-search mnav__icon" aria-hidden="true"></i><span>Пошук</span>
-        </a>
-      </li>
       <li>
         <a class="mnav__row" [routerLink]="'/' + ROUTES.REVIEWS" routerLinkActive="is-active" (click)="trackNav(ROUTES.REVIEWS, 'Відгуки'); closeMenu()">
           <i class="pi pi-comments mnav__icon" aria-hidden="true"></i><span>Відгуки</span>
