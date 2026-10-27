@@ -25,6 +25,8 @@ const articleSchema = new mongoose.Schema(
         tgReview:       [{ _id: false, chatId: String, messageId: Number }],
         rejectedAt:     { type: Date },
         rejectedByName: { type: String },
+        // Last content refresh by scripts/update-article.js (updatedAt also moves on every view)
+        refreshedAt:    { type: Date },
     },
     { timestamps: true }
 );

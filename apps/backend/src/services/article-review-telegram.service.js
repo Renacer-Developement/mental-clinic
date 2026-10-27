@@ -129,6 +129,26 @@ const notifyDraftForReview = async (article) => {
     if (failed.length) throw new Error(`${failed.length}/${results.length} chats: ${failed[0].reason.message}`);
 };
 
+/**
+ * Tells every staff chat that an article went live without review (auto-published or
+ * refreshed): the cover and the summary with the site and admin links, no buttons.
+ */
+const notifyPublished = async (article, heading = '🤖 Опубліковано автоматично') => {
+    const bot = reviewBot();
+    if (!bot.token || !bot.chatIds.length) throw new Error('TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID not set');
+
+    const text = `<i>${escapeHtml(heading)}</i>\n\n${renderSummary(article)}`;
+    const results = await Promise.allSettled(bot.chatIds.map(async (chatId) => {
+        if (article.coverImage) {
+            await sendTelegramPhoto(bot.token, chatId, article.coverImage)
+                .catch(err => console.log(`Telegram: cover not sent — ${err.message}`));
+        }
+        return sendTelegramMessage(text, { token: bot.token, chatId });
+    }));
+    const failed = results.filter(r => r.status === 'rejected');
+    if (failed.length) throw new Error(`${failed.length}/${results.length} chats: ${failed[0].reason.message}`);
+};
+
 /** Brings every chat's summary in line with the article; `except` skips the message just edited. */
 const syncReviewMessages = async (article, except) => {
     const bot = reviewBot();
@@ -140,5 +160,5 @@ const syncReviewMessages = async (article, except) => {
 
 module.exports = {
     REVIEW_ACTIONS, reviewBot, toTelegramHtml, chunk, renderSummary, reviewKeyboard,
-    notifyDraftForReview, syncReviewMessages,
+    notifyDraftForReview, notifyPublished, syncReviewMessages,
 };
