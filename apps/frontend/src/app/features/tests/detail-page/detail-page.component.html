@@ -291,8 +291,12 @@
                 Доповнення A — більше, ніж в однолітків (дитинство)
                 <b>A1: {{ yesNo(r.suppA1Child) }} · A2: {{ yesNo(r.suppA2Child) }}</b>
               </li>
-              <li [class.is-yes]="r.adultThreshold">Критерій A, зрілість: ≥5 в одній області <b>{{ yesNo(r.adultThreshold) }}</b></li>
-              <li [class.is-yes]="r.childThreshold">Критерій A, дитинство: ≥6 в одній області <b>{{ yesNo(r.childThreshold) }}</b></li>
+              <li [class.is-yes]="r.adultThreshold">
+                Критерій A, зрілість: ≥5 в одній області + доповнення A <b>{{ yesNo(r.adultThreshold) }}</b>
+              </li>
+              <li [class.is-yes]="r.childThreshold">
+                Критерій A, дитинство: ≥6 в одній області + доповнення A <b>{{ yesNo(r.childThreshold) }}</b>
+              </li>
               <li [class.is-yes]="r.onset">
                 Критерій B — симптоми до 12 років{{ r.onsetAge ? ' (з ' + r.onsetAge + ' р.)' : '' }}
                 <b>{{ yesNo(r.onset) }}</b>
