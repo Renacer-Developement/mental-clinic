@@ -6,6 +6,8 @@ const { escapeHtml, sendTelegramMessage, sendTelegramPhoto, editTelegramMessage 
 const ADMIN_URL = process.env.ADMIN_URL || 'https://mental-clinic-admin.vercel.app';
 const SITE_URL = 'https://doctor-skripnik.com.ua';
 const REVIEW_ACTIONS = ['publish', 'reject', 'undo'];
+// Buttons under a proposed refresh of a published article
+const REFRESH_ACTIONS = ['apply', 'drop'];
 // Telegram caps a message at 4096 characters; leave room for the "(1/3)" header
 const CHUNK_MAX = 3800;
 
@@ -129,26 +131,6 @@ const notifyDraftForReview = async (article) => {
     if (failed.length) throw new Error(`${failed.length}/${results.length} chats: ${failed[0].reason.message}`);
 };
 
-/**
- * Tells every staff chat that an article went live without review (auto-published or
- * refreshed): the cover and the summary with the site and admin links, no buttons.
- */
-const notifyPublished = async (article, heading = '🤖 Опубліковано автоматично') => {
-    const bot = reviewBot();
-    if (!bot.token || !bot.chatIds.length) throw new Error('TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID not set');
-
-    const text = `<i>${escapeHtml(heading)}</i>\n\n${renderSummary(article)}`;
-    const results = await Promise.allSettled(bot.chatIds.map(async (chatId) => {
-        if (article.coverImage) {
-            await sendTelegramPhoto(bot.token, chatId, article.coverImage)
-                .catch(err => console.log(`Telegram: cover not sent — ${err.message}`));
-        }
-        return sendTelegramMessage(text, { token: bot.token, chatId });
-    }));
-    const failed = results.filter(r => r.status === 'rejected');
-    if (failed.length) throw new Error(`${failed.length}/${results.length} chats: ${failed[0].reason.message}`);
-};
-
 /** Brings every chat's summary in line with the article; `except` skips the message just edited. */
 const syncReviewMessages = async (article, except) => {
     const bot = reviewBot();
@@ -158,7 +140,70 @@ const syncReviewMessages = async (article, except) => {
             .catch(err => { if (!/not modified|not found/i.test(err.message)) throw err; })));
 };
 
+// ── Refresh of a published article: the rewrite waits in article.refreshProposal ──
+
+const renderRefreshSummary = (a) => {
+    const p = a.refreshProposal;
+    const words = (html) => (html || '').replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
+    const status = {
+        pending:  '📝 <b>Оновлення чекає на рішення</b> — стаття на сайті поки стара',
+        applied:  `✅ <b>Оновлення застосовано</b>${p.decidedByName ? `: ${escapeHtml(p.decidedByName)}` : ''} · ${kyivTime(p.decidedAt)}`,
+        rejected: `🚫 <b>Оновлення відхилено</b>${p.decidedByName ? `: ${escapeHtml(p.decidedByName)}` : ''} · ${kyivTime(p.decidedAt)}`,
+    }[p.status];
+    return [
+        `🔄 <b>Оновлення статті: ${escapeHtml(a.title)}</b>`,
+        '',
+        escapeHtml(p.changes || ''),
+        '',
+        // Once applied the article holds the new text, so "before" is only known while pending
+        `📏 ${p.status === 'pending' ? `${words(a.content)} → ` : ''}${words(p.content)} слів`,
+        '',
+        status,
+        '',
+        `👁 <a href="${SITE_URL}/articles/${a.slug}">Стаття на сайті</a>`,
+        `✏️ <a href="${ADMIN_URL}/articles/${a._id}/edit">Редагувати в адмінці</a>`,
+    ].join('\n');
+};
+
+const refreshKeyboard = (a) => (a.refreshProposal?.status === 'pending'
+    ? { inline_keyboard: [[button(a, 'apply', '✅ Застосувати оновлення'), button(a, 'drop', '🚫 Відхилити')]] }
+    : { inline_keyboard: [] });
+
+/**
+ * Sends a proposed rewrite of a published article to every staff chat: the new text, then a
+ * summary with Застосувати / Відхилити. Stores the summaries on `article.refreshProposal.tgReview` (saved by the caller).
+ */
+const notifyRefreshForReview = async (article) => {
+    const bot = reviewBot();
+    if (!bot.token || !bot.chatIds.length) throw new Error('TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID not set');
+
+    const p = article.refreshProposal;
+    const parts = chunk(`<b>${escapeHtml(article.title)}</b>\n\n${toTelegramHtml(p.content)}`);
+    const results = await Promise.allSettled(bot.chatIds.map(async (chatId) => {
+        for (const [i, part] of parts.entries()) {
+            const header = `<i>Оновлена версія статті на перевірку${parts.length > 1 ? ` (${i + 1}/${parts.length})` : ''}</i>\n\n`;
+            await sendTelegramMessage(header + part, { token: bot.token, chatId });
+        }
+        return sendTelegramMessage(renderRefreshSummary(article), { token: bot.token, chatId, replyMarkup: refreshKeyboard(article) });
+    }));
+
+    p.tgReview = results
+        .filter(r => r.status === 'fulfilled')
+        .map(r => ({ chatId: String(r.value.chat.id), messageId: r.value.message_id }));
+    const failed = results.filter(r => r.status === 'rejected');
+    if (failed.length) throw new Error(`${failed.length}/${results.length} chats: ${failed[0].reason.message}`);
+};
+
+const syncRefreshMessages = async (article, except) => {
+    const bot = reviewBot();
+    await Promise.all((article.refreshProposal?.tgReview || [])
+        .filter(m => !(except && String(m.chatId) === String(except.chatId) && m.messageId === except.messageId))
+        .map(m => editTelegramMessage(bot.token, m.chatId, m.messageId, renderRefreshSummary(article), refreshKeyboard(article))
+            .catch(err => { if (!/not modified|not found/i.test(err.message)) throw err; })));
+};
+
 module.exports = {
-    REVIEW_ACTIONS, reviewBot, toTelegramHtml, chunk, renderSummary, reviewKeyboard,
-    notifyDraftForReview, notifyPublished, syncReviewMessages,
+    REVIEW_ACTIONS, REFRESH_ACTIONS, reviewBot, toTelegramHtml, chunk, renderSummary, reviewKeyboard,
+    notifyDraftForReview, syncReviewMessages,
+    renderRefreshSummary, refreshKeyboard, notifyRefreshForReview, syncRefreshMessages,
 };

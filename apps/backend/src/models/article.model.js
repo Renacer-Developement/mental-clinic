@@ -27,6 +27,22 @@ const articleSchema = new mongoose.Schema(
         rejectedByName: { type: String },
         // Last content refresh by scripts/update-article.js (updatedAt also moves on every view)
         refreshedAt:    { type: Date },
+        // A rewrite proposed by scripts/update-article.js, applied or dropped with the support
+        // bot's buttons. Kept after the decision so the next refresh skips this article for a while.
+        refreshProposal: {
+            excerpt:      String,
+            content:      String,
+            categories:   [String],
+            tags:         [String],
+            relatedTests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Test' }],
+            coverImage:   String,
+            changes:      String,
+            status:       { type: String, enum: ['pending', 'applied', 'rejected'] },
+            proposedAt:   Date,
+            decidedAt:    Date,
+            decidedByName: String,
+            tgReview:     [{ _id: false, chatId: String, messageId: Number }],
+        },
     },
     { timestamps: true }
 );
