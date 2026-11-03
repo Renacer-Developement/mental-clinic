@@ -246,6 +246,19 @@
             @for (c of conditionMenu; track c.slug) {
               <a [routerLink]="'/' + c.slug" routerLinkActive="is-active" (click)="trackNav(c.slug, c.label); closeMenu()">{{ c.label }}</a>
             }
+          </div>
+        </div>
+      </li>
+
+      <li class="mnav__group" [class.is-open]="mobileSection === 'services'">
+        <button type="button" class="mnav__row" (click)="toggleMobileSection('services')"
+                [attr.aria-expanded]="mobileSection === 'services'" aria-controls="mnav-sub-services">
+          <i class="pi pi-briefcase mnav__icon" aria-hidden="true"></i>
+          <span>Послуги</span>
+          <i class="pi pi-chevron-down mnav__chev" aria-hidden="true"></i>
+        </button>
+        <div class="mnav__sub" id="mnav-sub-services">
+          <div class="mnav__sub-inner">
             @for (s of serviceMenu; track s.slug) {
               <a [routerLink]="'/' + s.slug" routerLinkActive="is-active" (click)="trackNav(s.slug, s.label); closeMenu()">{{ s.label }}</a>
             }

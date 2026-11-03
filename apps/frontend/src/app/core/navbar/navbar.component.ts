@@ -34,7 +34,7 @@ export class NavbarComponent implements OnDestroy {
 
   isMenuOpen = false;
   /** Which accordion is expanded in the mobile menu. */
-  mobileSection: 'conditions' | 'tests' | 'articles' | 'other' | 'about' | null = null;
+  mobileSection: 'conditions' | 'services' | 'tests' | 'articles' | 'other' | 'about' | null = null;
   /** Which desktop dropdown is open. A signal, because it is also changed from a
    *  timer (delayed close) and the app runs without zone.js change detection. */
   readonly mega = signal<'conditions' | 'tests' | 'articles' | 'other' | 'about' | null>(null);
@@ -134,7 +134,7 @@ export class NavbarComponent implements OnDestroy {
     this.closeMenu();
   }
 
-  toggleMobileSection(which: 'conditions' | 'tests' | 'articles' | 'other' | 'about'): void {
+  toggleMobileSection(which: 'conditions' | 'services' | 'tests' | 'articles' | 'other' | 'about'): void {
     this.mobileSection = this.mobileSection === which ? null : which;
   }
 
