@@ -24,6 +24,8 @@ const PAGES = {
   '/drugs':      [`${features}/drugs`],
   // Every condition page is one component filled from conditions.data.ts.
   conditions:    [`${features}/conditions`],
+  // Same for service pages and services.data.ts.
+  services:      [`${features}/services`],
 };
 
 const git = (...args) => execFileSync('git', args, { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();

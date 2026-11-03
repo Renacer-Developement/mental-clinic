@@ -43,6 +43,15 @@
         </ul>
       </nav>
 
+      <nav class="footer__col" aria-label="Послуги">
+        <h4 class="footer__col-title">Послуги</h4>
+        <ul>
+          @for (s of services; track s.slug) {
+            <li><a [routerLink]="'/' + s.slug" (click)="trackLinkClick(s.label, '/' + s.slug)">{{ s.label }}</a></li>
+          }
+        </ul>
+      </nav>
+
       <nav class="footer__col" aria-label="Тести">
         <h4 class="footer__col-title">Тести</h4>
         <ul>

@@ -32,6 +32,8 @@ export const EVENT_TRACK = {
   // ── Conversions ──────────────────────────────────────────────────────────
   /** GA4 recommended event — a booking contact (Telegram / Viber / phone / feedback form). Mark as a key event in GA4. */
   GENERATE_LEAD:  'generate_lead',
+  /** A step finished in a service page's booking journey (step number + service slug only, no answers) */
+  BOOKING_STEP:   'booking_step',
   TEST_START:     'test_start',
   TEST_COMPLETE:  'test_complete',
 } as const;

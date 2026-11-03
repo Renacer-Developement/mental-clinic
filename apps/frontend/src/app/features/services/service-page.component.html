@@ -1,0 +1,7 @@
+@switch (service.slug) {
+  @case ('adyktoloh-onlain') { <app-addiction-page [service]="service" /> }
+  @case ('psykhoterapiya-onlain') { <app-therapy-page [service]="service" /> }
+  @case ('psykhiatr-i-nevroloh-onlain') { <app-doctors-page [service]="service" /> }
+  @case ('dytyachyi-psykholoh-onlain') { <app-child-page [service]="service" /> }
+  @case ('kompyuterna-diahnostyka-rduh') { <app-adhd-page [service]="service" /> }
+}

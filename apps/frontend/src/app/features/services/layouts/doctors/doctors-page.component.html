@@ -1,0 +1,108 @@
+@let s = service();
+
+<section class="dr-hero">
+  <div class="dr-frame dr-hero__grid">
+    <nav class="dr-crumbs" aria-label="Навігаційний ланцюжок">
+      <a routerLink="/">Головна</a><span aria-hidden="true">/</span><span aria-current="page">{{ s.label }}</span>
+    </nav>
+
+    <div class="dr-hero__text">
+      <p class="dr-kicker">Дитячі та дорослі лікарі</p>
+      <h1 class="dr-hero__title">{{ s.h1 }}</h1>
+      <p class="dr-hero__lead">{{ s.lead }}</p>
+      <a class="dr-phone" [href]="phone().href"><i class="pi pi-phone" aria-hidden="true"></i>{{ phone().text }}</a>
+    </div>
+
+    <div class="dr-doors">
+      @for (d of doors; track d.title) {
+        <a class="dr-door" [href]="anchor('booking')" (click)="jump($event, 'booking')">
+          <span class="dr-door__title">{{ d.title }}</span>
+          <span class="dr-door__text">{{ d.text }}</span>
+          <span class="dr-door__go">Записатися →</span>
+        </a>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="dr-who" aria-labelledby="dr-who">
+  <div class="dr-frame">
+    <div class="dr-who__head">
+      <h2 class="dr-title" id="dr-who">{{ s.helpsTitle }}</h2>
+      <div class="dr-tabs" role="group" aria-label="Показати для кого">
+        <button type="button" aria-controls="dr-panel" [attr.aria-pressed]="audience() === 'adults'" (click)="audience.set('adults')">Дорослим</button>
+        <button type="button" aria-controls="dr-panel" [attr.aria-pressed]="audience() === 'children'" (click)="audience.set('children')">Дітям</button>
+      </div>
+    </div>
+
+    <div class="dr-panel" id="dr-panel" aria-live="polite">
+      <div class="dr-panel__col">
+        <h3>Психіатр <span class="dr-panel__for">{{ audience() === 'adults' ? 'для дорослих' : 'для дітей' }}</span></h3>
+        <ul>@for (i of lists[audience()].psychiatry; track i) { <li>{{ i }}</li> }</ul>
+      </div>
+      <div class="dr-panel__col">
+        <h3>Невролог <span class="dr-panel__for">{{ audience() === 'adults' ? 'для дорослих' : 'для дітей' }}</span></h3>
+        <ul>@for (i of lists[audience()].neurology; track i) { <li>{{ i }}</li> }</ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="dr-how" aria-labelledby="dr-how">
+  <div class="dr-frame">
+    <h2 class="dr-title" id="dr-how">Як проходить консультація</h2>
+    <ol class="dr-cards">
+      @for (t of s.steps; track t.title; let i = $index) {
+        <li>
+          <span class="dr-cards__num" aria-hidden="true">{{ i + 1 }}</span>
+          <h3>{{ t.title }}</h3>
+          <p>{{ t.text }}</p>
+        </li>
+      }
+    </ol>
+
+    <div class="dr-duo">
+      <div class="dr-prepare">
+        <h3>Що підготувати</h3>
+        <ul>@for (p of prepare; track p) { <li>{{ p }}</li> }</ul>
+      </div>
+      <div class="dr-world">
+        <i class="pi pi-globe" aria-hidden="true"></i>
+        <p>Консультуємо онлайн по всьому світу</p>
+        @if (s.related) { <a [routerLink]="s.related.path">{{ s.related.label }} →</a> }
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="dr-booking" id="booking" aria-labelledby="dr-booking">
+  <div class="dr-frame dr-booking__grid">
+    <div class="dr-booking__side">
+      <h2 class="dr-title" id="dr-booking">Записатися до лікаря</h2>
+      <p>Турбота, що ґрунтується на доказовій медицині. Супроводжуємо вас під час лікування.</p>
+      <dl>
+        <div><dt>Години</dt><dd>Пн–Сб, 8:00–22:00</dd></div>
+        <div><dt>Телефон</dt><dd><a [href]="phone().href">{{ phone().text }}</a></dd></div>
+      </dl>
+    </div>
+    <app-booking-journey class="dr-journey" [service]="s" />
+  </div>
+</section>
+
+<section class="dr-faq" aria-labelledby="dr-faq">
+  <div class="dr-frame">
+    <h2 class="dr-title" id="dr-faq">Часті питання</h2>
+    <app-service-faq class="dr-faq__list" [faqs]="s.faqs" />
+  </div>
+</section>
+
+<section class="dr-more" aria-labelledby="dr-more">
+  <div class="dr-frame">
+    <h2 class="dr-title" id="dr-more">Інші послуги центру</h2>
+    <ul class="dr-more__list">
+      @for (r of related(); track r.slug) {
+        <li><a [routerLink]="'/' + r.slug"><strong>{{ r.label }}</strong><span>{{ r.teaser }}</span></a></li>
+      }
+    </ul>
+  </div>
+</section>

@@ -1,0 +1,106 @@
+@let s = service();
+
+<section class="ah-hero">
+  <div class="ah-frame ah-hero__grid">
+    <nav class="ah-crumbs" aria-label="Навігаційний ланцюжок">
+      <a routerLink="/">Головна</a><span aria-hidden="true">/</span><span aria-current="page">{{ s.label }}</span>
+    </nav>
+
+    <div class="ah-hero__text">
+      <p class="ah-kicker">Комп’ютерна діагностика</p>
+      <h1 class="ah-hero__title">{{ s.h1 }}</h1>
+      <p class="ah-hero__sub">розладу дефіциту уваги та гіперактивності — для дітей і дорослих</p>
+      <p class="ah-hero__lead">{{ s.lead }}</p>
+      <div class="ah-actions">
+        <a class="ah-btn ah-btn--solid" [href]="anchor('booking')" (click)="jump($event, 'booking')">Записатися на діагностику</a>
+        <a class="ah-btn" [href]="phone().href"><i class="pi pi-phone" aria-hidden="true"></i>{{ phone().text }}</a>
+      </div>
+    </div>
+
+    <figure class="ah-screen">
+      <div class="ah-screen__display" aria-hidden="true">
+        @for (c of cells; track c) { <span [class.is-target]="c === 12"></span> }
+      </div>
+      <figcaption>
+        <p class="ah-screen__title">Що вимірює тест</p>
+        <ul>
+          @for (m of measures; track m.name) { <li><strong>{{ m.name }}</strong> — {{ m.text }}</li> }
+        </ul>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="ah-formula" aria-labelledby="ah-formula">
+  <div class="ah-frame">
+    <h2 class="ah-title" id="ah-formula">Тест не ставить діагноз сам по собі</h2>
+    <div class="ah-formula__row">
+      <div class="ah-formula__cell"><span>Комп’ютерний тест</span><small>об’єктивні показники уваги й імпульсивності</small></div>
+      <span class="ah-formula__op" aria-hidden="true">+</span>
+      <div class="ah-formula__cell"><span>Клінічна оцінка лікаря</span><small>інтерв’ю за DSM-5, історія розвитку, опитувальники</small></div>
+      <span class="ah-formula__op" aria-hidden="true">=</span>
+      <div class="ah-formula__cell ah-formula__cell--result"><span>Точний висновок</span><small>і план, якщо діагноз підтвердився</small></div>
+    </div>
+  </div>
+</section>
+
+<section class="ah-signs" aria-labelledby="ah-signs">
+  <div class="ah-frame">
+    <h2 class="ah-title" id="ah-signs">{{ s.helpsTitle }}</h2>
+    <div class="ah-signs__grid">
+      <div class="ah-signs__col">
+        <h3>У дітей</h3>
+        <ul>@for (x of signs.children; track x) { <li>{{ x }}</li> }</ul>
+      </div>
+      <div class="ah-signs__col ah-signs__col--adult">
+        <h3>У дорослих</h3>
+        <ul>@for (x of signs.adults; track x) { <li>{{ x }}</li> }</ul>
+      </div>
+    </div>
+    <p class="ah-signs__more">
+      @if (s.testCategory) { <a [routerLink]="['/test/list', s.testCategory]">Онлайн-опитувальники на РДУГ</a> }
+      @if (s.related) { · <a [routerLink]="s.related.path">{{ s.related.label }}</a> }
+    </p>
+  </div>
+</section>
+
+<section class="ah-steps" aria-labelledby="ah-steps">
+  <div class="ah-frame">
+    <h2 class="ah-title ah-title--light" id="ah-steps">Як проходить діагностика</h2>
+    <ol class="ah-steps__row">
+      @for (t of s.steps; track t.title; let i = $index) {
+        <li>
+          <span class="ah-steps__num" aria-hidden="true">0{{ i + 1 }}</span>
+          <h3>{{ t.title }}</h3>
+          <p>{{ t.text }}</p>
+        </li>
+      }
+    </ol>
+  </div>
+</section>
+
+<section class="ah-booking" id="booking" aria-labelledby="ah-booking">
+  <div class="ah-frame ah-booking__grid">
+    <app-booking-journey class="ah-journey" [service]="s" />
+    <div class="ah-booking__side">
+      <h2 class="ah-title" id="ah-booking">Запис на діагностику</h2>
+      <p>Три короткі запитання і ваш номер — адміністратор передзвонить, підбере лікаря і час. Формат і вікові межі тесту уточнить під час запису.</p>
+      <p class="ah-booking__hint">Або зателефонуйте самі: <a [href]="phone().href">{{ phone().text }}</a></p>
+    </div>
+  </div>
+</section>
+
+<section class="ah-faq" aria-labelledby="ah-faq">
+  <div class="ah-frame ah-faq__grid">
+    <h2 class="ah-title" id="ah-faq">Питання про діагностику</h2>
+    <app-service-faq class="ah-faq__list" [faqs]="s.faqs" />
+  </div>
+</section>
+
+<section class="ah-more" aria-label="Інші послуги центру">
+  <div class="ah-frame ah-more__row">
+    @for (r of related(); track r.slug) {
+      <a [routerLink]="'/' + r.slug"><span>{{ r.label }}</span><i class="pi pi-arrow-right" aria-hidden="true"></i></a>
+    }
+  </div>
+</section>

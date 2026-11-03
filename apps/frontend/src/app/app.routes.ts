@@ -10,6 +10,8 @@ import { CenterComponent } from './features/center/center.component';
 import { ConditionPageComponent } from './features/conditions/condition-page.component';
 import { CONDITIONS } from './features/conditions/conditions.data';
 import { OnlineConsultationComponent } from './features/online-consultation/online-consultation.component';
+import { ServicePageComponent } from './features/services/service-page.component';
+import { SERVICES } from './features/services/services.data';
 
 export const APP_ROUTES: Routes = [
   {
@@ -28,6 +30,7 @@ export const APP_ROUTES: Routes = [
       { path: ROUTES.CENTER, component: CenterComponent },
       { path: ROUTES.ONLINE_CONSULTATION, component: OnlineConsultationComponent },
       ...CONDITIONS.map(c => ({ path: c.slug, component: ConditionPageComponent, data: { slug: c.slug } })),
+      ...SERVICES.map(s => ({ path: s.slug, component: ServicePageComponent, data: { slug: s.slug } })),
 
       // Everything below is RenderMode.Server (rendered per-request, not at
       // build time), so lazy loading is safe and keeps them out of the main bundle.

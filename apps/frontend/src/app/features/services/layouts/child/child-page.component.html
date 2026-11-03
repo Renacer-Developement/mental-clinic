@@ -1,0 +1,100 @@
+@let s = service();
+
+<section class="ch-hero">
+  <div class="ch-frame">
+    <nav class="ch-crumbs" aria-label="Навігаційний ланцюжок">
+      <a routerLink="/">Головна</a><span aria-hidden="true">/</span><span aria-current="page">{{ s.label }}</span>
+    </nav>
+
+    <div class="ch-hero__card">
+      <div class="ch-hero__text">
+        <p class="ch-kicker">Для запису до дитячого психолога</p>
+        <h1 class="ch-hero__title">{{ s.h1 }}</h1>
+        <p class="ch-hero__lead">{{ s.lead }}</p>
+        <div class="ch-actions">
+          <a class="ch-btn ch-btn--solid" [href]="anchor('booking')" (click)="jump($event, 'booking')">Записати дитину</a>
+          <a class="ch-btn" [href]="phone().href"><i class="pi pi-phone" aria-hidden="true"></i>{{ phone().text }}</a>
+        </div>
+      </div>
+
+      <div class="ch-toys" aria-hidden="true">
+        <span class="ch-rainbow"></span>
+        <span class="ch-block ch-block--1"></span>
+        <span class="ch-block ch-block--2"></span>
+        <span class="ch-block ch-block--3"></span>
+        <span class="ch-ball"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="ch-when" aria-labelledby="ch-when">
+  <div class="ch-frame">
+    <h2 class="ch-title" id="ch-when">{{ s.helpsTitle }}</h2>
+    <ul class="ch-tiles">
+      @for (h of s.helps; track h; let i = $index) {
+        <li [class]="'ch-tile ch-tile--' + (i % 4)">
+          <span class="ch-tile__shape" aria-hidden="true"></span>
+          {{ h }}
+        </li>
+      }
+    </ul>
+  </div>
+</section>
+
+<section class="ch-path" aria-labelledby="ch-path">
+  <div class="ch-frame">
+    <h2 class="ch-title ch-title--center" id="ch-path">Як ми працюємо</h2>
+    <ol class="ch-path__list">
+      @for (t of s.steps; track t.title; let i = $index) {
+        <li>
+          <span class="ch-path__dot" aria-hidden="true">{{ i + 1 }}</span>
+          <div class="ch-path__card">
+            <h3>{{ t.title }}</h3>
+            <p>{{ t.text }}</p>
+          </div>
+        </li>
+      }
+    </ol>
+  </div>
+</section>
+
+<section class="ch-tips" aria-labelledby="ch-tips">
+  <div class="ch-frame">
+    <div class="ch-note">
+      <h2 class="ch-title" id="ch-tips">Батькам: як підготувати дитину</h2>
+      <ul class="ch-note__list">
+        @for (t of tips; track t.title) {
+          <li><strong>{{ t.title }}</strong><span>{{ t.text }}</span></li>
+        }
+      </ul>
+      @if (s.related) {
+        <p class="ch-note__more">Якщо потрібна медична оцінка — <a [routerLink]="s.related.path">{{ s.related.label }}</a>.</p>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="ch-booking" id="booking" aria-labelledby="ch-booking">
+  <div class="ch-frame ch-booking__inner">
+    <h2 class="ch-title ch-title--center" id="ch-booking">Запишіть дитину за хвилину</h2>
+    <p class="ch-booking__lead">Оберіть вік, що турбує і зручний час — адміністратор підбере психолога, який працює саме з таким віком.</p>
+    <app-booking-journey class="ch-journey" [service]="s" />
+  </div>
+</section>
+
+<section class="ch-faq" aria-labelledby="ch-faq">
+  <div class="ch-frame ch-faq__inner">
+    <h2 class="ch-title ch-title--center" id="ch-faq">Батьки часто питають</h2>
+    <app-service-faq class="ch-faq__list" [faqs]="s.faqs" />
+  </div>
+</section>
+
+<section class="ch-more" aria-labelledby="ch-more">
+  <div class="ch-frame">
+    <h2 class="ch-more__title" id="ch-more">Ще в центрі</h2>
+    <nav class="ch-more__list" aria-labelledby="ch-more">
+      @for (r of related(); track r.slug) { <a [routerLink]="'/' + r.slug">{{ r.label }}</a> }
+    </nav>
+  </div>
+</section>

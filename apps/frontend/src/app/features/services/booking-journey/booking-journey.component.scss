@@ -1,0 +1,312 @@
+@use "../../../../assets/css/coloristics" as *;
+
+// Booking journey: a four-step progress rail over one question panel.
+// Each service page themes it through the --bj-* custom properties.
+
+:host {
+  --bj-bg: #{$section-bg};
+  --bj-surface: #{$paper};
+  --bj-ink: #{$heading-color};
+  --bj-ink-hover: #{$primary-ink};
+  --bj-on-ink: #{$paper};
+  --bj-text: #{$body-text-color};
+  --bj-muted: #{$muted-text-color};
+  --bj-picked: #{$accent-soft};
+  --bj-line: #{rgba($heading-color, 0.18)};
+  --bj-radius: 16px;
+  display: block;
+}
+
+$rule: 1px solid var(--bj-line);
+
+.bj {
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border-radius: var(--bj-radius);
+  background: var(--bj-bg);
+  color: var(--bj-text);
+}
+
+// ── Progress ──────────────────────────────────────────────────────────────────
+
+.bj-progress {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin: 0 0 1.75rem;
+  padding: 0;
+  list-style: none;
+
+  li {
+    border-top: 3px solid var(--bj-line);
+    transition: border-color 0.2s;
+
+    &.is-done, &.is-current { border-color: var(--bj-ink); }
+  }
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    min-height: 44px;
+    padding: 0.5rem 0 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: 0.85rem;
+    color: var(--bj-muted);
+    text-align: left;
+    cursor: pointer;
+
+    &:disabled { cursor: default; }
+  }
+
+  .is-done button:hover { color: var(--bj-ink); }
+  .is-current button { color: var(--bj-ink); font-weight: 600; }
+}
+
+.bj-progress__num {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+
+  .is-done &, .is-current & { border-color: var(--bj-ink); background: var(--bj-ink); color: var(--bj-on-ink); }
+}
+
+.bj-progress__label {
+  @media (max-width: 640px) {
+    // Numbers only on phones; the question below names the step
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+}
+
+// ── Question ──────────────────────────────────────────────────────────────────
+
+.bj-q {
+  margin: 0 0 0.5rem;
+  scroll-margin-top: 140px;
+
+  // focused programmatically on step change; no ring for a heading
+  &:focus { outline: none; }
+  font-family: $font-display;
+  font-size: clamp(1.3rem, 2.2vw, 1.6rem);
+  font-weight: 500;
+  color: var(--bj-ink);
+}
+
+.bj-hint {
+  margin: 0 0 1.25rem;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--bj-muted);
+}
+
+.bj-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+
+  &--grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    margin-top: 0;
+  }
+}
+
+.bj-option {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+  min-height: 56px;
+  padding: 0.85rem 1.25rem;
+  border: 1px solid var(--bj-line);
+  border-radius: 12px;
+  background: var(--bj-surface);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--bj-ink);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s, background-color 0.15s;
+
+  small { font-size: 0.8rem; font-weight: 400; color: var(--bj-muted); }
+
+  &:hover { border-color: var(--bj-ink); }
+
+  &.is-picked { border-color: var(--bj-ink); background: var(--bj-picked); }
+
+  @media (max-width: 520px) { width: 100%; }
+}
+
+.bj-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.bj-chip {
+  min-height: 44px;
+  padding: 0 1rem;
+  border: 1px solid var(--bj-line);
+  border-radius: 999px;
+  background: var(--bj-surface);
+  font: inherit;
+  font-size: 0.92rem;
+  color: var(--bj-ink);
+  cursor: pointer;
+  transition: border-color 0.15s, background-color 0.15s;
+
+  &:hover { border-color: var(--bj-ink); }
+
+  &.is-picked {
+    border-color: var(--bj-ink);
+    background: var(--bj-ink);
+    color: var(--bj-on-ink);
+  }
+}
+
+// ── Navigation ────────────────────────────────────────────────────────────────
+
+.bj-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: $rule;
+}
+
+.bj-link {
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 0.92rem;
+  color: var(--bj-muted);
+  cursor: pointer;
+
+  &:hover { color: var(--bj-ink); text-decoration: underline; text-underline-offset: 4px; }
+}
+
+.bj-next {
+  height: 48px;
+  padding: 0 1.75rem;
+  border: 1px solid var(--bj-ink);
+  border-radius: 999px;
+  background: var(--bj-ink);
+  font: inherit;
+  font-weight: 600;
+  color: var(--bj-on-ink);
+  cursor: pointer;
+
+  &:hover { background: var(--bj-ink-hover); border-color: var(--bj-ink-hover); }
+}
+
+// ── Contact form ──────────────────────────────────────────────────────────────
+
+.bj-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+
+  @media (max-width: 560px) { grid-template-columns: minmax(0, 1fr); }
+}
+
+.bj-field {
+  display: grid;
+  gap: 0.4rem;
+
+  label { font-size: 0.9rem; font-weight: 600; color: var(--bj-ink); }
+
+  input {
+    height: 52px;
+    padding: 0 1rem;
+    border: 1px solid var(--bj-muted);
+    border-radius: 12px;
+    background: var(--bj-surface);
+    font: inherit;
+    font-size: 1rem;
+    color: var(--bj-text);
+
+    &::placeholder { color: var(--bj-muted); }
+    &:focus-visible { outline-offset: 1px; }
+    &[aria-invalid='true'] { border-color: #b3261e; border-width: 2px; }
+  }
+}
+
+.bj-methods {
+  margin: 1.25rem 0 0;
+  padding: 0;
+  border: 0;
+
+  legend { margin-bottom: 0.5rem; padding: 0; font-size: 0.9rem; font-weight: 600; color: var(--bj-ink); }
+}
+
+// Real radio inputs, drawn as chips; the ring follows keyboard focus
+.bj-chip--radio {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+
+  input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+
+  &:has(input:focus-visible) { outline: 2px solid var(--bj-ink); outline-offset: 3px; }
+}
+
+.bj-hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+
+.bj-error {
+  margin: 1rem 0 0;
+  padding: 0.6rem 0.85rem;
+  border-left: 3px solid #b3261e;
+  border-radius: 0 8px 8px 0;
+  background: #fbeceb;
+  font-size: 0.92rem;
+  color: #8c1d18;
+}
+
+.bj-consent {
+  margin: 0.85rem 0 0;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--bj-muted);
+}
+
+.bj-next:disabled { opacity: 0.7; cursor: progress; }
+
+// ── Sent ──────────────────────────────────────────────────────────────────────
+
+.bj-done {
+  margin: 0 0 1rem;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--bj-text);
+}
+
+.bj-call {
+  font-weight: 600;
+  color: var(--bj-ink);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  text-underline-offset: 4px;
+}

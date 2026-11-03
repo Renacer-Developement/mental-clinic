@@ -1,0 +1,96 @@
+@use "../../../../assets/css/coloristics" as *;
+
+// Shared restraint for the service layouts: the site's serif headings, pill
+// buttons and kicker. Pages differ in composition, not in loudness.
+
+$rule: 1px solid rgba($heading-color, 0.14);
+
+@mixin svc-hero-title {
+  margin: 0;
+  font-family: $font-display;
+  font-size: clamp(2.2rem, 4.6vw, 3.75rem);
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  color: $heading-color;
+  text-wrap: balance;
+}
+
+@mixin svc-title {
+  margin: 0 0 1.75rem;
+  font-family: $font-display;
+  font-size: clamp(1.7rem, 2.6vw, 2.25rem);
+  font-weight: 500;
+  line-height: 1.15;
+  color: $heading-color;
+}
+
+@mixin svc-lead {
+  max-width: 38rem;
+  margin: 1.25rem 0 1.75rem;
+  font-size: clamp(1.05rem, 1.4vw, 1.15rem);
+  line-height: 1.6;
+  color: $body-text-color;
+}
+
+@mixin svc-crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: $muted-text-color;
+
+  a { display: inline-flex; align-items: center; min-height: 24px; color: inherit; text-decoration: none; }
+  a:hover { color: $heading-color; text-decoration: underline; }
+  [aria-current] { color: $heading-color; }
+}
+
+@mixin svc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+@mixin svc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 52px;
+  padding: 0 1.5rem;
+  border: 1px solid rgba($heading-color, 0.35);
+  border-radius: 999px;
+  background: none;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: $heading-color;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  font-variant-numeric: tabular-nums;
+  transition: background-color 0.15s, border-color 0.15s;
+
+  &:hover { border-color: $heading-color; background: rgba($heading-color, 0.04); }
+
+  i { font-size: 0.85rem; }
+
+  @media (max-width: 520px) { width: 100%; }
+}
+
+@mixin svc-btn-solid {
+  border-color: $heading-color;
+  background: $heading-color;
+  color: $paper;
+
+  &:hover { border-color: $primary-ink; background: $primary-ink; }
+}
+
+@mixin svc-link {
+  font-weight: 600;
+  color: $primary-ink;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+
+  &:hover { color: $heading-color; }
+}

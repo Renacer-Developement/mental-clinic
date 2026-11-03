@@ -1,0 +1,105 @@
+@let s = service();
+
+<section class="th-hero">
+  <div class="th-frame">
+    <nav class="th-crumbs" aria-label="Навігаційний ланцюжок">
+      <a routerLink="/">Головна</a><span aria-hidden="true">/</span><span aria-current="page">{{ s.label }}</span>
+    </nav>
+
+    <div class="th-hero__center">
+      <p class="th-pill">Сесії доказових фахівців з психотерапії</p>
+      <h1 class="th-hero__title">{{ s.h1 }}</h1>
+      <p class="th-hero__lead">{{ s.lead }}</p>
+      <div class="th-actions">
+        <a class="th-btn th-btn--solid" [href]="anchor('booking')" (click)="jump($event, 'booking')">Підібрати психотерапевта</a>
+        <a class="th-btn" [href]="phone().href"><i class="pi pi-phone" aria-hidden="true"></i>{{ phone().text }}</a>
+      </div>
+    </div>
+
+    <ul class="th-facts">
+      <li><i class="pi pi-clock" aria-hidden="true"></i>У зручний для вас час</li>
+      <li><i class="pi pi-globe" aria-hidden="true"></i>З будь-якої точки світу</li>
+      <li><i class="pi pi-verified" aria-hidden="true"></i>Лише доказові методи</li>
+    </ul>
+  </div>
+</section>
+
+<section class="th-cloud" aria-labelledby="th-cloud">
+  <div class="th-frame">
+    <h2 class="th-title" id="th-cloud">{{ s.helpsTitle }}</h2>
+    <ul class="th-bubbles">
+      @for (h of s.helps; track h) { <li>{{ h }}</li> }
+    </ul>
+    @if (s.testCategory) {
+      <p class="th-test">Не впевнені, з чого почати? <a [routerLink]="['/test/list', s.testCategory]">Пройдіть короткий тест</a> — результат можна показати терапевту.</p>
+    }
+  </div>
+</section>
+
+<section class="th-flow" aria-labelledby="th-flow">
+  <div class="th-frame th-flow__grid">
+    <div class="th-flow__head">
+      <h2 class="th-title" id="th-flow">Як проходить терапія</h2>
+      <p>Когнітивно-поведінкова терапія, схема-терапія та інші методи з доведеною ефективністю.</p>
+    </div>
+    <ol class="th-timeline">
+      @for (t of s.steps; track t.title; let i = $index) {
+        <li>
+          <span class="th-timeline__num" aria-hidden="true">{{ i + 1 }}</span>
+          <h3>{{ t.title }}</h3>
+          <p>{{ t.text }}</p>
+        </li>
+      }
+    </ol>
+  </div>
+</section>
+
+<section class="th-compare" aria-labelledby="th-compare">
+  <div class="th-frame">
+    <h2 class="th-title" id="th-compare">Психотерапевт чи психіатр?</h2>
+    <div class="th-table" role="table" aria-label="Порівняння психотерапевта і психіатра">
+      <div class="th-table__row th-table__row--head" role="row">
+        <span role="columnheader"><span class="visually-hidden">Критерій</span></span>
+        <span role="columnheader">Психотерапевт</span>
+        <span role="columnheader">Психіатр</span>
+      </div>
+      @for (r of compare; track r.aspect) {
+        <div class="th-table__row" role="row">
+          <span role="rowheader">{{ r.aspect }}</span>
+          <span role="cell" data-label="Психотерапевт">{{ r.therapist }}</span>
+          <span role="cell" data-label="Психіатр">{{ r.psychiatrist }}</span>
+        </div>
+      }
+    </div>
+    <p class="th-compare__note">У центрі вони працюють разом. @if (s.related) { Детальніше: <a [routerLink]="s.related.path">{{ s.related.label }}</a>. }</p>
+  </div>
+</section>
+
+<section class="th-booking" id="booking" aria-labelledby="th-booking">
+  <div class="th-frame th-booking__inner">
+    <h2 class="th-title th-title--center" id="th-booking">Підберемо фахівця під ваш запит</h2>
+    <p class="th-booking__lead">Дайте відповідь на три запитання і залиште номер — адміністратор передзвонить і запропонує фахівця.</p>
+    <app-booking-journey class="th-journey" [service]="s" />
+  </div>
+</section>
+
+<section class="th-faq" aria-labelledby="th-faq">
+  <div class="th-frame th-faq__inner">
+    <h2 class="th-title th-title--center" id="th-faq">Часті питання</h2>
+    <app-service-faq class="th-faq__list" [faqs]="s.faqs" />
+  </div>
+</section>
+
+<section class="th-final" aria-labelledby="th-final">
+  <div class="th-frame th-final__grid">
+    <h2 class="th-final__title" id="th-final">Турбота та безпечний <em>простір для змін</em></h2>
+    <nav aria-label="Інші послуги центру">
+      <p class="th-final__label">Також у центрі</p>
+      <ul class="th-final__list">
+        @for (r of related(); track r.slug) {
+          <li><a [routerLink]="'/' + r.slug"><span>{{ r.label }}</span><small>{{ r.teaser }}</small></a></li>
+        }
+      </ul>
+    </nav>
+  </div>
+</section>

@@ -65,6 +65,15 @@
                   }
                 </ul>
               </div>
+              <!-- stacked under the conditions in this one-column panel, so no side divider -->
+              <div class="dnav__col" style="padding-left: 0; border-left: 0">
+                <span class="dnav__col-title">Послуги</span>
+                <ul>
+                  @for (s of serviceMenu; track s.slug) {
+                    <li><a [routerLink]="'/' + s.slug" (click)="trackNav(s.slug, s.label); closeMega(true)">{{ s.label }}</a></li>
+                  }
+                </ul>
+              </div>
               <a class="dnav__all" [routerLink]="'/' + ROUTES.VISIT" (click)="closeMega(true)">Записатися на консультацію →</a>
             </div>
           </div>
@@ -236,6 +245,9 @@
           <div class="mnav__sub-inner">
             @for (c of conditionMenu; track c.slug) {
               <a [routerLink]="'/' + c.slug" routerLinkActive="is-active" (click)="trackNav(c.slug, c.label); closeMenu()">{{ c.label }}</a>
+            }
+            @for (s of serviceMenu; track s.slug) {
+              <a [routerLink]="'/' + s.slug" routerLinkActive="is-active" (click)="trackNav(s.slug, s.label); closeMenu()">{{ s.label }}</a>
             }
           </div>
         </div>

@@ -9,6 +9,7 @@ import { ConsentService } from '../../../../analytics/consent.service';
 import { EVENT_TRACK } from '../../../../analytics/analytics.constants';
 import { TEST_CATEGORY_CONTENT } from '../../../tests/constants/test-category-content.constants';
 import { CONDITIONS } from '../../../conditions/conditions.data';
+import { SERVICES } from '../../../services/services.data';
 
 @Component({
   standalone: true,
@@ -27,6 +28,8 @@ export class FooterComponent {
   }
 
   readonly conditions = CONDITIONS.map(c => ({ slug: c.slug, label: c.label }));
+
+  readonly services = SERVICES.map(s => ({ slug: s.slug, label: s.label }));
 
   readonly testCategories = Object.entries(TEST_CATEGORY_CONTENT).map(([slug, c]) => ({ slug, label: c.label }));
 

@@ -13,6 +13,7 @@ import { TEST_CATEGORY_CONTENT } from '../../features/tests/constants/test-categ
 import { sectionAnchor } from '../../features/tests/constants/test-sections.constants';
 import { ARTICLE_CATEGORIES } from '../../features/articles/constants/article-categories.constants';
 import { CONDITIONS } from '../../features/conditions/conditions.data';
+import { SERVICES } from '../../features/services/services.data';
 import { NavigationStart, Scroll } from '@angular/router';
 import { filter, take } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -50,6 +51,7 @@ export class NavbarComponent implements OnDestroy {
 
   /** Condition pages (/likuvannya-*), for the "Що лікуємо" menu. */
   readonly conditionMenu = CONDITIONS.map(c => ({ slug: c.slug, label: c.label }));
+  readonly serviceMenu = SERVICES.map(s => ({ slug: s.slug, label: s.label }));
 
   readonly phone = clinicContacts.doctors.phone;
   /** +380665691677 → +38 (066) 569-16-77 */

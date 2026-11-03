@@ -1,5 +1,6 @@
 import { RenderMode, ServerRoute } from '@angular/ssr';
 import { CONDITIONS } from './features/conditions/conditions.data';
+import { SERVICES } from './features/services/services.data';
 
 export const serverRoutes: ServerRoute[] = [
   // Static marketing pages — content doesn't depend on live API data, prerender at build time
@@ -11,6 +12,7 @@ export const serverRoutes: ServerRoute[] = [
   { path: 'pro-tsentr', renderMode: RenderMode.Prerender },
   { path: 'konsultatsiya-psykhiatra-onlain', renderMode: RenderMode.Prerender },
   ...CONDITIONS.map(c => ({ path: c.slug, renderMode: RenderMode.Prerender as const })),
+  ...SERVICES.map(s => ({ path: s.slug, renderMode: RenderMode.Prerender as const })),
 
   // Dynamic content backed by the API — render per-request so bots/crawlers
   // always see the current tests, articles and contract text, not a stale build-time snapshot

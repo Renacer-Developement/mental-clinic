@@ -1,0 +1,113 @@
+@let s = service();
+
+<section class="ad-hero">
+  <svg class="ad-hero__hills" viewBox="0 0 1440 260" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 150 L180 90 L320 140 L520 60 L700 130 L880 80 L1080 140 L1260 70 L1440 120 V260 H0Z" fill="#2d2e2e" fill-opacity="0.05"/>
+    <path d="M0 190 L220 130 L420 180 L640 120 L860 185 L1060 130 L1260 180 L1440 150 V260 H0Z" fill="#2d2e2e" fill-opacity="0.08"/>
+    <path d="M0 230 L260 190 L520 225 L780 185 L1040 228 L1300 195 L1440 215 V260 H0Z" fill="#fcf5ee"/>
+  </svg>
+
+  <div class="ad-hero__inner">
+    <nav class="ad-crumbs" aria-label="Навігаційний ланцюжок">
+      <a routerLink="/">Головна</a><span aria-hidden="true">/</span><span aria-current="page">{{ s.label }}</span>
+    </nav>
+
+    <div class="ad-hero__text">
+      <p class="ad-pill">Фахівець, який працює з різними видами залежностей</p>
+      <h1 class="ad-hero__title">{{ s.h1 }}</h1>
+      <p class="ad-hero__lead">{{ s.lead }}</p>
+    </div>
+
+    <aside class="ad-call" aria-label="Запис до адиктолога">
+      <p class="ad-call__label">Писати адміністратору в Telegram / Viber</p>
+      <a class="ad-call__phone" [href]="phone().href"><i class="pi pi-phone" aria-hidden="true"></i>{{ phone().text }}</a>
+      <a class="ad-call__btn" [href]="anchor('booking')" (click)="jump($event, 'booking')">Записатися онлайн</a>
+      <p class="ad-call__note">Конфіденційно · пн–сб 8:00–22:00</p>
+    </aside>
+  </div>
+</section>
+
+<section class="ad-kinds" aria-labelledby="ad-kinds">
+  <div class="ad-frame">
+    <h2 class="ad-title" id="ad-kinds">{{ s.helpsTitle }}</h2>
+    <ol class="ad-kinds__list">
+      @for (k of kinds(); track k.title; let i = $index) {
+        <li>
+          <span class="ad-kinds__num" aria-hidden="true">0{{ i + 1 }}</span>
+          <div>
+            <h3>{{ k.title }}</h3>
+            @if (k.detail) { <p>{{ k.detail }}</p> }
+          </div>
+        </li>
+      }
+    </ol>
+  </div>
+</section>
+
+<section class="ad-paths" aria-labelledby="ad-paths">
+  <div class="ad-frame">
+    <h2 class="ad-title" id="ad-paths">Звернутися можна двома шляхами</h2>
+    <div class="ad-paths__grid">
+      <article class="ad-path">
+        <span class="ad-path__tag">Для себе</span>
+        <h3>Залежність заважає вам</h3>
+        <p>Без осуду і без «кодування». Разом з адиктологом ви оціните, що відбувається, і складете план, який реально виконати.</p>
+      </article>
+      <article class="ad-path ad-path--dark">
+        <span class="ad-path__tag">Для родини</span>
+        <h3>Залежність у близької людини</h3>
+        <p>Почніть із консультації для себе: як говорити про лікування, не підтримувати залежність і зберегти власні сили.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="ad-steps" aria-labelledby="ad-steps">
+  <div class="ad-frame">
+    <h2 class="ad-title" id="ad-steps">Як проходить робота</h2>
+    <ol class="ad-steps__line">
+      @for (t of s.steps; track t.title) {
+        <li>
+          <span class="ad-steps__dot" aria-hidden="true"></span>
+          <h3>{{ t.title }}</h3>
+          <p>{{ t.text }}</p>
+        </li>
+      }
+    </ol>
+    <div class="ad-links">
+      @if (s.related) { <a [routerLink]="s.related.path">{{ s.related.label }} →</a> }
+      @if (s.testCategory) { <a [routerLink]="['/test/list', s.testCategory]">Тести на залежність →</a> }
+    </div>
+  </div>
+</section>
+
+<section class="ad-booking" id="booking" aria-labelledby="ad-booking">
+  <div class="ad-frame ad-booking__grid">
+    <div>
+      <h2 class="ad-title ad-title--light" id="ad-booking">Перший крок — короткий</h2>
+      <p class="ad-booking__lead">Три запитання і ваш номер — адміністратор передзвонить. Конфіденційно: відповіді бачить лише адміністратор центру.</p>
+    </div>
+    <app-booking-journey class="ad-journey" [service]="s" />
+  </div>
+</section>
+
+<section class="ad-faq" aria-labelledby="ad-faq">
+  <div class="ad-frame ad-faq__grid">
+    <div>
+      <h2 class="ad-title" id="ad-faq">Часті питання</h2>
+      @if (s.articleCategory) {
+        <p class="ad-faq__more">Більше у <a [routerLink]="['/articles/category', s.articleCategory]">статтях лікарів центру</a>.</p>
+      }
+    </div>
+    <app-service-faq class="ad-faq__list" [faqs]="s.faqs" />
+  </div>
+</section>
+
+<section class="ad-final" aria-labelledby="ad-final">
+  <div class="ad-frame">
+    <p class="ad-final__quote" id="ad-final">Піклуватися про ментальне здоров’я — це не слабкість, <em>а прояв відповідальності перед собою.</em></p>
+    <nav class="ad-more" aria-label="Інші послуги центру">
+      @for (r of related(); track r.slug) { <a [routerLink]="'/' + r.slug">{{ r.label }}</a> }
+    </nav>
+  </div>
+</section>

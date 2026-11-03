@@ -1,5 +1,6 @@
 import { API_ARTICLES, API_TESTS } from './app/app.constants';
 import { CONDITIONS } from './app/features/conditions/conditions.data';
+import { SERVICES } from './app/features/services/services.data';
 import { TEST_CATEGORY_CONTENT } from './app/features/tests/constants/test-category-content.constants';
 import { ARTICLE_CATEGORIES } from './app/features/articles/constants/article-categories.constants';
 import { PAGE_DATES } from './page-dates.generated';
@@ -43,6 +44,7 @@ const STATIC_ENTRIES: Entry[] = ([
   { path: '/visit',    changefreq: 'monthly', priority: '0.9' },
   { path: '/konsultatsiya-psykhiatra-onlain', changefreq: 'monthly', priority: '0.9' },
   ...CONDITIONS.map(c => ({ path: `/${c.slug}`, changefreq: 'monthly' as const, priority: '0.9', lastmod: PAGE_DATES['conditions'] })),
+  ...SERVICES.map(s => ({ path: `/${s.slug}`, changefreq: 'monthly' as const, priority: '0.9', lastmod: PAGE_DATES['services'] })),
   { path: '/articles', changefreq: 'daily',   priority: '0.9' },
   { path: '/test/list', changefreq: 'weekly', priority: '0.8' },
   ...Object.keys(TEST_CATEGORY_CONTENT).map(slug => ({ path: `/test/list/${slug}`, changefreq: 'weekly' as const, priority: '0.7' })),

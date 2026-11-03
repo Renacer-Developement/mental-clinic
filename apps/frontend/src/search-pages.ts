@@ -1,4 +1,5 @@
 import { CONDITIONS } from './app/features/conditions/conditions.data';
+import { SERVICES } from './app/features/services/services.data';
 import { TEST_CATEGORY_CONTENT } from './app/features/tests/constants/test-category-content.constants';
 import { ROUTES } from './app/shared/constants/routes.constants';
 
@@ -22,6 +23,17 @@ const conditionPages: SearchPage[] = CONDITIONS.map(c => ({
     `${c.lead}\n${c.symptomsTitle}: ${c.symptoms.join('; ')}`,
     `Як ми лікуємо: ${c.treatment.map(t => `${t.title} — ${t.text}`).join(' ')}`,
     ...c.faqs.map(f => `${f.q}\n${f.a}`),
+  ],
+}));
+
+const servicePages: SearchPage[] = SERVICES.map(s => ({
+  url: `/${s.slug}`,
+  title: s.h1,
+  snippet: s.description,
+  sections: [
+    `${s.lead}\n${s.helpsTitle}: ${s.helps.join('; ')}`,
+    `Як це працює: ${s.steps.map(t => `${t.title} — ${t.text}`).join(' ')}`,
+    ...s.faqs.map(f => `${f.q}\n${f.a}`),
   ],
 }));
 
@@ -76,4 +88,4 @@ const staticPages: SearchPage[] = [
   },
 ];
 
-export const SEARCH_PAGES: SearchPage[] = [...staticPages, ...conditionPages, ...testCategoryPages];
+export const SEARCH_PAGES: SearchPage[] = [...staticPages, ...conditionPages, ...servicePages, ...testCategoryPages];

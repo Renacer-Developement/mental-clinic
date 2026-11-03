@@ -1,0 +1,120 @@
+<div class="bj">
+  <ol class="bj-progress" aria-label="Кроки запису">
+    @for (s of STEPS; track s; let i = $index) {
+      <li [class.is-done]="i < step()" [class.is-current]="i === step()" [attr.aria-current]="i === step() ? 'step' : null">
+        <button type="button" (click)="goTo(i)" [disabled]="i >= step() || state() === 'sent'">
+          <span class="bj-progress__num" aria-hidden="true">{{ i < step() ? '✓' : i + 1 }}</span>
+          <span class="bj-progress__label">{{ s }}</span>
+          <span class="visually-hidden">, крок {{ i + 1 }} з {{ STEPS.length }}{{ i < step() ? ', виконано' : '' }}</span>
+        </button>
+      </li>
+    }
+  </ol>
+
+  <div class="bj-panel">
+    @switch (step()) {
+      @case (0) {
+        <h3 class="bj-q" id="bj-q0" tabindex="-1">Для кого шукаєте допомогу?</h3>
+        <div class="bj-options" role="group" aria-labelledby="bj-q0">
+          @for (o of service().journey.who; track o.id) {
+            <button type="button" class="bj-option" [class.is-picked]="who() === o.id" [attr.aria-pressed]="who() === o.id" (click)="pickWho(o.id)">
+              {{ o.label }}
+            </button>
+          }
+        </div>
+      }
+
+      @case (1) {
+        <h3 class="bj-q" id="bj-q1" tabindex="-1">Що турбує найбільше?</h3>
+        <p class="bj-hint" id="bj-h1">Можна обрати кілька або пропустити. Відповіді побачить лише адміністратор центру.</p>
+        <div class="bj-chips" role="group" aria-labelledby="bj-q1" aria-describedby="bj-h1">
+          @for (c of service().journey.concerns; track c) {
+            <button type="button" class="bj-chip" [class.is-picked]="concerns().includes(c)" [attr.aria-pressed]="concerns().includes(c)" (click)="toggleConcern(c)">
+              {{ c }}
+            </button>
+          }
+        </div>
+        <div class="bj-nav">
+          <button type="button" class="bj-link" (click)="back()">← Назад</button>
+          <button type="button" class="bj-next" (click)="next()">{{ concerns().length ? 'Далі' : 'Пропустити' }}</button>
+        </div>
+      }
+
+      @case (2) {
+        <h3 class="bj-q" id="bj-q2" tabindex="-1">Коли вам зручно?</h3>
+        <p class="bj-hint" id="bj-h2">Консультації онлайн, пн–сб. Точний час адміністратор погодить з вами.</p>
+        <div class="bj-options bj-options--grid" role="group" aria-labelledby="bj-q2" aria-describedby="bj-h2">
+          @for (t of TIMES; track t.id) {
+            <button type="button" class="bj-option" [class.is-picked]="time() === t.id" [attr.aria-pressed]="time() === t.id" (click)="pickTime(t.id)">
+              {{ t.label }}<small>{{ t.hint }}</small>
+            </button>
+          }
+        </div>
+        <div class="bj-nav">
+          <button type="button" class="bj-link" (click)="back()">← Назад</button>
+        </div>
+      }
+
+      @case (3) {
+        @if (state() === 'sent') {
+          <h3 class="bj-q" id="bj-q3" tabindex="-1">Заявку надіслано</h3>
+          <p class="bj-done" role="status">
+            Дякуємо, {{ name.trim() }}! Адміністратор звʼяжеться з вами
+            {{ contactMethod === 'phone' ? 'телефоном' : 'у ' + (contactMethod === 'telegram' ? 'Telegram' : 'Viber') }}
+            найближчим часом у робочі години: пн–сб, 8:00–22:00.
+          </p>
+          <p class="bj-hint">Якщо терміново — зателефонуйте:
+            <a class="bj-call" [href]="'tel:' + phone()" (click)="trackCall()">{{ phoneText() }}</a></p>
+        } @else {
+          <h3 class="bj-q" id="bj-q3" tabindex="-1">Залиште контакти — ми передзвонимо</h3>
+          <p class="bj-hint" id="bj-h3">Ваші відповіді побачить лише адміністратор центру. Він підбере фахівця і час.</p>
+
+          <form class="bj-form" (ngSubmit)="submit()" novalidate aria-describedby="bj-h3">
+            <div class="bj-fields">
+              <div class="bj-field">
+                <label for="bj-name">Імʼя</label>
+                <input id="bj-name" name="name" [(ngModel)]="name" autocomplete="name" maxlength="100" required
+                       [attr.aria-invalid]="invalid() === 'name'" [attr.aria-describedby]="invalid() === 'name' ? 'bj-error' : null" />
+              </div>
+              <div class="bj-field">
+                <label for="bj-phone">Телефон</label>
+                <input id="bj-phone" name="phone" [(ngModel)]="phoneInput" type="tel" inputmode="tel" autocomplete="tel"
+                       placeholder="+38 0__ ___ __ __" maxlength="30" required
+                       [attr.aria-invalid]="invalid() === 'phone'" [attr.aria-describedby]="invalid() === 'phone' ? 'bj-error' : null" />
+              </div>
+            </div>
+
+            <fieldset class="bj-methods">
+              <legend>Як з вами звʼязатися</legend>
+              <div class="bj-chips">
+                @for (m of METHODS; track m.value) {
+                  <label class="bj-chip bj-chip--radio" [class.is-picked]="contactMethod === m.value">
+                    <input type="radio" name="contactMethod" [value]="m.value" [(ngModel)]="contactMethod" />
+                    {{ m.label }}
+                  </label>
+                }
+              </div>
+            </fieldset>
+
+            <!-- Honeypot: invisible to people, bots fill it in -->
+            <label class="bj-hp" aria-hidden="true">
+              Website <input name="website" [(ngModel)]="website" tabindex="-1" autocomplete="off" />
+            </label>
+
+            @if (error()) {
+              <p class="bj-error" id="bj-error" role="alert">{{ error() }}</p>
+            }
+
+            <div class="bj-nav">
+              <button type="button" class="bj-link" (click)="back()">← Назад</button>
+              <button type="submit" class="bj-next" [disabled]="state() === 'sending'">
+                {{ state() === 'sending' ? 'Надсилаємо…' : 'Надіслати заявку' }}
+              </button>
+            </div>
+            <p class="bj-consent">Надсилаючи форму, ви погоджуєтеся на обробку персональних даних для звʼязку з вами. Дані конфіденційні.</p>
+          </form>
+        }
+      }
+    }
+  </div>
+</div>

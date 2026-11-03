@@ -9,6 +9,7 @@ import { API_ARTICLES, API_TESTS } from './app/app.constants';
 import { getSitemap } from './sitemap';
 import { SEARCH_PAGES } from './search-pages';
 import { CONDITIONS } from './app/features/conditions/conditions.data';
+import { SERVICES } from './app/features/services/services.data';
 import { TEST_KEYWORDS } from './app/features/tests/constants/test-keywords.constants';
 
 // Resolved from CWD rather than import.meta.url: this project's browserslist
@@ -89,6 +90,9 @@ app.get('/llms.txt', async (_req, res) => {
     '',
     '## Що лікуємо',
     ...CONDITIONS.map(c => line(c.h1, `${SITE}/${c.slug}`, `${c.teaser}. ${c.description}`)),
+    '',
+    '## Послуги',
+    ...SERVICES.map(s => line(s.h1, `${SITE}/${s.slug}`, `${s.teaser}. ${s.description}`)),
     '',
     '## Психологічні тести онлайн (безкоштовно)',
     line('Усі тести', `${SITE}/test/list`),
