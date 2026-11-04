@@ -6,6 +6,7 @@ import { ClinicContactsService } from '../shared/components/clinic-contacts-dial
 import { clinicContacts } from '../shared/constants/contacts.constants';
 import { Review, ReviewService } from '../reviews/review.service';
 import { CONDITIONS } from '../conditions/conditions.data';
+import { MEDICAL_REVIEW } from '../tests/constants/medical-review.constants';
 
 const BASE_URL = 'https://doctor-skripnik.com.ua';
 
@@ -130,7 +131,10 @@ export class OnlineConsultationComponent implements OnInit {
           name: this.h1,
           inLanguage: 'uk',
           audience: { '@type': 'MedicalAudience', audienceType: 'Patient' },
-          reviewedBy: { '@id': `${BASE_URL}/#physician` },
+          reviewedBy: {
+            '@type': 'Person', '@id': `${BASE_URL}/#physician`, name: MEDICAL_REVIEW.name,
+            jobTitle: 'Лікар-психіатр', url: `${BASE_URL}${MEDICAL_REVIEW.profile}`,
+          },
           mainEntity: {
             '@type': 'Service',
             name: 'Онлайн консультація психіатра',

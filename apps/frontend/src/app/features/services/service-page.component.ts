@@ -7,6 +7,8 @@ import { DoctorsPageComponent } from './layouts/doctors/doctors-page.component';
 import { ChildPageComponent } from './layouts/child/child-page.component';
 import { AdhdPageComponent } from './layouts/adhd/adhd-page.component';
 import { SERVICES_BY_SLUG, ServiceContent } from './services.data';
+import { PAGE_DATES } from '../../../page-dates.generated';
+import { MEDICAL_REVIEW } from '../tests/constants/medical-review.constants';
 
 const BASE_URL = 'https://doctor-skripnik.com.ua';
 
@@ -44,9 +46,16 @@ export class ServicePageComponent implements OnInit {
           name: s.h1,
           description: s.description,
           inLanguage: 'uk',
-          about: { '@type': 'MedicalTherapy', name: s.label },
+          isPartOf: { '@id': `${BASE_URL}/#website` },
+          ...(s.schema.about ? { about: s.schema.about } : {}),
+          ...(s.schema.specialty ? { specialty: s.schema.specialty } : {}),
           audience: { '@type': 'MedicalAudience', audienceType: 'Patient' },
-          reviewedBy: { '@id': `${BASE_URL}/#physician` },
+          reviewedBy: {
+            '@type': 'Person', '@id': `${BASE_URL}/#physician`, name: MEDICAL_REVIEW.name,
+            jobTitle: 'Лікар-психіатр', url: `${BASE_URL}${MEDICAL_REVIEW.profile}`,
+          },
+          // last content change, not a medical review date (that would be lastReviewed)
+          ...(PAGE_DATES['services'] ? { dateModified: PAGE_DATES['services'] } : {}),
           breadcrumb: {
             '@type': 'BreadcrumbList',
             itemListElement: [

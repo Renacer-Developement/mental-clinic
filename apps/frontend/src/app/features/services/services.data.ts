@@ -38,6 +38,8 @@ export interface ServiceContent {
   testCategory?: string;
   /** /articles/category/:cat with articles on the same topic */
   articleCategory?: string;
+  /** MedicalWebPage.about / .specialty in JSON-LD: what the page is about in schema.org terms */
+  schema: { about?: Record<string, unknown>; specialty?: string[] };
 }
 
 const SELF: JourneyOption = { id: 'self', label: 'Для себе' };
@@ -65,7 +67,7 @@ export const SERVICES: ServiceContent[] = [
       'Наркотична залежність',
       'Ігрова залежність: азартні ігри, казино, онлайн-гемблінг',
       'Залежність від стосунків: співзалежність, токсичні зв’язки, залежність від схвалення',
-      'Консультування родичів, які живуть поруч із залежною людиною і шукають правильні способи підтримки',
+      'Підтримка родичів: консультування близьких, які живуть поруч із залежною людиною і шукають правильні способи підтримки',
     ],
     steps: [
       { title: 'Перша зустріч', text: 'Адиктолог оцінює, як давно і як сильно залежність впливає на життя, які спроби вже були, що зараз допомагає і що заважає змінам.' },
@@ -96,6 +98,7 @@ export const SERVICES: ServiceContent[] = [
       },
     ],
     related: { path: '/likuvannya-zalezhnostei', label: 'Лікування залежностей у психіатра-нарколога' },
+    schema: { about: { '@type': 'MedicalCondition', name: 'Залежність', alternateName: 'Адикція' }, specialty: ['https://schema.org/Psychiatric'] },
     testCategory: TEST_CATEGORIES_CONST.ADDICTIONS,
     articleCategory: 'залежності',
   },
@@ -147,15 +150,16 @@ export const SERVICES: ServiceContent[] = [
       },
     ],
     related: { path: '/likuvannya-tryvohy', label: 'Лікування тривоги та панічних атак' },
+    schema: { about: { '@type': 'PsychologicalTreatment', name: 'Психотерапія' } },
     testCategory: TEST_CATEGORIES_CONST.ANXIETY,
   },
   {
     slug: 'psykhiatr-i-nevroloh-onlain',
     label: 'Психіатр і невролог',
     teaser: 'Дитячі та дорослі лікарі, консультації онлайн по всьому світу',
-    h1: 'Дитячий і дорослий психіатр та невролог онлайн',
-    title: 'Психіатр і невролог онлайн для дітей і дорослих',
-    description: 'Онлайн-консультація дитячого та дорослого психіатра і невролога в центрі Євгена Скрипника. Доказова медицина, супровід під час лікування. Запис 8:00–22:00.',
+    h1: 'Дитячий психіатр і невролог онлайн',
+    title: 'Дитячий психіатр і невролог онлайн — центр Скрипника',
+    description: 'Дитячий психіатр і невролог онлайн у центрі Євгена Скрипника, а також лікарі для дорослих. Доказова медицина, супровід під час лікування. Запис 8:00–22:00.',
     lead: 'Турбота, що ґрунтується на доказовій медицині. Дитячі та дорослі психіатри і неврологи центру консультують онлайн з будь-якої точки світу й супроводжують вас під час лікування.',
     specialist: 'Консультація лікаря',
     line: 'doctors',
@@ -197,6 +201,7 @@ export const SERVICES: ServiceContent[] = [
       },
     ],
     related: { path: '/konsultatsiya-psykhiatra-onlain', label: 'Консультація психіатра онлайн' },
+    schema: { specialty: ['https://schema.org/Psychiatric', 'https://schema.org/Neurologic', 'https://schema.org/Pediatric'] },
   },
   {
     slug: 'dytyachyi-psykholoh-onlain',
@@ -250,6 +255,7 @@ export const SERVICES: ServiceContent[] = [
       },
     ],
     related: { path: '/psykhiatr-i-nevroloh-onlain', label: 'Дитячий психіатр і невролог онлайн' },
+    schema: { about: { '@type': 'PsychologicalTreatment', name: 'Психологічна допомога дітям і підліткам' }, specialty: ['https://schema.org/Pediatric'] },
   },
   {
     slug: 'kompyuterna-diahnostyka-rduh',
@@ -257,7 +263,7 @@ export const SERVICES: ServiceContent[] = [
     teaser: 'Комп’ютерний тест уваги разом із клінічною оцінкою лікаря',
     h1: 'Комп’ютерна діагностика РДУГ',
     title: 'Комп’ютерна діагностика РДУГ у дітей і дорослих',
-    description: 'Високоефективна комп’ютерна діагностика розладу дефіциту уваги та гіперактивності (РДУГ) у дітей і дорослих разом із консультацією психіатра. Запис 8:00–22:00.',
+    description: 'Комп’ютерна діагностика розладу дефіциту уваги та гіперактивності (РДУГ) у дітей і дорослих разом із консультацією психіатра. Запис 8:00–22:00.',
     lead: 'Комп’ютеризований тест уваги вимірює, як людина утримує увагу, реагує на подразники та стримує імпульси, і порівнює результат з віковою нормою. Разом із клінічною оцінкою лікаря це дає точнішу картину, ніж опитувальники самі по собі.',
     specialist: 'Діагностика РДУГ',
     line: 'doctors',
@@ -299,6 +305,14 @@ export const SERVICES: ServiceContent[] = [
       },
     ],
     related: { path: '/likuvannya-rduh', label: 'Лікування РДУГ у дорослих' },
+    schema: {
+      about: {
+        '@type': 'MedicalTest',
+        name: 'Комп’ютерна діагностика РДУГ',
+        usedToDiagnose: { '@type': 'MedicalCondition', name: 'Розлад дефіциту уваги та гіперактивності (РДУГ)', alternateName: 'ADHD' },
+      },
+      specialty: ['https://schema.org/Psychiatric'],
+    },
     testCategory: TEST_CATEGORIES_CONST.BEHAVIORAL_DISORDERS,
   },
 ];

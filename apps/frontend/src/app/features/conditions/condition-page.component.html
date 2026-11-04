@@ -71,6 +71,9 @@
             </li>
           }
         </ol>
+        @if (condition.service; as svc) {
+          <p class="cp-faq__more">{{ svc.lead }} <a [routerLink]="'/' + svc.slug">{{ svc.label }}</a>.</p>
+        }
       </section>
 
       @if (reviews().length) {

@@ -81,12 +81,12 @@
 
 <section class="ah-booking" id="booking" aria-labelledby="ah-booking">
   <div class="ah-frame ah-booking__grid">
-    <app-booking-journey class="ah-journey" [service]="s" />
     <div class="ah-booking__side">
       <h2 class="ah-title" id="ah-booking">Запис на діагностику</h2>
       <p>Три короткі запитання і ваш номер — адміністратор передзвонить, підбере лікаря і час. Формат і вікові межі тесту уточнить під час запису.</p>
       <p class="ah-booking__hint">Або зателефонуйте самі: <a [href]="phone().href">{{ phone().text }}</a></p>
     </div>
+    <app-booking-journey class="ah-journey" [service]="s" />
   </div>
 </section>
 

@@ -28,6 +28,8 @@ export interface ConditionContent {
   testSections?: string[];
   /** /articles/category/:cat with articles on the same topic */
   articleCategory?: string;
+  /** A service page that covers the same need, linked under the treatment steps */
+  service?: { slug: string; lead: string; label: string };
 }
 
 // One page per condition the clinic treats. Each targets a "лікування X" search,
@@ -245,6 +247,7 @@ export const CONDITIONS: ConditionContent[] = [
     testCategory: TEST_CATEGORIES_CONST.ADDICTIONS,
     testSections: ['Залежності'],
     articleCategory: 'залежності',
+    service: { slug: 'adyktoloh-onlain', lead: 'З причинами залежності та підтримкою родини працює', label: 'адиктолог онлайн' },
   },
   {
     slug: 'likuvannya-rduh',
@@ -289,6 +292,7 @@ export const CONDITIONS: ConditionContent[] = [
     ],
     testCategory: TEST_CATEGORIES_CONST.BEHAVIORAL_DISORDERS,
     testSections: ['РДУГ', 'РДУГ (діти)'],
+    service: { slug: 'kompyuterna-diahnostyka-rduh', lead: 'Для дітей і дорослих також доступна', label: 'комп’ютерна діагностика РДУГ' },
   },
   {
     slug: 'likuvannya-bipolyarnoho-rozladu',

@@ -176,14 +176,11 @@
 
 .ah-booking__grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+  grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
   gap: 2rem 4rem;
   align-items: start;
 
-  @media (max-width: 960px) {
-    grid-template-columns: minmax(0, 1fr);
-    .ah-booking__side { order: -1; }
-  }
+  @media (max-width: 960px) { grid-template-columns: minmax(0, 1fr); }
 }
 
 .ah-booking__side p { margin: 0 0 1rem; line-height: 1.6; }

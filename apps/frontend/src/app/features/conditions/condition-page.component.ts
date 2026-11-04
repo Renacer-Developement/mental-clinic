@@ -6,6 +6,7 @@ import { ClinicContactsService } from '../shared/components/clinic-contacts-dial
 import { clinicContacts } from '../shared/constants/contacts.constants';
 import { Review, ReviewService } from '../reviews/review.service';
 import { CONDITIONS, CONDITIONS_BY_SLUG, ConditionContent } from './conditions.data';
+import { MEDICAL_REVIEW } from '../tests/constants/medical-review.constants';
 
 const BASE_URL = 'https://doctor-skripnik.com.ua';
 
@@ -108,7 +109,10 @@ export class ConditionPageComponent implements OnInit {
           inLanguage: 'uk',
           about: { '@type': 'MedicalCondition', name: c.label },
           audience: { '@type': 'MedicalAudience', audienceType: 'Patient' },
-          reviewedBy: { '@id': `${BASE_URL}/#physician` },
+          reviewedBy: {
+            '@type': 'Person', '@id': `${BASE_URL}/#physician`, name: MEDICAL_REVIEW.name,
+            jobTitle: 'Лікар-психіатр', url: `${BASE_URL}${MEDICAL_REVIEW.profile}`,
+          },
           breadcrumb: {
             '@type': 'BreadcrumbList',
             itemListElement: [
