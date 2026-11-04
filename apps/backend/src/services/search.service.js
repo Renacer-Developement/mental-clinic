@@ -63,7 +63,7 @@ const articleChunks = async () => {
 };
 
 const testChunks = async () => {
-    const tests = await Test.find().select('name description whyTest instructions slug').lean();
+    const tests = await Test.find({ hidden: { $ne: true } }).select('name description whyTest instructions slug').lean();
     return tests.map(t => ({
         kind: 'test',
         url: `/test/detail/${t.slug ?? t._id}`,

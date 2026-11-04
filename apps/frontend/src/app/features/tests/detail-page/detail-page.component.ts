@@ -888,6 +888,7 @@ export class DetailPageComponent implements OnInit {
       description: seoDescription,
       keywords: this.searchKeywords,
       canonical,
+      ...(this.data?.hidden ? { robots: 'noindex, nofollow' } : {}),
       schema: [{
         '@context': 'https://schema.org',
         '@type': 'MedicalWebPage',

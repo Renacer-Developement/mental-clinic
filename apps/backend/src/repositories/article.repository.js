@@ -48,7 +48,8 @@ class ArticleRepository {
             : { slug: idOrSlug };
         return Article.findOne(query)
             .populate('author', 'name')
-            .populate('relatedTests', 'name description duration type slug');
+            // Public article page: internal-only (hidden) tests are not linked
+            .populate({ path: 'relatedTests', select: 'name description duration type slug', match: { hidden: { $ne: true } } });
     }
 
     /** Internal lookup by _id only (used by admin / related queries) */

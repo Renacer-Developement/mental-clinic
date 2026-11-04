@@ -6,7 +6,7 @@ const { ukrainianToSlug } = require('../utils/slug');
 const generateRandomName = () => crypto.randomBytes(8).toString('hex');
 
 const buildFilter = ({ searchKeyword, type } = {}) => {
-    const filter = {};
+    const filter = { hidden: { $ne: true } };
     if (searchKeyword) {
         filter.$or = [
             { name:        { $regex: new RegExp(searchKeyword, 'i') } },
@@ -72,10 +72,12 @@ class TestService {
 
     /** Accepts a MongoDB _id (old URLs, admin) or a slug (public URLs). */
     async getById(idOrSlug) {
-        const test = mongoose.isValidObjectId(idOrSlug) && /^[0-9a-f]{24}$/i.test(idOrSlug)
+        const byId = mongoose.isValidObjectId(idOrSlug) && /^[0-9a-f]{24}$/i.test(idOrSlug);
+        const test = byId
             ? await testRepository.findById(idOrSlug)
             : await testRepository.findBySlug(idOrSlug);
-        if (!test) throw notFound();
+        // Hidden tests open only by their (unguessable) slug, never by the guessable id.
+        if (!test || (byId && test.hidden)) throw notFound();
         return test;
     }
 

@@ -45,6 +45,7 @@ export interface Test {
   questionCount?: number; // list endpoint only
   _id?: string;
   slug?: string;
+  hidden?: boolean; // internal-only: not listed, noindex
   __v?: number;
 }
 
