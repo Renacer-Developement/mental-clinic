@@ -104,11 +104,11 @@ export const TEST_CATEGORY_CONTENT: Record<string, TestCategoryContent> = {
   [TEST_CATEGORIES_CONST.BEHAVIORAL_DISORDERS]: {
     label: 'РДУГ та аутизм',
     h1: 'Тести на РДУГ та аутизм',
-    title: 'Тести на РДУГ (СДУГ) і аутизм онлайн — ASRS, DIVA-5, RAADS-R',
-    description: 'Тести на РДУГ у дорослих і дітей (ASRS, DIVA-5, опитувальник для батьків) та на розлади аутистичного спектра (RAADS-R, RBQ-2A). Безкоштовно онлайн.',
+    title: 'Тести на РДУГ (СДУГ) і аутизм онлайн — ASRS, DIVA-5, RAADS-R, AQ-50',
+    description: 'Тести на РДУГ у дорослих і дітей (ASRS, DIVA-5, опитувальник для батьків) та на розлади аутистичного спектра (RAADS-R, AQ-50, CAT-Q, RBQ-2A). Безкоштовно онлайн.',
     intro: [
       'Розлад дефіциту уваги з гіперактивністю (РДУГ, СДУГ) і розлади аутистичного спектра — нейровідмінності, що проявляються з дитинства, але часто вперше діагностуються вже в дорослому віці. Дорослі звертаються через хронічну неуважність, прокрастинацію, імпульсивність або труднощі в соціальній взаємодії.',
-      'Для дорослих почніть з опитувальника ASRS-v1.1 — офіційного скринінгу ВООЗ для РДУГ. DIVA-5 — структуроване діагностичне інтерв’ю, яке оцінює симптоми в дитинстві й зараз. RAADS-R і RBQ-2A допомагають помітити ознаки аутизму. Для дітей є опитувальники, які заповнюють батьки.',
+      'Для дорослих почніть з опитувальника ASRS-v1.1 — офіційного скринінгу ВООЗ для РДУГ. DIVA-5 — структуроване діагностичне інтерв’ю, яке оцінює симптоми в дитинстві й зараз. Короткий AQ-50 і детальніший RAADS-R допомагають помітити ознаки аутизму, RBQ-2A — повторювану поведінку, а CAT-Q показує, наскільки людина маскує свої особливості. Для дітей є опитувальники, які заповнюють батьки.',
     ],
   },
   [TEST_CATEGORIES_CONST.ADDICTIONS]: {
@@ -158,7 +158,8 @@ export const ALL_TESTS_CONTENT: TestCategoryContent = {
       { name: 'Y-BOCS', slug: 'shkala-yelya-brauna-dlya-otsinky-symptomiv-okr', questions: 10, time: '10 хв', bestFor: 'Нав’язливі думки й ритуали (ОКР)' },
       { name: 'Скринінг ПТСР', slug: 'opytuvalnyk-dlya-skryninhu-ptsr', questions: 7, time: '3 хв', bestFor: 'Флешбеки, кошмари, уникання після травматичних подій' },
       { name: 'ASRS-v1.1', slug: 'opytuvalnyk-symptomiv-rduh-dlya-doroslykh-asrs-v1-1', questions: 18, time: '5 хв', bestFor: 'Неуважність, імпульсивність, неорганізованість у дорослих' },
-      { name: 'RAADS-R', slug: 'test-raads-r-na-autyzm-shkala-ritvo-dlya-doroslykh', questions: 80, time: '30–45 хв', bestFor: 'Підозра на аутизм у дорослому віці' },
+      { name: 'AQ-50', slug: 'test-na-autyzm-aq-50-koefitsiyent-autystychnoho-spektra', questions: 50, time: '10–15 хв', bestFor: 'Підозра на аутизм у дорослому віці — короткий скринінг' },
+      { name: 'RAADS-R', slug: 'test-raads-r-na-autyzm-shkala-ritvo-dlya-doroslykh', questions: 80, time: '30–45 хв', bestFor: 'Підозра на аутизм у дорослому віці — детальна оцінка' },
       { name: 'HCL-32', slug: 'opytuvalnyk-symptomiv-hipomaniyi', questions: 32, time: '10 хв', bestFor: 'Періоди піднесення, енергії, зменшеної потреби у сні' },
       { name: 'MSI-BPD', slug: 'test-na-mezhovyy-rozlad-osobystosti-mro-msi-bpd', questions: 10, time: '5 хв', bestFor: 'Емоційні гойдалки, нестабільні стосунки, імпульсивність' },
     ],

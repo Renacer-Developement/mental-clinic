@@ -18,7 +18,7 @@ export const TEST_SECTIONS: { title: string; match: RegExp }[] = [
   { title: 'Схема-терапія',        match: /схем|SMI|YSQ/i },
   { title: 'РДУГ',                 match: /РДУГ|СДУГ|DIVA|ASRS/i },
   { title: 'РДУГ (діти)',          match: /у дитини|для батьків/i },
-  { title: 'Аутизм',               match: /RAADS|RBQ|повторюван/i },
+  { title: 'Аутизм',               match: /RAADS|RBQ|AQ-50|CAT-Q|повторюван/i },
   { title: 'Аутизм (діти)',        match: /аутизм/i },
   { title: 'Залежності',           match: /алкогол|залежн/i },
   { title: 'Харчова поведінка',    match: /харчов/i },
