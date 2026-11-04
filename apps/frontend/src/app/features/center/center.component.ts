@@ -63,7 +63,7 @@ export class CenterComponent implements OnInit {
     },
     {
       title: 'Доступність',
-      text: 'Відеоконсультація в Telegram, Viber, Google Meet або Zoom — без дороги, у зручний для вас час.',
+      text: 'Відеоконсультація в Telegram, Viber, WhatsApp, Google Meet або Zoom — без дороги, у зручний для вас час. Електронний рецепт діє в будь-якій аптеці України, зокрема за програмою «Доступні ліки».',
     },
     {
       title: 'Чесність',
