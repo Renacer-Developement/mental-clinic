@@ -39,8 +39,8 @@ const testSchema = new mongoose.Schema({
     // Public URL key (/test/detail/<slug>). Set once from the name and never
     // regenerated, so renaming a test doesn't break links that Google indexed.
     slug:                { type: String, unique: true, sparse: true, index: true },
-    // Taken off the site: not in the list API (tests page, sitemap, llms.txt, related
-    // tests), search or articles, and its page returns 404. Unset it to bring it back.
+    // Direct-link-only test: left out of the list API (tests page, sitemap, llms.txt,
+    // related tests), search and articles; its page opens only by slug and is noindex.
     hidden:              { type: Boolean, default: false },
 }, {
     // updatedAt feeds <lastmod> in the sitemap. Tests saved before this existed

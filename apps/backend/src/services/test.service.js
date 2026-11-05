@@ -76,8 +76,8 @@ class TestService {
         const test = byId
             ? await testRepository.findById(idOrSlug)
             : await testRepository.findBySlug(idOrSlug);
-        // Hidden tests are off the site entirely (kept in the DB to restore later).
-        if (!test || test.hidden) throw notFound();
+        // Hidden tests open only by their (unguessable) slug — a direct link — never by the guessable id.
+        if (!test || (byId && test.hidden)) throw notFound();
         return test;
     }
 
