@@ -76,6 +76,9 @@ export class DetailPageComponent implements OnInit {
   about?: TestAbout;
 
   answers: { [key: string]: number } = {};
+  // Which option was picked, by position: several options can share a score
+  // (AQ-50 scores 0,0,1,1), so the score alone can't tell which one to highlight.
+  answerIndex: { [key: string]: number } = {};
 
   currentQuestionIndex = 0;
   showError = false;
@@ -178,7 +181,7 @@ export class DetailPageComponent implements OnInit {
 
   isSelected(optionIndex: number): boolean {
     const q = this.data?.questions?.[this.currentQuestionIndex];
-    return !!q && this.answers[q._id] === q.value?.[optionIndex];
+    return !!q && this.answerIndex[q._id] === optionIndex;
   }
 
   nextQuestion(): void {
@@ -546,7 +549,7 @@ export class DetailPageComponent implements OnInit {
   private getAnswerLabel(question: any): string {
     const val = this.answers[question._id];
     if (val === undefined) return '—';
-    const idx = (question.value as number[]).indexOf(Number(val));
+    const idx = this.answerIndex[question._id] ?? (question.value as number[]).indexOf(Number(val));
     return idx >= 0 ? question.labelText[idx] : String(val);
   }
 
@@ -687,10 +690,11 @@ export class DetailPageComponent implements OnInit {
     }
   }
 
-  selectAnswer(questionId: string, value: number): void {
+  selectAnswer(questionId: string, optionIndex: number, value: number): void {
     // First answer of a run = the visitor actually started the test (not just opened the page)
     if (!Object.keys(this.answers).length) this.trackTest(EVENT_TRACK.TEST_START);
     this.answers[questionId] = value;
+    this.answerIndex[questionId] = optionIndex;
     this.showError = false;
   }
 
@@ -708,7 +712,7 @@ export class DetailPageComponent implements OnInit {
     const digit = Number(event.key);
     if (Number.isInteger(digit) && digit >= 1 && digit <= (question.labelText?.length ?? 0)) {
       event.preventDefault();
-      this.selectAnswer(question._id, question.value[digit - 1]);
+      this.selectAnswer(question._id, digit - 1, question.value[digit - 1]);
     } else if (event.key === 'Enter' || event.key === 'ArrowRight') {
       // let Enter activate a focused button natively
       if (event.key === 'Enter' && target?.closest('button, a')) return;
@@ -742,6 +746,7 @@ export class DetailPageComponent implements OnInit {
   restartTest(): void {
     this.currentQuestionIndex = 0;
     this.answers = {};
+    this.answerIndex = {};
     this.showError = false;
     this.isTestCompleted = false;
 

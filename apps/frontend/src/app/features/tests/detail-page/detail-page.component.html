@@ -119,6 +119,7 @@
               [attr.aria-checked]="isSelected(i)"
               (click)="selectAnswer(
                 data?.questions?.[currentQuestionIndex]?._id,
+                i,
                 data?.questions?.[currentQuestionIndex]?.value?.[i]
               )"
             >
